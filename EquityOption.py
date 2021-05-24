@@ -90,13 +90,13 @@ tab.add_row([method, europeanOption.NPV(), 'N/A', 'N/A'])
 # Barone-Adesi and Whaley approximation for American
 method = 'Barone-Adesi/Whaley'
 americanOption.setPricingEngine(
-    ql.BaroneAdesiWhaleyEngine(bsmProcess))
+    ql.BaroneAdesiWhaleyApproximationEngine(bsmProcess))
 tab.add_row([method, 'N/A', 'N/A', americanOption.NPV()])
 
 # Bjerksund and Stensland approximation for American
 method = 'Bjerksund/Stensland'
 americanOption.setPricingEngine(
-    ql.BjerksundStenslandEngine(bsmProcess))
+    ql.BjerksundStenslandApproximationEngine(bsmProcess))
 tab.add_row([method, 'N/A', 'N/A', americanOption.NPV()])
 
 # Integral
