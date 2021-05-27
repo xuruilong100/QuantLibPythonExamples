@@ -529,8 +529,8 @@ class AsianOptionTest(unittest.TestCase):
     def testMCDiscreteGeometricAveragePriceHeston(self):
         TEST_MESSAGE(
             "Testing MC discrete geometric average-price Asians under Heston...")
-        # # 30-day options need wider tolerance due to uncertainty around what "weekly
-        #     # fixing" dates mean over a 30-day month!
+        # 30-day options need wider tolerance due to uncertainty around what "weekly
+        # fixing" dates mean over a 30-day month!
         tol = [4.0e-2, 2.0e-2, 2.0e-2, 3.0e-2, 3.0e-2, 2.0e-2, 1.0e-1, 1.0e-2,
                2.0e-2, 2.0e-2, 2.0e-2, 1.0e-2, 2.0e-2, 1.0e-2, 1.0e-2, 1.0e-2,
                1.0e-2, 1.0e-2]
@@ -660,12 +660,12 @@ class AsianOptionTest(unittest.TestCase):
     def testMCDiscreteArithmeticAveragePriceHeston(self):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete arithmetic average-price Asians in Heston model...")
-        # // data from "A numerical method to price exotic path-dependent
-        #     // options on an underlying described by the Heston stochastic
-        #     // volatility model", Ballestra, Pacelli and Zirilli, Journal
-        #     // of Banking & Finance, 2007 (section 4 - Numerical Results)
+        # data from "A numerical method to price exotic path-dependent
+        # options on an underlying described by the Heston stochastic
+        # volatility model", Ballestra, Pacelli and Zirilli, Journal
+        # of Banking & Finance, 2007 (section 4 - Numerical Results)
         #
-        #     // nb. for Heston, the volatility param below is ignored
+        # nb. for Heston, the volatility param below is ignored
         cases = [
             self.DiscreteAverageData(Option.Call, 120.0, 100.0, 0.0, 0.05, 1.0 / 12.0, 11.0 / 12.0, 12, 0.1, False, 22.50)]
         vol = 0.3
@@ -746,13 +746,13 @@ class AsianOptionTest(unittest.TestCase):
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
 
-        # // An additional dataset using the Heston parameters coming from "General lower
-        #     // bounds for arithmetic Asian option prices", Applied Mathematical Finance 15(2)
-        #     // 123-149 (2008), by Albrecher, H., Mayer, P., and Schoutens, W. The numerical
-        #     // accuracy of prices given in Table 6 is low, but higher accuracy prices for the
-        #     // same parameters and options are reported by in "Pricing bounds and approximations
-        #     // for discrete arithmetic Asian options under time-changed Levy processes" by Zeng,
-        #     // P.P., and Kwok Y.K. (2013) in Table 4.
+        # An additional dataset using the Heston parameters coming from "General lower
+        # bounds for arithmetic Asian option prices", Applied Mathematical Finance 15(2)
+        # 123-149 (2008), by Albrecher, H., Mayer, P., and Schoutens, W. The numerical
+        # accuracy of prices given in Table 6 is low, but higher accuracy prices for the
+        # same parameters and options are reported by in "Pricing bounds and approximations
+        # for discrete arithmetic Asian options under time-changed Levy processes" by Zeng,
+        # P.P., and Kwok Y.K. (2013) in Table 4.
 
         strikes = [60.0, 80.0, 100.0, 120.0, 140.0]
         prices = [42.5990, 29.3698, 18.2360, 10.0565, 4.9609]
@@ -1208,8 +1208,8 @@ class AsianOptionTest(unittest.TestCase):
     def _testDiscreteGeometricAveragePriceHeston(self,
                                                  engine,
                                                  tol):
-        # # data from "A Recursive Method for Discretely Monitored Geometric Asian Option
-        #     # Prices", Kim, Kim, Kim & Wee, Bull. Korean Math. Soc. 53, 733-749, 2016
+        # data from "A Recursive Method for Discretely Monitored Geometric Asian Option
+        # Prices", Kim, Kim, Kim & Wee, Bull. Korean Math. Soc. 53, 733-749, 2016
         days = [30, 91, 182, 365, 730, 1095, 30, 91, 182, 365, 730, 1095, 30,
                 91, 182, 365, 730, 1095]
         strikes = [90, 90, 90, 90, 90, 90, 100, 100, 100, 100, 100, 100, 110,
