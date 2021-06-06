@@ -514,7 +514,6 @@ class EuropeanOptionTest(unittest.TestCase):
 
     def testGreeks(self):
         TEST_MESSAGE(
-            "SKIP TEST FOR THETA",
             "Testing analytic European option greeks...")
         backup = SavedSettings()
 
@@ -543,11 +542,11 @@ class EuropeanOptionTest(unittest.TestCase):
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
-        qTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
+        qTS = YieldTermStructureHandle(flatRate(qRate, dc))
         rRate = SimpleQuote(0.0)
-        rTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
+        rTS = YieldTermStructureHandle(flatRate(rRate, dc))
         vol = SimpleQuote(0.0)
-        volTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
+        volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
         for i in range(len(types)):
             for j in range(len(strikes)):
@@ -647,8 +646,6 @@ class EuropeanOptionTest(unittest.TestCase):
 
                                             # compare
                                             for greek in calculated.keys():
-                                                if greek == 'theta':
-                                                    continue
                                                 expct = expected[greek]
                                                 calcl = calculated[greek]
                                                 tol = tolerance[greek]

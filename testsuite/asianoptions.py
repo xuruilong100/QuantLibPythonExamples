@@ -131,7 +131,6 @@ class AsianOptionTest(unittest.TestCase):
 
     def testAnalyticContinuousGeometricAveragePriceGreeks(self):
         TEST_MESSAGE(
-            "SKIP TEST FOR THETA",
             "Testing analytic continuous geometric average-price Asian greeks...")
         backup = SavedSettings()
         calculated = dict()
@@ -158,11 +157,11 @@ class AsianOptionTest(unittest.TestCase):
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
-        qTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
+        qTS = YieldTermStructureHandle(flatRate(qRate, dc))
         rRate = SimpleQuote(0.0)
-        rTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
+        rTS = YieldTermStructureHandle(flatRate(rRate, dc))
         vol = SimpleQuote(0.0)
-        volTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
+        volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
         process = BlackScholesMertonProcess(
             QuoteHandle(spot), qTS, rTS, volTS)
@@ -255,9 +254,7 @@ class AsianOptionTest(unittest.TestCase):
                                             calcl = calculated[greek]
                                             tol = tolerance[greek]
                                             error = relativeError(expct, calcl, u)
-                                            # skip theta
-                                            if ky != 'theta':
-                                                self.assertFalse(error > tol)
+                                            self.assertFalse(error > tol)
 
     def testAnalyticContinuousGeometricAveragePriceHeston(self):
         TEST_MESSAGE("Testing analytic continuous geometric Asians under Heston...")
@@ -912,7 +909,6 @@ class AsianOptionTest(unittest.TestCase):
 
     def testAnalyticDiscreteGeometricAveragePriceGreeks(self):
         TEST_MESSAGE(
-            "SKIP TEST FOR THETA",
             "Testing discrete-averaging geometric Asian greeks...")
         baskup = SavedSettings()
         calculated = dict()
@@ -939,11 +935,11 @@ class AsianOptionTest(unittest.TestCase):
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
-        qTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
+        qTS = YieldTermStructureHandle(flatRate(qRate, dc))
         rRate = SimpleQuote(0.0)
-        rTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
+        rTS = YieldTermStructureHandle(flatRate(rRate, dc))
         vol = SimpleQuote(0.0)
-        volTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
+        volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
         process = BlackScholesMertonProcess(
             QuoteHandle(spot), qTS, rTS, volTS)
@@ -1038,9 +1034,7 @@ class AsianOptionTest(unittest.TestCase):
                                             calcl = calculated[greek]
                                             tol = tolerance[greek]
                                             error = relativeError(expct, calcl, u)
-                                            # skip theta
-                                            if ky != 'theta':
-                                                self.assertFalse(error > tol)
+                                            self.assertFalse(error > tol)
 
     def testPastFixings(self):
         TEST_MESSAGE(
