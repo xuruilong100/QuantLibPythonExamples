@@ -26,10 +26,12 @@ using QuantLib::FdCEVVanillaEngine;
 using QuantLib::FdHestonVanillaEngine;
 using QuantLib::FdSabrVanillaEngine;
 using QuantLib::FFTVarianceGammaEngine;
+using QuantLib::FFTVanillaEngine;
 using QuantLib::IntegralEngine;
 using QuantLib::JuQuadraticApproximationEngine;
 using QuantLib::MCAmericanEngine;
 using QuantLib::MCEuropeanEngine;
+using QuantLib::MakeMCEuropeanEngine;
 using QuantLib::VarianceGammaEngine;
 using QuantLib::CrankNicolson;
 using QuantLib::FDBermudanEngine;
@@ -129,7 +131,10 @@ class AnalyticDigitalAmericanKOEngine : public PricingEngine {
 class AnalyticEuropeanEngine : public PricingEngine {
   public:
     AnalyticEuropeanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>&);
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process);
+    AnalyticEuropeanEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        const Handle<YieldTermStructure>& discountCurve);
 };
 
 %shared_ptr(AnalyticGJRGARCHEngine)
@@ -457,6 +462,16 @@ class FFTVarianceGammaEngine : public PricingEngine {
         const std::vector<ext::shared_ptr<Instrument> >& optionList);
 };
 
+%shared_ptr(FFTVanillaEngine)
+class FFTVanillaEngine : public PricingEngine {
+  public:
+    explicit FFTVanillaEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Real logStrikeSpacing = 0.001);
+    void precalculate(
+        const std::vector<ext::shared_ptr<Instrument> >& optionList);
+};
+
 %shared_ptr(IntegralEngine)
 class IntegralEngine : public PricingEngine {
   public:
@@ -538,6 +553,31 @@ def MCEuropeanEngine(
         maxSamples,
         seed)
 %}
+
+template <class RNG>
+class MakeMCEuropeanEngine {
+  public:
+    MakeMCEuropeanEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& p);
+    // named parameters
+    MakeMCEuropeanEngine& withSteps(Size steps);
+    MakeMCEuropeanEngine& withStepsPerYear(Size steps);
+    MakeMCEuropeanEngine& withBrownianBridge(bool b = true);
+    MakeMCEuropeanEngine& withSamples(Size samples);
+    MakeMCEuropeanEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCEuropeanEngine& withMaxSamples(Size samples);
+    MakeMCEuropeanEngine& withSeed(BigNatural seed);
+    MakeMCEuropeanEngine& withAntitheticVariate(bool b = true);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> toPricingEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPREuropeanEngine) MakeMCEuropeanEngine<PseudoRandom>;
+%template(MakeMCLDEuropeanEngine) MakeMCEuropeanEngine<LowDiscrepancy>;
 
 %shared_ptr(MCAmericanEngine<PseudoRandom>);
 %shared_ptr(MCAmericanEngine<LowDiscrepancy>);

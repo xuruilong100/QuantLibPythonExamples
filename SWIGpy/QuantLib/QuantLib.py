@@ -2887,42 +2887,6 @@ class Observable(_object):
 Observable_swigregister = _QuantLib.Observable_swigregister
 Observable_swigregister(Observable)
 
-class Observer(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Observer, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Observer, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, callback):
-        this = _QuantLib.new_Observer(callback)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def _registerWith(self, arg2):
-        return _QuantLib.Observer__registerWith(self, arg2)
-
-    def _unregisterWith(self, arg2):
-        return _QuantLib.Observer__unregisterWith(self, arg2)
-
-    def registerWith(self,x):
-        if hasattr(x, "asObservable"):
-            self._registerWith(x.asObservable())
-        else:
-            self._registerWith(x)
-    def unregisterWith(self,x):
-        if hasattr(x, "asObservable"):
-            self._unregisterWith(x.asObservable())
-        else:
-            self._unregisterWith(x)
-
-    __swig_destroy__ = _QuantLib.delete_Observer
-    __del__ = lambda self: None
-Observer_swigregister = _QuantLib.Observer_swigregister
-Observer_swigregister(Observer)
-
 class PricingEngine(Observable):
     __swig_setmethods__ = {}
     for _s in [Observable]:
@@ -14814,8 +14778,8 @@ class AnalyticEuropeanEngine(PricingEngine):
     __getattr__ = lambda self, name: _swig_getattr(self, AnalyticEuropeanEngine, name)
     __repr__ = _swig_repr
 
-    def __init__(self, arg2):
-        this = _QuantLib.new_AnalyticEuropeanEngine(arg2)
+    def __init__(self, *args):
+        this = _QuantLib.new_AnalyticEuropeanEngine(*args)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -15280,6 +15244,31 @@ class FFTVarianceGammaEngine(PricingEngine):
 FFTVarianceGammaEngine_swigregister = _QuantLib.FFTVarianceGammaEngine_swigregister
 FFTVarianceGammaEngine_swigregister(FFTVarianceGammaEngine)
 
+class FFTVanillaEngine(PricingEngine):
+    __swig_setmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FFTVanillaEngine, name, value)
+    __swig_getmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FFTVanillaEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, process, logStrikeSpacing=0.001):
+        this = _QuantLib.new_FFTVanillaEngine(process, logStrikeSpacing)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def precalculate(self, optionList):
+        return _QuantLib.FFTVanillaEngine_precalculate(self, optionList)
+    __swig_destroy__ = _QuantLib.delete_FFTVanillaEngine
+    __del__ = lambda self: None
+FFTVanillaEngine_swigregister = _QuantLib.FFTVanillaEngine_swigregister
+FFTVanillaEngine_swigregister(FFTVanillaEngine)
+
 class IntegralEngine(PricingEngine):
     __swig_setmethods__ = {}
     for _s in [PricingEngine]:
@@ -15397,6 +15386,96 @@ def MCEuropeanEngine(
         requiredTolerance,
         maxSamples,
         seed)
+
+class MakeMCPREuropeanEngine(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MakeMCPREuropeanEngine, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, MakeMCPREuropeanEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, p):
+        this = _QuantLib.new_MakeMCPREuropeanEngine(p)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPREuropeanEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPREuropeanEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPREuropeanEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPREuropeanEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPREuropeanEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPREuropeanEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPREuropeanEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPREuropeanEngine_withAntitheticVariate(self, b)
+
+    def toPricingEngine(self):
+        return _QuantLib.MakeMCPREuropeanEngine_toPricingEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPREuropeanEngine
+    __del__ = lambda self: None
+MakeMCPREuropeanEngine_swigregister = _QuantLib.MakeMCPREuropeanEngine_swigregister
+MakeMCPREuropeanEngine_swigregister(MakeMCPREuropeanEngine)
+
+class MakeMCLDEuropeanEngine(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MakeMCLDEuropeanEngine, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, MakeMCLDEuropeanEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, p):
+        this = _QuantLib.new_MakeMCLDEuropeanEngine(p)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDEuropeanEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDEuropeanEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDEuropeanEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDEuropeanEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDEuropeanEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDEuropeanEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDEuropeanEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDEuropeanEngine_withAntitheticVariate(self, b)
+
+    def toPricingEngine(self):
+        return _QuantLib.MakeMCLDEuropeanEngine_toPricingEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDEuropeanEngine
+    __del__ = lambda self: None
+MakeMCLDEuropeanEngine_swigregister = _QuantLib.MakeMCLDEuropeanEngine_swigregister
+MakeMCLDEuropeanEngine_swigregister(MakeMCLDEuropeanEngine)
 
 class MCPRAmericanEngine(PricingEngine):
     __swig_setmethods__ = {}
@@ -33337,9 +33416,6 @@ class MarkovFunctionalSettings(_object):
 
     def withSmileMoneynessCheckpoints(self, m):
         return _QuantLib.MarkovFunctionalSettings_withSmileMoneynessCheckpoints(self, m)
-
-    def toInstance(self):
-        return _QuantLib.MarkovFunctionalSettings_toInstance(self)
     __swig_destroy__ = _QuantLib.delete_MarkovFunctionalSettings
     __del__ = lambda self: None
 MarkovFunctionalSettings_swigregister = _QuantLib.MarkovFunctionalSettings_swigregister
@@ -37576,6 +37652,42 @@ flatVol = _QuantLib.flatVol
 def relativeError(x1, x2, reference):
     return _QuantLib.relativeError(x1, x2, reference)
 relativeError = _QuantLib.relativeError
+class Flag(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Flag, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Flag, name)
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        this = _QuantLib.new_Flag()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def raiseFlag(self):
+        return _QuantLib.Flag_raiseFlag(self)
+
+    def lower(self):
+        return _QuantLib.Flag_lower(self)
+
+    def isUp(self):
+        return _QuantLib.Flag_isUp(self)
+
+    def update(self):
+        return _QuantLib.Flag_update(self)
+
+    def registerWith(self, arg2):
+        return _QuantLib.Flag_registerWith(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.Flag_unregisterWith(self, arg2)
+    __swig_destroy__ = _QuantLib.delete_Flag
+    __del__ = lambda self: None
+Flag_swigregister = _QuantLib.Flag_swigregister
+Flag_swigregister(Flag)
+
 class TimeBasket(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, TimeBasket, name, value)

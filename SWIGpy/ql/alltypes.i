@@ -880,6 +880,9 @@ using QuantLib::SimpleChooserOption;
 using QuantLib::VanillaStorageOption;
 using QuantLib::WriterExtensibleOption;
 using QuantLib::BMAIndex;
+
+using QuantLib::MakeMCEuropeanEngine;
+using QuantLib::FFTVanillaEngine;
 %}
 
 

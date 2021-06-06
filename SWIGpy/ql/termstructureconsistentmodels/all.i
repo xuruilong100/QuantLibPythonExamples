@@ -148,11 +148,11 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
         ModelSettings &removeAdjustment(int a);
         ModelSettings &withSmileMoneynessCheckpoints(const std::vector<Real>& m);
 
-        %extend {
+        /* %extend {
             ModelSettings toInstance() {
                 return *$self;
             }
-        }
+        } */
     };
 
     // Constructor for a swaption smile calibrated model

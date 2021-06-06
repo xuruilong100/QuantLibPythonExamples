@@ -4,8 +4,12 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 
 %{
+using QuantLib::Observable;
+using QuantLib::Observer;
+
 ext::shared_ptr<YieldTermStructure>
 flatRate(const Date& today,
          const ext::shared_ptr<Quote>& forward,
@@ -74,6 +78,18 @@ Real relativeError(Real x1, Real x2, Real reference) {
         // fall back to absolute error
         return std::fabs(x1 - x2);
 }
+
+class Flag : public Observer {
+  private:
+    bool up_;
+  public:
+    Flag() : up_(false) {}
+    void raise() { up_ = true; }
+    void lower() { up_ = false; }
+    bool isUp() const { return up_; }
+    void update() { raise(); }
+};
+
 %}
 
 ext::shared_ptr<YieldTermStructure>
@@ -112,5 +128,19 @@ flatVol(Volatility vol,
         const DayCounter& dc);
 
 Real relativeError(Real x1, Real x2, Real reference);
+
+class Flag {
+    %rename(raiseFlag) raise;
+  public:
+    Flag();
+    void raise();
+    void lower();
+    bool isUp() const;
+    void update();
+    void registerWith(
+        const ext::shared_ptr<Observable>&);
+    void unregisterWith(
+        const ext::shared_ptr<Observable>&);
+};
 
 #endif

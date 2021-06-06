@@ -8,18 +8,16 @@
 using QuantLib::Observable;
 using QuantLib::Observer;
 // C++ wrapper for Python observer
-class PyObserver : public Observer {
+/* class PyObserver : public Observer {
   public:
     PyObserver(PyObject* callback)
         : callback_(callback) {
-        /* make sure the Python object stays alive
-           as long as we need it */
+        // make sure the Python object stays alive as long as we need it
         Py_XINCREF(callback_);
     }
     PyObserver(const PyObserver& o)
         : callback_(o.callback_) {
-        /* make sure the Python object stays alive
-           as long as we need it */
+        // make sure the Python object stays alive as long as we need it
         Py_XINCREF(callback_);
     }
     PyObserver& operator=(const PyObserver& o) {
@@ -45,7 +43,7 @@ class PyObserver : public Observer {
 
   private:
     PyObject* callback_;
-};
+}; */
 %}
 %{
 using QuantLib::PricingEngine;
@@ -76,7 +74,7 @@ class Observable {};
 }
 
 // Python wrapper
-%rename(Observer) PyObserver;
+/* %rename(Observer) PyObserver;
 class PyObserver {
     %rename(_registerWith) registerWith;
     %rename(_unregisterWith) unregisterWith;
@@ -98,7 +96,7 @@ class PyObserver {
             else:
                 self._unregisterWith(x)
     %}
-};
+}; */
 
 %shared_ptr(PricingEngine)
 class PricingEngine : public Observable {
