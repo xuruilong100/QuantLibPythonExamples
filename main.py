@@ -5,12 +5,13 @@ from testsuite.andreasenhugevolatilityinterpl import AndreasenHugeVolatilityInte
 from testsuite.array import ArrayTest
 from testsuite.asianoptions import AsianOptionTest
 from testsuite.europeanoption import EuropeanOptionTest
+from testsuite.hestonmodel import HestonModelTest
 
 if __name__ == '__main__':
     unittest.main()
 
 '''
-Ran 62 tests in 195.824s
+Ran 94 tests in 226.148s
 
 OK
 '''

@@ -15,6 +15,7 @@ using QuantLib::AnalyticEuropeanEngine;
 using QuantLib::AnalyticGJRGARCHEngine;
 using QuantLib::AnalyticHestonEngine;
 using QuantLib::AnalyticPTDHestonEngine;
+using QuantLib::AnalyticPDFHestonEngine;
 using QuantLib::BaroneAdesiWhaleyApproximationEngine;
 using QuantLib::BatesEngine;
 using QuantLib::BjerksundStenslandApproximationEngine;
@@ -27,6 +28,7 @@ using QuantLib::FdHestonVanillaEngine;
 using QuantLib::FdSabrVanillaEngine;
 using QuantLib::FFTVarianceGammaEngine;
 using QuantLib::FFTVanillaEngine;
+using QuantLib::HestonExpansionEngine;
 using QuantLib::IntegralEngine;
 using QuantLib::JuQuadraticApproximationEngine;
 using QuantLib::MCAmericanEngine;
@@ -48,6 +50,8 @@ using QuantLib::MCEuropeanHestonEngine;
 using QuantLib::FDAmericanEngine;
 using QuantLib::FDShoutEngine;
 using QuantLib::MCEuropeanGJRGARCHEngine;
+using QuantLib::MakeMCEuropeanHestonEngine;
+using QuantLib::MakeFdHestonVanillaEngine;
 %}
 
 %shared_ptr(AnalyticCEVEngine);
@@ -233,10 +237,38 @@ class AnalyticHestonEngine : public PricingEngine {
         ComplexLogFormula cpxLog, const AnalyticHestonEngine::Integration& itg,
         Real andersenPiterbargEpsilon = 1e-8);
 
+    Size numberOfEvaluations() const;
+    static void doCalculation(
+        Real riskFreeDiscount,
+        Real dividendDiscount,
+        Real spotPrice,
+        Real strikePrice,
+        Real term,
+        Real kappa,
+        Real theta,
+        Real sigma,
+        Real v0,
+        Real rho,
+        const TypePayoff& type,
+        const Integration& integration,
+        ComplexLogFormula cpxLog,
+        const AnalyticHestonEngine* enginePtr,
+        Real& value,
+        Size& evaluations);
+    static ComplexLogFormula optimalControlVariate(
+        Time t, Real v0, Real kappa, Real theta, Real sigma, Real rho);
+
     %extend {
         std::pair<Real, Real> chF(
             Real real, Real imag, Time t) const {
             const std::complex<Real> tmp = self->chF(
+                std::complex<Real>(real, imag), t);
+            return std::pair<Real, Real>(
+                tmp.real(), tmp.imag());
+        }
+        std::pair<Real, Real> lnChF(
+            Real real, Real imag, Time t) const {
+            const std::complex<Real> tmp = self->lnChF(
                 std::complex<Real>(real, imag), t);
             return std::pair<Real, Real>(
                 tmp.real(), tmp.imag());
@@ -256,18 +288,46 @@ class AnalyticPTDHestonEngine : public PricingEngine {
     AnalyticPTDHestonEngine(
         const ext::shared_ptr<PiecewiseTimeDependentHestonModel>& model,
         Real relTolerance, Size maxEvaluations);
-    // Constructor using Laguerre integration
-    // and Gatheral's version of complex log.
     AnalyticPTDHestonEngine(
         const ext::shared_ptr<PiecewiseTimeDependentHestonModel>& model,
         Size integrationOrder = 144);
-
-    // Constructor giving full control over Fourier integration algorithm
     AnalyticPTDHestonEngine(
         const ext::shared_ptr<PiecewiseTimeDependentHestonModel>& model,
         ComplexLogFormula cpxLog,
         const Integration& itg,
         Real andersenPiterbargEpsilon = 1e-8);
+    //Size numberOfEvaluations() const;
+
+    %extend {
+        std::pair<Real, Real> chF(
+            Real real, Real imag, Time t) const {
+            const std::complex<Real> tmp = self->chF(
+                std::complex<Real>(real, imag), t);
+            return std::pair<Real, Real>(
+                tmp.real(), tmp.imag());
+        }
+        std::pair<Real, Real> lnChF(
+            Real real, Real imag, Time t) const {
+            const std::complex<Real> tmp = self->lnChF(
+                std::complex<Real>(real, imag), t);
+            return std::pair<Real, Real>(
+                tmp.real(), tmp.imag());
+        }
+    }
+};
+
+%shared_ptr(AnalyticPDFHestonEngine)
+class AnalyticPDFHestonEngine : public PricingEngine {
+  public:
+    explicit AnalyticPDFHestonEngine(
+        const ext::shared_ptr<HestonModel>& model,
+        Real gaussLobattoEps = 1e-6,
+        Size gaussLobattoIntegrationOrder = 10000UL);
+
+    // probability in x_t = ln(s_t)
+    Real Pv(Real x_t, Time t) const;
+    // cumulative distribution function Pr(x < X)
+    Real cdf(Real X, Time t) const;
 };
 
 %shared_ptr(BaroneAdesiWhaleyApproximationEngine);
@@ -302,6 +362,28 @@ class COSHestonEngine : public PricingEngine {
     COSHestonEngine(
         const ext::shared_ptr<HestonModel>& model,
         Real L = 16, Size N = 200);
+        void update();
+        void calculate() const;
+
+    // normalized characteristic function
+    %extend {
+        std::pair<Real, Real> chF(
+            Real u, Real t) const {
+            const std::complex<Real> tmp = self->chF(u, t);
+            return std::pair<Real, Real>(
+                tmp.real(), tmp.imag());
+        }
+    }
+
+    Real c1(Time t) const;
+    Real c2(Time t) const;
+    Real c3(Time t) const;
+    Real c4(Time t) const;
+
+    Real mu(Time t) const;
+    Real var(Time t) const;
+    Real skew(Time t) const;
+    Real kurtosis(Time t) const;
 };
 
 %shared_ptr(ExponentialFittingHestonEngine)
@@ -415,25 +497,37 @@ class FdHestonVanillaEngine : public PricingEngine {
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         const Real mixingFactor = 1.0);
+        // multiple strikes caching engine
+        void update();
+        void enableMultipleStrikesCaching(
+            const std::vector<Real>& strikes);
 
-    %feature("kwargs") make;
+        // helper method for Heston like engines
+        FdmSolverDesc getSolverDesc(
+            Real equityScaleFactor) const;
+};
+
+class MakeFdHestonVanillaEngine {
+  public:
+    explicit MakeFdHestonVanillaEngine(
+        const ext::shared_ptr<HestonModel>& hestonModel);
+
+    MakeFdHestonVanillaEngine& withQuantoHelper(
+        const ext::shared_ptr<FdmQuantoHelper>& quantoHelper);
+    MakeFdHestonVanillaEngine& withTGrid(Size tGrid);
+    MakeFdHestonVanillaEngine& withXGrid(Size xGrid);
+    MakeFdHestonVanillaEngine& withVGrid(Size vGrid);
+    MakeFdHestonVanillaEngine& withDampingSteps(
+        Size dampingSteps);
+    MakeFdHestonVanillaEngine& withFdmSchemeDesc(
+        const FdmSchemeDesc& schemeDesc);
+    MakeFdHestonVanillaEngine& withLeverageFunction(
+        ext::shared_ptr<LocalVolTermStructure>& leverageFct);
+
+    // conversion to pricing engine
     %extend {
-        static ext::shared_ptr<FdHestonVanillaEngine> make(
-            const ext::shared_ptr<HestonModel>& model,
-            const ext::shared_ptr<FdmQuantoHelper>& quantoHelper = ext::shared_ptr<FdmQuantoHelper>(),
-            Size tGrid = 100,
-            Size xGrid = 100,
-            Size vGrid = 50,
-            Size dampingSteps = 0,
-            const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
-            const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
-            const Real mixingFactor = 1.0) {
-            return ext::shared_ptr<FdHestonVanillaEngine>(
-                new FdHestonVanillaEngine(
-                    model, quantoHelper,
-                    tGrid, xGrid, vGrid,
-                    dampingSteps, schemeDesc,
-                    leverageFct, mixingFactor));
+        ext::shared_ptr<PricingEngine> toPricingEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
         }
     }
 };
@@ -470,6 +564,17 @@ class FFTVanillaEngine : public PricingEngine {
         Real logStrikeSpacing = 0.001);
     void precalculate(
         const std::vector<ext::shared_ptr<Instrument> >& optionList);
+};
+
+%shared_ptr(HestonExpansionEngine)
+class HestonExpansionEngine : public PricingEngine {
+  public:
+    enum HestonExpansionFormula {
+        LPP2, LPP3, Forde
+    };
+    HestonExpansionEngine(
+        const ext::shared_ptr<HestonModel>& model,
+        HestonExpansionFormula formula);
 };
 
 %shared_ptr(IntegralEngine)
@@ -761,6 +866,30 @@ def MCEuropeanHestonEngine(
         maxSamples,
         seed)
 %}
+
+template <class RNG>
+class MakeMCEuropeanHestonEngine {
+  public:
+    explicit MakeMCEuropeanHestonEngine(
+        const ext::shared_ptr<HestonProcess>& process);
+    // named parameters
+    MakeMCEuropeanHestonEngine& withSteps(Size steps);
+    MakeMCEuropeanHestonEngine& withStepsPerYear(Size steps);
+    MakeMCEuropeanHestonEngine& withSamples(Size samples);
+    MakeMCEuropeanHestonEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCEuropeanHestonEngine& withMaxSamples(Size samples);
+    MakeMCEuropeanHestonEngine& withSeed(BigNatural seed);
+    MakeMCEuropeanHestonEngine& withAntitheticVariate(bool b = true);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> toPricingEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPREuropeanHestonEngine) MakeMCEuropeanHestonEngine<PseudoRandom>;
+%template(MakeMCLDEuropeanHestonEngine) MakeMCEuropeanHestonEngine<LowDiscrepancy>;
 
 %shared_ptr(FDAmericanEngine<CrankNicolson>);
 template <class S>

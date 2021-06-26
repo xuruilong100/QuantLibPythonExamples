@@ -883,6 +883,14 @@ using QuantLib::BMAIndex;
 
 using QuantLib::MakeMCEuropeanEngine;
 using QuantLib::FFTVanillaEngine;
+using QuantLib::MakeMCEuropeanHestonEngine;
+using QuantLib::MakeFdHestonVanillaEngine;
+using QuantLib::AnalyticPDFHestonEngine;
+using QuantLib::HestonExpansionEngine;
+using QuantLib::HestonExpansion;
+using QuantLib::LPP2HestonExpansion;
+using QuantLib::LPP3HestonExpansion;
+using QuantLib::FordeHestonExpansion;
 %}
 
 

@@ -7020,8 +7020,11 @@ class BlackCalibrationHelper(CalibrationHelper):
     PriceError = _QuantLib.BlackCalibrationHelper_PriceError
     ImpliedVolError = _QuantLib.BlackCalibrationHelper_ImpliedVolError
 
-    def setPricingEngine(self, engine):
-        return _QuantLib.BlackCalibrationHelper_setPricingEngine(self, engine)
+    def volatility(self):
+        return _QuantLib.BlackCalibrationHelper_volatility(self)
+
+    def volatilityType(self):
+        return _QuantLib.BlackCalibrationHelper_volatilityType(self)
 
     def marketValue(self):
         return _QuantLib.BlackCalibrationHelper_marketValue(self)
@@ -7029,20 +7032,20 @@ class BlackCalibrationHelper(CalibrationHelper):
     def modelValue(self):
         return _QuantLib.BlackCalibrationHelper_modelValue(self)
 
+    def calibrationError(self):
+        return _QuantLib.BlackCalibrationHelper_calibrationError(self)
+
     def impliedVolatility(self, targetValue, accuracy, maxEvaluations, minVol, maxVol):
         return _QuantLib.BlackCalibrationHelper_impliedVolatility(self, targetValue, accuracy, maxEvaluations, minVol, maxVol)
 
     def blackPrice(self, volatility):
         return _QuantLib.BlackCalibrationHelper_blackPrice(self, volatility)
 
-    def volatility(self):
-        return _QuantLib.BlackCalibrationHelper_volatility(self)
+    def setPricingEngine(self, engine):
+        return _QuantLib.BlackCalibrationHelper_setPricingEngine(self, engine)
 
-    def volatilityType(self):
-        return _QuantLib.BlackCalibrationHelper_volatilityType(self)
-
-    def calibrationError(self):
-        return _QuantLib.BlackCalibrationHelper_calibrationError(self)
+    def times(self):
+        return _QuantLib.BlackCalibrationHelper_times(self)
     __swig_destroy__ = _QuantLib.delete_BlackCalibrationHelper
     __del__ = lambda self: None
 BlackCalibrationHelper_swigregister = _QuantLib.BlackCalibrationHelper_swigregister
@@ -7299,9 +7302,6 @@ class CapHelper(BlackCalibrationHelper):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-
-    def times(self):
-        return _QuantLib.CapHelper_times(self)
     __swig_destroy__ = _QuantLib.delete_CapHelper
     __del__ = lambda self: None
 CapHelper_swigregister = _QuantLib.CapHelper_swigregister
@@ -7324,6 +7324,9 @@ class HestonModelHelper(BlackCalibrationHelper):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def maturity(self):
+        return _QuantLib.HestonModelHelper_maturity(self)
     __swig_destroy__ = _QuantLib.delete_HestonModelHelper
     __del__ = lambda self: None
 HestonModelHelper_swigregister = _QuantLib.HestonModelHelper_swigregister
@@ -7352,9 +7355,6 @@ class SwaptionHelper(BlackCalibrationHelper):
 
     def swaption(self):
         return _QuantLib.SwaptionHelper_swaption(self)
-
-    def times(self):
-        return _QuantLib.SwaptionHelper_times(self)
 
     def swaptionExpiryDate(self):
         return _QuantLib.SwaptionHelper_swaptionExpiryDate(self)
@@ -14835,12 +14835,34 @@ class AnalyticHestonEngine(PricingEngine):
         except __builtin__.Exception:
             self.this = this
 
+    def numberOfEvaluations(self):
+        return _QuantLib.AnalyticHestonEngine_numberOfEvaluations(self)
+    if _newclass:
+        doCalculation = staticmethod(_QuantLib.AnalyticHestonEngine_doCalculation)
+    else:
+        doCalculation = _QuantLib.AnalyticHestonEngine_doCalculation
+    if _newclass:
+        optimalControlVariate = staticmethod(_QuantLib.AnalyticHestonEngine_optimalControlVariate)
+    else:
+        optimalControlVariate = _QuantLib.AnalyticHestonEngine_optimalControlVariate
+
     def chF(self, real, imag, t):
         return _QuantLib.AnalyticHestonEngine_chF(self, real, imag, t)
+
+    def lnChF(self, real, imag, t):
+        return _QuantLib.AnalyticHestonEngine_lnChF(self, real, imag, t)
     __swig_destroy__ = _QuantLib.delete_AnalyticHestonEngine
     __del__ = lambda self: None
 AnalyticHestonEngine_swigregister = _QuantLib.AnalyticHestonEngine_swigregister
 AnalyticHestonEngine_swigregister(AnalyticHestonEngine)
+
+def AnalyticHestonEngine_doCalculation(riskFreeDiscount, dividendDiscount, spotPrice, strikePrice, term, kappa, theta, sigma, v0, rho, type, integration, cpxLog, enginePtr, value, evaluations):
+    return _QuantLib.AnalyticHestonEngine_doCalculation(riskFreeDiscount, dividendDiscount, spotPrice, strikePrice, term, kappa, theta, sigma, v0, rho, type, integration, cpxLog, enginePtr, value, evaluations)
+AnalyticHestonEngine_doCalculation = _QuantLib.AnalyticHestonEngine_doCalculation
+
+def AnalyticHestonEngine_optimalControlVariate(t, v0, kappa, theta, sigma, rho):
+    return _QuantLib.AnalyticHestonEngine_optimalControlVariate(t, v0, kappa, theta, sigma, rho)
+AnalyticHestonEngine_optimalControlVariate = _QuantLib.AnalyticHestonEngine_optimalControlVariate
 
 class AnalyticHestonEngineIntegration(_object):
     __swig_setmethods__ = {}
@@ -14972,10 +14994,44 @@ class AnalyticPTDHestonEngine(PricingEngine):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def chF(self, real, imag, t):
+        return _QuantLib.AnalyticPTDHestonEngine_chF(self, real, imag, t)
+
+    def lnChF(self, real, imag, t):
+        return _QuantLib.AnalyticPTDHestonEngine_lnChF(self, real, imag, t)
     __swig_destroy__ = _QuantLib.delete_AnalyticPTDHestonEngine
     __del__ = lambda self: None
 AnalyticPTDHestonEngine_swigregister = _QuantLib.AnalyticPTDHestonEngine_swigregister
 AnalyticPTDHestonEngine_swigregister(AnalyticPTDHestonEngine)
+
+class AnalyticPDFHestonEngine(PricingEngine):
+    __swig_setmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, AnalyticPDFHestonEngine, name, value)
+    __swig_getmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, AnalyticPDFHestonEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, model, gaussLobattoEps=1e-6, gaussLobattoIntegrationOrder=10000):
+        this = _QuantLib.new_AnalyticPDFHestonEngine(model, gaussLobattoEps, gaussLobattoIntegrationOrder)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def Pv(self, x_t, t):
+        return _QuantLib.AnalyticPDFHestonEngine_Pv(self, x_t, t)
+
+    def cdf(self, X, t):
+        return _QuantLib.AnalyticPDFHestonEngine_cdf(self, X, t)
+    __swig_destroy__ = _QuantLib.delete_AnalyticPDFHestonEngine
+    __del__ = lambda self: None
+AnalyticPDFHestonEngine_swigregister = _QuantLib.AnalyticPDFHestonEngine_swigregister
+AnalyticPDFHestonEngine_swigregister(AnalyticPDFHestonEngine)
 
 class BaroneAdesiWhaleyApproximationEngine(PricingEngine):
     __swig_setmethods__ = {}
@@ -15060,6 +15116,39 @@ class COSHestonEngine(PricingEngine):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def update(self):
+        return _QuantLib.COSHestonEngine_update(self)
+
+    def calculate(self):
+        return _QuantLib.COSHestonEngine_calculate(self)
+
+    def chF(self, u, t):
+        return _QuantLib.COSHestonEngine_chF(self, u, t)
+
+    def c1(self, t):
+        return _QuantLib.COSHestonEngine_c1(self, t)
+
+    def c2(self, t):
+        return _QuantLib.COSHestonEngine_c2(self, t)
+
+    def c3(self, t):
+        return _QuantLib.COSHestonEngine_c3(self, t)
+
+    def c4(self, t):
+        return _QuantLib.COSHestonEngine_c4(self, t)
+
+    def mu(self, t):
+        return _QuantLib.COSHestonEngine_mu(self, t)
+
+    def var(self, t):
+        return _QuantLib.COSHestonEngine_var(self, t)
+
+    def skew(self, t):
+        return _QuantLib.COSHestonEngine_skew(self, t)
+
+    def kurtosis(self, t):
+        return _QuantLib.COSHestonEngine_kurtosis(self, t)
     __swig_destroy__ = _QuantLib.delete_COSHestonEngine
     __del__ = lambda self: None
 COSHestonEngine_swigregister = _QuantLib.COSHestonEngine_swigregister
@@ -15184,18 +15273,61 @@ class FdHestonVanillaEngine(PricingEngine):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-    if _newclass:
-        make = staticmethod(_QuantLib.FdHestonVanillaEngine_make)
-    else:
-        make = _QuantLib.FdHestonVanillaEngine_make
+
+    def update(self):
+        return _QuantLib.FdHestonVanillaEngine_update(self)
+
+    def enableMultipleStrikesCaching(self, strikes):
+        return _QuantLib.FdHestonVanillaEngine_enableMultipleStrikesCaching(self, strikes)
+
+    def getSolverDesc(self, equityScaleFactor):
+        return _QuantLib.FdHestonVanillaEngine_getSolverDesc(self, equityScaleFactor)
     __swig_destroy__ = _QuantLib.delete_FdHestonVanillaEngine
     __del__ = lambda self: None
 FdHestonVanillaEngine_swigregister = _QuantLib.FdHestonVanillaEngine_swigregister
 FdHestonVanillaEngine_swigregister(FdHestonVanillaEngine)
 
-def FdHestonVanillaEngine_make(*args, **kwargs):
-    return _QuantLib.FdHestonVanillaEngine_make(*args, **kwargs)
-FdHestonVanillaEngine_make = _QuantLib.FdHestonVanillaEngine_make
+class MakeFdHestonVanillaEngine(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MakeFdHestonVanillaEngine, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, MakeFdHestonVanillaEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, hestonModel):
+        this = _QuantLib.new_MakeFdHestonVanillaEngine(hestonModel)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def withQuantoHelper(self, quantoHelper):
+        return _QuantLib.MakeFdHestonVanillaEngine_withQuantoHelper(self, quantoHelper)
+
+    def withTGrid(self, tGrid):
+        return _QuantLib.MakeFdHestonVanillaEngine_withTGrid(self, tGrid)
+
+    def withXGrid(self, xGrid):
+        return _QuantLib.MakeFdHestonVanillaEngine_withXGrid(self, xGrid)
+
+    def withVGrid(self, vGrid):
+        return _QuantLib.MakeFdHestonVanillaEngine_withVGrid(self, vGrid)
+
+    def withDampingSteps(self, dampingSteps):
+        return _QuantLib.MakeFdHestonVanillaEngine_withDampingSteps(self, dampingSteps)
+
+    def withFdmSchemeDesc(self, schemeDesc):
+        return _QuantLib.MakeFdHestonVanillaEngine_withFdmSchemeDesc(self, schemeDesc)
+
+    def withLeverageFunction(self, leverageFct):
+        return _QuantLib.MakeFdHestonVanillaEngine_withLeverageFunction(self, leverageFct)
+
+    def toPricingEngine(self):
+        return _QuantLib.MakeFdHestonVanillaEngine_toPricingEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeFdHestonVanillaEngine
+    __del__ = lambda self: None
+MakeFdHestonVanillaEngine_swigregister = _QuantLib.MakeFdHestonVanillaEngine_swigregister
+MakeFdHestonVanillaEngine_swigregister(MakeFdHestonVanillaEngine)
 
 class FdSabrVanillaEngine(PricingEngine):
     __swig_setmethods__ = {}
@@ -15268,6 +15400,31 @@ class FFTVanillaEngine(PricingEngine):
     __del__ = lambda self: None
 FFTVanillaEngine_swigregister = _QuantLib.FFTVanillaEngine_swigregister
 FFTVanillaEngine_swigregister(FFTVanillaEngine)
+
+class HestonExpansionEngine(PricingEngine):
+    __swig_setmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, HestonExpansionEngine, name, value)
+    __swig_getmethods__ = {}
+    for _s in [PricingEngine]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, HestonExpansionEngine, name)
+    __repr__ = _swig_repr
+    LPP2 = _QuantLib.HestonExpansionEngine_LPP2
+    LPP3 = _QuantLib.HestonExpansionEngine_LPP3
+    Forde = _QuantLib.HestonExpansionEngine_Forde
+
+    def __init__(self, model, formula):
+        this = _QuantLib.new_HestonExpansionEngine(model, formula)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _QuantLib.delete_HestonExpansionEngine
+    __del__ = lambda self: None
+HestonExpansionEngine_swigregister = _QuantLib.HestonExpansionEngine_swigregister
+HestonExpansionEngine_swigregister(HestonExpansionEngine)
 
 class IntegralEngine(PricingEngine):
     __swig_setmethods__ = {}
@@ -15697,6 +15854,90 @@ def MCEuropeanHestonEngine(
         requiredTolerance,
         maxSamples,
         seed)
+
+class MakeMCPREuropeanHestonEngine(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MakeMCPREuropeanHestonEngine, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, MakeMCPREuropeanHestonEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        this = _QuantLib.new_MakeMCPREuropeanHestonEngine(process)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withStepsPerYear(self, steps)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_withAntitheticVariate(self, b)
+
+    def toPricingEngine(self):
+        return _QuantLib.MakeMCPREuropeanHestonEngine_toPricingEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPREuropeanHestonEngine
+    __del__ = lambda self: None
+MakeMCPREuropeanHestonEngine_swigregister = _QuantLib.MakeMCPREuropeanHestonEngine_swigregister
+MakeMCPREuropeanHestonEngine_swigregister(MakeMCPREuropeanHestonEngine)
+
+class MakeMCLDEuropeanHestonEngine(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MakeMCLDEuropeanHestonEngine, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, MakeMCLDEuropeanHestonEngine, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        this = _QuantLib.new_MakeMCLDEuropeanHestonEngine(process)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withStepsPerYear(self, steps)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_withAntitheticVariate(self, b)
+
+    def toPricingEngine(self):
+        return _QuantLib.MakeMCLDEuropeanHestonEngine_toPricingEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDEuropeanHestonEngine
+    __del__ = lambda self: None
+MakeMCLDEuropeanHestonEngine_swigregister = _QuantLib.MakeMCLDEuropeanHestonEngine_swigregister
+MakeMCLDEuropeanHestonEngine_swigregister(MakeMCLDEuropeanHestonEngine)
 
 class FDCNAmericanEngine(PricingEngine):
     __swig_setmethods__ = {}
@@ -19293,6 +19534,98 @@ class TimeGrid(_object):
     __del__ = lambda self: None
 TimeGrid_swigregister = _QuantLib.TimeGrid_swigregister
 TimeGrid_swigregister(TimeGrid)
+
+class HestonExpansion(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, HestonExpansion, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, HestonExpansion, name)
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def impliedVolatility(self, strike, forward):
+        return _QuantLib.HestonExpansion_impliedVolatility(self, strike, forward)
+    __swig_destroy__ = _QuantLib.delete_HestonExpansion
+    __del__ = lambda self: None
+HestonExpansion_swigregister = _QuantLib.HestonExpansion_swigregister
+HestonExpansion_swigregister(HestonExpansion)
+
+class LPP2HestonExpansion(HestonExpansion):
+    __swig_setmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LPP2HestonExpansion, name, value)
+    __swig_getmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LPP2HestonExpansion, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, kappa, theta, sigma, v0, rho, term):
+        this = _QuantLib.new_LPP2HestonExpansion(kappa, theta, sigma, v0, rho, term)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def impliedVolatility(self, strike, forward):
+        return _QuantLib.LPP2HestonExpansion_impliedVolatility(self, strike, forward)
+    __swig_destroy__ = _QuantLib.delete_LPP2HestonExpansion
+    __del__ = lambda self: None
+LPP2HestonExpansion_swigregister = _QuantLib.LPP2HestonExpansion_swigregister
+LPP2HestonExpansion_swigregister(LPP2HestonExpansion)
+
+class LPP3HestonExpansion(HestonExpansion):
+    __swig_setmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LPP3HestonExpansion, name, value)
+    __swig_getmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LPP3HestonExpansion, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, kappa, theta, sigma, v0, rho, term):
+        this = _QuantLib.new_LPP3HestonExpansion(kappa, theta, sigma, v0, rho, term)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def impliedVolatility(self, strike, forward):
+        return _QuantLib.LPP3HestonExpansion_impliedVolatility(self, strike, forward)
+    __swig_destroy__ = _QuantLib.delete_LPP3HestonExpansion
+    __del__ = lambda self: None
+LPP3HestonExpansion_swigregister = _QuantLib.LPP3HestonExpansion_swigregister
+LPP3HestonExpansion_swigregister(LPP3HestonExpansion)
+
+class FordeHestonExpansion(HestonExpansion):
+    __swig_setmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FordeHestonExpansion, name, value)
+    __swig_getmethods__ = {}
+    for _s in [HestonExpansion]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FordeHestonExpansion, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, kappa, theta, sigma, v0, rho, term):
+        this = _QuantLib.new_FordeHestonExpansion(kappa, theta, sigma, v0, rho, term)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def impliedVolatility(self, strike, forward):
+        return _QuantLib.FordeHestonExpansion_impliedVolatility(self, strike, forward)
+    __swig_destroy__ = _QuantLib.delete_FordeHestonExpansion
+    __del__ = lambda self: None
+FordeHestonExpansion_swigregister = _QuantLib.FordeHestonExpansion_swigregister
+FordeHestonExpansion_swigregister(FordeHestonExpansion)
 
 class IndexManager(_object):
     __swig_setmethods__ = {}

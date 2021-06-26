@@ -113,6 +113,7 @@
 %include ../ql/fdms/others/all.i
 %include ../ql/fdms/stepconditions/all.i
 %include ../ql/grid.i
+%include ../ql/hestonexpansion.i
 %include ../ql/indexes/all.i
 %include ../ql/inflation.i
 %include ../ql/instruments/Bond.i

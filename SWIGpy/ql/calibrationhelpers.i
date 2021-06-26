@@ -30,20 +30,29 @@ class BlackCalibrationHelper : public CalibrationHelper {
         PriceError,
         ImpliedVolError };
 
-    void setPricingEngine(
-        const ext::shared_ptr<PricingEngine>& engine);
+    Handle<Quote> volatility() const;
+    VolatilityType volatilityType() const;
     Real marketValue() const;
-    virtual Real modelValue() const;
+    Real modelValue() const;
+    Real calibrationError();
     Volatility impliedVolatility(
         Real targetValue,
         Real accuracy,
         Size maxEvaluations,
         Volatility minVol,
         Volatility maxVol);
-    Real blackPrice(Volatility volatility);
-    Handle<Quote> volatility() const;
-    VolatilityType volatilityType() const;
-    Real calibrationError();
+    Real blackPrice(Volatility volatility) const;
+    void setPricingEngine(
+        const ext::shared_ptr<PricingEngine>& engine);
+    %extend {
+        std::vector<Time> times() {
+            std::list<Time> l;
+            self->addTimesTo(l);
+            std::vector<Time> v;
+            std::copy(l.begin(), l.end(), std::back_inserter(v));
+            return v;
+        }
+    }
 
   private:
     BlackCalibrationHelper();
@@ -77,15 +86,6 @@ class CapHelper : public BlackCalibrationHelper {
         BlackCalibrationHelper::CalibrationErrorType errorType = BlackCalibrationHelper::RelativePriceError,
         const VolatilityType type = ShiftedLognormal,
         const Real shift = 0.0);
-    %extend {
-        std::vector<Time> times() {
-            std::list<Time> l;
-            self->addTimesTo(l);
-            std::vector<Time> v;
-            std::copy(l.begin(), l.end(), std::back_inserter(v));
-            return v;
-        }
-    }
 };
 
 %shared_ptr(HestonModelHelper)
@@ -100,6 +100,16 @@ class HestonModelHelper : public BlackCalibrationHelper {
         const Handle<YieldTermStructure>& riskFreeRate,
         const Handle<YieldTermStructure>& dividendYield,
         BlackCalibrationHelper::CalibrationErrorType errorType = BlackCalibrationHelper::RelativePriceError);
+    HestonModelHelper(
+        const Period& maturity,
+        const Calendar& calendar,
+        const Handle<Quote>& s0,
+        Real strikePrice,
+        const Handle<Quote>& volatility,
+        const Handle<YieldTermStructure>& riskFreeRate,
+        const Handle<YieldTermStructure>& dividendYield,
+        BlackCalibrationHelper::CalibrationErrorType errorType = BlackCalibrationHelper::RelativePriceError);
+    Time maturity() const;
 };
 
 %shared_ptr(SwaptionHelper)
@@ -151,13 +161,6 @@ class SwaptionHelper : public BlackCalibrationHelper {
     ext::shared_ptr<Swaption> swaption() const;
 
     %extend {
-        std::vector<Time> times() {
-            std::list<Time> l;
-            self->addTimesTo(l);
-            std::vector<Time> v;
-            std::copy(l.begin(), l.end(), std::back_inserter(v));
-            return v;
-        }
         Date swaptionExpiryDate() {
             return self->swaption()->exercise()->date(0);
         }
