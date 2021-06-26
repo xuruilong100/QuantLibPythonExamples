@@ -90,7 +90,7 @@ python3 setup.py install
 * [ ] LatentModel
 * [ ] MarketModels
 * [ ] MultidimIntegral
-* [ ] Replication
+* [x] Replication
 * [ ] Repo
 * [x] MulticurveBootstrapping
 
