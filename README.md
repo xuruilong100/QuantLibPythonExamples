@@ -1,41 +1,32 @@
 # QuantLibPythonExamples
 
 **MORE APIs, MORE examples, MORE test suites.**
+-----------------------------------------------
 
-## Introduction（简介）
+## Introduction
 
 * Reconstructing SWIG interface files for building Python wrapper.
 * Reimplementing of QuantLib [examples](https://www.quantlib.org/reference/examples.html) by Python.
 * Reimplementing of QuantLib [test-suite](https://github.com/lballabio/QuantLib/tree/master/test-suite) by Python.
 
 > Related blog (in Chinese): <https://www.cnblogs.com/xuruilong100/p/13281006.html>
+>
 > Environment:
-> * QuantLib: 1.21
-> * swig: 3.0.12
-> * clang: 10.0.0-4ubuntu1
-> * ubuntu: 20.04.2 LTS
-
-* 为构建 Python 包装而重构了 SWIG 接口代码。
-* 用 Python 重新实现 QuantLib 的[示例](https://www.quantlib.org/reference/examples.html)。
-* 用 Python 重新实现 QuantLib 的[测试](https://github.com/lballabio/QuantLib/tree/master/test-suite)。
-
-> 相关博客：<https://www.cnblogs.com/xuruilong100/p/13281006.html>
-> 环境：
-> * QuantLib: 1.21
-> * swig: 3.0.12
+> * QuantLib: 1.23
+> * swig: 4.0.1
 > * clang: 10.0.0-4ubuntu1
 > * ubuntu: 20.04.2 LTS
 
 ---
 
-## How to build Python wrapper（如何创建 Python 包装）
+## How to build Python wrapper
 
 Open `../SWIGpy/` and run the following commands.
 
 1. Generate `.cpp` file:
 
 ```
-swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp SWIG/quantlib.i
+swig4.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp SWIG/quantlib.i
 ```
 
 2. Compile `.cpp` file:
@@ -47,32 +38,12 @@ CC=clang CXX=clang++ python3 setup.py build
 3. Install Python wrapper:
 
 ```
-python3 setup.py install 
-```
-
-打开 `../SWIGpy/` 并运行下列命令。
-
-1. 生成 `.cpp` 文件：
-
-```
-swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp SWIG/quantlib.i
-```
-
-2. 编译 `.cpp` 文件：
-
-```
-CC=clang CXX=clang++ python3 setup.py build
-```
-
-3. 安装 Python 包装：
-
-```
-python3 setup.py install 
+python3 setup.py install
 ```
 
 ---
 
-## Examples（示例）
+## Examples
 
 * [ ] BasketLosses
 * [x] BermudanSwaption
@@ -96,7 +67,7 @@ python3 setup.py install
 
 ---
 
-## Test suites（测试）
+## Test suites
 
 * [x] americanoption
 * [x] amortizingbond
@@ -145,7 +116,7 @@ python3 setup.py install
 * [ ] dividendoption
 * [ ] doublebarrieroption
 * [ ] doublebinaryoption
-* [ ] europeanoption
+* [x] europeanoption
 * [ ] everestoption
 * [ ] exchangerate
 * [ ] extendedtrees
@@ -164,8 +135,8 @@ python3 setup.py install
 * [ ] gaussianquadratures
 * [ ] gjrgarchmodel
 * [ ] gsr
-* [ ] hestonmodel
-* [ ] hestonslvmodel
+* [x] hestonmodel
+* [x] hestonslvmodel
 * [ ] himalayaoption
 * [ ] hybridhestonhullwhiteprocess
 * [ ] indexes

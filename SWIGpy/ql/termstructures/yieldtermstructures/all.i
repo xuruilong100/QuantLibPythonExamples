@@ -38,7 +38,7 @@ typedef PiecewiseYieldCurve<SimpleZeroYield, Linear, QuantLib::GlobalBootstrap> 
 class ImpliedTermStructure : public YieldTermStructure {
   public:
     ImpliedTermStructure(
-        const Handle<YieldTermStructure>& curveHandle,
+        Handle<YieldTermStructure> curveHandle,
         const Date& referenceDate);
 };
 
@@ -46,19 +46,19 @@ class ImpliedTermStructure : public YieldTermStructure {
 class ZeroSpreadedTermStructure : public YieldTermStructure {
   public:
     ZeroSpreadedTermStructure(
-        const Handle<YieldTermStructure>& curveHandle,
-        const Handle<Quote>& spreadHandle,
+        Handle<YieldTermStructure> curveHandle,
+        Handle<Quote> spreadHandle,
         Compounding comp = QuantLib::Continuous,
         Frequency freq = QuantLib::NoFrequency,
-        const DayCounter& dc = DayCounter());
+        DayCounter dc = DayCounter());
 };
 
 %shared_ptr(ForwardSpreadedTermStructure);
 class ForwardSpreadedTermStructure : public YieldTermStructure {
   public:
     ForwardSpreadedTermStructure(
-        const Handle<YieldTermStructure>& curveHandle,
-        const Handle<Quote>& spreadHandle);
+        Handle<YieldTermStructure> curveHandle,
+        Handle<Quote> spreadHandle);
 };
 
 %shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>);
@@ -67,8 +67,8 @@ template <class Interpolator>
 class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure {
   public:
     InterpolatedPiecewiseZeroSpreadedTermStructure(
-        const Handle<YieldTermStructure>& curveHandle,
-        const std::vector< Handle<Quote> >& spreadHandles,
+        Handle<YieldTermStructure> curveHandle,
+        std::vector< Handle<Quote> > spreadHandles,
         const std::vector<Date>& dates,
         Compounding comp = QuantLib::Continuous,
         Frequency freq = QuantLib::NoFrequency,
@@ -84,7 +84,7 @@ class FlatForward : public YieldTermStructure {
   public:
     FlatForward(
         const Date& referenceDate,
-        const Handle<Quote>& forward,
+        Handle<Quote> forward,
         const DayCounter& dayCounter,
         Compounding compounding = QuantLib::Continuous,
         Frequency frequency = QuantLib::Annual);
@@ -97,7 +97,7 @@ class FlatForward : public YieldTermStructure {
     FlatForward(
         Integer settlementDays,
         const Calendar& calendar,
-        const Handle<Quote>& forward,
+        Handle<Quote> forward,
         const DayCounter& dayCounter,
         Compounding compounding = QuantLib::Continuous,
         Frequency frequency = QuantLib::Annual);
@@ -108,15 +108,17 @@ class FlatForward : public YieldTermStructure {
         const DayCounter& dayCounter,
         Compounding compounding = QuantLib::Continuous,
         Frequency frequency = QuantLib::Annual);
+    Compounding compounding() const;
+    Frequency compoundingFrequency() const;
 };
 
 %shared_ptr(UltimateForwardTermStructure);
 class UltimateForwardTermStructure : public YieldTermStructure {
   public:
     UltimateForwardTermStructure(
-        const Handle<YieldTermStructure>& curveHandle,
-        const Handle<Quote>& lastLiquidForwardRate,
-        const Handle<Quote>& ultimateForwardRate,
+        Handle<YieldTermStructure> curveHandle,
+        Handle<Quote> lastLiquidForwardRate,
+        Handle<Quote> ultimateForwardRate,
         const Period& firstSmoothingPoint,
         Real alpha);
 };
@@ -149,161 +151,116 @@ typedef PiecewiseYieldCurve<Traits, Interpolator> Name;
 class Name : public YieldTermStructure {
   public:
     %extend {
-        Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
-             const std::vector<Date>& jumpDates = std::vector<Date>(),
-             const Interpolator& i = Interpolator(),
-             const IterativeBootstrap& b = IterativeBootstrap()) {
-            return new Name(
-                referenceDate,
-                instruments,
-                dayCounter,
-                jumps,
-                jumpDates,
-                i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        }
-        Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const Interpolator& i,
-             const IterativeBootstrap& b = IterativeBootstrap()) {
-            return new Name(
-                referenceDate,
-                instruments,
-                dayCounter,
-                i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        }
-        /* Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const IterativeBootstrap& b = IterativeBootstrap()) {
-            return new Name(
-                referenceDate,
-                instruments,
-                dayCounter,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        } */
-        Name(Integer settlementDays,
-             const Calendar& calendar,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
-             const std::vector<Date>& jumpDates = std::vector<Date>(),
-             const Interpolator& i = Interpolator(),
-             const IterativeBootstrap& b = IterativeBootstrap()) {
-            return new Name(
-                settlementDays, calendar,
-                instruments, dayCounter,
-                jumps, jumpDates,
-                i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        }
-        Name(Integer settlementDays,
-             const Calendar& calendar,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const Interpolator& i,
-             const IterativeBootstrap& b = IterativeBootstrap()) {
-            return new Name(
-                settlementDays, calendar,
-                instruments,
-                dayCounter,
-                i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        }
-        /* Name(Integer settlementDays,
-             const Calendar& calendar,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const IterativeBootstrap& b) {
-            return new Name(
-                settlementDays, calendar,
-                instruments,
-                dayCounter,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        } */
-        //----------------
-        /* Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
-             const std::vector<Date>& jumpDates = std::vector<Date>(),
-             Real accuracy = 1.0e-12,
-             const Interpolator& i = Interpolator(),
-             const _IterativeBootstrap& b = _IterativeBootstrap()) {
-            return new Name(
-                referenceDate, instruments,
-                dayCounter, jumps, jumpDates,
-                accuracy,
-                i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(Integer settlementDays,
-             const Calendar& calendar,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
-             const std::vector<Date>& jumpDates = std::vector<Date>(),
-             Real accuracy = 1.0e-12,
-             const Interpolator& i = Interpolator(),
-             const _IterativeBootstrap& b = _IterativeBootstrap()) {
-            return new Name(
-                settlementDays, calendar,
-                instruments, dayCounter,
-                jumps, jumpDates,
-                accuracy, Interpolator(),
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const _IterativeBootstrap& b) {
-            return new Name(
-                referenceDate, instruments,
-                dayCounter, Interpolator(),
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(Integer settlementDays, const Calendar& calendar,
-             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const _IterativeBootstrap& b) {
-            return new Name(
-                settlementDays, calendar,
-                instruments, dayCounter,
-                Interpolator(),
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        } */
+        Name(
+            const Date &referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const std::vector< Handle< Quote > > &jumps=std::vector< Handle< Quote > >(),
+            const std::vector< Date > &jumpDates=std::vector< Date >(),
+            const Interpolator &i=Interpolator(),
+            const IterativeBootstrap& b = IterativeBootstrap()) {
+                return new Name(
+                    referenceDate,
+                    instruments,
+                    dayCounter,
+                    jumps,
+                    jumpDates,
+                    i,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
+     	Name(
+            const Date &referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const Interpolator &i,
+            const IterativeBootstrap& b = IterativeBootstrap()) {
+                return new Name(
+                    referenceDate,
+                    instruments,
+                    dayCounter,
+                    i,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
+     	Name(
+            const Date &referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const IterativeBootstrap& b) {
+                return new Name(
+                    referenceDate,
+                    instruments,
+                    dayCounter,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
+     	Name(
+            Natural settlementDays,
+            const Calendar &calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const std::vector< Handle< Quote > > &jumps=std::vector< Handle< Quote > >(),
+            const std::vector< Date > &jumpDates=std::vector< Date >(),
+            const Interpolator &i=Interpolator(),
+            const IterativeBootstrap& b = IterativeBootstrap()) {
+                return new Name(
+                    settlementDays,
+                    calendar,
+                    instruments,
+                    dayCounter,
+                    jumps,
+                    jumpDates,
+                    i,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
+     	Name(
+            Natural settlementDays,
+            const Calendar &calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const Interpolator &i,
+            const IterativeBootstrap& b = IterativeBootstrap()) {
+                return new Name(
+                    settlementDays,
+                    calendar,
+                    instruments,
+                    dayCounter,
+                    i,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
+     	Name(
+            Natural settlementDays,
+            const Calendar &calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter &dayCounter,
+            const IterativeBootstrap& b) {
+                return new Name(
+                    settlementDays,
+                    calendar,
+                    instruments,
+                    dayCounter,
+                    Name::bootstrap_type(
+                        b.accuracy, b.minValue, b.maxValue,
+                        b.maxAttempts, b.maxFactor, b.minFactor,
+                        b.dontThrow, b.dontThrowSteps));
+            }
     }
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
     const std::vector<Real>& data() const;
-
     std::vector<std::pair<Date, Real>> nodes() const;
 };
 
@@ -397,7 +354,7 @@ class GlobalLinearSimpleZeroCurve : public YieldTermStructure {
             const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
             const DayCounter& dayCounter,
-            const _GlobalBootstrap& b) {
+            const GlobalBootstrap& b) {
             if (b.additionalHelpers.empty()) {
                 return new GlobalLinearSimpleZeroCurve(
                     referenceDate, instruments,
@@ -424,7 +381,6 @@ class GlobalLinearSimpleZeroCurve : public YieldTermStructure {
 %shared_ptr(InterpolatedDiscountCurve<LogLinear>);
 %shared_ptr(InterpolatedDiscountCurve<MonotonicLogCubic>);
 %shared_ptr(InterpolatedDiscountCurve<SplineCubic>);
-
 template <class Interpolator>
 class InterpolatedDiscountCurve : public YieldTermStructure {
   public:
@@ -438,7 +394,6 @@ class InterpolatedDiscountCurve : public YieldTermStructure {
     const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
     const std::vector<DiscountFactor>& discounts() const;
-
     std::vector<std::pair<Date,DiscountFactor> > nodes() const;
 };
 
@@ -452,7 +407,7 @@ class FittedBondDiscountCurve : public YieldTermStructure {
     FittedBondDiscountCurve(
         Natural settlementDays,
         const Calendar& calendar,
-        const std::vector<ext::shared_ptr<BondHelper>>& helpers,
+        std::vector<ext::shared_ptr<BondHelper>> helpers,
         const DayCounter& dayCounter,
         const FittingMethod& fittingMethod,
         Real accuracy = 1.0e-10,
@@ -461,13 +416,14 @@ class FittedBondDiscountCurve : public YieldTermStructure {
         Real simplexLambda = 1.0);
     FittedBondDiscountCurve(
         const Date& referenceDate,
-        const std::vector<ext::shared_ptr<BondHelper>>& helpers,
+        std::vector<ext::shared_ptr<BondHelper>> helpers,
         const DayCounter& dayCounter,
         const FittingMethod& fittingMethod,
         Real accuracy = 1.0e-10,
         Size maxEvaluations = 10000,
         const Array& guess = Array(),
         Real simplexLambda = 1.0);
+    Size numberOfBonds() const;
     const FittingMethod& fitResults() const;
 };
 
@@ -480,13 +436,32 @@ class FittedBondDiscountCurve : public YieldTermStructure {
 template <class Interpolator>
 class InterpolatedZeroCurve : public YieldTermStructure {
   public:
-    InterpolatedZeroCurve(const std::vector<Date>& dates,
-                          const std::vector<Rate>& yields,
-                          const DayCounter& dayCounter,
-                          const Calendar& calendar = Calendar(),
-                          const Interpolator& i = Interpolator(),
-                          Compounding compounding = Continuous,
-                          Frequency frequency = Annual);
+    InterpolatedZeroCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& yields,
+        const DayCounter& dayCounter,
+        const Calendar& calendar = Calendar(),
+        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Date>& jumpDates = std::vector<Date>(),
+        const Interpolator& interpolator = Interpolator(),
+        Compounding compounding = Continuous,
+        Frequency frequency = Annual);
+    InterpolatedZeroCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& yields,
+        const DayCounter& dayCounter,
+        const Calendar& calendar,
+        const Interpolator& interpolator,
+        Compounding compounding = Continuous,
+        Frequency frequency = Annual);
+    InterpolatedZeroCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& yields,
+        const DayCounter& dayCounter,
+        const Interpolator& interpolator,
+        Compounding compounding = Continuous,
+        Frequency frequency = Annual);
+
     const std::vector<Time>& times() const;
     const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
@@ -505,14 +480,30 @@ class InterpolatedZeroCurve : public YieldTermStructure {
 template <class Interpolator>
 class InterpolatedForwardCurve : public YieldTermStructure {
   public:
-    InterpolatedForwardCurve(const std::vector<Date>& dates,
-                             const std::vector<Rate>& forwards,
-                             const DayCounter& dayCounter,
-                             const Calendar& calendar = Calendar(),
-                             const Interpolator& i = Interpolator());
+    InterpolatedForwardCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& forwards,
+        const DayCounter& dayCounter,
+        const Calendar& cal = Calendar(),
+        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Date>& jumpDates = std::vector<Date>(),
+        const Interpolator& interpolator = Interpolator());
+    InterpolatedForwardCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& forwards,
+        const DayCounter& dayCounter,
+        const Calendar& calendar,
+        const Interpolator& interpolator);
+    InterpolatedForwardCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& forwards,
+        const DayCounter& dayCounter,
+        const Interpolator& interpolator);
+
+    const std::vector<Time>& times() const;
+    const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
     const std::vector<Rate>& forwards() const;
-
     std::vector<std::pair<Date,Rate> > nodes() const;
 };
 

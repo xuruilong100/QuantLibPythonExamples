@@ -9,6 +9,9 @@
 
 %{
 using QuantLib::CdsOption;
+using QuantLib::FloatFloatSwaption;
+using QuantLib::NonstandardSwaption;
+using QuantLib::Swaption;
 %}
 
 %shared_ptr(CdsOption)
@@ -18,6 +21,7 @@ class CdsOption : public Option {
         const ext::shared_ptr<CreditDefaultSwap>& swap,
         const ext::shared_ptr<Exercise>& exercise,
         bool knocksOut = true);
+    const ext::shared_ptr<CreditDefaultSwap>& underlyingSwap() const;
     Rate atmRate() const;
     Real riskyAnnuity() const;
     Volatility impliedVolatility(
@@ -30,5 +34,137 @@ class CdsOption : public Option {
         Volatility minVol = 1.0e-7,
         Volatility maxVol = 4.0) const;
 };
+
+%shared_ptr(FloatFloatSwaption)
+class FloatFloatSwaption : public Option {
+  public:
+    FloatFloatSwaption(
+        const ext::shared_ptr<FloatFloatSwap>& swap,
+        const ext::shared_ptr<Exercise>& exercise,
+        Settlement::Type delivery = Settlement::Physical,
+        Settlement::Method settlementMethod = Settlement::PhysicalOTC);
+
+    Settlement::Type settlementType() const;
+    Settlement::Method settlementMethod() const;
+    VanillaSwap::Type type() const;
+    const ext::shared_ptr<FloatFloatSwap>& underlyingSwap() const;
+    std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
+        const ext::shared_ptr<SwapIndex>& standardSwapBase,
+        const ext::shared_ptr<SwaptionVolatilityStructure>& swaptionVolatility,
+        BasketGeneratingEngine::CalibrationBasketType basketType = BasketGeneratingEngine::MaturityStrikeByDeltaGamma) const;
+
+    %extend {
+        /* std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
+            ext::shared_ptr<SwapIndex> swapIndex,
+            ext::shared_ptr<SwaptionVolatilityStructure> swaptionVolatility,
+            std::string typeStr) const {
+
+            BasketGeneratingEngine::CalibrationBasketType type;
+            if (typeStr == "Naive")
+                type = BasketGeneratingEngine::Naive;
+            else if (typeStr == "MaturityStrikeByDeltaGamma")
+                type = BasketGeneratingEngine::MaturityStrikeByDeltaGamma;
+            else
+                QL_FAIL("type " << typeStr << "unknown.");
+
+            std::vector<ext::shared_ptr<BlackCalibrationHelper>> hs = self->calibrationBasket(
+                swapIndex, swaptionVolatility, type);
+            std::vector<ext::shared_ptr<BlackCalibrationHelper>> helpers(hs.size());
+            for (Size i = 0; i < hs.size(); ++i)
+                helpers[i] = hs[i];
+            return helpers;
+        } */
+        Real underlyingValue() {
+            return self->result<Real>("underlyingValue");
+        }
+        std::vector<Real> probabilities() {
+            return self->result<std::vector<Real>>("probabilities");
+        }
+    }
+};
+
+%shared_ptr(Swaption)
+class Swaption : public Option {
+  public:
+    Swaption(
+        ext::shared_ptr<VanillaSwap> swap,
+        const ext::shared_ptr<Exercise>& exercise,
+        Settlement::Type type = Settlement::Physical,
+        Settlement::Method settlementMethod = Settlement::PhysicalOTC);
+
+    Settlement::Type settlementType() const;
+    Settlement::Method settlementMethod() const;
+    Swap::Type type() const;
+    const ext::shared_ptr<VanillaSwap>& underlyingSwap() const;
+    Volatility impliedVolatility(
+        Real price,
+        const Handle<YieldTermStructure>& discountCurve,
+        Volatility guess,
+        Real accuracy = 1.0e-4,
+        Natural maxEvaluations = 100,
+        Volatility minVol = 1.0e-7,
+        Volatility maxVol = 4.0,
+        VolatilityType type = ShiftedLognormal,
+        Real displacement = 0.0) const;
+    %extend {
+        Real vega() {
+            return self->result<Real>("vega");
+        }
+        Real delta() {
+            return self->result<Real>("delta");
+        }
+        Real annuity() {
+            return self->result<Real>("annuity");
+        }
+    }
+};
+
+%shared_ptr(NonstandardSwaption)
+class NonstandardSwaption : public Option {
+  public:
+    NonstandardSwaption(const Swaption& fromSwaption);
+    NonstandardSwaption(
+        const ext::shared_ptr<NonstandardSwap>& swap,
+        const ext::shared_ptr<Exercise>& exercise,
+        Settlement::Type type = Settlement::Physical,
+        Settlement::Method settlementMethod = Settlement::PhysicalOTC);
+
+    Settlement::Type settlementType() const;
+    Settlement::Method settlementMethod() const;
+    Swap::Type type() const;
+    const ext::shared_ptr<NonstandardSwap>& underlyingSwap() const;
+    std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
+        const ext::shared_ptr<SwapIndex>& standardSwapBase,
+        const ext::shared_ptr<SwaptionVolatilityStructure>& swaptionVolatility,
+        BasketGeneratingEngine::CalibrationBasketType basketType = BasketGeneratingEngine::MaturityStrikeByDeltaGamma) const;
+
+    %extend {
+        /* std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
+            ext::shared_ptr<SwapIndex> swapIndex,
+            ext::shared_ptr<SwaptionVolatilityStructure> swaptionVolatility,
+            std::string typeStr) const {
+
+            BasketGeneratingEngine::CalibrationBasketType type;
+            if (typeStr == "Naive")
+                type = BasketGeneratingEngine::Naive;
+            else if (typeStr == "MaturityStrikeByDeltaGamma")
+                type = BasketGeneratingEngine::MaturityStrikeByDeltaGamma;
+            else
+                QL_FAIL("type " << typeStr << "unknown.");
+
+            std::vector<ext::shared_ptr<BlackCalibrationHelper>> hs = self->calibrationBasket(
+                swapIndex, swaptionVolatility, type);
+            std::vector<ext::shared_ptr<BlackCalibrationHelper>> helpers(hs.size());
+            for (Size i = 0; i < hs.size(); ++i)
+                helpers[i] = hs[i];
+            return helpers;
+        } */
+        std::vector<Real> probabilities() {
+            return self->result<std::vector<Real>>("probabilities");
+        }
+    }
+};
+
+
 
 #endif

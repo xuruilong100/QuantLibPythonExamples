@@ -26,24 +26,30 @@ using QuantLib::VanillaForwardPayoff;
 
 %shared_ptr(Payoff);
 class Payoff {
-  public:
-    Real operator()(Real price) const;
   private:
     Payoff();
+  public:
+    std::string name() const;
+    std::string description() const;
+    Real operator()(Real price) const;
 };
 
 %shared_ptr(TypePayoff)
 class TypePayoff : public Payoff {
-  public:
-    Option::Type optionType();
   private:
     TypePayoff();
+  public:
+    Option::Type optionType();
 };
 
 %shared_ptr(BasketPayoff)
 class BasketPayoff : public Payoff {
   private:
     BasketPayoff();
+  public:
+    Real operator()(const Array &a) const;
+    Real accumulate(const Array &a) const;
+    ext::shared_ptr<Payoff> basePayoff();
 };
 
 %shared_ptr(MinBasketPayoff)
@@ -80,17 +86,14 @@ class SpreadBasketPayoff : public BasketPayoff  {
 class FloatingTypePayoff : public TypePayoff {
   public:
     FloatingTypePayoff(Option::Type type);
-    Real operator()(Real price, Real strike) const;
-    Real operator()(Real price) const;
 };
 
 %shared_ptr(StrikedTypePayoff)
-class StrikedTypePayoff : public TypePayoff
-{
-  public:
-    Real strike();
+class StrikedTypePayoff : public TypePayoff {
   private:
     StrikedTypePayoff();
+  public:
+    Real strike();
 };
 
 %shared_ptr(PlainVanillaPayoff)

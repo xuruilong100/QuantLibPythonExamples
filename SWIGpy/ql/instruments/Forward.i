@@ -8,13 +8,15 @@
 
 %{
 using QuantLib::Forward;
+using QuantLib::OvernightIndexFuture;
 %}
 
 %shared_ptr(Forward)
 class Forward : public Instrument{
-public:
+  private:
+    Forward();
+  public:
     Date settlementDate() const;
-    bool isExpired() const;
     const Calendar& calendar() const;
     BusinessDayConvention businessDayConvention() const;
     const DayCounter& dayCounter() const;
@@ -22,7 +24,6 @@ public:
     Handle<YieldTermStructure> incomeDiscountCurve() const;
     Real spotValue() const;
     Real spotIncome(const Handle<YieldTermStructure>& incomeDiscountCurve) const;
-
     Real forwardValue();
     InterestRate impliedYield(
         Real underlyingSpotValue,
@@ -30,8 +31,19 @@ public:
         Date settlementDate,
         Compounding compoundingConvention,
         DayCounter dayCounter);
-private:
-    Forward();
+};
+
+%shared_ptr(OvernightIndexFuture)
+class OvernightIndexFuture : public Instrument {
+  public:
+    OvernightIndexFuture(
+        ext::shared_ptr<OvernightIndex> overnightIndex,
+        const Date& valueDate,
+        const Date& maturityDate,
+        Handle<Quote> convexityAdjustment = Handle<Quote>(),
+        RateAveraging::Type averagingMethod = RateAveraging::Compound);
+
+    Real convexityAdjustment() const;
 };
 
 #endif

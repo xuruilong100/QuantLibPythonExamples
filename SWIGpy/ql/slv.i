@@ -1,10 +1,10 @@
 #ifndef ql_slv_i
 #define ql_slv_i
 
-%include stl.i
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 
 %{
 using QuantLib::BrownianGenerator;
@@ -24,7 +24,6 @@ class BrownianGenerator {
   public:
     Real nextStep(std::vector<Real>&);
     Real nextPath();
-
     Size numberOfFactors() const;
     Size numberOfSteps() const;
 };
@@ -80,7 +79,8 @@ class SobolBrownianGeneratorFactory : public BrownianGeneratorFactory {
             SobolRsg::DirectionIntegers directionIntegers = SobolRsg::Jaeckel);
 };
 
-class HestonSLVMCModel {
+%shared_ptr(HestonSLVMCModel)
+class HestonSLVMCModel : public LazyObject {
   public:
     HestonSLVMCModel(
         const Handle<LocalVolTermStructure>& localVol,
@@ -140,33 +140,22 @@ class HestonSLVFokkerPlanckFdmParams {
     }
 };
 
-
-/*
-class HestonSLVFDMModel {
-  public:
-    %extend {
-        HestonSLVFDMModel(
-            const ext::shared_ptr<LocalVolTermStructure>& localVol,
-            const ext::shared_ptr<HestonModel>& model,
-            const Date& endDate,
-            const HestonSLVFokkerPlanckFdmParams& params,
-            const bool logging = false,
-            const std::vector<Date>& mandatoryDates = std::vector<Date>(),
-            Real mixingFactor = 1.0) {
-            return new HestonSLVFDMModel(
-                Handle<LocalVolTermStructure>(localVol), Handle<HestonModel>(model),
-                endDate, params, logging, mandatoryDates, mixingFactor);
-        }
-    }
-    ext::shared_ptr<HestonProcess> hestonProcess() const;
-    ext::shared_ptr<LocalVolTermStructure> localVol() const;
-    ext::shared_ptr<LocalVolTermStructure> leverageFunction() const;
+%{
+struct LogEntryStruct {
+    Time t;
+    Array prob;
+    ext::shared_ptr<FdmMesherComposite> mesher;
 };
-*/
+%}
 
-%rename (HestonSLVFDMModelLogEntry) HestonSLVFDMModel::LogEntry;
-%feature ("flatnested") LogEntry;
-class HestonSLVFDMModel {
+struct LogEntryStruct {
+    Time t;
+    Array prob;
+    ext::shared_ptr<FdmMesherComposite> mesher;
+};
+
+%shared_ptr(HestonSLVFDMModel)
+class HestonSLVFDMModel : public LazyObject {
   public:
     HestonSLVFDMModel(
         const Handle<LocalVolTermStructure>& localVol,
@@ -181,22 +170,22 @@ class HestonSLVFDMModel {
     ext::shared_ptr<LocalVolTermStructure> localVol() const;
     ext::shared_ptr<LocalVolTermStructure> leverageFunction() const;
 
-    struct LogEntry {
-        const Time t;
-        const ext::shared_ptr<Array> prob;
-        const ext::shared_ptr<FdmMesherComposite> mesher;
-        %extend {
-            LogEntry() {
-                const HestonSLVFDMModel::LogEntry entry = {
-                    0.0, ext::shared_ptr<Array>(),
-                    ext::shared_ptr<FdmMesherComposite>() };
-                return new HestonSLVFDMModel::LogEntry(entry);
+    %extend {
+        std::vector<LogEntryStruct> logEntryVector() const {
+            const std::list<HestonSLVFDMModel::LogEntry>& logEntries = self->logEntries();
+            std::vector<LogEntryStruct> logEntryVector;
+            for (std::list<HestonSLVFDMModel::LogEntry>::const_iterator i = logEntries.begin();
+                 i != logEntries.end();
+                 ++i) {
+                LogEntryStruct logEntryStruct = {
+                    i->t, *(i->prob), i->mesher};
+                logEntryVector.push_back(logEntryStruct);
             }
+            return logEntryVector;
         }
-    };
-
-    const std::list<LogEntry>& logEntries() const;
+    }
 };
 
+%template(LogEntryVector) std::vector<LogEntryStruct>;
 
 #endif

@@ -27,7 +27,7 @@ class SafeInterpolation {
 %{
 typedef SafeInterpolation<QuantLib::T> Safe##T;
 %}
-%rename(Alias) Safe##T;
+//%rename(Alias) Safe##T;
 class Safe##T {
   public:
     Safe##T(
@@ -114,7 +114,7 @@ class SafeInterpolation2D {
 %{
 typedef SafeInterpolation2D<QuantLib::T> Safe##T;
 %}
-%rename(Alias) Safe##T;
+//%rename(Alias) Safe##T;
 class Safe##T {
   public:
     Safe##T(
@@ -129,111 +129,6 @@ class Safe##T {
 
 make_safe_interpolation2d(BicubicSpline, BicubicSpline);
 make_safe_interpolation2d(BilinearInterpolation, BilinearInterpolation);
-
-// 1D interpolation traits
-
-%{
-using QuantLib::LinearFlat;
-using QuantLib::BackwardFlat;
-using QuantLib::ConvexMonotone;
-using QuantLib::Cubic;
-using QuantLib::ForwardFlat;
-using QuantLib::Linear;
-using QuantLib::LogLinear;
-//using QuantLib::LogCubic;
-//using QuantLib::LogMixedLinearCubic;
-//using QuantLib::MixedLinearCubic;
-using QuantLib::DefaultLogCubic;
-using QuantLib::MonotonicLogCubic;
-using QuantLib::KrugerLog;
-//using QuantLib::SABR;
-//using QuantLib::Abcd;
-%}
-
-%{
-class MonotonicCubic : public Cubic {
-  public:
-    MonotonicCubic() : Cubic(
-        QuantLib::CubicInterpolation::Spline, true,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0) {}
-};
-
-class SplineCubic : public Cubic {
-  public:
-    SplineCubic() : Cubic(
-        QuantLib::CubicInterpolation::Spline, false,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0) {}
-};
-
-class Kruger : public Cubic {
-  public:
-    Kruger() : Cubic(
-        QuantLib::CubicInterpolation::Kruger) {}
-};
-
-/* class DefaultLogCubic : public QuantLib::LogCubic {
-  public:
-    DefaultLogCubic() : QuantLib::LogCubic(
-        QuantLib::CubicInterpolation::Kruger) {}
-};
-
-class MonotonicLogCubic : public QuantLib::LogCubic {
-  public:
-    MonotonicLogCubic() : QuantLib::LogCubic(
-        QuantLib::CubicInterpolation::Spline, true,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0) {}
-};
-
-class KrugerLog : public QuantLib::LogCubic {
-  public:
-    KrugerLog() : QuantLib::LogCubic(
-        QuantLib::CubicInterpolation::Kruger, false,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0,
-        QuantLib::CubicInterpolation::SecondDerivative, 0.0) {}
-}; */
-%}
-
-struct LinearFlat {};
-struct BackwardFlat {};
-struct ConvexMonotone {
-    ConvexMonotone(
-        Real quadraticity = 0.3,
-        Real monotonicity = 0.7,
-        bool forcePositive = true);
-};
-struct Cubic {};
-struct ForwardFlat {};
-struct Linear {};
-struct LogLinear {};
-//struct LogCubic {};
-//struct LogMixedLinearCubic {};
-//struct MixedLinearCubic {};
-struct DefaultLogCubic {};
-struct MonotonicLogCubic {};
-struct KrugerLog {};
-struct Kruger {};
-struct MonotonicCubic {};
-struct SplineCubic {};
-
-//struct Abcd {};
-//struct SABR {};
-
-// 2D interpolation traits
-
-%{
-using QuantLib::Bicubic;
-using QuantLib::BackwardflatLinear;
-using QuantLib::Bilinear;
-using QuantLib::Polynomial;
-%}
-
-struct Bicubic {};
-struct BackwardflatLinear {};
-struct Bilinear {};
-struct Polynomial {};
 
 %{
 // safe version which copies its arguments
@@ -281,7 +176,7 @@ class SafeSABRInterpolation {
 };
 %}
 
-%rename(SABRInterpolation) SafeSABRInterpolation;
+//%rename(SABRInterpolation) SafeSABRInterpolation;
 class SafeSABRInterpolation {
   public:
     SafeSABRInterpolation(
@@ -353,7 +248,7 @@ class SafeConvexMonotoneInterpolation {
 };
 %}
 
-%rename(ConvexMonotoneInterpolation) SafeConvexMonotoneInterpolation;
+//%rename(ConvexMonotoneInterpolation) SafeConvexMonotoneInterpolation;
 class SafeConvexMonotoneInterpolation {
   public:
     SafeConvexMonotoneInterpolation(

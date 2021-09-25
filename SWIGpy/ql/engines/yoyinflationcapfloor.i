@@ -12,24 +12,20 @@ using QuantLib::YoYInflationBlackCapFloorEngine;
 using QuantLib::YoYInflationUnitDisplacedBlackCapFloorEngine;
 using QuantLib::YoYInflationBachelierCapFloorEngine;
 %}
-/*
+
 %shared_ptr(YoYInflationCapFloorEngine)
 class YoYInflationCapFloorEngine : public PricingEngine {
+  private:
+    YoYInflationCapFloorEngine();
   public:
-    YoYInflationCapFloorEngine(
-        const ext::shared_ptr<YoYInflationIndex>&,
-        const Handle<YoYOptionletVolatilitySurface>& vol,
-        const Handle<YieldTermStructure>& nominalTermStructure);
-
     ext::shared_ptr<YoYInflationIndex> index() const;
     Handle<YoYOptionletVolatilitySurface> volatility() const;
     Handle<YieldTermStructure> nominalTermStructure() const;
-
     void setVolatility(const Handle<YoYOptionletVolatilitySurface>& vol);
 };
-*/
+
 %shared_ptr(YoYInflationBlackCapFloorEngine)
-class YoYInflationBlackCapFloorEngine : public PricingEngine {
+class YoYInflationBlackCapFloorEngine : public YoYInflationCapFloorEngine {
   public:
     YoYInflationBlackCapFloorEngine(
         const ext::shared_ptr<YoYInflationIndex>&,
@@ -38,7 +34,7 @@ class YoYInflationBlackCapFloorEngine : public PricingEngine {
 };
 
 %shared_ptr(YoYInflationUnitDisplacedBlackCapFloorEngine)
-class YoYInflationUnitDisplacedBlackCapFloorEngine : public PricingEngine {
+class YoYInflationUnitDisplacedBlackCapFloorEngine : public YoYInflationCapFloorEngine {
   public:
     YoYInflationUnitDisplacedBlackCapFloorEngine(
         const ext::shared_ptr<YoYInflationIndex>&,
@@ -47,7 +43,7 @@ class YoYInflationUnitDisplacedBlackCapFloorEngine : public PricingEngine {
 };
 
 %shared_ptr(YoYInflationBachelierCapFloorEngine)
-class YoYInflationBachelierCapFloorEngine : public PricingEngine {
+class YoYInflationBachelierCapFloorEngine : public YoYInflationCapFloorEngine {
   public:
     YoYInflationBachelierCapFloorEngine(
         const ext::shared_ptr<YoYInflationIndex>&,

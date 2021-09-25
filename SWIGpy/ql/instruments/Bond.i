@@ -8,7 +8,16 @@
 
 %{
 using QuantLib::Bond;
+typedef Bond::Price BondPrice;
 %}
+
+class BondPrice {
+  public:
+    enum Type { Dirty, Clean };
+    BondPrice(Real amount, Type type);
+    Real amount() const;
+    Type type() const;
+};
 
 %shared_ptr(Bond)
 class Bond : public Instrument {
@@ -23,50 +32,54 @@ class Bond : public Instrument {
     Bond(Natural settlementDays,
          const Calendar& calendar,
          const Date& issueDate = Date(),
-         const Leg& coupons = Leg());
-    // public functions
-    Rate nextCouponRate(const Date& d = Date());
-    Rate previousCouponRate(const Date& d = Date());
-    // inspectors
+        const Leg& coupons = Leg());
     Natural settlementDays() const;
-    Date settlementDate(Date d = Date());
+    const Calendar& calendar() const;
+    const std::vector<Real>& notionals() const;
+    Real notional(Date d = Date()) const;
+    const Leg& cashflows() const;
+    const Leg& redemptions() const;
+    const ext::shared_ptr<CashFlow>& redemption() const;
     Date startDate() const;
     Date maturityDate() const;
     Date issueDate() const;
-    std::vector<ext::shared_ptr<CashFlow> > cashflows() const;
-    std::vector<ext::shared_ptr<CashFlow> > redemptions() const;
-    ext::shared_ptr<CashFlow> redemption() const;
-    Calendar calendar() const;
-    std::vector<Real> notionals() const;
-    Real notional(Date d = Date()) const;
-    // calculations
-    Real cleanPrice();
-    Real cleanPrice(Rate yield,
-                    const DayCounter &dc,
-                    Compounding compounding,
-                    Frequency frequency,
-                    const Date& settlement = Date());
-    Real dirtyPrice();
-    Real dirtyPrice(Rate yield,
-                    const DayCounter &dc,
-                    Compounding compounding,
-                    Frequency frequency,
-                    const Date& settlement = Date());
-    Real yield(const DayCounter& dc,
-               Compounding compounding,
-               Frequency freq,
-               Real accuracy = 1.0e-8,
-               Size maxEvaluations = 100);
-    Real yield(Real cleanPrice,
-               const DayCounter& dc,
-               Compounding compounding,
-               Frequency freq,
-               const Date& settlement = Date(),
-               Real accuracy = 1.0e-8,
-               Size maxEvaluations = 100);
-    Real accruedAmount(const Date& settlement = Date());
+    bool isTradable(Date d = Date()) const;
+    Date settlementDate(Date d = Date()) const;
+    Real cleanPrice() const;
+    Real dirtyPrice() const;
     Real settlementValue() const;
+    Rate yield(const DayCounter& dc,
+               Compounding comp,
+               Frequency freq,
+               Real accuracy = 1.0e-8,
+               Size maxEvaluations = 100,
+               Real guess = 0.05,
+               Bond::Price::Type priceType = Bond::Price::Clean) const;
+    Real cleanPrice(Rate yield,
+                    const DayCounter& dc,
+                    Compounding comp,
+                    Frequency freq,
+                    Date settlementDate = Date()) const;
+    Real dirtyPrice(Rate yield,
+                    const DayCounter& dc,
+                    Compounding comp,
+                    Frequency freq,
+                    Date settlementDate = Date()) const;
     Real settlementValue(Real cleanPrice) const;
+    Rate yield(Real cleanPrice,
+               const DayCounter& dc,
+               Compounding comp,
+               Frequency freq,
+               Date settlementDate = Date(),
+               Real accuracy = 1.0e-8,
+               Size maxEvaluations = 100,
+               Real guess = 0.05,
+               Bond::Price::Type priceType = Bond::Price::Clean) const;
+    Real accruedAmount(Date d = Date()) const;
+    Rate nextCouponRate(Date d = Date()) const;
+    Rate previousCouponRate(Date d = Date()) const;
+    Date nextCashFlowDate(Date d = Date()) const;
+    Date previousCashFlowDate(Date d = Date()) const;
 };
 
 %inline %{

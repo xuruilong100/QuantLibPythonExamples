@@ -23,22 +23,43 @@ using QuantLib::Gaussian1dFloatFloatSwaptionEngine;
 %shared_ptr(BlackSwaptionEngine)
 class BlackSwaptionEngine : public PricingEngine {
   public:
-    BlackSwaptionEngine(const Handle<YieldTermStructure> & discountCurve,
-                        const Handle<Quote>& vol,
-                        const DayCounter& dc = Actual365Fixed(),
-                        Real displacement = 0.0);
-    BlackSwaptionEngine(const Handle<YieldTermStructure> & discountCurve,
-                        const Handle<SwaptionVolatilityStructure>& v);
+    enum CashAnnuityModel { SwapRate, DiscountCurve };
+    BlackSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        Volatility vol,
+        const DayCounter& dc = Actual365Fixed(),
+        Real displacement = 0.0,
+        CashAnnuityModel model = DiscountCurve);
+    BlackSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        const Handle<Quote>& vol,
+        const DayCounter& dc = Actual365Fixed(),
+        Real displacement = 0.0,
+        CashAnnuityModel model = DiscountCurve);
+    BlackSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        const Handle<SwaptionVolatilityStructure>& vol,
+        CashAnnuityModel model = DiscountCurve);
 };
 
 %shared_ptr(BachelierSwaptionEngine)
 class BachelierSwaptionEngine : public PricingEngine {
   public:
-    BachelierSwaptionEngine(const Handle<YieldTermStructure> & discountCurve,
-                            const Handle<Quote>& vol,
-                            const DayCounter& dc = Actual365Fixed());
-    BachelierSwaptionEngine(const Handle<YieldTermStructure> & discountCurve,
-                            const Handle<SwaptionVolatilityStructure>& v);
+    enum CashAnnuityModel { SwapRate, DiscountCurve };
+    BachelierSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        Volatility vol,
+        const DayCounter& dc = Actual365Fixed(),
+        CashAnnuityModel model = DiscountCurve);
+    BachelierSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        const Handle<Quote>& vol,
+        const DayCounter& dc = Actual365Fixed(),
+        CashAnnuityModel model = DiscountCurve);
+    BachelierSwaptionEngine(
+        const Handle<YieldTermStructure>& discountCurve,
+        const Handle<SwaptionVolatilityStructure>& vol,
+        CashAnnuityModel model = DiscountCurve);
 };
 
 %shared_ptr(JamshidianSwaptionEngine)
@@ -46,7 +67,7 @@ class JamshidianSwaptionEngine : public PricingEngine {
   public:
     JamshidianSwaptionEngine(
         const ext::shared_ptr<OneFactorAffineModel>& model,
-        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+        Handle<YieldTermStructure> termStructure = Handle<YieldTermStructure>());
 };
 
 %shared_ptr(TreeSwaptionEngine)
@@ -55,15 +76,15 @@ class TreeSwaptionEngine : public PricingEngine {
     TreeSwaptionEngine(
         const ext::shared_ptr<ShortRateModel>& model,
         Size timeSteps,
-        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+        Handle<YieldTermStructure> termStructure = Handle<YieldTermStructure>());
     TreeSwaptionEngine(
         const ext::shared_ptr<ShortRateModel>& model,
         const TimeGrid& grid,
-        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+        Handle<YieldTermStructure> termStructure = Handle<YieldTermStructure>());
     TreeSwaptionEngine(
         const Handle<ShortRateModel>& model,
         Size timeSteps,
-        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+        Handle<YieldTermStructure> termStructure = Handle<YieldTermStructure>());
 };
 
 %shared_ptr(G2SwaptionEngine)
@@ -106,14 +127,14 @@ class Gaussian1dSwaptionEngine : public PricingEngine {
         const int integrationPoints = 64, const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
-        const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
         const Gaussian1dSwaptionEngine::Probabilities probabilities = Gaussian1dSwaptionEngine::None);
     Gaussian1dSwaptionEngine(
         const Handle<Gaussian1dModel> &model,
         const int integrationPoints = 64, const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
-        const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
         const Gaussian1dSwaptionEngine::Probabilities probabilities = Gaussian1dSwaptionEngine::None);
 };
 

@@ -14,22 +14,11 @@ using QuantLib::DiscountingSwapEngine;
 class DiscountingSwapEngine : public PricingEngine {
   public:
     DiscountingSwapEngine(
-        const Handle<YieldTermStructure>& discountCurve,
-        bool includeSettlementDateFlows,
-        const Date& settlementDate = Date(),
-        const Date& npvDate = Date());
-    %extend {
-        DiscountingSwapEngine(
-            const Handle<YieldTermStructure>& discountCurve,
-            const Date& settlementDate = Date(),
-            const Date& npvDate = Date()) {
-            return new DiscountingSwapEngine(
-                discountCurve,
-                boost::none,
-                settlementDate,
-                npvDate);
-        }
-    }
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
+        const boost::optional<bool>& includeSettlementDateFlows = boost::none,
+        Date settlementDate = Date(),
+        Date npvDate = Date());
+      Handle<YieldTermStructure> discountCurve() const;
 };
 
 #endif

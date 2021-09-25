@@ -16,19 +16,21 @@ using QuantLib::BlackCdsOptionEngine;
 %shared_ptr(MidPointCdsEngine)
 class MidPointCdsEngine : public PricingEngine {
   public:
-    MidPointCdsEngine(const Handle<DefaultProbabilityTermStructure>& probability,
-                      Real recoveryRate,
-                      const Handle<YieldTermStructure>& discountCurve);
+    MidPointCdsEngine(
+        Handle<DefaultProbabilityTermStructure> probability,
+        Real recoveryRate,
+        Handle<YieldTermStructure> discountCurve,
+        const boost::optional<bool>& includeSettlementDateFlows = boost::none);
 };
 
 %shared_ptr(IntegralCdsEngine)
 class IntegralCdsEngine : public PricingEngine {
   public:
-    IntegralCdsEngine(const Period &integrationStep,
-                      const Handle<DefaultProbabilityTermStructure>& probability,
+    IntegralCdsEngine(const Period& integrationStep,
+                      Handle<DefaultProbabilityTermStructure>,
                       Real recoveryRate,
-                      const Handle<YieldTermStructure>& discountCurve,
-                      bool includeSettlementDateFlows = false);
+                      Handle<YieldTermStructure> discountCurve,
+                      const boost::optional<bool>& includeSettlementDateFlows = boost::none);
 };
 
 %shared_ptr(IsdaCdsEngine)
@@ -39,23 +41,25 @@ class IsdaCdsEngine : public PricingEngine {
     enum AccrualBias {HalfDayBias, NoBias};
     enum ForwardsInCouponPeriod {Flat, Piecewise};
     IsdaCdsEngine(
-        const Handle<DefaultProbabilityTermStructure> &probability,
+        Handle<DefaultProbabilityTermStructure> probability,
         Real recoveryRate,
-        const Handle<YieldTermStructure> &discountCurve,
-        bool includeSettlementDateFlows = false,
-        const IsdaCdsEngine::NumericalFix numericalFix = IsdaCdsEngine::Taylor,
-        const IsdaCdsEngine::AccrualBias accrualBias = IsdaCdsEngine::HalfDayBias,
-        const IsdaCdsEngine::ForwardsInCouponPeriod forwardsInCouponPeriod = IsdaCdsEngine::Piecewise);
+        Handle<YieldTermStructure> discountCurve,
+        const boost::optional<bool> &includeSettlementDateFlows=boost::none,
+        NumericalFix numericalFix=Taylor,
+        AccrualBias accrualBias=HalfDayBias,
+        ForwardsInCouponPeriod forwardsInCouponPeriod=Piecewise);
+        Handle<YieldTermStructure> isdaRateCurve() const;
+        Handle<DefaultProbabilityTermStructure> isdaCreditCurve() const;
 };
 
 %shared_ptr(BlackCdsOptionEngine)
 class BlackCdsOptionEngine : public PricingEngine {
   public:
     BlackCdsOptionEngine(
-        const Handle<DefaultProbabilityTermStructure>&,
+        Handle<DefaultProbabilityTermStructure>,
         Real recoveryRate,
-        const Handle<YieldTermStructure>& termStructure,
-        const Handle<Quote>& vol);
+        Handle<YieldTermStructure> termStructure,
+        Handle<Quote> vol);
     Handle<YieldTermStructure> termStructure();
     Handle<Quote> volatility();
 };

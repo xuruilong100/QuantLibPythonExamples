@@ -7,15 +7,24 @@
 %include ../ql/base.i
 
 %{
+using QuantLib::CdsHelper;
 using QuantLib::SpreadCdsHelper;
 using QuantLib::UpfrontCdsHelper;
 %}
 
+%shared_ptr(CdsHelper)
+class CdsHelper : public BootstrapHelper<DefaultProbabilityTermStructure> {
+  private:
+    CdsHelper();
+  public:
+    ext::shared_ptr<CreditDefaultSwap> swap() const;
+};
+
 %shared_ptr(SpreadCdsHelper)
-class SpreadCdsHelper : public DefaultProbabilityHelper {
+class SpreadCdsHelper : public CdsHelper {
   public:
     SpreadCdsHelper(
-        const Handle<Quote>& spread,
+        const Handle<Quote>& runningSpread,
         const Period& tenor,
         Integer settlementDays,
         const Calendar& calendar,
@@ -32,7 +41,7 @@ class SpreadCdsHelper : public DefaultProbabilityHelper {
         bool rebatesAccrual = true,
         CreditDefaultSwap::PricingModel model = CreditDefaultSwap::Midpoint);
     SpreadCdsHelper(
-        Rate spread,
+        Rate runningSpread,
         const Period& tenor,
         Integer settlementDays,
         const Calendar& calendar,
@@ -51,7 +60,7 @@ class SpreadCdsHelper : public DefaultProbabilityHelper {
 };
 
 %shared_ptr(UpfrontCdsHelper)
-class UpfrontCdsHelper : public DefaultProbabilityHelper {
+class UpfrontCdsHelper : public CdsHelper {
   public:
     UpfrontCdsHelper(
         const Handle<Quote>& upfront,

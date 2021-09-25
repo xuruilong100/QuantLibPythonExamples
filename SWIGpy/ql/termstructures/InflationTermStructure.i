@@ -15,16 +15,16 @@ class InflationTermStructure : public TermStructure {
   private:
     InflationTermStructure();
   public:
-    virtual Period observationLag() const;
-    virtual Frequency frequency() const;
-    virtual bool indexIsInterpolated() const;
-    virtual Rate baseRate() const;
-    virtual Handle<YieldTermStructure> nominalTermStructure() const;
-    virtual Date baseDate() const;
+    Period observationLag() const;
+    Frequency frequency() const;
+    bool indexIsInterpolated() const;
+    Rate baseRate() const;
+    Handle<YieldTermStructure> nominalTermStructure() const;
+    Date baseDate() const;
     void setSeasonality(
         const ext::shared_ptr<Seasonality>& seasonality = ext::shared_ptr<Seasonality>());
     ext::shared_ptr<Seasonality> seasonality() const;
-    bool hasSeasonality() const;
+    bool hasSeasonality() const;    
 };
 
 %inline %{

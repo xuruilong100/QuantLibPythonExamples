@@ -26,14 +26,23 @@ using QuantLib::PiecewiseDefaultCurve;
 class FlatHazardRate : public DefaultProbabilityTermStructure {
   public:
     FlatHazardRate(
-        Integer settlementDays,
+        const Date& todaysDate,
+        const Handle<Quote>& hazardRate,
+        const DayCounter& dayCounter);
+    FlatHazardRate(
+        const Date& referenceDate,
+        Rate hazardRate,
+        const DayCounter&);
+    FlatHazardRate(
+        Natural settlementDays,
         const Calendar& calendar,
         const Handle<Quote>& hazardRate,
         const DayCounter& dayCounter);
     FlatHazardRate(
-        const Date& todaysDate,
-        const Handle<Quote>& hazardRate,
-        const DayCounter& dayCounter);
+        Natural settlementDays,
+        const Calendar& calendar,
+        Rate hazardRate,
+        const DayCounter&);
 };
 
 // add other instantiations both here and below the class
@@ -43,11 +52,26 @@ class InterpolatedHazardRateCurve : public DefaultProbabilityTermStructure {
   public:
     InterpolatedHazardRateCurve(
         const std::vector<Date>& dates,
-        const std::vector<Real>& hazardRates,
+        const std::vector<Rate>& hazardRates,
         const DayCounter& dayCounter,
-        const Calendar& calendar = Calendar(),
-        const Interpolator& i = Interpolator());
+        const Calendar& cal = Calendar(),
+        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Date>& jumpDates = std::vector<Date>(),
+        const Interpolator& interpolator = Interpolator());
+    InterpolatedHazardRateCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& hazardRates,
+        const DayCounter& dayCounter,
+        const Calendar& calendar,
+        const Interpolator& interpolator);
+    InterpolatedHazardRateCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Rate>& hazardRates,
+        const DayCounter& dayCounter,
+        const Interpolator& interpolator);
+    const std::vector<Time>& times() const;
     const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
     const std::vector<Real>& hazardRates() const;
     std::vector<std::pair<Date, Real>> nodes() const;
 };
@@ -64,8 +88,23 @@ class InterpolatedDefaultDensityCurve : public DefaultProbabilityTermStructure {
         const std::vector<Real>& densities,
         const DayCounter& dayCounter,
         const Calendar& calendar = Calendar(),
-        const Interpolator& i = Interpolator());
+        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Date>& jumpDates = std::vector<Date>(),
+        const Interpolator& interpolator = Interpolator());
+    InterpolatedDefaultDensityCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Real>& densities,
+        const DayCounter& dayCounter,
+        const Calendar& calendar,
+        const Interpolator& interpolator);
+    InterpolatedDefaultDensityCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Real>& densities,
+        const DayCounter& dayCounter,
+        const Interpolator& interpolator);
+    const std::vector<Time>& times() const;
     const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
     const std::vector<Real>& defaultDensities() const;
     std::vector<std::pair<Date, Real>> nodes() const;
 };
@@ -82,11 +121,25 @@ class InterpolatedSurvivalProbabilityCurve : public DefaultProbabilityTermStruct
         const std::vector<Probability>& probabilities,
         const DayCounter& dayCounter,
         const Calendar& calendar = Calendar(),
-        const Interpolator& i = Interpolator());
+        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Date>& jumpDates = std::vector<Date>(),
+        const Interpolator& interpolator = Interpolator());
+    InterpolatedSurvivalProbabilityCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Probability>& probabilities,
+        const DayCounter& dayCounter,
+        const Calendar& calendar,
+        const Interpolator& interpolator);
+    InterpolatedSurvivalProbabilityCurve(
+        const std::vector<Date>& dates,
+        const std::vector<Probability>& probabilities,
+        const DayCounter& dayCounter,
+        const Interpolator& interpolator);
+    const std::vector<Time>& times() const;
     const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
     const std::vector<Probability>& survivalProbabilities() const;
-
-    std::vector<std::pair<Date, Real>> nodes() const;
+    std::vector<std::pair<Date, Real> > nodes() const;
 };
 
 %template(SurvivalProbabilityCurve) InterpolatedSurvivalProbabilityCurve<Linear>;
@@ -132,19 +185,6 @@ class Name : public DefaultProbabilityTermStructure {
                     b.maxAttempts, b.maxFactor, b.minFactor,
                     b.dontThrow, b.dontThrowSteps));
         }
-        /* Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const IterativeBootstrap& b) {
-            return new Name(
-                referenceDate,
-                instruments,
-                dayCounter,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        } */
         Name(Integer settlementDays,
              const Calendar& calendar,
              const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
@@ -179,72 +219,10 @@ class Name : public DefaultProbabilityTermStructure {
                     b.maxAttempts, b.maxFactor, b.minFactor,
                     b.dontThrow, b.dontThrowSteps));
         }
-        /* Name(Integer settlementDays,
-             const Calendar& calendar,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const IterativeBootstrap& b) {
-            return new Name(
-                settlementDays, calendar,
-                instruments,
-                dayCounter,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue,
-                    b.maxAttempts, b.maxFactor, b.minFactor,
-                    b.dontThrow, b.dontThrowSteps));
-        } */
-        //-----------
-        /* Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             Real accuracy = 1.0e-12,
-             const Interpolator& i = Interpolator(),
-             const _IterativeBootstrap& b = _IterativeBootstrap()) {
-            return new Name(
-                referenceDate, instruments,
-                dayCounter, accuracy, i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(Integer settlementDays, const Calendar& calendar,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             Real accuracy = 1.0e-12,
-             const Interpolator& i = Interpolator(),
-             const _IterativeBootstrap& b = _IterativeBootstrap()) {
-            return new Name(
-                settlementDays, calendar,
-                instruments, dayCounter,
-                accuracy, i,
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(const Date& referenceDate,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const _IterativeBootstrap& b) {
-            return new Name(
-                referenceDate, instruments,
-                dayCounter, 1e-12,
-                Interpolator(),
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        }
-        Name(Integer settlementDays, const Calendar& calendar,
-             const std::vector<ext::shared_ptr<DefaultProbabilityHelper>>& instruments,
-             const DayCounter& dayCounter,
-             const _IterativeBootstrap& b) {
-            return new Name(
-                settlementDays, calendar,
-                instruments, dayCounter, 1e-12,
-                Interpolator(),
-                Name::bootstrap_type(
-                    b.accuracy, b.minValue, b.maxValue));
-        } */
     }
-    const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
-
+    const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
     std::vector<std::pair<Date, Real>> nodes() const;
 };
 

@@ -1,5 +1,5 @@
-#ifndef ql_fdms_FdmMesher_i
-#define ql_fdms_FdmMesher_i
+#ifndef ql_fdms_FdmLinearOp_i
+#define ql_fdms_FdmLinearOp_i
 
 %include ../ql/types.i
 %include ../ql/common.i
@@ -12,7 +12,8 @@ using QuantLib::FdmLinearOp;
 %shared_ptr(FdmLinearOp)
 class FdmLinearOp {
   public:
-    virtual Array apply(const Array& r) const;
+    Array apply(const Array& r) const;
+    //SparseMatrix toMatrix() const;
 
   private:
     FdmLinearOp();

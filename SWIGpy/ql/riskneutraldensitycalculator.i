@@ -17,20 +17,19 @@ using QuantLib::SquareRootProcessRNDCalculator;
 
 %shared_ptr(RiskNeutralDensityCalculator)
 class RiskNeutralDensityCalculator {
-  public:
-    virtual Real pdf(Real x, Time t) const;
-    virtual Real cdf(Real x, Time t) const;
-    virtual Real invcdf(Real p, Time t) const;
-
   private:
     RiskNeutralDensityCalculator();
+  public:
+    Real pdf(Real x, Time t) const;
+    Real cdf(Real x, Time t) const;
+    Real invcdf(Real p, Time t) const;
 };
 
 %shared_ptr(BSMRNDCalculator)
 class BSMRNDCalculator : public RiskNeutralDensityCalculator {
   public:
     explicit BSMRNDCalculator(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process);
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
 %shared_ptr(CEVRNDCalculator)
@@ -45,39 +44,58 @@ class CEVRNDCalculator : public RiskNeutralDensityCalculator {
 class GBSMRNDCalculator : public RiskNeutralDensityCalculator {
 public:
     explicit GBSMRNDCalculator(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process);
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
 %shared_ptr(HestonRNDCalculator)
 class HestonRNDCalculator : public RiskNeutralDensityCalculator {
 public:
     HestonRNDCalculator(
-        const ext::shared_ptr<HestonProcess>& hestonProcess,
+        ext::shared_ptr<HestonProcess> hestonProcess,
         Real integrationEps= 1e-6,
         Size maxIntegrationIterations = 10000ul);
 };
 
 %shared_ptr(LocalVolRNDCalculator)
 class LocalVolRNDCalculator : public RiskNeutralDensityCalculator {
-    %feature("kwargs") LocalVolRNDCalculator;
   public:
     LocalVolRNDCalculator(
-        const ext::shared_ptr<Quote>& spot,
-        const ext::shared_ptr<YieldTermStructure>& rTS,
-        const ext::shared_ptr<YieldTermStructure>& qTS,
+        ext::shared_ptr<Quote> spot,
+        ext::shared_ptr<YieldTermStructure> rTS,
+        ext::shared_ptr<YieldTermStructure> qTS,
         const ext::shared_ptr<LocalVolTermStructure>& localVol,
-        Size xGrid = 101, Size tGrid = 51,
+        Size xGrid = 101,
+        Size tGrid = 51,
         Real x0Density = 0.1,
         Real localVolProbEps = 1e-6,
         Size maxIter = 10000,
         Time gaussianStepSize = -Null<Time>());
-
-    ext::shared_ptr<Fdm1dMesher> mesher(Time t) const;
     %extend {
-        std::vector<unsigned int> rescaleTimeSteps() const {
-            return to_vector<unsigned int>($self->rescaleTimeSteps());
-        }
+        LocalVolRNDCalculator(
+            ext::shared_ptr<Quote> spot,
+            ext::shared_ptr<YieldTermStructure> rTS,
+            ext::shared_ptr<YieldTermStructure> qTS,
+            ext::shared_ptr<LocalVolTermStructure> localVol,
+            TimeGrid& timeGrid,
+            Size xGrid = 101,
+            Real x0Density = 0.1,
+            Real eps = 1e-6,
+            Size maxIter = 10000,
+            Time gaussianStepSize = -Null<Time>()) {
+                ext::shared_ptr<TimeGrid> ptr(&timeGrid);
+                return new LocalVolRNDCalculator(
+                    spot, rTS, qTS, localVol, ptr,
+                    xGrid, x0Density, eps, maxIter,
+                    gaussianStepSize);
+            }
+            const TimeGrid& timeGrid() const {
+                return *(self->timeGrid());
+            }
     }
+
+    //ext::shared_ptr<TimeGrid> timeGrid() const;
+    ext::shared_ptr<Fdm1dMesher> mesher(Time t) const;
+    std::vector<Size> rescaleTimeSteps() const;
 };
 
 %shared_ptr(SquareRootProcessRNDCalculator)

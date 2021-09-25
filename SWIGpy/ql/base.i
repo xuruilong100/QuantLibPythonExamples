@@ -7,48 +7,14 @@
 %{
 using QuantLib::Observable;
 using QuantLib::Observer;
-// C++ wrapper for Python observer
-/* class PyObserver : public Observer {
-  public:
-    PyObserver(PyObject* callback)
-        : callback_(callback) {
-        // make sure the Python object stays alive as long as we need it
-        Py_XINCREF(callback_);
-    }
-    PyObserver(const PyObserver& o)
-        : callback_(o.callback_) {
-        // make sure the Python object stays alive as long as we need it
-        Py_XINCREF(callback_);
-    }
-    PyObserver& operator=(const PyObserver& o) {
-        if ((this != &o) && (callback_ != o.callback_)) {
-            Py_XDECREF(callback_);
-            callback_ = o.callback_;
-            Py_XINCREF(callback_);
-        }
-        return *this;
-    }
-    ~PyObserver() {
-        // now it can go as far as we are concerned
-        Py_XDECREF(callback_);
-    }
-    void update() {
-        PyObject* pyResult = PyObject_CallFunction(
-            callback_, NULL);
-        QL_ENSURE(
-            pyResult != NULL,
-            "failed to notify Python observer");
-        Py_XDECREF(pyResult);
-    }
-
-  private:
-    PyObject* callback_;
-}; */
+using QuantLib::LazyObject;
 %}
 %{
+using QuantLib::Extrapolator;
 using QuantLib::PricingEngine;
 using QuantLib::Instrument;
 using QuantLib::TermStructure;
+using QuantLib::Event;
 using QuantLib::CashFlow;
 using QuantLib::Leg;
 using QuantLib::CalibratedModel;
@@ -62,41 +28,46 @@ using QuantLib::RateHelper;
 using QuantLib::StochasticProcess;
 using QuantLib::AndreasenHugeVolatilityInterpl;
 using QuantLib::AffineModel;
+using QuantLib::FloatingRateCouponPricer;
+using QuantLib::InflationCouponPricer;
 %}
 
-%shared_ptr(Observable);
-class Observable {};
+%{
+typedef StochasticProcess::discretization discretization;
+%}
 
-%extend Handle {
-    ext::shared_ptr<Observable> asObservable() {
-        return ext::shared_ptr<Observable>(*self);
-    }
-}
-
-// Python wrapper
-/* %rename(Observer) PyObserver;
-class PyObserver {
-    %rename(_registerWith) registerWith;
-    %rename(_unregisterWith) unregisterWith;
+%shared_ptr(Observable)
+class Observable {
+  private:
+    Observable();
   public:
-    PyObserver(PyObject* callback);
-    void registerWith(
+    void notifyObservers();
+};
+
+%shared_ptr(Observer);
+class Observer {
+  private:
+    Observer();
+  public:
+    void registerWithObservables(
+        const ext::shared_ptr<Observer>&);
+    Size unregisterWith(
         const ext::shared_ptr<Observable>&);
-    void unregisterWith(
-        const ext::shared_ptr<Observable>&);
-    %pythoncode %{
-        def registerWith(self,x):
-            if hasattr(x, "asObservable"):
-                self._registerWith(x.asObservable())
-            else:
-                self._registerWith(x)
-        def unregisterWith(self,x):
-            if hasattr(x, "asObservable"):
-                self._unregisterWith(x.asObservable())
-            else:
-                self._unregisterWith(x)
-    %}
-}; */
+    void unregisterWithAll();
+    void update();
+    void deepUpdate();
+};
+
+%shared_ptr(LazyObject);
+class LazyObject : public Observer, public Observable {
+  private:
+    LazyObject();
+  public:
+    void recalculate();
+    void freeze();
+    void unfreeze();
+    void alwaysForwardNotifications();
+};
 
 %shared_ptr(PricingEngine)
 class PricingEngine : public Observable {
@@ -105,48 +76,63 @@ class PricingEngine : public Observable {
 };
 
 %shared_ptr(Instrument)
-class Instrument : public Observable {
+class Instrument : public LazyObject {
+  private:
+    Instrument();
   public:
     Real NPV() const;
     Real errorEstimate() const;
+    Date valuationDate() const;
     bool isExpired() const;
     void setPricingEngine(
         const ext::shared_ptr<PricingEngine>&);
-    void recalculate();
-    void freeze();
-    void unfreeze();
-  private:
-    Instrument();
 };
 
 %template(InstrumentVector) std::vector<ext::shared_ptr<Instrument> >;
 
-%shared_ptr(TermStructure);
-class TermStructure : public Observable {
+%shared_ptr(Extrapolator)
+class Extrapolator {
+  private:
+    Extrapolator();
+  public:
+    void enableExtrapolation(bool b = true);
+    void disableExtrapolation(bool b = true);
+    bool allowsExtrapolation() const;
+};
+
+%shared_ptr(TermStructure)
+class TermStructure : public Observer, public Observable, public Extrapolator {
   private:
     TermStructure();
   public:
     DayCounter dayCounter() const;
     Time timeFromReference(const Date& date) const;
-    Calendar calendar() const;
-    Date referenceDate() const;
     Date maxDate() const;
     Time maxTime() const;
-    // from Extrapolator, since we can't use multiple inheritance
-    // and we're already inheriting from Observable
-    void enableExtrapolation();
-    void disableExtrapolation();
-    bool allowsExtrapolation();
+    Date referenceDate() const;
+    Calendar calendar() const;
+    Natural settlementDays() const;
+};
+
+%shared_ptr(Event)
+class Event : public Observable {
+  private:
+    Event();
+  public:
+    Date date() const;
+    bool hasOccurred(
+            const Date& refDate = Date(),
+            boost::optional<bool> includeRefDate = boost::none) const;
 };
 
 %shared_ptr(CashFlow)
-class CashFlow : public Observable {
+class CashFlow : public Event {
   private:
     CashFlow();
   public:
     Real amount() const;
-    Date date() const;
-    bool hasOccurred(const Date& refDate = Date()) const;
+    Date exCouponDate() const;
+    bool tradingExCoupon(const Date &refDate=Date()) const;
 };
 
 %template(Leg) std::vector<ext::shared_ptr<CashFlow> >;
@@ -154,44 +140,34 @@ typedef std::vector<ext::shared_ptr<CashFlow> > Leg;
 %template(LegVector) std::vector<Leg>;
 
 %shared_ptr(CalibratedModel)
-class CalibratedModel : public virtual Observable {
+class CalibratedModel : public Observer, public Observable {
+  private:
+    CalibratedModel();
   public:
-    Array params() const;
-    void setParams(const Array& params);
-
-    virtual void calibrate(
+    void calibrate(
         const std::vector<ext::shared_ptr<CalibrationHelper> >& helper,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
         const std::vector<Real>& weights = std::vector<Real>(),
         const std::vector<bool>& fixParameters = std::vector<bool>());
-    virtual void calibrate(
-        const std::vector<ext::shared_ptr<BlackCalibrationHelper> >& helper,
-        OptimizationMethod& method,
-        const EndCriteria& endCriteria,
-        const Constraint& constraint = Constraint(),
-        const std::vector<Real>& weights = std::vector<Real>(),
-        const std::vector<bool>& fixParameters = std::vector<bool>());
-
     Real value(
         const Array& params,
         const std::vector<ext::shared_ptr<CalibrationHelper> >& helpers);
     const ext::shared_ptr<Constraint>& constraint() const;
     EndCriteria::Type endCriteria() const;
     const Array& problemValues() const;
+    Array params() const;
+    void setParams(const Array &params);
     Integer functionEvaluation() const;
-
-  private:
-    CalibratedModel();
 };
 
 %shared_ptr(TermStructureConsistentModel)
-class TermStructureConsistentModel : public virtual Observable{
-  public:
-    const Handle<YieldTermStructure>& termStructure() const;
+class TermStructureConsistentModel : public Observable{
   private:
     TermStructureConsistentModel();
+  public:
+    const Handle<YieldTermStructure>& termStructure() const;
 };
 
 %shared_ptr(Index)
@@ -202,11 +178,12 @@ class Index : public Observable {
   public:
     std::string name() const;
     Calendar fixingCalendar() const;
-    bool isValidFixingDate(
-        const Date& fixingDate) const;
+    bool isValidFixingDate(const Date& fixingDate) const;
+    bool hasHistoricalFixing(const Date& fixingDate) const;
     Real fixing(
         const Date& fixingDate,
         bool forecastTodaysFixing = false) const;
+    const TimeSeries<Real>& timeSeries() const;
     bool allowsNativeFixings();
     void addFixing(
         const Date& fixingDate, Rate fixing,
@@ -214,7 +191,6 @@ class Index : public Observable {
     void addFixings(
         const TimeSeries<Real>& t,
         bool forceOverwrite = false);
-    const TimeSeries<Real>& timeSeries() const;
     void clearFixings();
     %extend {
         void addFixings(
@@ -232,35 +208,35 @@ class Index : public Observable {
 };
 
 %shared_ptr(SmileSection);
-class SmileSection : public Observable {
+class SmileSection : public Observer, public Observable {
   private:
     SmileSection();
 
   public:
     Real minStrike() const;
     Real maxStrike() const;
-    Real atmLevel() const;
     Real variance(Rate strike) const;
     Volatility volatility(Rate strike) const;
-    virtual const Date& exerciseDate() const;
-    virtual VolatilityType volatilityType() const;
-    virtual Rate shift() const;
-    virtual const Date& referenceDate() const;
-    virtual Time exerciseTime() const;
-    virtual const DayCounter& dayCounter();
-    virtual Real optionPrice(
+    Real atmLevel() const;
+    const Date& exerciseDate() const;
+    VolatilityType volatilityType() const;
+    Rate shift() const;
+    const Date& referenceDate() const;
+    Time exerciseTime() const;
+    const DayCounter& dayCounter();
+    Real optionPrice(
         Rate strike,
         Option::Type type = Option::Call,
         Real discount = 1.0) const;
-    virtual Real digitalOptionPrice(
+    Real digitalOptionPrice(
         Rate strike,
         Option::Type type = Option::Call,
         Real discount = 1.0,
         Real gap = 1.0e-5) const;
-    virtual Real vega(
+    Real vega(
         Rate strike,
         Real discount = 1.0) const;
-    virtual Real density(
+    Real density(
         Rate strike,
         Real discount = 1.0,
         Real gap = 1.0E-4) const;
@@ -272,45 +248,35 @@ class SmileSection : public Observable {
 
 %template(SmileSectionVector) std::vector<ext::shared_ptr<SmileSection> >;
 
-%shared_ptr(DefaultProbabilityHelper)
-class DefaultProbabilityHelper : public Observable {
-  public:
-    Handle<Quote> quote() const;
-    Date latestDate() const;
-    Date earliestDate() const;
-    Date maturityDate() const;
-    Date latestRelevantDate() const;
-    Date pillarDate() const;
-    Real impliedQuote() const;
-    Real quoteError() const;
-  private:
-    DefaultProbabilityHelper();
-};
-
-%template(DefaultProbabilityHelperVector) std::vector<ext::shared_ptr<DefaultProbabilityHelper> >;
-
+%shared_ptr(BootstrapHelper<YieldTermStructure>)
+%shared_ptr(BootstrapHelper<DefaultProbabilityTermStructure>)
 %shared_ptr(BootstrapHelper<ZeroInflationTermStructure>)
 %shared_ptr(BootstrapHelper<YoYInflationTermStructure>)
 %shared_ptr(BootstrapHelper<YoYOptionletVolatilitySurface>)
 template <class TS>
-class BootstrapHelper : public Observable {
-  public:
-    Handle<Quote> quote() const;
-    Date latestDate() const;
-	Date earliestDate() const;
-	Date maturityDate() const;
-	Date latestRelevantDate() const;
-	Date pillarDate() const;
-	Real impliedQuote() const;
-	Real quoteError() const;
+class BootstrapHelper : public Observer, public Observable {
   private:
     BootstrapHelper();
+  public:
+    const Handle<Quote>& quote() const;
+    Real impliedQuote() const;
+    Real quoteError() const;
+    void setTermStructure(TS *);
+    Date earliestDate() const;
+    Date maturityDate() const;
+    Date latestRelevantDate() const;
+    Date pillarDate() const;
+    Date latestDate() const;
 };
 
+%template(RateHelper) BootstrapHelper<YieldTermStructure>;
+%template(DefaultProbabilityHelper) BootstrapHelper<DefaultProbabilityTermStructure>;
 %template(ZeroHelper) BootstrapHelper<ZeroInflationTermStructure>;
 %template(YoYHelper) BootstrapHelper<YoYInflationTermStructure>;
 %template(YoYOptionHelper) BootstrapHelper<YoYOptionletVolatilitySurface>;
 
+%template(RateHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YieldTermStructure> > >;
+%template(DefaultProbabilityHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<DefaultProbabilityTermStructure> > >;
 %template(ZeroHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<ZeroInflationTermStructure> > >;
 %template(YoYHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure> > >;
 %template(YoYOptionHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYOptionletVolatilitySurface> > >;
@@ -327,23 +293,43 @@ class Quote : public Observable {
 %template(QuoteHandle) Handle<Quote>;
 %template(RelinkableQuoteHandle) RelinkableHandle<Quote>;
 
-%shared_ptr(RateHelper)
-class RateHelper : public Observable {
+// typedef BootstrapHelper<YieldTermStructure> RateHelper;
+/* %shared_ptr(RateHelper)
+class RateHelper : public Observer, public Observable {
+  private:
+    RateHelper();
   public:
     const Handle<Quote>& quote() const;
     Date latestDate() const;
-	Date earliestDate() const;
-	Date maturityDate() const;
-	Date latestRelevantDate() const;
-	Date pillarDate() const;
-	Real impliedQuote() const;
-	Real quoteError() const;
+    Date earliestDate() const;
+    Date maturityDate() const;
+    Date latestRelevantDate() const;
+    Date pillarDate() const;
+    Real impliedQuote() const;
+    Real quoteError() const;
+}; */
+
+%shared_ptr(discretization)
+class discretization {
   private:
-    RateHelper();
+    discretization();
+  public:
+    Array drift(
+        const StochasticProcess&,
+        Time t0, const Array& x0,
+        Time dt) const;
+    Matrix diffusion(
+        const StochasticProcess&,
+        Time t0, const Array& x0,
+        Time dt) const;
+    Matrix covariance(
+        const StochasticProcess&,
+        Time t0, const Array& x0,
+        Time dt) const;
 };
 
 %shared_ptr(StochasticProcess)
-class StochasticProcess : public Observable {
+class StochasticProcess : public Observer, public Observable {
   private:
     StochasticProcess();
 
@@ -362,6 +348,10 @@ class StochasticProcess : public Observable {
     Array evolve(
         Time t0, const Array& x0,
         Time dt, const Array& dw) const;
+    Array apply(
+        const Array& x0,
+        const Array& dx) const;
+    Time time(const Date&) const;
 };
 
 %template(StochasticProcessVector) std::vector<ext::shared_ptr<StochasticProcess> >;
@@ -371,7 +361,7 @@ class StochasticProcess : public Observable {
 %template(CalibrationSet) std::vector<std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote> > >;
 
 %shared_ptr(AndreasenHugeVolatilityInterpl)
-class AndreasenHugeVolatilityInterpl : public Observable {
+class AndreasenHugeVolatilityInterpl : public LazyObject {
   public:
     enum InterpolationType {
         PiecewiseConstant,
@@ -404,47 +394,159 @@ class AndreasenHugeVolatilityInterpl : public Observable {
     Date maxDate() const;
     Real minStrike() const;
     Real maxStrike() const;
-
     Real fwd(Time t) const;
     const Handle<YieldTermStructure>& riskFreeRate() const;
-
-    // returns min, max and average error in volatility units
     ext::tuple<Real, Real, Real> calibrationError() const;
-
-    // returns the option price of the calibration type. In case
-    // of CallPut it return the call option price
     Real optionPrice(
         Time t, Real strike,
         Option::Type optionType) const;
-
     Volatility localVol(Time t, Real strike) const;
 };
 
 %shared_ptr(AffineModel)
-class AffineModel : public virtual Observable {
+class AffineModel : public Observable {
   private:
     AffineModel();
   public:
     //! Implied discount curve
-    virtual DiscountFactor discount(Time t) const;
-
-    virtual Real discountBond(
+    DiscountFactor discount(Time t) const;
+    Real discountBond(
         Time now,
         Time maturity,
         Array factors) const;
-
-    virtual Real discountBondOption(
+    Real discountBondOption(
         Option::Type type,
         Real strike,
         Time maturity,
         Time bondMaturity) const;
-
-    virtual Real discountBondOption(
+    Real discountBondOption(
         Option::Type type,
         Real strike,
         Time maturity,
         Time bondStart,
         Time bondMaturity) const;
+};
+
+%shared_ptr(FloatingRateCouponPricer)
+class FloatingRateCouponPricer : public Observer, public Observable {
+  private:
+    FloatingRateCouponPricer();
+  public:
+    Real swapletPrice() const;
+    Rate swapletRate() const;
+    Real capletPrice(Rate effectiveCap) const;
+    Rate capletRate(Rate effectiveCap) const;
+    Real floorletPrice(Rate effectiveFloor) const;
+    Rate floorletRate(Rate effectiveFloor) const;
+    void initialize(const FloatingRateCoupon &coupon);
+};
+
+%template(FloatingRateCouponPricerVector) std::vector<ext::shared_ptr<FloatingRateCouponPricer> >;
+
+void setCouponPricer(
+    const Leg&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&);
+
+void setCouponPricers(
+    const Leg& leg,
+    const std::vector<ext::shared_ptr<FloatingRateCouponPricer> >&);
+
+void setCouponPricers(
+    const Leg& leg,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&);
+
+void setCouponPricers(
+    const Leg& leg,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&);
+
+void setCouponPricers(
+    const Leg& leg,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&,
+    const ext::shared_ptr<FloatingRateCouponPricer>&);
+
+%shared_ptr(InflationCouponPricer)
+class InflationCouponPricer: public Observer, public Observable {
+  private:
+    InflationCouponPricer();
+  public:
+    Real swapletPrice() const;
+    Rate swapletRate() const;
+    Real capletPrice(Rate effectiveCap) const;
+    Rate capletRate(Rate effectiveCap) const;
+    Real floorletPrice(Rate effectiveFloor) const;
+    Rate floorletRate(Rate effectiveFloor) const;
+    void initialize(const InflationCoupon&);
+};
+
+
+%{
+struct IterativeBootstrap {
+    Real accuracy;
+    Real minValue, maxValue;
+    Size maxAttempts;
+    Real maxFactor, minFactor;
+    bool dontThrow;
+    Size dontThrowSteps;
+    IterativeBootstrap(
+        Real accuracy = Null<Real>(),
+        Real minValue = Null<Real>(),
+        Real maxValue = Null<Real>(),
+        Size maxAttempts = 1,
+        Real maxFactor = 2.0,
+        Real minFactor = 2.0,
+        bool dontThrow = false,
+        Size dontThrowSteps = 10)
+        : accuracy(accuracy),
+          minValue(minValue),
+          maxValue(maxValue),
+          maxAttempts(maxAttempts),
+          maxFactor(maxFactor),
+          minFactor(minFactor),
+          dontThrow(dontThrow),
+          dontThrowSteps(dontThrowSteps) {}
+};
+
+struct GlobalBootstrap {
+    std::vector<ext::shared_ptr<RateHelper>> additionalHelpers;
+    std::vector<Date> additionalDates;
+    double accuracy;
+    GlobalBootstrap(double accur = Null<double>())
+        : accuracy(accur) {}
+    GlobalBootstrap(
+        const std::vector<ext::shared_ptr<RateHelper>>& additionHelpers,
+        const std::vector<Date>& additionDates,
+        double accur = Null<double>())
+        : additionalHelpers(additionHelpers),
+          additionalDates(additionDates),
+          accuracy(accur) {}
+};
+%}
+
+struct IterativeBootstrap {
+    %feature("kwargs") IterativeBootstrap;
+    IterativeBootstrap(
+        Real accuracy = Null<Real>(),
+        Real minValue = Null<Real>(),
+        Real maxValue = Null<Real>(),
+        Size maxAttempts = 1,
+        Real maxFactor = 2.0,
+        Real minFactor = 2.0,
+        bool dontThrow = false,
+        Size dontThrowSteps = 10);
+};
+
+struct GlobalBootstrap {
+    GlobalBootstrap(
+        Real accuracy = Null<double>());
+    GlobalBootstrap(
+        const std::vector<ext::shared_ptr<RateHelper> >& additionalHelpers,
+        const std::vector<Date>& additionalDates,
+        Real accuracy = Null<double>());
 };
 
 #endif

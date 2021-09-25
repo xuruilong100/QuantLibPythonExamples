@@ -19,8 +19,10 @@ using QuantLib::ModifiedCraigSneydScheme;
 %shared_ptr(CraigSneydScheme)
 class CraigSneydScheme  {
   public:
-    CraigSneydScheme(Real theta, Real mu,
-        const ext::shared_ptr<FdmLinearOpComposite> & map,
+    CraigSneydScheme(
+        Real theta,
+        Real mu,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);
@@ -33,7 +35,7 @@ class ImplicitEulerScheme {
   public:
     enum SolverType { BiCGstab, GMRES };
     ImplicitEulerScheme(
-        const ext::shared_ptr<FdmLinearOpComposite>& map,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet(),
         Real relTol = 1e-8,
         SolverType solverType = BiCGstab);
@@ -77,7 +79,7 @@ class DouglasScheme  {
 class ExplicitEulerScheme  {
   public:
     ExplicitEulerScheme(
-        const ext::shared_ptr<FdmLinearOpComposite>& map,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);
@@ -88,8 +90,9 @@ class ExplicitEulerScheme  {
 class HundsdorferScheme  {
   public:
     HundsdorferScheme(
-        Real theta, Real mu,
-        const ext::shared_ptr<FdmLinearOpComposite> & map,
+        Real theta,
+        Real mu,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);
@@ -100,8 +103,9 @@ class HundsdorferScheme  {
 class MethodOfLinesScheme  {
   public:
     MethodOfLinesScheme(
-        const Real eps, const Real relInitStepSize,
-        const ext::shared_ptr<FdmLinearOpComposite>& map,
+        Real eps,
+        Real relInitStepSize,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);
@@ -111,8 +115,10 @@ class MethodOfLinesScheme  {
 %shared_ptr(ModifiedCraigSneydScheme)
 class ModifiedCraigSneydScheme  {
   public:
-    ModifiedCraigSneydScheme(Real theta, Real mu,
-        const ext::shared_ptr<FdmLinearOpComposite> & map,
+    ModifiedCraigSneydScheme(
+        Real theta,
+        Real mu,
+        ext::shared_ptr<FdmLinearOpComposite> map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);

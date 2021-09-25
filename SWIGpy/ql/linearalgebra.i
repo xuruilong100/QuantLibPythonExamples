@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include stl.i
 
 %{
 using QuantLib::Array;
@@ -313,25 +312,37 @@ class Array {
             return out.str();
         }
         Array __add__(const Array& a) {
-            return Array(*self+a);
+            return Array(*self + a);
         }
         Array __sub__(const Array& a) {
-            return Array(*self-a);
+            return Array(*self - a);
+        }
+        Array __mul__(const Array& a) {
+            return Array(*self * a);
+        }
+        Array __div__(const Array& a) {
+            return Array(*self / a);
+        }
+        Array __add__(Real a) {
+            return Array(*self + a);
+        }
+        Array __sub__(Real a) {
+            return Array(*self - a);
         }
         Array __mul__(Real a) {
-            return Array(*self*a);
-        }
-        Real __mul__(const Array& a) {
-            return QuantLib::DotProduct(*self,a);
-        }
-        Array __mul__(const Matrix& a) {
-            return *self*a;
+            return Array(*self * a);
         }
         Array __div__(Real a) {
-            return Array(*self/a);
+            return Array(*self / a);
+        }
+        Array __mul__(const Matrix& a) {
+            return Array(*self * a);
         }
         Array __rmul__(Real a) {
-            return Array(*self*a);
+            return Array(*self * a);
+        }
+        Array __rdiv__(Real a) {
+            return Array(a / *self);
         }
         Array __getslice__(Integer i, Integer j) {
             Integer size_ = static_cast<Integer>(self->size());
@@ -387,17 +398,13 @@ class Array {
     }
 };
 
-%inline %{
-    Array NullArray() { return Array(); }
-%}
-
 Real DotProduct(const Array&, const Array&);
 Real Norm2(const Array&);
-//Disposable<Array> Abs(const Array&);
-//Disposable<Array> Sqrt(const Array&);
-//Disposable<Array> Log(const Array&);
-//Disposable<Array> Exp(const Array&);
-//Disposable<Array> Pow(const Array&, Real);
+Array Abs(const Array&);
+Array Sqrt(const Array&);
+Array Log(const Array&);
+Array Exp(const Array&);
+Array Pow(const Array&, Real);
 
 class DefaultLexicographicalViewColumn {
   private:

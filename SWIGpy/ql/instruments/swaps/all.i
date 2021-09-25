@@ -18,7 +18,7 @@ using QuantLib::OvernightIndexedSwap;
 using QuantLib::VanillaSwap;
 using QuantLib::YearOnYearInflationSwap;
 using QuantLib::ZeroCouponInflationSwap;
-
+using QuantLib::ZeroCouponSwap;
 using QuantLib::MakeOIS;
 using QuantLib::MakeVanillaSwap;
 %}
@@ -55,23 +55,17 @@ class ArithmeticAverageOIS : public Swap {
     ArithmeticAverageOIS::Type type() const;
     Real nominal() const;
     std::vector<Real> nominals() const;
-
     Frequency fixedLegPaymentFrequency();
     Frequency overnightLegPaymentFrequency();
-
     Rate fixedRate() const;
     const DayCounter& fixedDayCount();
-
     const ext::shared_ptr<OvernightIndex>& overnightIndex();
     Spread spread() const;
-
     const Leg& fixedLeg() const;
     const Leg& overnightLeg() const;
-
     Real fixedLegBPS() const;
     Real fixedLegNPV() const;
     Real fairRate() const;
-
     Real overnightLegBPS() const;
     Real overnightLegNPV() const;
     Spread fairSpread() const;
@@ -84,13 +78,11 @@ class BMASwap : public Swap {
     BMASwap(
         BMASwap::Type type,
         Real nominal,
-        // Libor leg
         const Schedule& liborSchedule,
         Rate liborFraction,
         Rate liborSpread,
         const ext::shared_ptr<IborIndex>& liborIndex,
         const DayCounter& liborDayCount,
-        // BMA leg
         const Schedule& bmaSchedule,
         const ext::shared_ptr<BMAIndex>& bmaIndex,
         const DayCounter& bmaDayCount);
@@ -98,16 +90,13 @@ class BMASwap : public Swap {
     Real liborFraction() const;
     Spread liborSpread() const;
     Real nominal() const;
-    //! "payer" or "receiver" refer to the BMA leg
     BMASwap::Type type() const;
     const Leg& bmaLeg() const;
     const Leg& liborLeg() const;
-
     Real liborLegBPS() const;
     Real liborLegNPV() const;
     Rate fairLiborFraction() const;
     Spread fairLiborSpread() const;
-
     Real bmaLegBPS() const;
     Real bmaLegNPV() const;
 };
@@ -123,7 +112,6 @@ class AssetSwap : public Swap {
               const Schedule& floatSchedule = Schedule(),
               const DayCounter& floatingDayCount = DayCounter(),
               bool parAssetSwap = true);
-
     AssetSwap(bool parAssetSwap,
               const ext::shared_ptr<Bond>& bond,
               Real bondCleanPrice,
@@ -175,46 +163,42 @@ class CPISwap : public Swap {
         CPI::InterpolationType observationInterpolation = CPI::AsIndex,
         Real inflationNominal = Null<Real>() );
 
-    virtual Real floatLegNPV() const;
-    virtual Spread fairSpread() const;
+    Real floatLegNPV() const;
+    Spread fairSpread() const;
     // fixed rate x inflation
-    virtual Real fixedLegNPV() const;
-    virtual Rate fairRate() const;
-
+    Real fixedLegNPV() const;
+    Rate fairRate() const;
     // inspectors
-    virtual CPISwap::Type type() const;
-    virtual Real nominal() const;
-    virtual bool subtractInflationNominal() const;
-
+    CPISwap::Type type() const;
+    Real nominal() const;
+    bool subtractInflationNominal() const;
     // float+spread
-    virtual Spread spread() const;
-    virtual const DayCounter& floatDayCount() const;
-    virtual const Schedule& floatSchedule() const;
-    virtual const BusinessDayConvention& floatPaymentRoll() const;
-    virtual Natural fixingDays() const;
-    virtual const ext::shared_ptr<IborIndex>& floatIndex() const;
-
+    Spread spread() const;
+    const DayCounter& floatDayCount() const;
+    const Schedule& floatSchedule() const;
+    const BusinessDayConvention& floatPaymentRoll() const;
+    Natural fixingDays() const;
+    const ext::shared_ptr<IborIndex>& floatIndex() const;
     // fixed rate x inflation
-    virtual Rate fixedRate() const;
-    virtual Real baseCPI() const;
-    virtual const DayCounter& fixedDayCount() const;
-    virtual const Schedule& fixedSchedule() const;
-    virtual const BusinessDayConvention& fixedPaymentRoll() const;
-    virtual Period observationLag() const;
-    virtual const ext::shared_ptr<ZeroInflationIndex>& fixedIndex() const;
-    virtual CPI::InterpolationType observationInterpolation() const;
-    virtual Real inflationNominal() const;
-
+    Rate fixedRate() const;
+    Real baseCPI() const;
+    const DayCounter& fixedDayCount() const;
+    const Schedule& fixedSchedule() const;
+    const BusinessDayConvention& fixedPaymentRoll() const;
+    Period observationLag() const;
+    const ext::shared_ptr<ZeroInflationIndex>& fixedIndex() const;
+    CPI::InterpolationType observationInterpolation() const;
+    Real inflationNominal() const;
     // legs
-    virtual const Leg& cpiLeg() const;
-    virtual const Leg& floatLeg() const;
+    const Leg& cpiLeg() const;
+    const Leg& floatLeg() const;
 };
 
 %shared_ptr(FloatFloatSwap)
 class FloatFloatSwap : public Swap {
   public:
     FloatFloatSwap(
-        VanillaSwap::Type type,
+        Swap::Type type,
         Real nominal1,
         Real nominal2,
         const Schedule& schedule1,
@@ -235,9 +219,8 @@ class FloatFloatSwap : public Swap {
         Real flooredRate2 = Null<Real>(),
         const boost::optional<BusinessDayConvention>& paymentConvention1 = boost::none,
         const boost::optional<BusinessDayConvention>& paymentConvention2 = boost::none);
-
      FloatFloatSwap(
-        VanillaSwap::Type type,
+        Swap::Type type,
         const std::vector<Real>& nominal1,
         const std::vector<Real>& nominal2,
         const Schedule& schedule1,
@@ -259,33 +242,25 @@ class FloatFloatSwap : public Swap {
         const boost::optional<BusinessDayConvention>& paymentConvention1 = boost::none,
         const boost::optional<BusinessDayConvention>& paymentConvention2 = boost::none);
 
-    VanillaSwap::Type type() const;
+    Swap::Type type() const;
     const std::vector<Real> &nominal1() const;
     const std::vector<Real> &nominal2() const;
-
     const Schedule &schedule1() const;
     const Schedule &schedule2() const;
-
     const ext::shared_ptr<InterestRateIndex> &index1() const;
     const ext::shared_ptr<InterestRateIndex> &index2() const;
-
     std::vector<Real> spread1() const;
     std::vector<Real> spread2() const;
-
     std::vector<Real> gearing1() const;
     std::vector<Real> gearing2() const;
-
     std::vector<Rate> cappedRate1() const;
     std::vector<Rate> flooredRate1() const;
     std::vector<Rate> cappedRate2() const;
     std::vector<Rate> flooredRate2() const;
-
     const DayCounter &dayCount1() const;
     const DayCounter &dayCount2() const;
-
     BusinessDayConvention paymentConvention1() const;
     BusinessDayConvention paymentConvention2() const;
-
     const Leg &leg1() const;
     const Leg &leg2() const;
 };
@@ -303,14 +278,11 @@ class IrregularSwap : public Swap {
         const Leg& floatLeg);
 
     IrregularSwap::Type type() const;
-
     const Leg& fixedLeg() const;
     const Leg& floatingLeg() const;
-
     Real fixedLegBPS() const;
     Real fixedLegNPV() const;
     Rate fairRate() const;
-
     Real floatingLegBPS() const;
     Real floatingLegNPV() const;
     Spread fairSpread() const;
@@ -332,7 +304,8 @@ class OvernightIndexedSwap : public Swap {
         Natural paymentLag = 0,
         BusinessDayConvention paymentAdjustment = Following,
         Calendar paymentCalendar = Calendar(),
-        bool telescopicValueDates = false);
+        bool telescopicValueDates = false,
+        RateAveraging::Type averagingMethod = RateAveraging::Compound);
     OvernightIndexedSwap(
         OvernightIndexedSwap::Type type,
         std::vector<Real> nominals,
@@ -344,27 +317,23 @@ class OvernightIndexedSwap : public Swap {
         Natural paymentLag = 0,
         BusinessDayConvention paymentAdjustment = Following,
         Calendar paymentCalendar = Calendar(),
-        bool telescopicValueDates = false);
+        bool telescopicValueDates = false,
+        RateAveraging::Type averagingMethod = RateAveraging::Compound);
 
     OvernightIndexedSwap::Type type() const;
     Real nominal() const;
     std::vector<Real> nominals() const;
-
     Frequency paymentFrequency();
-
     Rate fixedRate() const;
     const DayCounter& fixedDayCount();
-
     const ext::shared_ptr<OvernightIndex>& overnightIndex();
+    RateAveraging::Type averagingMethod();
     Spread spread() const;
-
     const Leg& fixedLeg() const;
     const Leg& overnightLeg() const;
-
     Real fixedLegBPS() const;
     Real fixedLegNPV() const;
     Real fairRate() const;
-
     Real overnightLegBPS() const;
     Real overnightLegNPV() const;
     Spread fairSpread() const;
@@ -381,29 +350,24 @@ class VanillaSwap : public Swap {
         const Schedule& floatSchedule,
         const ext::shared_ptr<IborIndex>& index,
         Spread spread,
-        const DayCounter& floatingDayCount);
+        const DayCounter& floatingDayCount,
+        boost::optional<BusinessDayConvention> paymentConvention = boost::none);
 
     VanillaSwap::Type type() const;
     Real nominal() const;
-
     const Schedule& fixedSchedule() const;
     Rate fixedRate() const;
     const DayCounter& fixedDayCount() const;
-
     const Schedule& floatingSchedule() const;
     const ext::shared_ptr<IborIndex>& iborIndex() const;
     Spread spread() const;
     const DayCounter& floatingDayCount() const;
-
     BusinessDayConvention paymentConvention() const;
-
     const Leg& fixedLeg() const;
     const Leg& floatingLeg() const;
-
     Real fixedLegBPS() const;
     Real fixedLegNPV() const;
     Rate fairRate() const;
-
     Real floatingLegBPS() const;
     Real floatingLegNPV() const;
     Spread fairSpread() const;
@@ -447,11 +411,9 @@ class NonstandardSwap : public Swap {
     VanillaSwap::Type type() const;
     const std::vector<Real> &fixedNominal() const;
     const std::vector<Real> &floatingNominal() const;
-
     const Schedule &fixedSchedule() const;
     const std::vector<Real> &fixedRate() const;
     const DayCounter &fixedDayCount() const;
-
     const Schedule &floatingSchedule() const;
     const ext::shared_ptr<IborIndex> &iborIndex() const;
     Spread spread() const;
@@ -459,9 +421,7 @@ class NonstandardSwap : public Swap {
     const std::vector<Spread>& spreads() const;
     const std::vector<Real>& gearings() const;
     const DayCounter &floatingDayCount() const;
-
     BusinessDayConvention paymentConvention() const;
-
     const Leg &fixedLeg() const;
     const Leg &floatingLeg() const;
 };
@@ -484,30 +444,24 @@ class YearOnYearInflationSwap : public Swap {
         const Calendar& paymentCalendar,
         BusinessDayConvention paymentConvention = Following);
 
-    virtual Real fixedLegNPV() const;
-    virtual Rate fairRate() const;
-
-    virtual Real yoyLegNPV() const;
-    virtual Spread fairSpread() const;
-    // inspectors
-    virtual YearOnYearInflationSwap::Type type() const;
-    virtual Real nominal() const;
-
-    virtual const Schedule& fixedSchedule() const;
-    virtual Rate fixedRate() const;
-    virtual const DayCounter& fixedDayCount() const;
-
-    virtual const Schedule& yoySchedule() const;
-    virtual const ext::shared_ptr<YoYInflationIndex>& yoyInflationIndex() const;
-    virtual Period observationLag() const;
-    virtual Spread spread() const;
-    virtual const DayCounter& yoyDayCount() const;
-
-    virtual Calendar paymentCalendar() const;
-    virtual BusinessDayConvention paymentConvention() const;
-
-    virtual const Leg& fixedLeg() const;
-    virtual const Leg& yoyLeg() const;
+    Real fixedLegNPV() const;
+    Rate fairRate() const;
+    Real yoyLegNPV() const;
+    Spread fairSpread() const;
+    YearOnYearInflationSwap::Type type() const;
+    Real nominal() const;
+    const Schedule& fixedSchedule() const;
+    Rate fixedRate() const;
+    const DayCounter& fixedDayCount() const;
+    const Schedule& yoySchedule() const;
+    const ext::shared_ptr<YoYInflationIndex>& yoyInflationIndex() const;
+    Period observationLag() const;
+    Spread spread() const;
+    const DayCounter& yoyDayCount() const;
+    Calendar paymentCalendar() const;
+    BusinessDayConvention paymentConvention() const;
+    const Leg& fixedLeg() const;
+    const Leg& yoyLeg() const;
 };
 
 %shared_ptr(ZeroCouponInflationSwap)
@@ -536,16 +490,13 @@ class ZeroCouponInflationSwap : public Swap {
     Calendar fixedCalendar() const;
     BusinessDayConvention fixedConvention() const;
     DayCounter dayCounter() const;
-    //! \f$ K \f$ in the above formula.
     Rate fixedRate() const;
     ext::shared_ptr<ZeroInflationIndex> inflationIndex() const;
     Period observationLag() const;
     bool adjustObservationDates() const;
     Calendar inflationCalendar() const;
     BusinessDayConvention inflationConvention() const;
-    //! just one cashflow (that is not a coupon) in each leg
     const Leg& fixedLeg() const;
-    //! just one cashflow (that is not a coupon) in each leg
     const Leg& inflationLeg() const;
 
     Real fixedLegNPV() const;
@@ -553,7 +504,43 @@ class ZeroCouponInflationSwap : public Swap {
     Real fairRate() const;
 };
 
-%rename (_MakeOIS) MakeOIS;
+%shared_ptr(ZeroCouponSwap)
+class ZeroCouponSwap : public Swap {
+  public:
+    ZeroCouponSwap(Type type,
+                   Real baseNominal,
+                   const Date& startDate,
+                   const Date& maturityDate,
+                   Real fixedPayment,
+                   ext::shared_ptr<IborIndex> iborIndex,
+                   const Calendar& paymentCalendar,
+                   BusinessDayConvention paymentConvention = Following,
+                   Natural paymentDelay = 0);
+    ZeroCouponSwap(Type type,
+                   Real baseNominal,
+                   const Date& startDate,
+                   const Date& maturityDate,
+                   Rate fixedRate,
+                   const DayCounter& fixedDayCounter,
+                   ext::shared_ptr<IborIndex> iborIndex,
+                   const Calendar& paymentCalendar,
+                   BusinessDayConvention paymentConvention = Following,
+                   Natural paymentDelay = 0);
+
+    Type type() const { return type_; }
+    Real baseNominal() const { return baseNominal_; }
+    Date startDate() const { return startDate_; }
+    Date maturityDate() const { return maturityDate_; }
+    const ext::shared_ptr<IborIndex>& iborIndex() const { return iborIndex_; }
+    const Leg& fixedLeg() const;
+    const Leg& floatingLeg() const;
+    Real fixedPayment() const;
+    Real fixedLegNPV() const;
+    Real floatingLegNPV() const;
+    Real fairFixedPayment() const;
+    Rate fairFixedRate(const DayCounter& dayCounter) const;
+};
+
 class MakeOIS {
   public:
     MakeOIS(
@@ -564,7 +551,7 @@ class MakeOIS {
 
     %extend{
         ext::shared_ptr<OvernightIndexedSwap> makeOIS(){
-            return (ext::shared_ptr<OvernightIndexedSwap>)(* $self);
+            return (ext::shared_ptr<OvernightIndexedSwap>)(*$self);
         }
     }
 
@@ -585,6 +572,7 @@ class MakeOIS {
     MakeOIS& withDiscountingTermStructure(
         const Handle<YieldTermStructure>& discountingTermStructure);
     MakeOIS& withTelescopicValueDates(bool telescopicValueDates);
+    MakeOIS& withAveragingMethod(RateAveraging::Type averagingMethod);
     MakeOIS& withPricingEngine(
         const ext::shared_ptr<PricingEngine>& engine);
 };
@@ -611,8 +599,9 @@ def MakeOIS(
         overnightLegSpread=0.0,
         discountingTermStructure=None,
         telescopicValueDates=False,
-        pricingEngine=None):
-    mv = _MakeOIS(
+        pricingEngine=None,
+        averagingMethod=None):
+    mv = MakeOIS(
         swapTenor, overnightIndex, fixedRate, fwdStart)
 
     if not receiveFixed:
@@ -649,13 +638,14 @@ def MakeOIS(
         mv.withDiscountingTermStructure(discountingTermStructure)
     if telescopicValueDates:
         mv.withTelescopicValueDates(telescopicValueDates)
+    if averagingMethod is not None:
+        mv.withAveragingMethod(averagingMethod)
     if pricingEngine is not None:
         mv.withPricingEngine(pricingEngine)
 
     return mv.makeOIS()
 }
 
-%rename (_MakeVanillaSwap) MakeVanillaSwap;
 class MakeVanillaSwap {
   public:
     MakeVanillaSwap(
@@ -712,7 +702,7 @@ def MakeVanillaSwap(
         fixedLegEndOfMonth=None, fixedLegFirstDate=None, fixedLegNextToLastDate=None,
         floatingLegTerminationDateConvention=None,  floatingLegDateGenRule=None,
         floatingLegEndOfMonth=None, floatingLegFirstDate=None, floatingLegNextToLastDate=None):
-    mv = _MakeVanillaSwap(swapTenor, iborIndex, fixedRate, forwardStart)
+    mv = MakeVanillaSwap(swapTenor, iborIndex, fixedRate, forwardStart)
     if receiveFixed is not None:
         mv.receiveFixed(receiveFixed)
     if swapType is not None:

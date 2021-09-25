@@ -19,10 +19,16 @@ class TimeSeries {
         TimeSeries(const std::vector<Date>& d, const std::vector<T>& v) {
             return new TimeSeries<T>(d.begin(), d.end(), v.begin());
         }
+        TimeSeries(const Date& firstDate, const std::vector<T>& v) {
+            return new TimeSeries<T>(firstDate, v.begin(), v.end());
+        }
     }
+    Date firstDate() const;
+    Date lastDate() const;
+    Size size();
+    bool empty() const;
     std::vector<Date> dates();
     std::vector<T> values();
-    Size size();
     %extend {
         T __getitem__(const Date& d) {
             return (*self)[d];

@@ -7,6 +7,12 @@
 
 %{
 using QuantLib::Exercise;
+using QuantLib::EarlyExercise;
+using QuantLib::AmericanExercise;
+using QuantLib::BermudanExercise;
+using QuantLib::EuropeanExercise;
+using QuantLib::RebatedExercise;
+using QuantLib::SwingExercise;
 %}
 
 %shared_ptr(Exercise)
@@ -22,15 +28,6 @@ class Exercise {
     const std::vector<Date>& dates();
     Date lastDate() const;
 };
-
-%{
-using QuantLib::EarlyExercise;
-using QuantLib::AmericanExercise;
-using QuantLib::BermudanExercise;
-using QuantLib::EuropeanExercise;
-using QuantLib::RebatedExercise;
-using QuantLib::SwingExercise;
-%}
 
 %shared_ptr(EuropeanExercise)
 class EuropeanExercise : public Exercise {

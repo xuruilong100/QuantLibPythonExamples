@@ -34,14 +34,19 @@ class YieldTermStructure : public TermStructure {
         Frequency f = Annual,
         bool extrapolate = false) const;
     InterestRate forwardRate(
+        const Date &d, const Period &p,
+        const DayCounter &resultDayCounter,
+        Compounding comp, Frequency freq=Annual,
+        bool extrapolate=false) const;
+    InterestRate forwardRate(
         Time t1, Time t2,
         Compounding, Frequency f = Annual,
         bool extrapolate = false) const;
+    const std::vector<Date> & jumpDates() const;
+    const std::vector<Time> & jumpTimes() const;
 };
 
 %template(YieldTermStructureHandle) Handle<YieldTermStructure>;
 %template(RelinkableYieldTermStructureHandle) RelinkableHandle<YieldTermStructure>;
-
-
 
 #endif

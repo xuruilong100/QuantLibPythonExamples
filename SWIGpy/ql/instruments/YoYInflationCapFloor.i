@@ -16,8 +16,22 @@ class YoYInflationCapFloor : public Instrument {
     enum Type { Cap, Floor, Collar };
     YoYInflationCapFloor(
         YoYInflationCapFloor::Type type,
-        const Leg& yoyLeg,
+        Leg yoyLeg,
+        std::vector<Rate> capRates,
+        std::vector<Rate> floorRates);
+    YoYInflationCapFloor(
+        YoYInflationCapFloor::Type type,
+        Leg yoyLeg,
         const std::vector<Rate>& strikes);
+    Type type() const;
+    const std::vector<Rate>& capRates() const;
+    const std::vector<Rate>& floorRates() const;
+    const Leg& yoyLeg() const;
+    Date startDate() const;
+    Date maturityDate() const;
+    ext::shared_ptr<YoYInflationCoupon> lastYoYInflationCoupon() const;
+    ext::shared_ptr<YoYInflationCapFloor> optionlet(Size n) const;
+    Rate atmRate(const YieldTermStructure& discountCurve) const;
     Volatility impliedVolatility(
         Real price,
         const Handle<YoYInflationTermStructure>& curve,

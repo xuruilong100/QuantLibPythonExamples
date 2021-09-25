@@ -15,7 +15,6 @@ class OneAssetOption : public Option {
   private:
     OneAssetOption();
   public:
-    bool isExpired() const;
     Real delta() const;
     Real deltaForward() const;
     Real elasticity() const;

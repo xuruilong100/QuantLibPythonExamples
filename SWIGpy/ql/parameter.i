@@ -10,6 +10,7 @@ using QuantLib::Parameter;
 using QuantLib::ConstantParameter;
 using QuantLib::NullParameter;
 using QuantLib::PiecewiseConstantParameter;
+using QuantLib::InterpolationParameter;
 %}
 
 class Parameter {
@@ -23,32 +24,24 @@ class Parameter {
     const Constraint& constraint() const;
 };
 
-//! Standard constant parameter \f$ a(t) = a \f$
 class ConstantParameter : public Parameter {
   public:
     ConstantParameter(
         const Constraint& constraint);
     ConstantParameter(
         Real value, const Constraint& constraint);
-
 };
 
-//! %Parameter which is always zero \f$ a(t) = 0 \f$
 class NullParameter : public Parameter {
   public:
     NullParameter();
 };
 
-//! Piecewise-constant parameter
-/*! \f$ a(t) = a_i if t_{i-1} \geq t < t_i \f$.
-    This kind of parameter is usually used to enhance the fitting of a
-    model
-*/
 class PiecewiseConstantParameter : public Parameter {
   public:
-     PiecewiseConstantParameter(
-         const std::vector<Time>& times,
-         const Constraint& constraint=QuantLib::NoConstraint());
+    PiecewiseConstantParameter(
+        std::vector<Time> times,
+        const Constraint& constraint = NoConstraint());
 };
 
 #endif

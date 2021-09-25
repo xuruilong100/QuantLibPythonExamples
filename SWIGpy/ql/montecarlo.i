@@ -1,5 +1,5 @@
-#ifndef ql_montecarlo_i
-#define ql_montecarlo_i
+#ifndef ql_monte_carlo_i
+#define ql_monte_carlo_i
 
 %include ../ql/types.i
 %include ../ql/common.i
@@ -29,23 +29,18 @@ class Path {
   private:
     Path();
   public:
+    bool empty() const;
     Size length() const;
+    Real at(Size i) const;
     Real value(Size i) const;
+    Time time(Size i) const;
     Real front() const;
     Real back() const;
-    Time time(Size i) const;
+    const TimeGrid& timeGrid() const;
     %extend {
         Real __getitem__(Integer i) {
-            Integer size_ = Integer(self->length());
-            if (i>=0 && i<size_) {
-                return (*self)[i];
-            } else if (i<0 && -i<=size_) {
-                return (*self)[size_+i];
-            } else {
-                throw std::out_of_range("path index out of range");
-            }
+            return (*self)[i];
         }
-
     }
 };
 
@@ -83,18 +78,10 @@ class MultiPath {
   public:
     Size pathSize() const;
     Size assetNumber() const;
-	Path& at(Size j);
-
+	const Path& at(Size j) const;
     %extend {
         const Path& __getitem__(Integer i) {
-            Integer assets_ = Integer(self->assetNumber());
-            if (i>=0 && i<assets_) {
-                return (*self)[i];
-            } else if (i<0 && -i<=assets_) {
-                return (*self)[assets_+i];
-            } else {
-                throw std::out_of_range("multi-path index out of range");
-            }
+            return (*self)[i];
         }
     }
 };
@@ -110,19 +97,6 @@ class MultiPathGenerator {
         const TimeGrid& timeGrid,
         const GSG& generator,
         bool brownianBridge = false);
-    %extend {
-        MultiPathGenerator(
-            const ext::shared_ptr<StochasticProcess>& process,
-            const std::vector<Time>& times,
-            const GSG& generator,
-            bool brownianBridge = false) {
-            return new MultiPathGenerator<GSG>(
-                process,
-                TimeGrid(times.begin(), times.end()),
-                generator,
-                brownianBridge);
-        }
-    }
     const sample_type& next() const;
     const sample_type& antithetic() const;
 };
@@ -137,10 +111,13 @@ class BrownianBridge {
     BrownianBridge(const TimeGrid& timeGrid);
 
     Size size() const;
-    std::vector<Time> times() const;
-    std::vector<Real> leftWeight() const;
-    std::vector<Real> rightWeight() const;
-    std::vector<Real> stdDeviation() const;
+    const std::vector<Time>& times() const;
+    const std::vector<Size>& bridgeIndex() const;
+    const std::vector<Size>& leftIndex() const;
+    const std::vector<Size>& rightIndex() const;
+    const std::vector<Real>& leftWeight() const;
+    const std::vector<Real>& rightWeight() const;
+    const std::vector<Real>& stdDeviation() const;
     %extend {
         std::vector<Real> transform(
             const std::vector<Real>& input) {
@@ -148,15 +125,6 @@ class BrownianBridge {
             $self->transform(
                 input.begin(), input.end(), outp.begin());
             return outp;
-        }
-        std::vector<unsigned int> bridgeIndex() const {
-            return to_vector<unsigned int>($self->bridgeIndex());
-        }
-        std::vector<unsigned int> leftIndex() const {
-            return to_vector<unsigned int>($self->leftIndex());
-        }
-        std::vector<unsigned int> rightIndex() const {
-            return to_vector<unsigned int>($self->rightIndex());
         }
     }
 };

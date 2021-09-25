@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include stl.i
 
 %define QL_TYPECHECK_PERIOD                      5220    %enddef
 
@@ -139,21 +138,6 @@ class Date {
   public:
     Date();
     Date(Day d, Month m, Year y);
-    /* %extend {
-        Date(Day d, Month m, Year y,
-             Hour hours, Minute minutes, Second seconds,
-             Millisecond millisec = 0,
-             Microsecond microsec = 0) {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return new Date(
-                d, m, y, hours, minutes, seconds,
-                millisec, microsec);
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-    } */
     Date(BigInteger serialNumber);
     // access functions
     Weekday weekday() const;
@@ -161,90 +145,12 @@ class Date {
     Day dayOfYear() const;        // one-based
     Month month() const;
     Year year() const;
-    /* %extend {
-        Hour hours() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->hours();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        Minute minutes() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->minutes();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        Second seconds() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->seconds();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        Millisecond milliseconds() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->milliseconds();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        Microsecond microseconds() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->microseconds();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-
-        Time fractionOfDay() const {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->fractionOfDay();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        Time fractionOfSecond() const {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return self->fractionOfSecond();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-    } */
-
     BigInteger serialNumber() const;
     // static methods
     static bool isLeap(Year y);
     static Date minDate();
     static Date maxDate();
     static Date todaysDate();
-    /* %extend {
-        static Date localDateTime() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return Date::localDateTime();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-        }
-        static Date universalDateTime() {
-        %#ifdef QL_HIGH_RESOLUTION_DATE
-            return Date::universalDateTime();
-        %#else
-            throw std::runtime_error(
-                "QuantLib was not compiled with intraday support");
-        %#endif
-         }
-    } */
     static Date endOfMonth(const Date&);
     static bool isEndOfMonth(const Date&);
     static Date nextWeekday(const Date&, Weekday);
@@ -266,6 +172,9 @@ class Date {
             _replace_format(fmt, "dd", "%d");
             return new Date(
                 DateParser::parseFormatted(str,fmt));
+        }
+        Day day() const {
+            return self->dayOfMonth();
         }
         Integer weekdayNumber() {
             return int(self->weekday());

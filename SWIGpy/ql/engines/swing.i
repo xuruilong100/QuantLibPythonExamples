@@ -15,7 +15,7 @@ using QuantLib::FdSimpleExtOUJumpSwingEngine;
 class FdSimpleBSSwingEngine : public PricingEngine {
   public:
     FdSimpleBSSwingEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
         Size tGrid = 50,
         Size xGrid = 100,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas());

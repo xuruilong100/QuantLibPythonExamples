@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include stl.i
 
 %{
 using QuantLib::DayCounter;
@@ -19,6 +18,7 @@ class DayCounter {
                       const Date& startRef = Date(),
                       const Date& endRef = Date()) const;
     std::string name() const;
+    bool empty() const;
     %extend {
         std::string __str__() {
             return self->name()+" day counter";
@@ -42,7 +42,9 @@ class Actual360 : public DayCounter {
   public:
     Actual360(const bool includeLastDay = false);
 };
+
 class Actual364 : public DayCounter {};
+
 class Actual365Fixed : public DayCounter {
   public:
     enum Convention {
@@ -52,18 +54,7 @@ class Actual365Fixed : public DayCounter {
     };
     Actual365Fixed(Convention c = Standard);
 };
-class Thirty360 : public DayCounter {
-  public:
-    enum Convention {
-        USA,
-        BondBasis,
-        European,
-        EurobondBasis,
-        Italian
-    };
-    Thirty360(Convention c = USA);
-};
-class Thirty365 : public DayCounter {};
+
 class ActualActual : public DayCounter {
   public:
     enum Convention {
@@ -76,15 +67,39 @@ class ActualActual : public DayCounter {
         Euro
     };
     ActualActual(
-        Convention c = ISDA,
+        Convention c,
         const Schedule& schedule = Schedule());
 };
-class OneDayCounter : public DayCounter {};
-class SimpleDayCounter : public DayCounter {};
+
 class Business252 : public DayCounter {
   public:
     Business252(Calendar c = Brazil());
 };
+
+class OneDayCounter : public DayCounter {};
+
+class SimpleDayCounter : public DayCounter {};
+
+class Thirty360 : public DayCounter {
+  public:
+    enum Convention {
+        USA,
+        BondBasis,
+        European,
+        EurobondBasis,
+        Italian,
+        German,
+        ISMA,
+        ISDA,
+        NASD
+    };
+    Thirty360(
+        Convention c,
+        const Date &terminationDate=Date());
+};
+
+class Thirty365 : public DayCounter {};
+
 }    // namespace QuantLib
 
 #endif

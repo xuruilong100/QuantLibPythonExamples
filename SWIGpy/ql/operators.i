@@ -18,6 +18,7 @@ using QuantLib::DirichletBC;
 
 class TridiagonalOperator {
   public:
+    TridiagonalOperator(Size size=0);
     TridiagonalOperator(
         const Array& low,
         const Array& mid,
@@ -25,13 +26,19 @@ class TridiagonalOperator {
     // operator interface
     Array solveFor(const Array& rhs) const;
     Array applyTo(const Array& v) const;
+    Array SOR(const Array &rhs, Real tol) const;
     // inspectors
     Size size() const;
+    bool isTimeDependent() const;
+    const Array & lowerDiagonal() const;
+    const Array & diagonal() const;
+    const Array & upperDiagonal() const;
     // modifiers
     void setFirstRow(Real, Real);
     void setMidRow(Size, Real, Real, Real);
     void setMidRows(Real, Real, Real);
     void setLastRow(Real, Real);
+    void setTime(Time t);
     // identity
     static TridiagonalOperator identity(Size size);
 
@@ -50,7 +57,6 @@ class TridiagonalOperator {
         TridiagonalOperator __div__(Real a) {
             return *self/a;
         }
-
         TridiagonalOperator __iadd__(
             const TridiagonalOperator& O) {
             return *self+O;

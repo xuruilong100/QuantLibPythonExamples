@@ -4,10 +4,11 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include ../ql/cashflows/FloatingRateCouponPricer.i
+%include ../ql/base.i
 
 %{
 using QuantLib::GFunctionFactory;
+using QuantLib::SubPeriodsPricer;
 using QuantLib::CmsCouponPricer;
 using QuantLib::CmsSpreadCouponPricer;
 using QuantLib::IborCouponPricer;
@@ -16,6 +17,8 @@ using QuantLib::NumericHaganPricer;
 using QuantLib::LinearTsrPricer;
 using QuantLib::LognormalCmsSpreadPricer;
 using QuantLib::BlackIborCouponPricer;
+using QuantLib::CompoundingRatePricer;
+using QuantLib::AveragingRatePricer;
 %}
 
 class GFunctionFactory {
@@ -29,6 +32,20 @@ class GFunctionFactory {
         ParallelShifts,
         NonParallelShifts
     };
+};
+
+%shared_ptr(SubPeriodsPricer)
+class SubPeriodsPricer: public FloatingRateCouponPricer {
+  private:
+    SubPeriodsPricer();
+  public:
+    Real swapletPrice() const;
+    Rate swapletRate() const;
+    Real capletPrice(Rate effectiveCap) const;
+    Rate capletRate(Rate effectiveCap) const;
+    Real floorletPrice(Rate effectiveFloor) const;
+    Rate floorletRate(Rate effectiveFloor) const;
+    void initialize(const FloatingRateCoupon &coupon);
 };
 
 %shared_ptr(CmsCouponPricer)
@@ -149,6 +166,20 @@ class BlackIborCouponPricer : public IborCouponPricer {
         const TimingAdjustment timingAdjustment = Black76,
         const Handle<Quote> correlation =
         Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(1.0))));
+};
+
+%shared_ptr(CompoundingRatePricer)
+class CompoundingRatePricer: public SubPeriodsPricer {
+  public:
+    CompoundingRatePricer();
+    Rate swapletRate() const;
+};
+
+%shared_ptr(AveragingRatePricer)
+class AveragingRatePricer: public SubPeriodsPricer {
+  public:
+    AveragingRatePricer();
+    Rate swapletRate() const;
 };
 
 #endif

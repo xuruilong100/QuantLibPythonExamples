@@ -1,5 +1,5 @@
-#ifndef ql_fdmlinearops_all_i
-#define ql_fdmlinearops_all_i
+#ifndef ql_fdms_linearops_all_i
+#define ql_fdms_linearops_all_i
 
 %include ../ql/types.i
 %include ../ql/common.i
@@ -13,38 +13,43 @@ using QuantLib::TripleBandLinearOp;
 using QuantLib::NinePointLinearOp;
 using QuantLib::NthOrderDerivativeOp;
 
+using QuantLib::Fdm2dBlackScholesOp;
 using QuantLib::FdmBatesOp;
 using QuantLib::FdmBlackScholesOp;
-using QuantLib::Fdm2dBlackScholesOp;
+using QuantLib::FdmBlackScholesFwdOp;
 using QuantLib::FdmCEVOp;
+using QuantLib::FdmCIROp;
+using QuantLib::FdmDupire1dOp;
+using QuantLib::FdmExtOUJumpOp;
+using QuantLib::FdmExtendedOrnsteinUhlenbeckOp;
 using QuantLib::FdmG2Op;
+using QuantLib::FdmHestonFwdOp;
 using QuantLib::FdmHestonHullWhiteOp;
 using QuantLib::FdmHestonOp;
 using QuantLib::FdmHullWhiteOp;
+using QuantLib::FdmKlugeExtOUOp;
 using QuantLib::FdmLocalVolFwdOp;
 using QuantLib::FdmOrnsteinUhlenbeckOp;
 using QuantLib::FdmSabrOp;
-using QuantLib::FdmZabrOp;
-using QuantLib::FdmDupire1dOp;
-using QuantLib::FdmBlackScholesFwdOp;
-using QuantLib::FdmHestonFwdOp;
 using QuantLib::FdmSquareRootFwdOp;
+using QuantLib::FdmZabrOp;
 
 using QuantLib::FirstDerivativeOp;
 using QuantLib::SecondDerivativeOp;
 using QuantLib::SecondOrderMixedDerivativeOp;
+using QuantLib::ModTripleBandLinearOp;
 %}
 
 %shared_ptr(FdmLinearOpComposite)
 class FdmLinearOpComposite : public FdmLinearOp {
   public:
-    virtual Size size() const;
-    virtual void setTime(Time t1, Time t2);
+    Size size() const;
+    void setTime(Time t1, Time t2);
 
-    virtual Array apply_mixed(const Array& r) const;
-    virtual Array apply_direction(Size direction, const Array& r) const;
-    virtual Array solve_splitting(Size direction, const Array& r, Real s) const;
-    virtual Array preconditioner(const Array& r, Real s) const;
+    Array apply_mixed(const Array& r) const;
+    Array apply_direction(Size direction, const Array& r) const;
+    Array solve_splitting(Size direction, const Array& r, Real s) const;
+    Array preconditioner(const Array& r, Real s) const;
 
   private:
       FdmLinearOpComposite();
@@ -240,7 +245,7 @@ class FdmBlackScholesOp : public FdmLinearOpComposite {
         const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Real strike,
         bool localVol = false,
-        doubleOrNull illegalLocalVolOverwrite = -Null<Real>(),
+        Real illegalLocalVolOverwrite = -Null<Real>(),
         Size direction = 0,
         const ext::shared_ptr<FdmQuantoHelper>& quantoHelper = ext::shared_ptr<FdmQuantoHelper>());
 };
@@ -255,7 +260,7 @@ class Fdm2dBlackScholesOp : public FdmLinearOpComposite {
         Real correlation,
         Time maturity,
         bool localVol = false,
-        doubleOrNull illegalLocalVolOverwrite = -Null<Real>());
+        Real illegalLocalVolOverwrite = -Null<Real>());
 };
 
 %shared_ptr(FdmCEVOp)
@@ -266,6 +271,49 @@ class FdmCEVOp : public FdmLinearOpComposite {
         const ext::shared_ptr<YieldTermStructure>& rTS,
         Real f0, Real alpha, Real beta,
         Size direction);
+};
+
+%shared_ptr(FdmCIROp)
+class FdmCIROp : public FdmLinearOpComposite {
+  public:
+    FdmCIROp(const ext::shared_ptr<FdmMesher>& mesher,
+             const ext::shared_ptr<CoxIngersollRossProcess>& cirProcess,
+             const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
+             Real rho,
+             Real strike);
+};
+
+%shared_ptr(FdmExtOUJumpOp)
+class FdmExtOUJumpOp : public FdmLinearOpComposite {
+  public:
+    FdmExtOUJumpOp(
+        const ext::shared_ptr<FdmMesher>& mesher,
+        const ext::shared_ptr<ExtOUWithJumpsProcess>& process,
+        const ext::shared_ptr<YieldTermStructure>& rTS,
+        const FdmBoundaryConditionSet& bcSet,
+        Size integroIntegrationOrder);
+};
+
+%shared_ptr(FdmExtendedOrnsteinUhlenbeckOp)
+class FdmExtendedOrnsteinUhlenbeckOp : public FdmLinearOpComposite {
+  public:
+    FdmExtendedOrnsteinUhlenbeckOp(
+        const ext::shared_ptr<FdmMesher>& mesher,
+        ext::shared_ptr<ExtendedOrnsteinUhlenbeckProcess> p,
+        ext::shared_ptr<YieldTermStructure> rTS,
+        FdmBoundaryConditionSet bcSet,
+        Size direction = 0);
+};
+
+%shared_ptr(FdmKlugeExtOUOp)
+class FdmKlugeExtOUOp : public FdmLinearOpComposite {
+  public:
+    FdmKlugeExtOUOp(
+        const ext::shared_ptr<FdmMesher>& mesher,
+        const ext::shared_ptr<KlugeExtOUProcess>& klugeOUProcess,
+        const ext::shared_ptr<YieldTermStructure>& rTS,
+        const FdmBoundaryConditionSet& bcSet,
+        Size integroIntegrationOrder);
 };
 
 %shared_ptr(FdmG2Op)
@@ -312,8 +360,8 @@ class FdmLocalVolFwdOp : public FdmLinearOpComposite {
       FdmLocalVolFwdOp(
         const ext::shared_ptr<FdmMesher>& mesher,
         const ext::shared_ptr<Quote>& spot,
-        const ext::shared_ptr<YieldTermStructure>& rTS,
-        const ext::shared_ptr<YieldTermStructure>& qTS,
+        ext::shared_ptr<YieldTermStructure> rTS,
+        ext::shared_ptr<YieldTermStructure> qTS,
         const ext::shared_ptr<LocalVolTermStructure>& localVol,
         Size direction = 0);
 };
@@ -415,6 +463,14 @@ class SecondOrderMixedDerivativeOp : public NinePointLinearOp {
 public:
     SecondOrderMixedDerivativeOp(
         Size d0, Size d1,
+        const ext::shared_ptr<FdmMesher>& mesher);
+};
+
+%shared_ptr(ModTripleBandLinearOp)
+class ModTripleBandLinearOp : public TripleBandLinearOp {
+  public:
+    ModTripleBandLinearOp(
+        Size direction,
         const ext::shared_ptr<FdmMesher>& mesher);
 };
 

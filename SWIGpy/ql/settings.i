@@ -8,6 +8,7 @@
 %{
 using QuantLib::Settings;
 using QuantLib::SavedSettings;
+using QuantLib::SeedGenerator;
 %}
 
 class Settings {
@@ -53,6 +54,13 @@ class Settings {
 class SavedSettings {
     public:
     SavedSettings();
+};
+
+class SeedGenerator {
+  public:
+    BigNatural get();
+  private:
+    SeedGenerator();
 };
 
 #endif

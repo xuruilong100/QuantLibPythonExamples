@@ -45,7 +45,7 @@ class AmortizingBondTest(unittest.TestCase):
         # SND Code - RISF11
         # ISIN Code - BRRISFDBS005
         # Fiduciary Agent URL - https://www.pentagonotrustee.com.br/Site/DetalhesEmissor?ativo=RISF11&aba=tab-5&tipo=undefined
-        arr=[
+        arr = [
             1000, 983.33300000, 966.66648898, 950.00019204,
             933.33338867, 916.66685434, 900.00001759, 883.33291726,
             866.66619177, 849.99933423, 833.33254728, 816.66589633,
@@ -60,12 +60,12 @@ class AmortizingBondTest(unittest.TestCase):
             266.66594695, 249.99932526, 233.33262024, 216.66590450,
             199.99931312, 183.33277035, 166.66617153, 149.99955437,
             133.33295388, 116.66633464, 99.99973207, 83.33307672,
-            66.66646137, 49.99984602, 33.33324734, 16.66662367        ]
-        notionals=DoubleVector()
+            66.66646137, 49.99984602, 33.33324734, 16.66662367]
+        notionals = DoubleVector()
         for i in arr:
             notionals.push_back(i)
 
-        expected_amortizations=[
+        expected_amortizations = [
             16.66700000, 16.66651102, 16.66629694, 16.66680337,
             16.66653432, 16.66683675, 16.66710033, 16.66672548,
             16.66685753, 16.66678695, 16.66665095, 16.66651761,
@@ -80,8 +80,8 @@ class AmortizingBondTest(unittest.TestCase):
             16.66662168, 16.66670502, 16.66671573, 16.66659137,
             16.66654276, 16.66659882, 16.66661715, 16.66660049,
             16.66661924, 16.66660257, 16.66665534, 16.66661534,
-            16.66661534, 16.66659867, 16.66662367, 16.66662367        ]
-        expected_coupons=[
+            16.66661534, 16.66659867, 16.66662367, 16.66662367]
+        expected_coupons = [
             5.97950399, 4.85474255, 5.27619136, 5.18522454,
             5.33753111, 5.24221882, 4.91231709, 4.59116258,
             4.73037674, 4.63940686, 4.54843737, 3.81920094,
@@ -96,25 +96,25 @@ class AmortizingBondTest(unittest.TestCase):
             1.38600825, 1.23425366, 1.39521333, 1.06968563,
             1.03950542, 1.00065409, 0.90968563, 0.81871706,
             0.79726493, 0.63678002, 0.57187676, 0.49829046,
-            0.32913418, 0.27290565, 0.19062560, 0.08662552        ]
+            0.32913418, 0.27290565, 0.19062560, 0.08662552]
         settlementDays = 0
-        issueDate=Date(2, March, 2020)
-        maturityDate=Date(2, March, 2025)
-        schedule=Schedule        (
+        issueDate = Date(2, March, 2020)
+        maturityDate = Date(2, March, 2025)
+        schedule = Schedule(
             issueDate,
             maturityDate,
             Period(Monthly),
             Brazil(Brazil.Settlement),
-        Unadjusted,
-        Unadjusted,
-        DateGeneration.Backward,
-                        False)
-        couponRates=InterestRateVector(1)
+            Unadjusted,
+            Unadjusted,
+            DateGeneration.Backward,
+            False)
+        couponRates = InterestRateVector(1)
         couponRates[0] = InterestRate(
             0.0675,
             Business252(Brazil()),
             Compounded, Annual)
-        risf11=AmortizingFixedRateBond        (
+        risf11 = AmortizingFixedRateBond(
             settlementDays,
             notionals,
             schedule,
@@ -129,7 +129,3 @@ class AmortizingBondTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
             error = abs(expected_amortizations[k] - cashflows[2 * k + 1].amount())
             self.assertFalse(error > tolerance)
-
-
-
-

@@ -4,40 +4,32 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 
 %{
 using QuantLib::Callability;
 using QuantLib::SoftCallability;
 using QuantLib::CallabilitySchedule;
-typedef Callability::Price CallabilityPrice;
 %}
 
-class CallabilityPrice {
-  public:
-    enum Type { Dirty, Clean };
-    CallabilityPrice(Real amount, Type type);
-    Real amount() const;
-    Type type() const;
-};
-
 %shared_ptr(Callability)
-class Callability {
+class Callability : public Event {
   public:
     enum Type { Call, Put };
-    Callability(const CallabilityPrice& price,
+    Callability(const BondPrice& price,
                 Type type,
                 const Date& date);
-    const CallabilityPrice& price() const;
+    const BondPrice& price() const;
     Type type() const;
-    Date date() const;
 };
 
 %shared_ptr(SoftCallability)
 class SoftCallability : public Callability {
   public:
-    SoftCallability(const CallabilityPrice& price,
+    SoftCallability(const BondPrice& price,
                     const Date& date,
                     Real trigger);
+    Real trigger() const;
 };
 
 %template(CallabilitySchedule) std::vector<ext::shared_ptr<Callability> >;

@@ -4,6 +4,7 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 
 %{
 using QuantLib::FdmSolverDesc;
@@ -58,7 +59,6 @@ class Fdm1DimSolver {
 
     Real interpolateAt(Real x) const;
     Real thetaAt(Real x) const;
-
     Real derivativeX(Real x) const;
     Real derivativeXX(Real x) const;
 };
@@ -78,7 +78,7 @@ class FdmBackwardSolver {
 };
 
 %shared_ptr(Fdm2dBlackScholesSolver)
-class Fdm2dBlackScholesSolver {
+class Fdm2dBlackScholesSolver : public LazyObject {
   public:
     %feature("kwargs") Fdm2dBlackScholesSolver;
     %extend {
@@ -109,7 +109,7 @@ class Fdm2dBlackScholesSolver {
 };
 
 %shared_ptr(Fdm2DimSolver)
-class Fdm2DimSolver {
+class Fdm2DimSolver : public LazyObject {
   public:
     Fdm2DimSolver(
         const FdmSolverDesc& solverDesc,
@@ -127,7 +127,7 @@ class Fdm2DimSolver {
 };
 
 %shared_ptr(Fdm3DimSolver)
-class Fdm3DimSolver {
+class Fdm3DimSolver : public LazyObject {
   public:
     Fdm3DimSolver(
         const FdmSolverDesc& solverDesc,
@@ -141,7 +141,7 @@ class Fdm3DimSolver {
 };
 
 %shared_ptr(FdmG2Solver)
-class FdmG2Solver {
+class FdmG2Solver : public LazyObject {
   public:
     %extend {
         FdmG2Solver(
@@ -156,7 +156,7 @@ class FdmG2Solver {
 };
 
 %shared_ptr(FdmHestonHullWhiteSolver)
-class FdmHestonHullWhiteSolver {
+class FdmHestonHullWhiteSolver : public LazyObject {
   public:
     %extend {
         FdmHestonHullWhiteSolver(
@@ -181,7 +181,7 @@ class FdmHestonHullWhiteSolver {
 };
 
 %shared_ptr(FdmHestonSolver)
-class FdmHestonSolver {
+class FdmHestonSolver : public LazyObject {
   public:
     %feature("kwargs") FdmHestonSolver;
     %extend {
@@ -210,7 +210,7 @@ class FdmHestonSolver {
 };
 
 %shared_ptr(FdmHullWhiteSolver)
-class FdmHullWhiteSolver {
+class FdmHullWhiteSolver : public LazyObject {
   public:
     %extend {
         FdmHullWhiteSolver(
@@ -228,7 +228,7 @@ class FdmHullWhiteSolver {
 %shared_ptr(FdmNdimSolver<5>);
 %shared_ptr(FdmNdimSolver<6>);
 template <Size N>
-class FdmNdimSolver {
+class FdmNdimSolver : public LazyObject {
   public:
     FdmNdimSolver(
         const FdmSolverDesc& solverDesc,
@@ -237,6 +237,10 @@ class FdmNdimSolver {
 
     Real interpolateAt(const std::vector<Real>& x) const;
     Real thetaAt(const std::vector<Real>& x) const;
+
+    /* typedef typename MultiCubicSpline<N>::data_table data_table;
+    void static setValue(data_table& f,
+                         const std::vector<Size>& x, Real value); */
 };
 
 %template(Fdm4dimSolver) FdmNdimSolver<4>;

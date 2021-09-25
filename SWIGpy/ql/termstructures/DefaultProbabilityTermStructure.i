@@ -25,20 +25,19 @@ class DefaultProbabilityTermStructure : public TermStructure {
         bool extrapolate = false);
     Probability defaultProbability(
         Time, Time, bool extrapolate = false);
-
     Probability survivalProbability(
         const Date&, bool extrapolate = false);
     Probability survivalProbability(
         Time, bool extrapolate = false);
-
     Real defaultDensity(
         const Date&, bool extrapolate = false);
     Real defaultDensity(Time, bool extrapolate = false);
-
     Real hazardRate(
         const Date&, bool extrapolate = false);
     Real hazardRate(
         Time, bool extrapolate = false);
+    const std::vector<Date>& jumpDates() const;
+    const std::vector<Time>& jumpTimes() const;
 };
 
 

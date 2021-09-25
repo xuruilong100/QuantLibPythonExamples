@@ -16,65 +16,49 @@ using QuantLib::FdmHestonGreensFct;
 
 class FdmLinearOpIterator {
   public:
+    explicit FdmLinearOpIterator(
+        Size index = 0);
+    explicit FdmLinearOpIterator(
+        const std::vector<Size>& dim);
+    FdmLinearOpIterator(
+        std::vector<Size> dim,
+        std::vector<Size> coordinates,
+        Size index);
+    FdmLinearOpIterator(
+        const Disposable<FdmLinearOpIterator> & from);
+
+    Size index() const;
+    const std::vector<Size>& coordinates() const;
+    void swap(FdmLinearOpIterator& iter);
     %extend {
-        FdmLinearOpIterator(const std::vector<unsigned int>& dim,
-                            const std::vector<unsigned int>& coordinates,
-                            Size index) {
-            return new FdmLinearOpIterator(to_vector<Size>(dim),
-                                           to_vector<Size>(coordinates),
-                                           index);
-        }
-        std::vector<unsigned int> coordinates() {
-            return to_vector<unsigned int>($self->coordinates());
-        }
         void increment() {
             ++(*$self);
         }
         bool notEqual(const FdmLinearOpIterator& iterator) {
-            return self->operator!=(iterator);
+            return (*self) != iterator;
         }
     }
-
-    Size index() const;
 };
 
 %shared_ptr(FdmLinearOpLayout)
 class FdmLinearOpLayout {
   public:
-    %extend {
-        FdmLinearOpLayout(
-            const std::vector<unsigned int>& dim) {
-            return new FdmLinearOpLayout(to_vector<Size>(dim));
-        }
-        std::vector<unsigned int> spacing() {
-            return to_vector<unsigned int>($self->spacing());
-        }
-        std::vector<unsigned int> dim() const {
-            return to_vector<unsigned int>($self->dim());
-        }
-        Size index(
-            const std::vector<unsigned int>& coordinates) const {
-            return $self->index(to_vector<Size>(coordinates));
-        }
-    }
+    explicit FdmLinearOpLayout(const std::vector<Size>& dim);
 
     FdmLinearOpIterator begin() const;
     FdmLinearOpIterator end() const;
-
+    const std::vector<Size>& dim() const;
+    const std::vector<Size>& spacing() const;
     Size size() const;
-
-    Size neighbourhood(
-        const FdmLinearOpIterator& iterator,
-        Size i, Integer offset) const;
-
-    Size neighbourhood(
-        const FdmLinearOpIterator& iterator,
-        Size i1, Integer offset1,
-        Size i2, Integer offset2) const;
+    Size index(const std::vector<Size>& coordinates) const;
+    Size neighbourhood(const FdmLinearOpIterator& iterator,
+                       Size i, Integer offset) const;
+    Size neighbourhood(const FdmLinearOpIterator& iterator,
+                       Size i1, Integer offset1,
+                       Size i2, Integer offset2) const;
 
     FdmLinearOpIterator iter_neighbourhood(
-        const FdmLinearOpIterator& iterator,
-        Size i, Integer offset) const;
+        const FdmLinearOpIterator& iterator, Size i, Integer offset) const;
 };
 
 %shared_ptr(FdmIndicesOnBoundary)
@@ -85,11 +69,7 @@ class FdmIndicesOnBoundary {
         Size direction,
         FdmDirichletBoundary::Side side);
 
-    %extend {
-        std::vector<unsigned int> getIndices() const {
-            return to_vector<unsigned int>($self->getIndices());
-        }
-    }
+    const std::vector<Size>& getIndices() const;
 };
 
 struct FdmSchemeDesc {
@@ -134,12 +114,27 @@ class FdmQuantoHelper {
         const ext::shared_ptr<BlackVolTermStructure>& fxVolTS,
         Real equityFxCorrelation,
         Real exchRateATMlevel);
+
+    Rate quantoAdjustment(
+        Volatility equityVol, Time t1, Time t2) const;
+    Array quantoAdjustment(
+        const Array& equityVol, Time t1, Time t2) const;
 };
 
-struct FdmHestonGreensFct {
-    enum Algorithm { ZeroCorrelation, Gaussian, SemiAnalytical };
-  private:
-    FdmHestonGreensFct();
+class FdmHestonGreensFct {
+  public:
+    enum Algorithm {
+        ZeroCorrelation,
+        Gaussian,
+        SemiAnalytical };
+
+    FdmHestonGreensFct(
+        ext::shared_ptr<FdmMesher> mesher,
+        ext::shared_ptr<HestonProcess> process,
+        FdmSquareRootFwdOp::TransformationType trafoType_,
+        Real l0 = 1.0);
+
+    Array get(Time t, Algorithm algorithm) const;
 };
 
 #endif

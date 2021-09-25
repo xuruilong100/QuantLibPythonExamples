@@ -12,7 +12,6 @@ using QuantLib::Barrier;
 using QuantLib::DoubleBarrier;
 using QuantLib::PartialBarrier;
 using QuantLib::ContinuousAveragingAsianOption;
-
 using QuantLib::CliquetOption;
 using QuantLib::ComplexChooserOption;
 using QuantLib::CompoundOption;
@@ -22,7 +21,6 @@ using QuantLib::SimpleChooserOption;
 using QuantLib::VanillaStorageOption;
 using QuantLib::WriterExtensibleOption;
 using QuantLib::QuantoBarrierOption;
-
 using QuantLib::DiscreteAveragingAsianOption;
 using QuantLib::DividendVanillaOption;
 using QuantLib::QuantoVanillaOption;
@@ -57,13 +55,22 @@ struct PartialBarrier : public Barrier {
     enum Range { Start, End, EndB1, EndB2 };
 };
 
-%shared_ptr(ContinuousAveragingAsianOption)
-class ContinuousAveragingAsianOption : public OneAssetOption {
+%shared_ptr(BarrierOption)
+class BarrierOption : public OneAssetOption {
   public:
-    ContinuousAveragingAsianOption(
-        Average::Type averageType,
+    BarrierOption(
+        Barrier::Type barrierType,
+        Real barrier,
+        Real rebate,
         const ext::shared_ptr<StrikedTypePayoff>& payoff,
         const ext::shared_ptr<Exercise>& exercise);
+    Volatility impliedVolatility(
+        Real targetValue,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Real accuracy = 1.0e-4,
+        Size maxEvaluations = 100,
+        Volatility minVol = 1.0e-7,
+        Volatility maxVol = 4.0);
 };
 
 %shared_ptr(CliquetOption)
@@ -73,6 +80,43 @@ class CliquetOption : public OneAssetOption {
         const ext::shared_ptr<PercentageStrikePayoff>&,
         const ext::shared_ptr<EuropeanExercise>& maturity,
         const std::vector<Date>& resetDates);
+};
+
+%shared_ptr(CompoundOption)
+class CompoundOption : public OneAssetOption {
+ public:
+    CompoundOption(
+        const ext::shared_ptr<StrikedTypePayoff>& motherPayoff,
+        const ext::shared_ptr<Exercise>& motherExercise,
+        const ext::shared_ptr<StrikedTypePayoff>& daughterPayoff,
+        const ext::shared_ptr<Exercise>& daughterExercise);
+};
+
+%shared_ptr(ContinuousAveragingAsianOption)
+class ContinuousAveragingAsianOption : public OneAssetOption {
+  public:
+    ContinuousAveragingAsianOption(
+        Average::Type averageType,
+        const ext::shared_ptr<StrikedTypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise);
+};
+
+%shared_ptr(ContinuousFixedLookbackOption)
+class ContinuousFixedLookbackOption : public OneAssetOption {
+  public:
+    ContinuousFixedLookbackOption(
+        Real currentMinmax,
+        const ext::shared_ptr<StrikedTypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise);
+};
+
+%shared_ptr(ContinuousFloatingLookbackOption)
+class ContinuousFloatingLookbackOption : public OneAssetOption {
+  public:
+    ContinuousFloatingLookbackOption(
+        Real currentMinmax,
+        const ext::shared_ptr<TypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise);
 };
 
 %shared_ptr(ComplexChooserOption)
@@ -86,16 +130,6 @@ class ComplexChooserOption : public OneAssetOption {
         const ext::shared_ptr<Exercise>& exercisePut);
 };
 
-%shared_ptr(CompoundOption)
-class CompoundOption : public OneAssetOption {
- public:
-    CompoundOption(
-        const ext::shared_ptr<StrikedTypePayoff>& motherPayoff,
-        const ext::shared_ptr<Exercise>& motherExercise,
-        const ext::shared_ptr<StrikedTypePayoff>& daughterPayoff,
-        const ext::shared_ptr<Exercise>& daughterExercise);
-};
-
 %shared_ptr(DiscreteAveragingAsianOption)
 class DiscreteAveragingAsianOption : public OneAssetOption {
   public:
@@ -103,14 +137,15 @@ class DiscreteAveragingAsianOption : public OneAssetOption {
         Average::Type averageType,
         Real runningAccumulator,
         Size pastFixings,
-        const std::vector<Date>& fixingDates,
+        std::vector<Date> fixingDates,
         const ext::shared_ptr<StrikedTypePayoff>& payoff,
         const ext::shared_ptr<Exercise>& exercise);
-    %extend {
-        TimeGrid timeGrid() {
-            return self->result<TimeGrid>("TimeGrid");
-        }
-    }
+    DiscreteAveragingAsianOption(
+        Average::Type averageType,
+        std::vector<Date> fixingDates,
+        const ext::shared_ptr<StrikedTypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise,
+        std::vector<Real> allPastFixings = std::vector<Real>());
 };
 
 %shared_ptr(DividendVanillaOption)
@@ -126,8 +161,27 @@ class DividendVanillaOption : public OneAssetOption {
         const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Real accuracy = 1.0e-4,
         Size maxEvaluations = 100,
-        Volatility minVol = 1.0e-4,
+        Volatility minVol = 1.0e-7,
         Volatility maxVol = 4.0);
+};
+
+%shared_ptr(DoubleBarrierOption)
+class DoubleBarrierOption : public OneAssetOption {
+  public:
+    DoubleBarrierOption(
+        DoubleBarrier::Type barrierType,
+        Real barrier_lo,
+        Real barrier_hi,
+        Real rebate,
+        const ext::shared_ptr<StrikedTypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise);
+    Volatility impliedVolatility(
+        Real price,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Real accuracy = 1.0e-4,
+        Size maxEvaluations = 100,
+        Volatility minVol = 1.0e-7,
+        Volatility maxVol = 4.0) const;
 };
 
 %shared_ptr(QuantoVanillaOption)
@@ -182,7 +236,6 @@ class VanillaSwingOption : public OneAssetOption {
         const ext::shared_ptr<Payoff>& payoff,
         const ext::shared_ptr<SwingExercise>& ex,
         Size minExerciseRights, Size maxExerciseRights);
-    bool isExpired() const;
 };
 
 %shared_ptr(VanillaStorageOption)
@@ -193,7 +246,6 @@ class VanillaStorageOption : public OneAssetOption {
         Real capacity,
         Real load,
         Real changeRate);
-    bool isExpired() const;
 };
 
 %shared_ptr(VanillaOption)
@@ -232,62 +284,6 @@ class WriterExtensibleOption : public OneAssetOption {
         const ext::shared_ptr<Exercise>& exercise2);
     ext::shared_ptr<Payoff> payoff2();
     ext::shared_ptr<Exercise> exercise2();
-    bool isExpired() const;
-};
-
-%shared_ptr(ContinuousFloatingLookbackOption)
-class ContinuousFloatingLookbackOption : public OneAssetOption {
-  public:
-    ContinuousFloatingLookbackOption(
-        Real currentMinmax,
-        const ext::shared_ptr<TypePayoff>& payoff,
-        const ext::shared_ptr<Exercise>& exercise);
-};
-
-%shared_ptr(BarrierOption)
-class BarrierOption : public OneAssetOption {
-  public:
-    BarrierOption(
-        Barrier::Type barrierType,
-        Real barrier,
-        Real rebate,
-        const ext::shared_ptr<StrikedTypePayoff>& payoff,
-        const ext::shared_ptr<Exercise>& exercise);
-    Volatility impliedVolatility(
-        Real targetValue,
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-        Real accuracy = 1.0e-4,
-        Size maxEvaluations = 100,
-        Volatility minVol = 1.0e-4,
-        Volatility maxVol = 4.0);
-};
-
-%shared_ptr(ContinuousFixedLookbackOption)
-class ContinuousFixedLookbackOption : public OneAssetOption {
-  public:
-    ContinuousFixedLookbackOption(
-        Real currentMinmax,
-        const ext::shared_ptr<StrikedTypePayoff>& payoff,
-        const ext::shared_ptr<Exercise>& exercise);
-};
-
-%shared_ptr(DoubleBarrierOption)
-class DoubleBarrierOption : public OneAssetOption {
-  public:
-    DoubleBarrierOption(
-        DoubleBarrier::Type barrierType,
-        Real barrier_lo,
-        Real barrier_hi,
-        Real rebate,
-        const ext::shared_ptr<StrikedTypePayoff>& payoff,
-        const ext::shared_ptr<Exercise>& exercise);
-    Volatility impliedVolatility(
-        Real price,
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-        Real accuracy = 1.0e-4,
-        Size maxEvaluations = 100,
-        Volatility minVol = 1.0e-7,
-        Volatility maxVol = 4.0) const;
 };
 
 %shared_ptr(ForwardVanillaOption)

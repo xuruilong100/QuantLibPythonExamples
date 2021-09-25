@@ -2,12 +2,10 @@
 #define ql_vectors_i
 
 %include ../ql/alltypes.i
-%include stl.i
 %include common.i
 %include date.i
-%include std_vector.i
-%include std_pair.i
 
+%template(SizeVector) std::vector<size_t>;
 %template(IntVector) std::vector<int>;
 %template(UnsignedIntVector) std::vector<unsigned int>;
 %template(DoubleVector) std::vector<double>;
@@ -20,6 +18,17 @@
 
 %template(NodePair) std::pair<Date, double>;
 %template(NodeVector) std::vector<std::pair<Date, double> >;
+
+%template(DoubleVectorVector) std::vector<std::vector<Real> >;
+
+namespace std {
+    %template(QuoteVector) vector<ext::shared_ptr<Quote> >;
+    %template(QuoteVectorVector) vector<vector<ext::shared_ptr<Quote> > >;
+    %template(QuoteHandleVector) vector<Handle<Quote> >;
+    %template(QuoteHandleVectorVector) vector<vector<Handle<Quote> > >;
+    %template(RelinkableQuoteHandleVector) vector<RelinkableHandle<Quote> >;
+    %template(RelinkableQuoteHandleVectorVector) vector<vector<RelinkableHandle<Quote> > >;
+}
 
 %{
 template <class T, class U>

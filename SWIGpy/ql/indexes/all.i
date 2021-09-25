@@ -21,6 +21,7 @@ class IndexManager {
     std::vector<std::string> histories() const;
     void clearHistory(const std::string& name);
     void clearHistories();
+    bool hasHistoricalFixing(const std::string& name, const Date& fixingDate) const;
 };
 
 %{
@@ -535,7 +536,8 @@ class OvernightIndexedSwapIndex : public SwapIndex {
         Natural settlementDays,
         Currency currency,
         const ext::shared_ptr<OvernightIndex>& overnightIndex,
-        bool telescopicValueDates = false);
+        bool telescopicValueDates = false,
+        RateAveraging::Type averagingMethod = RateAveraging::Compound);
 
     ext::shared_ptr<OvernightIndex> overnightIndex() const;
     ext::shared_ptr<OvernightIndexedSwap> underlyingSwap(

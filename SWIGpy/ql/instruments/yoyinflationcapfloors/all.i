@@ -1,5 +1,5 @@
-#ifndef ql_yoy_inflation_cap_floor_i
-#define ql_yoy_inflation_cap_floor_i
+#ifndef ql_instruments_yoyinflationcapfloors_all_i
+#define ql_instruments_yoyinflationcapfloors_all_i
 
 %include ../ql/types.i
 %include ../ql/common.i

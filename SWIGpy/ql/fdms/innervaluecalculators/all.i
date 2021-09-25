@@ -1,5 +1,5 @@
-#ifndef ql_fdms_fdminnervaluecalculators_all_i
-#define ql_fdms_fdminnervaluecalculators_all_i
+#ifndef ql_fdms_innervaluecalculators_all_i
+#define ql_fdms_innervaluecalculators_all_i
 
 %include ../ql/types.i
 %include ../ql/common.i
@@ -8,11 +8,103 @@
 
 %{
 using QuantLib::FdmCellAveragingInnerValue;
+using QuantLib::FdmLogInnerValue;
+using QuantLib::FdmAffineModelSwapInnerValue;
+using QuantLib::EscrowedDividendAdjustment;
+using QuantLib::FdmEscrowedLogInnerValueCalculator;
+using QuantLib::FdmExpExtOUInnerValueCalculator;
+using QuantLib::FdmShoutLogInnerValueCalculator;
+using QuantLib::FdmSpreadPayoffInnerValue;
 using QuantLib::FdmLogBasketInnerValue;
 using QuantLib::FdmZeroInnerValue;
-using QuantLib::FdmAffineModelSwapInnerValue;
-using QuantLib::FdmLogInnerValue;
 %}
+
+%shared_ptr(EscrowedDividendAdjustment)
+class EscrowedDividendAdjustment {
+  public:
+    EscrowedDividendAdjustment(
+        DividendSchedule dividendSchedule,
+        Handle<YieldTermStructure> rTS,
+        Handle<YieldTermStructure> qTS,
+        ext::function<Real(Date)> toTime,
+        Time maturity);
+    %extend {
+        EscrowedDividendAdjustment(
+            DividendSchedule dividendSchedule,
+            Handle<YieldTermStructure> rTS,
+            Handle<YieldTermStructure> qTS,
+            PyObject* toTime,
+            Time maturity) {
+                return new EscrowedDividendAdjustment(
+                    dividendSchedule,
+                    rTS, qTS,
+                    UnaryFunction(toTime),
+                    maturity);
+            }
+    }
+
+    Real dividendAdjustment(Time t) const;
+
+    const Handle<YieldTermStructure>& riskFreeRate() const;
+    const Handle<YieldTermStructure>& dividendYield() const;
+};
+
+%shared_ptr(FdmEscrowedLogInnerValueCalculator)
+class FdmEscrowedLogInnerValueCalculator: public FdmInnerValueCalculator {
+  public:
+    FdmEscrowedLogInnerValueCalculator(
+        ext::shared_ptr<EscrowedDividendAdjustment> escrowedDividendAdj,
+        ext::shared_ptr<Payoff> payoff,
+        ext::shared_ptr<FdmMesher> mesher,
+        Size direction);
+};
+
+%shared_ptr(FdmExpExtOUInnerValueCalculator)
+class FdmExpExtOUInnerValueCalculator : public FdmInnerValueCalculator {
+  public:
+    typedef std::vector<std::pair<Time, Real> > Shape;
+
+    FdmExpExtOUInnerValueCalculator(
+        ext::shared_ptr<Payoff> payoff,
+        ext::shared_ptr<FdmMesher> mesher,
+        ext::shared_ptr<Shape> shape = ext::shared_ptr<Shape>(),
+        Size direction = 0);
+};
+
+%shared_ptr(FdmLogBasketInnerValue)
+class FdmLogBasketInnerValue : public FdmInnerValueCalculator {
+  public:
+    FdmLogBasketInnerValue(
+        const ext::shared_ptr<BasketPayoff>& payoff,
+        const ext::shared_ptr<FdmMesher>& mesher);
+};
+
+%shared_ptr(FdmShoutLogInnerValueCalculator)
+class FdmShoutLogInnerValueCalculator: public FdmInnerValueCalculator {
+  public:
+    FdmShoutLogInnerValueCalculator(
+        Handle<BlackVolTermStructure> blackVolatility,
+        ext::shared_ptr<EscrowedDividendAdjustment> escrowedDividendAdj,
+        Time maturity,
+        ext::shared_ptr<PlainVanillaPayoff> payoff,
+        ext::shared_ptr<FdmMesher> mesher,
+        Size direction);
+};
+
+%shared_ptr(FdmSpreadPayoffInnerValue)
+class FdmSpreadPayoffInnerValue : public FdmInnerValueCalculator {
+  public:
+    FdmSpreadPayoffInnerValue(
+        ext::shared_ptr<BasketPayoff> payoff,
+        ext::shared_ptr<FdmInnerValueCalculator> calc1,
+        ext::shared_ptr<FdmInnerValueCalculator> calc2);
+};
+
+%shared_ptr(FdmZeroInnerValue)
+class FdmZeroInnerValue : public FdmInnerValueCalculator {
+  public:
+    FdmZeroInnerValue();
+};
 
 %{
 class FdmInnerValueCalculatorProxy : public FdmInnerValueCalculator {
@@ -120,34 +212,19 @@ class FdmLogInnerValue : public FdmCellAveragingInnerValue {
         Size direction);
 };
 
-%shared_ptr(FdmLogBasketInnerValue)
-class FdmLogBasketInnerValue : public FdmInnerValueCalculator {
-  public:
-    FdmLogBasketInnerValue(
-        const ext::shared_ptr<BasketPayoff>& payoff,
-        const ext::shared_ptr<FdmMesher>& mesher);
-};
-
-%shared_ptr(FdmZeroInnerValue)
-class FdmZeroInnerValue : public FdmInnerValueCalculator {
-  public:
-    FdmZeroInnerValue();
-};
+%template(TimeToDateMap) std::map<Time, Date>;
 
 %shared_ptr(FdmAffineModelSwapInnerValue<G2>)
 %shared_ptr(FdmAffineModelSwapInnerValue<HullWhite>)
-
-%template(TimeToDateMap) std::map<Time, Date>;
-
 template <class ModelType>
 class FdmAffineModelSwapInnerValue : public FdmInnerValueCalculator {
   public:
     FdmAffineModelSwapInnerValue(
-        const ext::shared_ptr<ModelType>& disModel,
-        const ext::shared_ptr<ModelType>& fwdModel,
+        ext::shared_ptr<ModelType> disModel,
+        ext::shared_ptr<ModelType> fwdModel,
         const ext::shared_ptr<VanillaSwap>& swap,
-        const std::map<Time, Date>& exerciseDates,
-        const ext::shared_ptr<FdmMesher>& mesher,
+        std::map<Time, Date> exerciseDates,
+        ext::shared_ptr<FdmMesher> mesher,
         Size direction);
 };
 

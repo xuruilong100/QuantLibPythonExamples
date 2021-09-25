@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include stl.i
 
 %{
 using QuantLib::Calendar;
@@ -14,13 +13,22 @@ class Calendar {
   protected:
     Calendar();
   public:
-    bool isWeekend(Weekday w);
-    Date endOfMonth(const Date&);
+    bool empty() const;
+    std::string name();
+    const std::set<Date> & addedHolidays() const;
+    const std::set<Date> & removedHolidays() const;
     bool isBusinessDay(const Date&);
     bool isHoliday(const Date&);
+    bool isWeekend(Weekday w);
     bool isEndOfMonth(const Date&);
+    Date endOfMonth(const Date&);
     void addHoliday(const Date&);
     void removeHoliday(const Date&);
+    std::vector<Date> holidayList(const Date& from,
+                                  const Date& to,
+                                  bool includeWeekEnds = false);
+    std::vector<Date> businessDayList(const Date& from,
+                                      const Date& to);
     Date adjust(const Date& d,
                 BusinessDayConvention convention = QuantLib::Following);
     Date advance(const Date& d, Integer n, TimeUnit unit,
@@ -33,12 +41,7 @@ class Calendar {
                                    const Date& to,
                                    bool includeFirst = true,
                                    bool includeLast = false);
-    std::vector<Date> holidayList(const Date& from,
-                                  const Date& to,
-                                  bool includeWeekEnds = false);
-    std::vector<Date> businessDayList(const Date& from,
-                                      const Date& to);
-    std::string name();
+
     %extend {
         std::string __str__() {
             return self->name()+" calendar";

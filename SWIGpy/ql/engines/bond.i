@@ -17,7 +17,9 @@ using QuantLib::BinomialConvertibleEngine;
 class DiscountingBondEngine : public PricingEngine {
   public:
     DiscountingBondEngine(
-        const Handle<YieldTermStructure>& discountCurve);
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
+        const boost::optional<bool>& includeSettlementDateFlows = boost::none);
+    Handle<YieldTermStructure> discountCurve() const;
 };
 
 %shared_ptr(TreeCallableFixedRateBondEngine)
@@ -38,7 +40,10 @@ class BlackCallableFixedRateBondEngine : public PricingEngine {
   public:
     BlackCallableFixedRateBondEngine(
         const Handle<Quote>& fwdYieldVol,
-        const Handle<YieldTermStructure>& discountCurve);
+        Handle<YieldTermStructure> discountCurve);
+    BlackCallableFixedRateBondEngine(
+        Handle<CallableBondVolatilityStructure> yieldVolStructure,
+        Handle<YieldTermStructure> discountCurve);
 };
 
 %shared_ptr(BinomialConvertibleEngine<CoxRossRubinstein>)
@@ -52,7 +57,7 @@ template <class T>
 class BinomialConvertibleEngine : public PricingEngine {
   public:
     BinomialConvertibleEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>&,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
         Size steps);
 };
 
@@ -63,30 +68,5 @@ class BinomialConvertibleEngine : public PricingEngine {
 %template(BinomialTianConvertibleEngine) BinomialConvertibleEngine<Tian>;
 %template(BinomialLRConvertibleEngine) BinomialConvertibleEngine<LeisenReimer>;
 %template(BinomialJ4ConvertibleEngine) BinomialConvertibleEngine<Joshi4>;
-
-%pythoncode %{
-def BinomialConvertibleEngine(
-        process,
-        type,
-        steps):
-    type = type.lower()
-    if type == "crr" or type == "coxrossrubinstein":
-        cls = BinomialCRRConvertibleEngine
-    elif type == "jr" or type == "jarrowrudd":
-        cls = BinomialJRConvertibleEngine
-    elif type == "eqp":
-        cls = BinomialEQPConvertibleEngine
-    elif type == "trigeorgis":
-        cls = BinomialTrigeorgisConvertibleEngine
-    elif type == "tian":
-        cls = BinomialTianConvertibleEngine
-    elif type == "lr" or type == "leisenreimer":
-        cls = BinomialLRConvertibleEngine
-    elif type == "j4" or type == "joshi4":
-        cls = BinomialJ4ConvertibleEngine
-    else:
-        raise RuntimeError("unknown binomial engine type: %s" % type);
-    return cls(process, steps)
-%}
 
 #endif

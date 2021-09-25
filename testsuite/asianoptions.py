@@ -4,72 +4,75 @@ from QuantLib import *
 from math import floor
 
 
+class DiscreteAverageData(object):
+    def __init__(self,
+                 typeOpt,
+                 underlying,
+                 strike,
+                 dividendYield,
+                 riskFreeRate,
+                 first,
+                 length,
+                 fixings,
+                 volatility,
+                 controlVariate,
+                 result):
+        self.typeOpt = typeOpt
+        self.underlying = underlying
+        self.strike = strike
+        self.dividendYield = dividendYield
+        self.riskFreeRate = riskFreeRate
+        self.first = first
+        self.length = length
+        self.fixings = fixings
+        self.volatility = volatility
+        self.controlVariate = controlVariate
+        self.result = result
+
+
+class ContinuousAverageData(object):
+    def __init__(self,
+                 typeOpt,
+                 spot,
+                 currentAverage,
+                 strike,
+                 dividendYield,
+                 riskFreeRate,
+                 volatility,
+                 length,
+                 elapsed,
+                 result):
+        self.typeOpt = typeOpt
+        self.spot = spot
+        self.currentAverage = currentAverage
+        self.strike = strike
+        self.dividendYield = dividendYield
+        self.riskFreeRate = riskFreeRate
+        self.volatility = volatility
+        self.length = length
+        self.elapsed = elapsed
+        self.result = result
+
+
+class VecerData(object):
+    def __init__(self,
+                 spot,
+                 riskFreeRate,
+                 volatility,
+                 strike,
+                 length,
+                 result,
+                 tolerance):
+        self.spot = spot
+        self.strike = strike
+        self.riskFreeRate = riskFreeRate
+        self.volatility = volatility
+        self.length = length
+        self.result = result
+        self.tolerance = tolerance
+
+
 class AsianOptionTest(unittest.TestCase):
-    class DiscreteAverageData(object):
-        def __init__(self,
-                     typeOpt,
-                     underlying,
-                     strike,
-                     dividendYield,
-                     riskFreeRate,
-                     first,
-                     length,
-                     fixings,
-                     volatility,
-                     controlVariate,
-                     result):
-            self.typeOpt = typeOpt
-            self.underlying = underlying
-            self.strike = strike
-            self.dividendYield = dividendYield
-            self.riskFreeRate = riskFreeRate
-            self.first = first
-            self.length = length
-            self.fixings = fixings
-            self.volatility = volatility
-            self.controlVariate = controlVariate
-            self.result = result
-
-    class ContinuousAverageData(object):
-        def __init__(self,
-                     typeOpt,
-                     spot,
-                     currentAverage,
-                     strike,
-                     dividendYield,
-                     riskFreeRate,
-                     volatility,
-                     length,
-                     elapsed,
-                     result):
-            self.typeOpt = typeOpt
-            self.spot = spot
-            self.currentAverage = currentAverage
-            self.strike = strike
-            self.dividendYield = dividendYield
-            self.riskFreeRate = riskFreeRate
-            self.volatility = volatility
-            self.length = length
-            self.elapsed = elapsed
-            self.result = result
-
-    class VecerData(object):
-        def __init__(self,
-                     spot,
-                     riskFreeRate,
-                     volatility,
-                     strike,
-                     length,
-                     result,
-                     tolerance):
-            self.spot = spot
-            self.strike = strike
-            self.riskFreeRate = riskFreeRate
-            self.volatility = volatility
-            self.length = length
-            self.result = result
-            self.tolerance = tolerance
-
     def testAnalyticContinuousGeometricAveragePrice(self):
         TEST_MESSAGE(
             "Testing analytic continuous geometric average-price Asians...")
@@ -492,10 +495,11 @@ class AsianOptionTest(unittest.TestCase):
             YieldTermStructureHandle(rTS),
             BlackVolTermStructureHandle(volTS))
         tolerance = 4.0e-3
-        engine = MCDiscreteGeometricAPEngine(
-            stochProcess,
-            'LowDiscrepancy',
-            requiredSamples=8191)
+
+        engine = MakeMCLDDiscreteGeometricAPEngine(stochProcess)
+        engine.withSamples(8191)
+        engine = engine.makeEngine()
+
         averageType = Average.Geometric
         runningAccumulator = 1.0
         pastFixings = 0
@@ -528,9 +532,10 @@ class AsianOptionTest(unittest.TestCase):
             "Testing MC discrete geometric average-price Asians under Heston...")
         # 30-day options need wider tolerance due to uncertainty around what "weekly
         # fixing" dates mean over a 30-day month!
-        tol = [4.0e-2, 2.0e-2, 2.0e-2, 3.0e-2, 3.0e-2, 2.0e-2, 1.0e-1, 1.0e-2,
-               2.0e-2, 2.0e-2, 2.0e-2, 1.0e-2, 2.0e-2, 1.0e-2, 1.0e-2, 1.0e-2,
-               1.0e-2, 1.0e-2]
+        tol = [
+            4.0e-2, 2.0e-2, 2.0e-2, 3.0e-2, 3.0e-2, 6.0e-2,
+            1.0e-1, 1.0e-2, 2.0e-2, 2.0e-2, 4.0e-2, 6.0e-2,
+            2.0e-2, 1.0e-2, 1.0e-2, 1.0e-2, 4.0e-2, 6.0e-2]
         dc = Actual365Fixed()
         today = Settings.instance().evaluationDate
 
@@ -549,11 +554,12 @@ class AsianOptionTest(unittest.TestCase):
             YieldTermStructureHandle(rTS),
             YieldTermStructureHandle(qTS),
             spot, v0, kappa, theta, sigma, rho)
-        engine = MCDiscreteGeometricAPHestonEngine(
-            hestonProcess,
-            'LowDiscrepancy',
-            requiredSamples=65535,
-            seed=43)
+
+        engine = MakeMCLDDiscreteGeometricAPHestonEngine(hestonProcess)
+        engine.withSamples(32767)
+        engine.withSeed(43)
+        engine = engine.makeEngine()
+
         self._testDiscreteGeometricAveragePriceHeston(engine, tol)
 
     def testMCDiscreteArithmeticAveragePrice(self):
@@ -564,36 +570,36 @@ class AsianOptionTest(unittest.TestCase):
         # in "Exotic Options: The State of the Art",
         # edited by Clewlow, Strickland
         cases4 = [
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.3942835683),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.5852442983),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 8, 0.13, True, 1.66970673),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 12, 0.13, True, 1.6980019214),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 26, 0.13, True, 1.7255070456),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 52, 0.13, True, 1.7401553533),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 100, 0.13, True, 1.7478303712),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 250, 0.13, True, 1.7490291943),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 500, 0.13, True, 1.7515113291),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 1000, 0.13, True, 1.7537344885),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.8496053697),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 2.0111495205),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 2.0852138818),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 2.1105094397),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 2.1346526695),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 2.147489651),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 2.154728109),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 2.1564276565),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 2.1594238588),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.1595367326),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 2.63315092584),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 2.76723962361),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 2.83124836881),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 2.84290301412),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 2.88179560417),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 2.88447044543),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 2.89985329603),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 2.90047296063),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 2.89813412160),
-            self.DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.89703362437)]
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.3942835683),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.5852442983),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 8, 0.13, True, 1.66970673),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 12, 0.13, True, 1.6980019214),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 26, 0.13, True, 1.7255070456),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 52, 0.13, True, 1.7401553533),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 100, 0.13, True, 1.7478303712),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 250, 0.13, True, 1.7490291943),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 500, 0.13, True, 1.7515113291),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 1000, 0.13, True, 1.7537344885),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.8496053697),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 2.0111495205),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 2.0852138818),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 2.1105094397),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 2.1346526695),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 2.147489651),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 2.154728109),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 2.1564276565),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 2.1594238588),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.1595367326),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 2.63315092584),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 2.76723962361),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 2.83124836881),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 2.84290301412),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 2.88179560417),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 2.88447044543),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 2.89985329603),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 2.90047296063),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 2.89813412160),
+            DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.89703362437)]
 
         dc = Actual360()
         today = Settings.instance().evaluationDate
@@ -631,10 +637,12 @@ class AsianOptionTest(unittest.TestCase):
                 YieldTermStructureHandle(qTS),
                 YieldTermStructureHandle(rTS),
                 BlackVolTermStructureHandle(volTS))
-            engine = MCDiscreteArithmeticAPEngine(
-                stochProcess, 'LowDiscrepancy',
-                requiredSamples=2047,
-                controlVariate=cases4[l].controlVariate)
+
+            engine = MakeMCLDDiscreteArithmeticAPEngine(stochProcess)
+            engine.withSamples(2047)
+            engine.withControlVariate(cases4[l].controlVariate)
+            engine = engine.makeEngine()
+
             option = DiscreteAveragingAsianOption(
                 averageType, runningSum,
                 pastFixings, fixingDates,
@@ -664,7 +672,7 @@ class AsianOptionTest(unittest.TestCase):
         #
         # nb. for Heston, the volatility param below is ignored
         cases = [
-            self.DiscreteAverageData(Option.Call, 120.0, 100.0, 0.0, 0.05, 1.0 / 12.0, 11.0 / 12.0, 12, 0.1, False, 22.50)]
+            DiscreteAverageData(Option.Call, 120.0, 100.0, 0.0, 0.05, 1.0 / 12.0, 11.0 / 12.0, 12, 0.1, False, 22.50)]
         vol = 0.3
         v0 = vol * vol
         kappa = 11.35
@@ -709,11 +717,11 @@ class AsianOptionTest(unittest.TestCase):
                 QuoteHandle(spot),
                 v0, kappa, theta, sigma, rho)
 
-            engine = MCDiscreteArithmeticAPHestonEngine(
-                hestonProcess,
-                "LowDiscrepancy",
-                seed=42,
-                requiredSamples=32768)
+            engine = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess)
+            engine.withSeed(42)
+            engine.withSamples(8191)
+            engine = engine.makeEngine()
+
             option = DiscreteAveragingAsianOption(
                 averageType, runningSum,
                 pastFixings, fixingDates,
@@ -728,13 +736,12 @@ class AsianOptionTest(unittest.TestCase):
                 abs(calculated - expected) > tolerance)
 
             # Also test the control variate version of the pricer
-            engine2 = MCDiscreteArithmeticAPHestonEngine(
-                hestonProcess,
-                "LowDiscrepancy",
-                seed=42,
-                timeSteps=48,
-                requiredSamples=8192,
-                controlVariate=True)
+            engine2 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess)
+            engine2.withSeed(42)
+            engine2.withSteps(48)
+            engine2.withSamples(8191)
+            engine2.withControlVariate(true)
+            engine2 = engine2.makeEngine()
 
             option.setPricingEngine(engine2)
             calculated = option.NPV()
@@ -773,19 +780,19 @@ class AsianOptionTest(unittest.TestCase):
             QuoteHandle(spot2),
             v02, kappa2, theta2, sigma2, rho2)
 
-        engine3 = MCDiscreteArithmeticAPHestonEngine(
-            hestonProcess2,
-            "LowDiscrepancy",
-            seed=42,
-            timeSteps=360,
-            requiredSamples=32768)
-        engine4 = MCDiscreteArithmeticAPHestonEngine(
-            hestonProcess2,
-            "LowDiscrepancy",
-            seed=42,
-            timeSteps=360,
-            requiredSamples=16384,
-            controlVariate=True)
+        engine3 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess2)
+        engine3.withSeed(42)
+        engine3.withSteps(180)
+        engine3.withSamples(16383)
+        engine3.withControlVariate(true)
+        engine3 = engine3.makeEngine()
+
+        engine4 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess2)
+        engine4.withSeed(42)
+        engine4.withSteps(180)
+        engine4.withSamples(16383)
+        engine4.withControlVariate(true)
+        engine4 = engine4.makeEngine()
 
         fixingDates = DateVector(120)
         for i in range(1, 121):
@@ -820,36 +827,36 @@ class AsianOptionTest(unittest.TestCase):
         # edited by Clewlow, Strickland
 
         cases5 = [
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.51917595129),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.67940165674),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 8, 0.13, True, 1.75371215251),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 12, 0.13, True, 1.77595318693),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 26, 0.13, True, 1.81430536630),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 52, 0.13, True, 1.82269246898),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 100, 0.13, True, 1.83822402464),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 250, 0.13, True, 1.83875059026),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 500, 0.13, True, 1.83750703638),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 1000, 0.13, True, 1.83887181884),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.51154400089),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 1.67103508506),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 1.74529684070),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 1.76667074564),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 1.80528400613),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 1.81400883891),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 1.82922901451),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 1.82937111773),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 1.82826193186),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.82967846654),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.49648170891),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 1.65443100462),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 1.72817806731),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 1.74877367895),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 1.78733801988),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 1.79624826757),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 1.81114186876),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 1.81101152587),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 1.81002311939),
-            self.DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.81145760308)]
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.51917595129),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.67940165674),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 8, 0.13, True, 1.75371215251),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 12, 0.13, True, 1.77595318693),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 26, 0.13, True, 1.81430536630),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 52, 0.13, True, 1.82269246898),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 100, 0.13, True, 1.83822402464),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 250, 0.13, True, 1.83875059026),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 500, 0.13, True, 1.83750703638),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 1000, 0.13, True, 1.83887181884),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.51154400089),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 1.67103508506),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 1.74529684070),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 1.76667074564),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 1.80528400613),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 1.81400883891),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 1.82922901451),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 1.82937111773),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 1.82826193186),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 1.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.82967846654),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 2, 0.13, True, 1.49648170891),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 4, 0.13, True, 1.65443100462),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 8, 0.13, True, 1.72817806731),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 12, 0.13, True, 1.74877367895),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 26, 0.13, True, 1.78733801988),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 52, 0.13, True, 1.79624826757),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 100, 0.13, True, 1.81114186876),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 250, 0.13, True, 1.81101152587),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 500, 0.13, True, 1.81002311939),
+            DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.81145760308)]
 
         dc = Actual360()
         today = Settings.instance().evaluationDate
@@ -890,11 +897,13 @@ class AsianOptionTest(unittest.TestCase):
                 YieldTermStructureHandle(qTS),
                 YieldTermStructureHandle(rTS),
                 BlackVolTermStructureHandle(volTS))
-            engine = MCDiscreteArithmeticASEngine(
-                stochProcess,
-                'LowDiscrepancy',
-                seed=3456789,
-                requiredSamples=1023)
+
+            engine = MakeMCLDDiscreteArithmeticASEngine(
+                stochProcess)
+            engine.withSeed(3456789)
+            engine.withSamples(1023)
+            engine = engine.makeEngine()
+
             option = DiscreteAveragingAsianOption(
                 averageType, runningSum,
                 pastFixings, fixingDates,
@@ -1080,10 +1089,9 @@ class AsianOptionTest(unittest.TestCase):
             pastFixings, fixingDates2,
             payoff, exercise)
 
-        engine = MCDiscreteArithmeticAPEngine(
-            stochProcess,
-            "LowDiscrepancy",
-            requiredSamples=2047)
+        engine = MakeMCLDDiscreteArithmeticAPEngine(stochProcess)
+        engine.withSamples(2047)
+        engine = engine.makeEngine()
 
         option1.setPricingEngine(engine)
         option2.setPricingEngine(engine)
@@ -1092,6 +1100,82 @@ class AsianOptionTest(unittest.TestCase):
         price2 = option2.NPV()
 
         self.assertFalse(close(price1, price2))
+
+        # Test past-fixings-as-a-vector interface
+
+        allPastFixings = [spot.value() * 0.8, spot.value() * 0.8]
+
+        option1a = DiscreteAveragingAsianOption(Average.Arithmetic, fixingDates1,
+                                                payoff, exercise)
+
+        option2a = DiscreteAveragingAsianOption(Average.Arithmetic, fixingDates2,
+                                                payoff, exercise, allPastFixings)
+
+        option1a.setPricingEngine(engine)
+        option2a.setPricingEngine(engine)
+
+        price1a = option1a.NPV()
+        price2a = option2a.NPV()
+
+        self.assertFalse(abs(price1 - price1a) > 1e-8)
+
+        self.assertFalse(abs(price2 - price2a) > 1e-8)
+
+        # MC arithmetic average-strike
+
+        engine = MakeMCLDDiscreteArithmeticASEngine(stochProcess)
+        engine.withSamples(2047)
+        engine = engine.makeEngine()
+
+        option1.setPricingEngine(engine)
+        option2.setPricingEngine(engine)
+
+        price1 = option1.NPV()
+        price2 = option2.NPV()
+
+        self.assertFalse(close(price1, price2))
+
+        # // analytic geometric average-price
+
+        runningProduct = 1.0
+        pastFixings = 0
+
+        option3 = DiscreteAveragingAsianOption(
+            Average.Geometric, runningProduct,
+            pastFixings, fixingDates1,
+            payoff, exercise)
+
+        pastFixings = 2
+        runningProduct = spot.value() * spot.value()
+
+        option4 = DiscreteAveragingAsianOption(
+            Average.Geometric, runningProduct,
+            pastFixings, fixingDates2,
+            payoff, exercise)
+
+        engine = AnalyticDiscreteGeometricAveragePriceAsianEngine(
+            stochProcess)
+
+        option3.setPricingEngine(engine)
+        option4.setPricingEngine(engine)
+
+        price3 = option3.NPV()
+        price4 = option4.NPV()
+
+        self.assertFalse(close(price3, price4))
+        # // MC geometric average-price
+
+        engine = MakeMCLDDiscreteGeometricAPEngine(stochProcess)
+        engine.withSamples(2047)
+        engine = engine.makeEngine()
+
+        option3.setPricingEngine(engine)
+        option4.setPricingEngine(engine)
+
+        price3 = option3.NPV()
+        price4 = option4.NPV()
+
+        self.assertFalse(close(price3, price4))
 
     def testAllFixingsInThePast(self):
         TEST_MESSAGE(
@@ -1104,26 +1188,26 @@ class AsianOptionTest(unittest.TestCase):
         # data from Haug, "Option Pricing Formulas", p.99-100
 
         cases = [
-            self.ContinuousAverageData(Option.Call, 6.80, 6.80, 6.90, 0.09, 0.07, 0.14, 180, 0, 0.0944),
-            self.ContinuousAverageData(Option.Put, 6.80, 6.80, 6.90, 0.09, 0.07, 0.14, 180, 0, 0.2237),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 0, 7.0544),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 90, 5.6731),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 180, 5.0806),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 0, 10.1213),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 90, 6.9705),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 180, 5.1411),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 0, 3.7845),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 90, 1.9964),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 180, 0.6722),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 0, 7.5038),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 90, 4.0687),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 180, 1.4222),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 0, 1.6729),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 90, 0.3565),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 180, 0.0004),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 0, 5.4071),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 90, 2.1359),
-            self.ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 180, 0.1552)]
+            ContinuousAverageData(Option.Call, 6.80, 6.80, 6.90, 0.09, 0.07, 0.14, 180, 0, 0.0944),
+            ContinuousAverageData(Option.Put, 6.80, 6.80, 6.90, 0.09, 0.07, 0.14, 180, 0, 0.2237),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 0, 7.0544),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 90, 5.6731),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.15, 270, 180, 5.0806),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 0, 10.1213),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 90, 6.9705),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 95.0, 0.05, 0.1, 0.35, 270, 180, 5.1411),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 0, 3.7845),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 90, 1.9964),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.15, 270, 180, 0.6722),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 0, 7.5038),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 90, 4.0687),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 100.0, 0.05, 0.1, 0.35, 270, 180, 1.4222),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 0, 1.6729),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 90, 0.3565),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.15, 270, 180, 0.0004),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 0, 5.4071),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 90, 2.1359),
+            ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 180, 0.1552)]
 
         dc = Actual360()
         today = Settings.instance().evaluationDate
@@ -1161,13 +1245,13 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE("Testing Vecer engine for Asian options...")
 
         cases = [
-            self.VecerData(1.9, 0.05, 0.5, 2.0, 1, 0.193174, 1.0e-5),
-            self.VecerData(2.0, 0.05, 0.5, 2.0, 1, 0.246416, 1.0e-5),
-            self.VecerData(2.1, 0.05, 0.5, 2.0, 1, 0.306220, 1.0e-4),
-            self.VecerData(2.0, 0.02, 0.1, 2.0, 1, 0.055986, 2.0e-4),
-            self.VecerData(2.0, 0.18, 0.3, 2.0, 1, 0.218388, 1.0e-4),
-            self.VecerData(2.0, 0.0125, 0.25, 2.0, 2, 0.172269, 1.0e-4),
-            self.VecerData(2.0, 0.05, 0.5, 2.0, 2, 0.350095, 2.0e-4)]
+            VecerData(1.9, 0.05, 0.5, 2.0, 1, 0.193174, 1.0e-5),
+            VecerData(2.0, 0.05, 0.5, 2.0, 1, 0.246416, 1.0e-5),
+            VecerData(2.1, 0.05, 0.5, 2.0, 1, 0.306220, 1.0e-4),
+            VecerData(2.0, 0.02, 0.1, 2.0, 1, 0.055986, 2.0e-4),
+            VecerData(2.0, 0.18, 0.3, 2.0, 1, 0.218388, 1.0e-4),
+            VecerData(2.0, 0.0125, 0.25, 2.0, 2, 0.172269, 1.0e-4),
+            VecerData(2.0, 0.05, 0.5, 2.0, 2, 0.350095, 2.0e-4)]
 
         dayCounter = Actual360()
         today = Settings.instance().evaluationDate
@@ -1246,3 +1330,79 @@ class AsianOptionTest(unittest.TestCase):
             calculated = option.NPV()
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
+
+    def testDiscreteGeometricAveragePriceHestonPastFixings(self):
+        TEST_MESSAGE(
+            "Testing Analytic vs MC for seasoned discrete geometric Asians under Heston...")
+
+        # 30-day options need wider tolerance due to uncertainty around what "weekly
+        # fixing" dates mean over a 30-day month!
+        tolerance = 0.04
+        days = [30, 90, 180, 360, 720]
+        strikes = [90, 100, 110]
+
+        dc = Actual365Fixed()
+        today = Settings.instance().evaluationDate
+
+        spot = QuoteHandle(SimpleQuote(100))
+        qRate = SimpleQuote(0.0)
+        qTS = flatRate(today, qRate, dc)
+        rRate = SimpleQuote(0.05)
+        rTS = flatRate(today, rRate, dc)
+
+        v0 = 0.09
+        kappa = 1.15
+        theta = 0.0348
+        sigma = 0.39
+        rho = -0.64
+
+        hestonProcess = HestonProcess(
+            YieldTermStructureHandle(rTS),
+            YieldTermStructureHandle(qTS),
+            spot, v0, kappa, theta, sigma, rho)
+
+        analyticEngine = AnalyticDiscreteGeometricAveragePriceAsianHestonEngine(
+            hestonProcess)
+
+        mcEngine = MakeMCLDDiscreteGeometricAPHestonEngine(hestonProcess)
+        mcEngine.withSamples(32767)
+        mcEngine.withSeed(43)
+
+        mcEngine = mcEngine.makeEngine()
+
+        type = Option.Call
+        averageType = Average.Geometric
+
+        for strike in strikes:
+            for day in days:
+                for k in range(2):
+                    futureFixings = int(floor(day / 30.0))
+                    fixingDates = DateVector(futureFixings)
+                    expiryDate = today + day * Days
+
+                    for i in range(futureFixings - 1, -1, -1):
+                        fixingDates[i] = expiryDate - i * 30
+
+                    europeanExercise = EuropeanExercise(expiryDate)
+                    payoff = PlainVanillaPayoff(type, strike)
+
+                    runningAccumulator = 1.0
+                    pastFixingsCount = 0
+                    if k == 0:
+                        runningAccumulator = 100.0
+                        pastFixingsCount = 1
+                    else:
+                        runningAccumulator = 95.0 * 100.0 * 105.0
+                        pastFixingsCount = 3
+
+                    option = DiscreteAveragingAsianOption(
+                        averageType, runningAccumulator, pastFixingsCount,
+                        fixingDates, payoff, europeanExercise)
+
+                    option.setPricingEngine(analyticEngine)
+                    analyticPrice = option.NPV()
+
+                    option.setPricingEngine(mcEngine)
+                    mcPrice = option.NPV()
+
+                    self.assertFalse(abs(analyticPrice - mcPrice) > tolerance)

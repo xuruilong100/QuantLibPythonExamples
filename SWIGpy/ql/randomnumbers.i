@@ -60,7 +60,8 @@ class UniformRandomGenerator {
 
 /************* Gaussian number generators *************/
 
-template<class RNG> class CLGaussianRng {
+template<class RNG>
+class CLGaussianRng {
   public:
     CLGaussianRng(const RNG& rng);
     Sample<Real> next() const;
@@ -70,7 +71,8 @@ template<class RNG> class CLGaussianRng {
 %template(CentralLimitKnuthGaussianRng) CLGaussianRng<KnuthUniformRng>;
 %template(CentralLimitMersenneTwisterGaussianRng) CLGaussianRng<MersenneTwisterUniformRng>;
 
-template<class RNG> class BoxMullerGaussianRng {
+template<class RNG>
+class BoxMullerGaussianRng {
   public:
     BoxMullerGaussianRng(const RNG& rng);
     Sample<Real> next() const;
@@ -138,7 +140,7 @@ class SobolRsg {
     };
     SobolRsg(
         Size dimensionality,
-         BigInteger seed = 0,
+        BigInteger seed = 0,
         DirectionIntegers directionIntegers = QuantLib::SobolRsg::Jaeckel);
     const Sample<std::vector<Real>>& nextSequence() const;
     const Sample<std::vector<Real>>& lastSequence() const;
@@ -154,9 +156,14 @@ class SobolRsg {
 
 class SobolBrownianBridgeRsg {
   public:
-    SobolBrownianBridgeRsg(Size factors, Size steps);
-    const Sample<std::vector<Real> >&  nextSequence() const;
-    const Sample<std::vector<Real> >&  lastSequence() const;
+    SobolBrownianBridgeRsg(
+        Size factors,
+        Size steps,
+        SobolBrownianGenerator::Ordering ordering = SobolBrownianGenerator::Diagonal,
+        unsigned long seed = 0,
+        SobolRsg::DirectionIntegers directionIntegers = SobolRsg::JoeKuoD7);
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -170,6 +177,7 @@ class RandomSequenceGenerator {
         Size dimensionality,
         BigNatural seed = 0);
     const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -183,6 +191,7 @@ class UniformRandomSequenceGenerator {
         Size dimensionality,
         const UniformRandomGenerator& rng);
     const Sample<std::vector<Real> >& nextSequence() const;
+    const Sample<std::vector<Real> >& lastSequence() const;
     Size dimension() const;
 };
 
@@ -193,6 +202,7 @@ class UniformLowDiscrepancySequenceGenerator {
         BigInteger seed=0,
         SobolRsg::DirectionIntegers directionIntegers = QuantLib::SobolRsg::Jaeckel);
     const Sample<std::vector<Real> >& nextSequence() const;
+    const Sample<std::vector<Real> >& lastSequence() const;
     Size dimension() const;
 };
 
@@ -207,6 +217,7 @@ class InverseCumulativeRsg {
         const U& uniformSequenceGenerator,
         const I& inverseCumulative);
     const Sample<std::vector<Real> >& nextSequence() const;
+    const Sample<std::vector<Real> >& lastSequence() const;
     Size dimension() const;
 };
 
@@ -227,6 +238,7 @@ class GaussianRandomSequenceGenerator {
     GaussianRandomSequenceGenerator(
         const UniformRandomSequenceGenerator& uniformSequenceGenerator);
     const Sample<std::vector<Real> >& nextSequence() const;
+    const Sample<std::vector<Real> >& lastSequence() const;
     Size dimension() const;
 };
 
@@ -235,6 +247,7 @@ class GaussianLowDiscrepancySequenceGenerator {
     GaussianLowDiscrepancySequenceGenerator(
         const UniformLowDiscrepancySequenceGenerator& u);
     const Sample<std::vector<Real> >& nextSequence() const;
+    const Sample<std::vector<Real> >& lastSequence() const;
     Size dimension() const;
 };
 

@@ -43,7 +43,7 @@ class Schedule {
         const boost::optional<Period> tenor = boost::none,
         boost::optional<DateGeneration::Rule> rule = boost::none,
         boost::optional<bool> endOfMonth = boost::none,
-        const std::vector<bool>& isRegular = std::vector<bool>(0));
+        std::vector<bool> isRegular = std::vector<bool>(0));
     Schedule(
         const Date& effectiveDate,
         const Date& terminationDate,
@@ -117,48 +117,10 @@ class MakeSchedule {
     MakeSchedule& withNextToLastDate(const Date& d);
 
     %extend{
-        Schedule schedule(){
+        Schedule makeSchedule(){
             return (Schedule)(* $self);
         }
     }
 };
-
-
-%pythoncode{
-def MakeSchedule(
-        effectiveDate=None, terminationDate=None, tenor=None,
-        frequency=None, calendar=None,
-        convention=None, terminalDateConvention=None,
-        rule=None, forwards=False, backwards=False,
-        endOfMonth=None, firstDate=None, nextToLastDate=None):
-    ms = _MakeSchedule()
-    if effectiveDate is not None:
-        ms.fromDate(effectiveDate)
-    if terminationDate is not None:
-        ms.to(terminationDate)
-    if tenor is not None:
-        ms.withTenor(tenor)
-    if frequency is not None:
-        ms.withFrequency(frequency)
-    if calendar is not None:
-        ms.withCalendar(calendar)
-    if convention is not None:
-        ms.withConvention(convention)
-    if terminalDateConvention is not None:
-        ms.withTerminationDateConvention(terminalDateConvention)
-    if rule is not None:
-        ms.withRule(rule)
-    if forwards:
-        ms.forwards()
-    if backwards:
-        ms.backwards()
-    if endOfMonth is not None:
-        ms.endOfMonth(endOfMonth)
-    if firstDate is not None:
-        ms.withFirstDate(firstDate)
-    if nextToLastDate is not None:
-        ms.withNextToLastDate(nextToLastDate)
-    return ms.schedule()
-}
 
 #endif

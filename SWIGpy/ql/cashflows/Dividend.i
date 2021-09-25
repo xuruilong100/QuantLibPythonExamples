@@ -7,13 +7,15 @@
 %include ../ql/base.i
 
 %{
-using QuantLib::Dividend;    
+using QuantLib::Dividend;
 %}
 
 %shared_ptr(Dividend)
 class Dividend : public CashFlow {
   private:
     Dividend();
+  public:
+    Real amount(Real underlying) const;
 };
 
 #endif

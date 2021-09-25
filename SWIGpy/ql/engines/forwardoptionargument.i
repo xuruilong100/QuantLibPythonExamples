@@ -12,6 +12,8 @@ using QuantLib::ForwardVanillaEngine;
 using QuantLib::AnalyticHestonForwardEuropeanEngine;
 using QuantLib::MCForwardEuropeanBSEngine;
 using QuantLib::MCForwardEuropeanHestonEngine;
+using QuantLib::MakeMCForwardEuropeanBSEngine;
+using QuantLib::MakeMCForwardEuropeanHestonEngine;
 typedef ForwardVanillaEngine<AnalyticEuropeanEngine> ForwardEuropeanEngine;
 %}
 
@@ -19,147 +21,107 @@ typedef ForwardVanillaEngine<AnalyticEuropeanEngine> ForwardEuropeanEngine;
 class ForwardEuropeanEngine : public PricingEngine {
   public:
     ForwardEuropeanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>&);
+        ext::shared_ptr<GeneralizedBlackScholesProcess>);
 };
 
 %shared_ptr(AnalyticHestonForwardEuropeanEngine)
 class AnalyticHestonForwardEuropeanEngine : public PricingEngine {
   public:
     AnalyticHestonForwardEuropeanEngine(
-        const ext::shared_ptr<HestonProcess>& process,
+        ext::shared_ptr<HestonProcess> process,
         Size integrationOrder = 144);
+    Real propagator(
+        Time resetTime, Real varReset) const;
+    ext::shared_ptr<AnalyticHestonEngine> forwardChF(
+        Handle<Quote> &spotReset, Real varReset) const;
 };
 
 %shared_ptr(MCForwardEuropeanBSEngine<PseudoRandom>);
 %shared_ptr(MCForwardEuropeanBSEngine<LowDiscrepancy>);
 template <class RNG>
 class MCForwardEuropeanBSEngine : public PricingEngine {
-    %feature("kwargs") MCForwardEuropeanBSEngine;
-
   public:
-    %extend {
-        MCForwardEuropeanBSEngine(
-            const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-            intOrNull timeSteps = Null<Size>(),
-            intOrNull timeStepsPerYear = Null<Size>(),
-            bool brownianBridge = false,
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0) {
-            return new MCForwardEuropeanBSEngine<RNG>(
-                process,
-                timeSteps,
-                timeStepsPerYear,
-                brownianBridge,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed);
-        }
-    }
+    MCForwardEuropeanBSEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples, BigNatural seed);
 };
 
 %template(MCPRForwardEuropeanBSEngine) MCForwardEuropeanBSEngine<PseudoRandom>;
 %template(MCLDForwardEuropeanBSEngine) MCForwardEuropeanBSEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCForwardEuropeanBSEngine(
-        process,
-        traits,
-        timeSteps=None,
-        timeStepsPerYear=None,
-        brownianBridge=False,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPRForwardEuropeanBSEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDForwardEuropeanBSEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        timeSteps,
-        timeStepsPerYear,
-        brownianBridge,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed)
-%}
+template <class RNG>
+class MakeMCForwardEuropeanBSEngine {
+  public:
+    explicit MakeMCForwardEuropeanBSEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process);
+    // named parameters
+    MakeMCForwardEuropeanBSEngine& withSteps(Size steps);
+    MakeMCForwardEuropeanBSEngine& withStepsPerYear(Size steps);
+    MakeMCForwardEuropeanBSEngine& withBrownianBridge(bool b = false);
+    MakeMCForwardEuropeanBSEngine& withSamples(Size samples);
+    MakeMCForwardEuropeanBSEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCForwardEuropeanBSEngine& withMaxSamples(Size samples);
+    MakeMCForwardEuropeanBSEngine& withSeed(BigNatural seed);
+    MakeMCForwardEuropeanBSEngine& withAntitheticVariate(bool b = true);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPRForwardEuropeanBSEngine) MakeMCForwardEuropeanBSEngine<PseudoRandom>;
+%template(MakeMCLDForwardEuropeanBSEngine) MakeMCForwardEuropeanBSEngine<LowDiscrepancy>;
 
 %shared_ptr(MCForwardEuropeanHestonEngine<PseudoRandom>);
 %shared_ptr(MCForwardEuropeanHestonEngine<LowDiscrepancy>);
 template <class RNG>
 class MCForwardEuropeanHestonEngine : public PricingEngine {
-    %feature("kwargs") MCForwardEuropeanHestonEngine;
-
   public:
-    %extend {
-        MCForwardEuropeanHestonEngine(
-            const ext::shared_ptr<HestonProcess>& process,
-            intOrNull timeSteps = Null<Size>(),
-            intOrNull timeStepsPerYear = Null<Size>(),
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0,
-            bool controlVariate = false) {
-            return new MCForwardEuropeanHestonEngine<RNG>(
-                process,
-                timeSteps,
-                timeStepsPerYear,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed,
-                controlVariate);
-        }
-    }
+    MCForwardEuropeanHestonEngine(
+        const ext::shared_ptr<HestonProcess> &process,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed,
+        bool controlVariate=false);
 };
 
 %template(MCPRForwardEuropeanHestonEngine) MCForwardEuropeanHestonEngine<PseudoRandom>;
 %template(MCLDForwardEuropeanHestonEngine) MCForwardEuropeanHestonEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCForwardEuropeanHestonEngine(
-        process,
-        traits,
-        timeSteps=None,
-        timeStepsPerYear=None,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0,
-        controlVariate=False):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPRForwardEuropeanHestonEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDForwardEuropeanHestonEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        timeSteps,
-        timeStepsPerYear,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed,
-        controlVariate)
-%}
+template <class RNG>
+class MakeMCForwardEuropeanHestonEngine {
+  public:
+    explicit MakeMCForwardEuropeanHestonEngine(ext::shared_ptr<HestonProcess> process);
+    // named parameters
+    MakeMCForwardEuropeanHestonEngine& withSteps(Size steps);
+    MakeMCForwardEuropeanHestonEngine& withStepsPerYear(Size steps);
+    MakeMCForwardEuropeanHestonEngine& withSamples(Size samples);
+    MakeMCForwardEuropeanHestonEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCForwardEuropeanHestonEngine& withMaxSamples(Size samples);
+    MakeMCForwardEuropeanHestonEngine& withSeed(BigNatural seed);
+    MakeMCForwardEuropeanHestonEngine& withAntitheticVariate(bool b = true);
+    MakeMCForwardEuropeanHestonEngine& withControlVariate(bool b = false);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPRForwardEuropeanHestonEngine) MakeMCForwardEuropeanHestonEngine<PseudoRandom>;
+%template(MakeMCLDForwardEuropeanHestonEngine) MakeMCForwardEuropeanHestonEngine<LowDiscrepancy>;
 
 #endif

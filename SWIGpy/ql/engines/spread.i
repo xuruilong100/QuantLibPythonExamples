@@ -14,9 +14,9 @@ using QuantLib::KirkSpreadOptionEngine;
 class KirkSpreadOptionEngine : public PricingEngine {
   public:
     KirkSpreadOptionEngine(
-        const ext::shared_ptr<BlackProcess>& process1,
-        const ext::shared_ptr<BlackProcess>& process2,
-        const Handle<Quote>& correlation);
+        ext::shared_ptr<BlackProcess> process1,
+        ext::shared_ptr<BlackProcess> process2,
+        Handle<Quote> correlation);
 };
 
 #endif

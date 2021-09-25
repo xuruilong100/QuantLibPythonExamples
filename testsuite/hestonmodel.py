@@ -110,16 +110,16 @@ def getDAXCalibrationMarketData():
 
 class HestonModelTest(unittest.TestCase):
 
-    def reportOnIntegrationMethodTest(self,
-                                      option,
-                                      model,
-                                      integration,
-                                      formula,
-                                      isAdaptive,
-                                      expected,
-                                      tol,
-                                      valuations,
-                                      method):
+    def _reportOnIntegrationMethodTest(self,
+                                       option,
+                                       model,
+                                       integration,
+                                       formula,
+                                       isAdaptive,
+                                       expected,
+                                       tol,
+                                       valuations,
+                                       method):
 
         if integration.isAdaptiveIntegration() != isAdaptive:
             self.fail(
@@ -279,7 +279,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = settlementDate + Period(6, Months)
 
         payoff = PlainVanillaPayoff(Option.Put, 30)
@@ -339,7 +339,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(28, March, 2005)
 
         payoff = PlainVanillaPayoff(Option.Call, 1.05)
@@ -416,7 +416,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(30, March, 2007)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(30, March, 2017)
 
         payoff = PlainVanillaPayoff(Option.Call, 200)
@@ -456,7 +456,7 @@ class HestonModelTest(unittest.TestCase):
             engine.withAntitheticVariate()
             engine.withAbsoluteTolerance(tolerance)
             engine.withSeed(1234)
-            engine = engine.toPricingEngine()
+            engine = engine.makeEngine()
 
             option.setPricingEngine(engine)
 
@@ -473,7 +473,8 @@ class HestonModelTest(unittest.TestCase):
                 HestonProcess.BroadieKayaExactSchemeLaguerre))
         engine.withSteps(1)
         engine.withSamples(1023)
-        engine = engine.toPricingEngine()
+        engine = engine.makeEngine()
+
         option.setPricingEngine(engine)
 
         calculated = option.NPV()
@@ -516,7 +517,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(28, March, 2005)
 
         payoff = PlainVanillaPayoff(Option.Put, 1.05)
@@ -540,7 +541,7 @@ class HestonModelTest(unittest.TestCase):
         engine.withAntitheticVariate()
         engine.withSamples(50000)
         engine.withSeed(1234)
-        engine = engine.toPricingEngine()
+        engine = engine.makeEngine()
 
         option.setPricingEngine(engine)
 
@@ -603,7 +604,7 @@ class HestonModelTest(unittest.TestCase):
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
 
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(28, March, 2005)
 
         payoff = PlainVanillaPayoff(Option.Put, 1.05)
@@ -627,7 +628,7 @@ class HestonModelTest(unittest.TestCase):
         engine.withTGrid(100)
         engine.withXGrid(200)
         engine.withVGrid(100)
-        engine = engine.toPricingEngine()
+        engine = engine.makeEngine()
         option.setPricingEngine(engine)
 
         expected = 0.06325
@@ -670,7 +671,7 @@ class HestonModelTest(unittest.TestCase):
         engine.withTGrid(200)
         engine.withXGrid(400)
         engine.withVGrid(100)
-        engine = engine.toPricingEngine()
+        engine = engine.makeEngine()
 
         divOption.setPricingEngine(engine)
         calculated = divOption.NPV()
@@ -699,7 +700,7 @@ class HestonModelTest(unittest.TestCase):
         engine.withTGrid(200)
         engine.withXGrid(400)
         engine.withVGrid(100)
-        engine = engine.toPricingEngine()
+        engine = engine.makeEngine()
         option.setPricingEngine(engine)
         calculated = option.NPV()
 
@@ -726,7 +727,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
 
         riskFreeTS = YieldTermStructureHandle(
             flatRate(0.05, dayCounter))
@@ -822,7 +823,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(28, March, 2005)
 
         exercise = EuropeanExercise(exerciseDate)
@@ -884,7 +885,7 @@ class HestonModelTest(unittest.TestCase):
         backup = SavedSettings()
         settlementDate = Date(27, December, 2004)
         Settings.instance().evaluationDate = settlementDate
-        dayCounter = ActualActual()
+        dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = Date(28, March, 2005)
 
         payoff = PlainVanillaPayoff(Option.Call, 1.0)
@@ -1337,7 +1338,7 @@ class HestonModelTest(unittest.TestCase):
         expected = 10.147041515497
 
         # Gauss-Laguerre with Gatheral logarithm integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLaguerre(),
             AnalyticHestonEngine.Gatheral,
@@ -1345,7 +1346,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Laguerre with Gatheral logarithm")
 
         # Gauss-Laguerre with branch correction integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLaguerre(),
             AnalyticHestonEngine.BranchCorrection,
@@ -1353,7 +1354,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Laguerre with branch correction")
 
         # Gauss-Laguerre with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLaguerre(),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1361,7 +1362,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Laguerre with Andersen Piterbarg control variate")
 
         # Gauss-Legendre with Gatheral logarithm integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLegendre(),
             AnalyticHestonEngine.Gatheral,
@@ -1369,7 +1370,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Legendre with Gatheral logarithm")
 
         # Gauss-Legendre with branch correction integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLegendre(),
             AnalyticHestonEngine.BranchCorrection,
@@ -1377,7 +1378,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Legendre with branch correction")
 
         # Gauss-Legendre with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLegendre(256),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1385,7 +1386,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Legendre with Andersen Piterbarg control variate")
 
         # Gauss-Chebyshev with Gatheral logarithm integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev(512),
             AnalyticHestonEngine.Gatheral,
@@ -1393,14 +1394,14 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Chebyshev with Gatheral logarithm")
 
         # Gauss-Chebyshev with branch correction integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev(512),
             AnalyticHestonEngine.BranchCorrection,
             False, expected, 1e-4, 1024, "Gauss-Chebyshev with branch correction")
 
         # Gauss-Chebyshev with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev(512),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1408,7 +1409,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Laguerre with Andersen Piterbarg control variate")
 
         # Gauss-Chebyshev2nd with Gatheral logarithm integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev2nd(512),
             AnalyticHestonEngine.Gatheral,
@@ -1416,7 +1417,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Chebyshev2nd with Gatheral logarithm")
 
         # Gauss-Chebyshev with branch correction integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev2nd(512),
             AnalyticHestonEngine.BranchCorrection,
@@ -1424,7 +1425,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Chebyshev2nd with branch correction")
 
         # Gauss-Chebyshev with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussChebyshev2nd(512),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1432,7 +1433,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Chebyshev2nd with Andersen Piterbarg control variate")
 
         # Discrete Simpson rule with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.discreteSimpson(512),
             AnalyticHestonEngine.Gatheral,
@@ -1440,7 +1441,7 @@ class HestonModelTest(unittest.TestCase):
             "Discrete Simpson rule with Gatheral logarithm")
 
         # Discrete Simpson rule with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.discreteSimpson(64),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1448,7 +1449,7 @@ class HestonModelTest(unittest.TestCase):
             "Discrete Simpson rule with Andersen Piterbarg control variate")
 
         # Discrete Trapezoid rule with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.discreteTrapezoid(512),
             AnalyticHestonEngine.Gatheral,
@@ -1456,7 +1457,7 @@ class HestonModelTest(unittest.TestCase):
             "Discrete Trapezoid rule with Gatheral logarithm")
 
         # Discrete Trapezoid rule with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.discreteTrapezoid(64),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1464,7 +1465,7 @@ class HestonModelTest(unittest.TestCase):
             "Discrete Trapezoid rule with Andersen Piterbarg control variate")
 
         # Gauss-Lobatto with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLobatto(
                 tol, NullReal()),
@@ -1473,7 +1474,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Lobatto with Gatheral logarithm")
 
         # Gauss-Lobatto with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussLobatto(tol, NullReal()),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1481,7 +1482,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Lobatto with Andersen Piterbarg control variate")
 
         # Gauss-Konrod with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussKronrod(tol),
             AnalyticHestonEngine.Gatheral,
@@ -1489,7 +1490,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Konrod with Gatheral logarithm")
 
         # Gauss-Konrod with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.gaussKronrod(tol),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1497,7 +1498,7 @@ class HestonModelTest(unittest.TestCase):
             "Gauss-Konrod with Andersen Piterbarg control variate")
 
         # Simpson with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.simpson(tol),
             AnalyticHestonEngine.Gatheral,
@@ -1505,7 +1506,7 @@ class HestonModelTest(unittest.TestCase):
             "Simpson with Gatheral logarithm")
 
         # Simpson with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.simpson(tol),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -1513,7 +1514,7 @@ class HestonModelTest(unittest.TestCase):
             "Simpson with Andersen Piterbarg control variate")
 
         # Trapezoid with Gatheral logarithm
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.trapezoid(tol),
             AnalyticHestonEngine.Gatheral,
@@ -1521,7 +1522,7 @@ class HestonModelTest(unittest.TestCase):
             "Trapezoid with Gatheral logarithm")
 
         # Trapezoid with Andersen-Piterbarg integration method
-        self.reportOnIntegrationMethodTest(
+        self._reportOnIntegrationMethodTest(
             option, model,
             AnalyticHestonEngineIntegration.trapezoid(tol),
             AnalyticHestonEngine.AndersenPiterbarg,
@@ -2450,3 +2451,57 @@ class HestonModelTest(unittest.TestCase):
                 diff = abs(calculated - expected[i])
 
                 self.assertFalse(diff > 5e-8)
+
+    def testLocalVolFromHestonModel(self):
+        TEST_MESSAGE("Testing Local Volatility pricing from Heston Model...")
+
+        backup=SavedSettings()
+
+        todaysDate = Date(28, June, 2021)
+        Settings.instance().evaluationDate = todaysDate
+
+        dc = Actual365Fixed()
+
+        rTS=YieldTermStructureHandle(flatRate(0.15, dc))
+        qTS=YieldTermStructureHandle(flatRate(0.05, dc))
+
+        s0=QuoteHandle(SimpleQuote(100.0))
+
+        v0 = 0.1
+        rho = -0.75
+        sigma = 0.8
+        kappa = 1.0
+        theta = 0.16
+
+        hestonModel = HestonModel(
+            HestonProcess(
+                rTS, qTS, s0, v0, kappa, theta, sigma, rho))
+
+        option=VanillaOption(
+            PlainVanillaPayoff(Option.Call, 120.0),
+            EuropeanExercise(todaysDate + Period(1, Years)))
+
+        option.setPricingEngine(
+            AnalyticHestonEngine(
+                hestonModel,
+                AnalyticHestonEngine.OptimalCV,
+                AnalyticHestonEngineIntegration.gaussLaguerre(192)))
+
+        expected = option.NPV()
+
+        option.setPricingEngine(
+            FdBlackScholesVanillaEngine(
+                BlackScholesMertonProcess(
+                    s0, qTS, rTS,
+                    BlackVolTermStructureHandle(
+                        HestonBlackVolSurface(
+                            HestonModelHandle(hestonModel),
+                            AnalyticHestonEngine.OptimalCV,
+                            AnalyticHestonEngineIntegration.gaussLaguerre(24)))),
+                25, 125, 1, FdmSchemeDesc.Douglas(), true, 0.4))
+
+        calculated = option.NPV()
+
+        tol = 0.005
+        diff = abs(calculated - expected)
+        self.assertFalse(diff > tol)

@@ -13,48 +13,50 @@ using QuantLib::MarkovFunctional;
 %}
 
 %shared_ptr(Gaussian1dModel)
-class Gaussian1dModel : public TermStructureConsistentModel {
+class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
   public:
-    const ext::shared_ptr<StochasticProcess1D> stateProcess() const;
-
-    const Real numeraire(
-        const Time t, const Real y = 0.0,
-        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
-    const Real zerobond(
-        const Time T, const Time t = 0.0,
-        const Real y = 0.0,
-        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>());
-    const Real numeraire(
-        const Date& referenceDate, const Real y = 0.0,
-        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
-    const Real zerobond(
+    ext::shared_ptr<StochasticProcess1D> stateProcess() const;
+    Real numeraire(
+        Time t, Real y = 0.0,
+        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+    Real zerobond(
+        Time T, Time t = 0.0, Real y = 0.0,
+        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+    Real numeraire(
+        const Date& referenceDate, Real y = 0.0,
+        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+    Real zerobond(
         const Date& maturity,
-        const Date& referenceDate = Null<Date>(),
-        const Real y = 0.0,
-        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
-    const Real zerobondOption(
-        const Option::Type& type, const Date& expiry, const Date& valueDate,
-        const Date& maturity, const Rate strike,
-        const Date& referenceDate = Null<Date>(), const Real y = 0.0,
-        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>(),
-        const Real yStdDevs = 7.0, const Size yGridPoints = 64,
-        const bool extrapolatePayoff = true,
-        const bool flatPayoffExtrapolation = false) const;
-    const Real forwardRate(
+        const Date& referenceDate = Null<Date>(), Real y = 0.0,
+        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+    Real zerobondOption(
+        const Option::Type& type, const Date& expiry,
+        const Date& valueDate, const Date& maturity, Rate strike,
+        const Date& referenceDate = Null<Date>(), Real y = 0.0,
+        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>(),
+        Real yStdDevs=7.0, Size yGridPoints=64,
+        bool extrapolatePayoff=true,
+        bool flatPayoffExtrapolation=false) const;
+    Real forwardRate(
         const Date& fixing,
         const Date& referenceDate = Null<Date>(),
-        const Real y = 0.0,
-        ext::shared_ptr<IborIndex> iborIdx = ext::shared_ptr<IborIndex>()) const;
-    const Real swapRate(
+        Real y = 0.0,
+        const ext::shared_ptr< IborIndex >& iborIdx=ext::shared_ptr< IborIndex >()) const;
+    Real swapRate(
         const Date& fixing, const Period& tenor,
-        const Date& referenceDate = Null<Date>(),
-        const Real y = 0.0,
-        ext::shared_ptr<SwapIndex> swapIdx = ext::shared_ptr<SwapIndex>()) const;
-    const Real swapAnnuity(
+        const Date& referenceDate = Null<Date>(), Real y = 0.0,
+        const ext::shared_ptr<SwapIndex>& swapIdx=ext::shared_ptr<SwapIndex>()) const;
+    Real swapAnnuity(
         const Date& fixing, const Period& tenor,
-        const Date& referenceDate = Null<Date>(),
-        const Real y = 0.0,
-        ext::shared_ptr<SwapIndex> swapIdx = ext::shared_ptr<SwapIndex>()) const;
+        const Date& referenceDate = Null<Date>(), Real y = 0.0,
+        const ext::shared_ptr<SwapIndex>& swapIdx = ext::shared_ptr<SwapIndex>()) const;
+    Array yGrid(
+        Real yStdDevs, int gridPoints,
+        Real T=1.0, Real t=0, Real y=0) const;
+    static Real gaussianPolynomialIntegral(
+        Real a, Real b, Real c, Real d, Real e, Real x0, Real x1);
+    static Real gaussianShiftedPolynomialIntegral(
+        Real a, Real b, Real c, Real d, Real e, Real h, Real x0, Real x1);
 };
 
 %shared_ptr(Gsr)
@@ -62,61 +64,55 @@ class Gsr : public Gaussian1dModel, public CalibratedModel {
   public:
     // constant mean reversion
     Gsr(const Handle<YieldTermStructure>& termStructure,
-        const std::vector<Date>& volstepdates,
+        std::vector<Date> volstepdates,
         const std::vector<Real>& volatilities,
         Real reversion,
         Real T = 60.0);
     // piecewise mean reversion (with same step dates as volatilities)
     Gsr(const Handle<YieldTermStructure>& termStructure,
-        const std::vector<Date>& volstepdates,
+        std::vector<Date> volstepdates,
         const std::vector<Real>& volatilities,
         const std::vector<Real>& reversions,
         Real T = 60.0);
     // constant mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
-        const std::vector<Date>& volstepdates,
-        const std::vector<Handle<Quote> >& volatilities,
+        std::vector<Date> volstepdates,
+        std::vector<Handle<Quote> > volatilities,
         const Handle<Quote>& reversion,
         Real T = 60.0);
     // piecewise mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
-        const std::vector<Date>& volstepdates,
-        const std::vector<Handle<Quote> >& volatilities,
-        const std::vector<Handle<Quote> >& reversions,
+        std::vector<Date> volstepdates,
+        std::vector<Handle<Quote> > volatilities,
+        std::vector<Handle<Quote> > reversions,
         Real T = 60.0);
 
+    Real numeraireTime() const;
+    void numeraireTime(Real T);
+    const Array& reversion() const;
+    const Array& volatility() const;
+    std::vector<bool> FixedReversions();
+    std::vector<bool> FixedVolatilities();
+    std::vector<bool> MoveVolatility(Size i);
+    std::vector<bool> MoveReversion(Size i);
     void calibrateVolatilitiesIterative(
         const std::vector<ext::shared_ptr<BlackCalibrationHelper>>& helpers,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
         const std::vector<Real>& weights = std::vector<Real>());
-
-    Real numeraireTime() const;
-    void numeraireTime(Real T);
-    const Array& reversion() const;
-    const Array& volatility() const;
-
     void calibrateReversionsIterative(
         const std::vector<ext::shared_ptr<BlackCalibrationHelper>>& instruments,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
         const std::vector<Real>& weights = std::vector<Real>());
-
-    /* Array params() const;
-    void setParams(const Array& params);
-    Real value(
-        const Array& params,
-        const std::vector<ext::shared_ptr<CalibrationHelper> >& instruments);
-    const ext::shared_ptr<Constraint>& constraint() const;
-    EndCriteria::Type endCriteria() const;
-    const Array& problemValues() const;
-    Integer functionEvaluation() const; */
 };
 
 %rename (MarkovFunctionalSettings) MarkovFunctional::ModelSettings;
+%rename (MarkovFunctionalOutputs) MarkovFunctional::ModelOutputs;
 %feature ("flatnested") ModelSettings;
+%feature ("flatnested") ModelOutputs;
 %shared_ptr(MarkovFunctional)
 class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
   public:
@@ -136,51 +132,76 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
 
         ModelSettings();
 
-        ModelSettings &withYGridPoints(Size n);
-        ModelSettings &withYStdDevs(Real s);
-        ModelSettings &withGaussHermitePoints(Size n);
-        ModelSettings &withDigitalGap(Real d);
-        ModelSettings &withMarketRateAccuracy(Real a);
-        ModelSettings &withUpperRateBound(Real u);
-        ModelSettings &withLowerRateBound(Real l);
-        ModelSettings &withAdjustments(int a);
-        ModelSettings &addAdjustment(int a);
-        ModelSettings &removeAdjustment(int a);
-        ModelSettings &withSmileMoneynessCheckpoints(const std::vector<Real>& m);
+        ModelSettings& withYGridPoints(Size n);
+        ModelSettings& withYStdDevs(Real s);
+        ModelSettings& withGaussHermitePoints(Size n);
+        ModelSettings& withDigitalGap(Real d);
+        ModelSettings& withMarketRateAccuracy(Real a);
+        ModelSettings& withUpperRateBound(Real u);
+        ModelSettings& withLowerRateBound(Real l);
+        ModelSettings& withAdjustments(int a);
+        ModelSettings& addAdjustment(int a);
+        ModelSettings& removeAdjustment(int a);
+        ModelSettings& withSmileMoneynessCheckpoints(const std::vector<Real>& m);
 
-        /* %extend {
-            ModelSettings toInstance() {
-                return *$self;
-            }
-        } */
+        Size yGridPoints_ = 64;
+        Real yStdDevs_ = 7.0;
+        Size gaussHermitePoints_ = 32;
+        Real digitalGap_ = 1E-5, marketRateAccuracy_ = 1E-7;
+        Real lowerRateBound_ = 0.0, upperRateBound_ = 2.0;
+        int adjustments_;
+        std::vector<Real> smileMoneynessCheckpoints_;
+        //ext::shared_ptr<CustomSmileFactory> customSmileFactory_;
+    };
+
+    struct ModelOutputs {
+        bool dirty_;
+        ModelSettings settings_;
+        std::vector<Date> expiries_;
+        std::vector<Period> tenors_;
+        std::vector<Real> atm_;
+        std::vector<Real> annuity_;
+        std::vector<Real> adjustmentFactors_;
+        std::vector<Real> digitalsAdjustmentFactors_;
+        std::vector<std::string> messages_;
+        std::vector<std::vector<Real> > smileStrikes_;
+        std::vector<std::vector<Real> > marketRawCallPremium_;
+        std::vector<std::vector<Real> > marketRawPutPremium_;
+        std::vector<std::vector<Real> > marketCallPremium_;
+        std::vector<std::vector<Real> > marketPutPremium_;
+        std::vector<std::vector<Real> > modelCallPremium_;
+        std::vector<std::vector<Real> > modelPutPremium_;
+        std::vector<std::vector<Real> > marketVega_;
+        std::vector<Real> marketZerorate_;
+        std::vector<Real> modelZerorate_;
     };
 
     // Constructor for a swaption smile calibrated model
     MarkovFunctional(
         const Handle<YieldTermStructure>& termStructure,
-        const Real reversion,
-        const std::vector<Date>& volstepdates,
-        const std::vector<Real>& volatilities,
+        Real reversion,
+        std::vector<Date> volstepdates,
+        std::vector<Real> volatilities,
         const Handle<SwaptionVolatilityStructure>& swaptionVol,
         const std::vector<Date>& swaptionExpiries,
         const std::vector<Period>& swaptionTenors,
         const ext::shared_ptr<SwapIndex>& swapIndexBase,
-        const MarkovFunctional::ModelSettings& modelSettings = ModelSettings());
-
+        MarkovFunctional::ModelSettings modelSettings = ModelSettings());
     // Constructor for a caplet smile calibrated model
     MarkovFunctional(
         const Handle<YieldTermStructure>& termStructure,
-        const Real reversion,
-        const std::vector<Date>& volstepdates,
-        const std::vector<Real>& volatilities,
+        Real reversion,
+        std::vector<Date> volstepdates,
+        std::vector<Real> volatilities,
         const Handle<OptionletVolatilityStructure>& capletVol,
         const std::vector<Date>& capletExpiries,
-        const ext::shared_ptr<IborIndex>& iborIndex,
-        const MarkovFunctional::ModelSettings& modelSettings = ModelSettings());
+        ext::shared_ptr<IborIndex> iborIndex,
+        MarkovFunctional::ModelSettings modelSettings = ModelSettings());
 
-    const Date &numeraireDate() const;
-    const Time &numeraireTime() const;
-
+    const ModelSettings& modelSettings() const;
+    const ModelOutputs& modelOutputs() const;
+    const Date& numeraireDate() const;
+    const Time& numeraireTime() const;
     const Array& volatility();
 
     void calibrate(
@@ -202,41 +223,5 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
     void forceArbitrageIndices(
         const std::vector<std::pair<Size,Size> >& indices);
 };
-
-/* %pythoncode{
-def MarkovFunctionalSettings(
-        yGridPoints = None,
-        yStdDevs = None,
-        gaussHermitePoints = None,
-        digitalGap = None,
-        marketRateAccuracy = None,
-        lowerRateBound = None,
-        upperRateBound = None,
-        adjustments = None,
-        smileMoneynessCheckpoints = None):
-
-    ms = _MarkovFunctionalSettings()
-
-    if yGridPoints is not None:
-        ms.withYGridPoints(yGridPoints)
-    if yStdDevs is not None:
-        ms.withYStdDevs(yGridPoints)
-    if gaussHermitePoints is not None:
-        ms.withGaussHermitePoints(yGridPoints)
-    if digitalGap is not None:
-        ms.withDigitalGap(yGridPoints)
-    if marketRateAccuracy is not None:
-        ms.withMarketRateAccuracy(yGridPoints)
-    if lowerRateBound is not None:
-        ms.withLowerRateBound(yGridPoints)
-    if upperRateBound is not None:
-        ms.withUpperRateBound(yGridPoints)
-    if adjustments is not None:
-        ms.withAdjustments(yGridPoints)
-    if smileMoneynessCheckpoints is not None:
-        ms.withYStdDevs(yGridPoints)
-
-    return ms.settings()
-} */
 
 #endif

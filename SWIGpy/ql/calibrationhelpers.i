@@ -16,14 +16,16 @@ using QuantLib::HestonModelHelper;
 
 %shared_ptr(CalibrationHelper)
 class CalibrationHelper {
-  public:
-    Real calibrationError();
   private:
     CalibrationHelper();
+  public:
+    Real calibrationError();
 };
 
 %shared_ptr(BlackCalibrationHelper)
 class BlackCalibrationHelper : public CalibrationHelper {
+  private:
+    BlackCalibrationHelper();
   public:
     enum CalibrationErrorType {
         RelativePriceError,
@@ -53,9 +55,6 @@ class BlackCalibrationHelper : public CalibrationHelper {
             return v;
         }
     }
-
-  private:
-    BlackCalibrationHelper();
 };
 
 %inline %{
@@ -128,7 +127,6 @@ class SwaptionHelper : public BlackCalibrationHelper {
         const Real nominal = 1.0,
         const VolatilityType type = ShiftedLognormal,
         const Real shift = 0.0);
-
     SwaptionHelper(
         const Date& exerciseDate, const Period& length,
         const Handle<Quote>& volatility,
@@ -142,7 +140,6 @@ class SwaptionHelper : public BlackCalibrationHelper {
         const Real nominal = 1.0,
         const VolatilityType type = ShiftedLognormal,
         const Real shift = 0.0);
-
     SwaptionHelper(
         const Date& exerciseDate, const Date& endDate,
         const Handle<Quote>& volatility,

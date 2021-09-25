@@ -1,10 +1,8 @@
 #ifndef ql_common_i
 #define ql_common_i
 
-%include stl.i
-%include exception.i
-%include boost_shared_ptr.i
 %include ../ql/alltypes.i
+%include ../ql/defines.i
 %include ../ql/types.i
 %include ../ql/vectors.i
 %include ../ql/date.i
@@ -140,12 +138,11 @@ using QuantLib::Pillar;
 }
 
 %inline %{
-    int nullInt() { return Null<int>(); }
-    double nullDouble() { return Null<double>(); }
     int NullSize() { return Null<Size>(); }
     double NullReal() { return Null<Real>(); }
-    int SizeNull() { return Null<Size>(); }
-    double RealNull() { return Null<Real>(); }
+    double NullTime() { return Null<Time>(); }
+    Date NullDate() { return Null<Date>(); }
+    Array NullArray() { return Null<Array>(); }
 %}
 
 %typemap(in) intOrNull {
@@ -211,9 +208,10 @@ template <class T>
 class Handle {
   public:
   Handle(const ext::shared_ptr<T>& = ext::shared_ptr<T>());
-    ext::shared_ptr<T> operator->();
-    ext::shared_ptr<T> currentLink();
-    ext::shared_ptr<T> operator*();
+    const ext::shared_ptr<T>& operator->() const;
+    const ext::shared_ptr<T>& currentLink() const;
+    const ext::shared_ptr<T>& operator*() const;
+    bool empty() const;
     %extend {
         bool __nonzero__() {
             return !self->empty();
@@ -221,30 +219,27 @@ class Handle {
         bool __bool__() {
             return !self->empty();
         }
+        ext::shared_ptr<Observable> asObservable() {
+            return ext::shared_ptr<Observable>(*self);
+        }
     }
 };
 
 template <class T>
 class RelinkableHandle : public Handle<T> {
   public:
-    RelinkableHandle(const ext::shared_ptr<T>& = ext::shared_ptr<T>());
-    void linkTo(const ext::shared_ptr<T>&);
+    RelinkableHandle(
+        const ext::shared_ptr<T>& = ext::shared_ptr<T>(),
+        bool registerAsObserver = true);
+    void linkTo(
+        const ext::shared_ptr<T>&,
+        bool registerAsObserver = true);
     %extend {
-        // could be defined in C++ class, added here in the meantime
         void reset() {
             self->linkTo(ext::shared_ptr<T>());
         }
     }
 };
-
-%define deprecate_feature(OldName, NewName)
-%pythoncode %{
-def OldName(*args, **kwargs):
-    from warnings import warn
-    warn('%s is deprecated; use %s' % (OldName.__name__, NewName.__name__))
-    return NewName(*args, **kwargs)
-%}
-%enddef
 
 namespace ext {
 template <typename T1 = void, typename T2 = void, typename T3 = void>
@@ -308,90 +303,6 @@ class Sample {
 %template(SampleNumber) Sample<Real>;
 %template(SampleArray) Sample<Array>;
 %template(SampleRealVector) Sample<std::vector<Real> >;
-
-%{
-/* struct _IterativeBootstrap {
-    double accuracy, minValue, maxValue;
-    _IterativeBootstrap(
-        double accuracy = Null<double>(),
-        double minValue = Null<double>(),
-        double maxValue = Null<double>())
-        : accuracy(accuracy),
-          minValue(minValue),
-          maxValue(maxValue) {}
-}; */
-struct IterativeBootstrap {
-    Real accuracy;
-    Real minValue, maxValue;
-    Size maxAttempts;
-    Real maxFactor, minFactor;
-    bool dontThrow;
-    Size dontThrowSteps;
-    IterativeBootstrap(
-        Real accuracy = Null<Real>(),
-        Real minValue = Null<Real>(),
-        Real maxValue = Null<Real>(),
-        Size maxAttempts = 1,
-        Real maxFactor = 2.0,
-        Real minFactor = 2.0,
-        bool dontThrow = false,
-        Size dontThrowSteps = 10)
-        : accuracy(accuracy),
-          minValue(minValue),
-          maxValue(maxValue),
-          maxAttempts(maxAttempts),
-          maxFactor(maxFactor),
-          minFactor(minFactor),
-          dontThrow(dontThrow),
-          dontThrowSteps(dontThrowSteps) {}
-};
-
-struct _GlobalBootstrap {
-    std::vector<ext::shared_ptr<RateHelper>> additionalHelpers;
-    std::vector<Date> additionalDates;
-    double accuracy;
-    _GlobalBootstrap(double accuracy = Null<double>())
-        : accuracy(accuracy) {}
-    _GlobalBootstrap(
-        const std::vector<ext::shared_ptr<RateHelper>>& additionalHelpers,
-        const std::vector<Date>& additionalDates,
-        double accuracy = Null<double>())
-        : additionalHelpers(additionalHelpers),
-          additionalDates(additionalDates),
-          accuracy(accuracy) {}
-};
-%}
-
-/* %rename(IterativeBootstrap) _IterativeBootstrap;
-struct _IterativeBootstrap {
-    %feature("kwargs") _IterativeBootstrap;
-    _IterativeBootstrap(
-        doubleOrNull accuracy = Null<double>(),
-        doubleOrNull minValue = Null<double>(),
-        doubleOrNull maxValue = Null<double>());
-}; */
-struct IterativeBootstrap {
-    %feature("kwargs") IterativeBootstrap;
-    IterativeBootstrap(
-        Real accuracy = Null<Real>(),
-        Real minValue = Null<Real>(),
-        Real maxValue = Null<Real>(),
-        Size maxAttempts = 1,
-        Real maxFactor = 2.0,
-        Real minFactor = 2.0,
-        bool dontThrow = false,
-        Size dontThrowSteps = 10);
-};
-
-%rename(GlobalBootstrap) _GlobalBootstrap;
-struct _GlobalBootstrap {
-    _GlobalBootstrap(
-        doubleOrNull accuracy = Null<double>());
-    _GlobalBootstrap(
-        const std::vector<ext::shared_ptr<RateHelper> >& additionalHelpers,
-        const std::vector<Date>& additionalDates,
-        doubleOrNull accuracy = Null<double>());
-};
 
 bool close(Real x, Real y);
 bool close(Real x, Real y, Size n);
@@ -474,9 +385,25 @@ class UnaryFunction {
     ~UnaryFunction() {
         Py_XDECREF(function_);
     }
+    Real operator()() const {
+        PyObject* pyResult = PyObject_CallFunction(
+            function_, NULL);
+        QL_ENSURE(pyResult != NULL, "failed to call Python function");
+        Real result = PyFloat_AsDouble(pyResult);
+        Py_XDECREF(pyResult);
+        return result;
+    }
     Real operator()(Real x) const {
         PyObject* pyResult = PyObject_CallFunction(
             function_, "d", x);
+        QL_ENSURE(pyResult != NULL, "failed to call Python function");
+        Real result = PyFloat_AsDouble(pyResult);
+        Py_XDECREF(pyResult);
+        return result;
+    }
+    Real operator()(const Date& x) const {
+        PyObject* pyResult = PyObject_CallFunction(
+            function_, "(3)", x.dayOfMonth(), x.month(), x.year());
         QL_ENSURE(pyResult != NULL, "failed to call Python function");
         Real result = PyFloat_AsDouble(pyResult);
         Py_XDECREF(pyResult);
@@ -581,7 +508,8 @@ class PyCostFunction : public CostFunction {
 
 enum VolatilityType {
     ShiftedLognormal,
-    Normal};
+    Normal
+};
 
 %typemap(in) boost::optional<VolatilityType> %{
     if($input == Py_None)

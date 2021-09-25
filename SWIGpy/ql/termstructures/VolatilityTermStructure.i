@@ -15,6 +15,8 @@ class VolatilityTermStructure : public TermStructure {
   private:
     VolatilityTermStructure();
   public:
+    BusinessDayConvention businessDayConvention() const;
+    Date optionDateFromTenor(const Period &) const;
     Real minStrike() const;
     Real maxStrike() const;
 };

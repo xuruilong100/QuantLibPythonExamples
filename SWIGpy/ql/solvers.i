@@ -13,6 +13,7 @@ using QuantLib::Brent;
 using QuantLib::FalsePosition;
 using QuantLib::Newton;
 using QuantLib::NewtonSafe;
+using QuantLib::FiniteDifferenceNewtonSafe;
 using QuantLib::Ridder;
 using QuantLib::Secant;
 %}
@@ -52,6 +53,7 @@ DeclareSolver(Ridder);
 DeclareSolver(Secant);
 
 // these two need f.derivative()
+DeclareSolver(FiniteDifferenceNewtonSafe);
 DeclareSolver(Newton);
 DeclareSolver(NewtonSafe);
 

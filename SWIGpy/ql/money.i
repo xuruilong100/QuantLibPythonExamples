@@ -10,6 +10,7 @@ using QuantLib::Money;
 
 class Money {
   public:
+    Money();
     Money(const Currency& currency, Decimal value);
     Money(Decimal value, const Currency& currency);
     const Currency& currency() const;

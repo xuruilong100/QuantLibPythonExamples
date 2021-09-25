@@ -1,15 +1,15 @@
 // Undefine symbols that are also used in quantlib
 
-%{
+/* %{
 #ifdef barrier
 #undef barrier
 #endif
-%}
+%} */
 
 %{
 #include <ql/quantlib.hpp>
 
-#if QL_HEX_VERSION < 0x01210000
+#if QL_HEX_VERSION < 0x01230000
     #error using an old version of QuantLib, please update
 #endif
 
@@ -41,15 +41,7 @@
 #endif
 %}
 
-#ifdef SWIGPYTHON
-%{
-#if PY_VERSION_HEX < 0x02010000
-    #error Python version 2.1.0 or later is required
-#endif
-%}
-#endif
-
-
+%include ../ql/defines.i
 %include ../ql/alltypes.i
 %include ../ql/base.i
 %include ../ql/common.i
@@ -58,6 +50,7 @@
 %include ../ql/blackformula.i
 %include ../ql/bondfunctions.i
 %include ../ql/bootstraphelpers/all.i
+%include ../ql/calculator.i
 %include ../ql/calendars.i
 %include ../ql/calibratedmodels/HestonModel.i
 %include ../ql/calibratedmodels/ShortRateModel.i
@@ -69,11 +62,12 @@
 %include ../ql/cashflows/CashFlows.i
 %include ../ql/cashflows/Coupon.i
 %include ../ql/cashflows/Dividend.i
-%include ../ql/cashflows/FloatingRateCouponPricer.i
+//%include ../ql/cashflows/FloatingRateCouponPricer.i
 %include ../ql/cashflows/Leg.i
 %include ../ql/cashflows/coupons/all.i
 %include ../ql/cashflows/dividends/all.i
 %include ../ql/cashflows/floatingratecouponpricers/all.i
+%include ../ql/cashflows/inflationcouponpricers/all.i
 %include ../ql/cashflows/others/all.i
 %include ../ql/currencies.i
 %include ../ql/date.i
@@ -107,9 +101,9 @@
 %include ../ql/fdms/Scheme.i
 %include ../ql/fdms/StepCondition.i
 %include ../ql/fdms/boundaryconditions/all.i
-%include ../ql/fdms/fdm1dmeshers/all.i
-%include ../ql/fdms/fdminnervaluecalculators/all.i
-%include ../ql/fdms/fdmlinearops/all.i
+%include ../ql/fdms/1dmeshers/all.i
+%include ../ql/fdms/innervaluecalculators/all.i
+%include ../ql/fdms/linearops/all.i
 %include ../ql/fdms/others/all.i
 %include ../ql/fdms/stepconditions/all.i
 %include ../ql/grid.i
@@ -136,6 +130,12 @@
 %include ../ql/integrals.i
 %include ../ql/interestrate.i
 %include ../ql/interpolation.i
+%include ../ql/interpolation/Interpolation.i
+%include ../ql/interpolation/Interpolation2D.i
+%include ../ql/interpolation/interpolations/all.i
+%include ../ql/interpolation/interpolation2ds/all.i
+%include ../ql/interpolation/traits/all.i
+%include ../ql/interpolation/trait2ds/all.i
 %include ../ql/linearalgebra.i
 %include ../ql/money.i
 %include ../ql/montecarlo.i
@@ -156,15 +156,26 @@
 %include ../ql/smilesections/all.i
 %include ../ql/solvers.i
 %include ../ql/statistics.i
-%include ../ql/stochasticprocesses/all.i
+%include ../ql/stochasticprocesses/StochasticProcess1D.i
+%include ../ql/stochasticprocesses/1d/all.i
+%include ../ql/stochasticprocesses/others/all.i
 %include ../ql/termstructureconsistentmodels/all.i
+%include ../ql/termstructures/CallableBondVolatilityStructure.i
 %include ../ql/termstructures/DefaultProbabilityTermStructure.i
 %include ../ql/termstructures/InflationTermStructure.i
 %include ../ql/termstructures/VolatilityTermStructure.i
 %include ../ql/termstructures/YieldTermStructure.i
 %include ../ql/termstructures/defaultprobabilitytermstructures/all.i
 %include ../ql/termstructures/inflationtermstructures/all.i
-%include ../ql/termstructures/volatilitytermstructures/all.i
+%include ../ql/termstructures/volatilitytermstructures/BlackVolTermStructure.i
+%include ../ql/termstructures/volatilitytermstructures/BlackAtmVolCurve.i
+%include ../ql/termstructures/volatilitytermstructures/LocalVolTermStructure.i
+%include ../ql/termstructures/volatilitytermstructures/SwaptionVolatilityStructure.i
+%include ../ql/termstructures/volatilitytermstructures/blackvol/all.i
+%include ../ql/termstructures/volatilitytermstructures/blackatmvol/all.i
+%include ../ql/termstructures/volatilitytermstructures/localvol/all.i
+%include ../ql/termstructures/volatilitytermstructures/swaptionvol/all.i
+%include ../ql/termstructures/volatilitytermstructures/others.i
 %include ../ql/termstructures/yieldtermstructures/all.i
 %include ../ql/termstructures/yieldtermstructures/fittingmethods.i
 %include ../ql/testsuite.i

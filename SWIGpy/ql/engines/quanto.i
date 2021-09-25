@@ -16,20 +16,20 @@ typedef QuantoEngine<ForwardVanillaOption,AnalyticEuropeanEngine> QuantoForwardE
 class QuantoEuropeanEngine : public PricingEngine {
   public:
     QuantoEuropeanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-        const Handle<YieldTermStructure>& foreignRiskFreeRate,
-        const Handle<BlackVolTermStructure>& exchangeRateVolatility,
-        const Handle<Quote>& correlation);
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
+        Handle<YieldTermStructure> foreignRiskFreeRate,
+        Handle<BlackVolTermStructure> exchangeRateVolatility,
+        Handle<Quote> correlation);
 };
 
 %shared_ptr(QuantoForwardEuropeanEngine)
 class QuantoForwardEuropeanEngine : public PricingEngine {
   public:
     QuantoForwardEuropeanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-        const Handle<YieldTermStructure>& foreignRiskFreeRate,
-        const Handle<BlackVolTermStructure>& exchangeRateVolatility,
-        const Handle<Quote>& correlation);
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
+        Handle<YieldTermStructure> foreignRiskFreeRate,
+        Handle<BlackVolTermStructure> exchangeRateVolatility,
+        Handle<Quote> correlation);
 };
 
 #endif

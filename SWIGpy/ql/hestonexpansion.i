@@ -14,7 +14,7 @@ class HestonExpansion {
   private:
     HestonExpansion(){}
   public:
-    virtual Real impliedVolatility(
+    Real impliedVolatility(
         Real strike, Real forward) const;
 };
 
@@ -23,8 +23,6 @@ class LPP2HestonExpansion : public HestonExpansion {
     LPP2HestonExpansion(
         Real kappa, Real theta, Real sigma,
         Real v0, Real rho, Real term);
-    virtual Real impliedVolatility(
-        Real strike, Real forward) const;
 };
 
 class LPP3HestonExpansion : public HestonExpansion{
@@ -32,8 +30,6 @@ class LPP3HestonExpansion : public HestonExpansion{
     LPP3HestonExpansion(
         Real kappa, Real theta, Real sigma,
         Real v0, Real rho, Real term);
-    virtual Real impliedVolatility(
-        Real strike, Real forward) const;
 };
 
 class FordeHestonExpansion : public HestonExpansion {
@@ -41,8 +37,6 @@ class FordeHestonExpansion : public HestonExpansion {
     FordeHestonExpansion(
         Real kappa, Real theta, Real sigma,
         Real v0, Real rho, Real term);
-    virtual Real impliedVolatility(
-        Real strike, Real forward) const;
 };
 
 #endif

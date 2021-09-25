@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include stl.i
 
 %{
 using QuantLib::TimeGrid;
@@ -27,27 +26,20 @@ class TimeGrid {
             return new TimeGrid(times.begin(), times.end(), steps);
         }
     }
+
+    Size index(Time t) const;
+    Size closestIndex(Time t) const;
+    Time closestTime(Time t) const;
+    const std::vector<Time>& mandatoryTimes() const;
+    Time dt(Size i) const;
+    Time at(Size i) const;
     Size size() const;
+    bool empty() const;
+    Time front() const;
+    Time back() const;
     %extend {
-        Time __getitem__(Integer i) {
-            Integer size_ = static_cast<Integer>(self->size());
-            if (i>=0 && i<size_) {
-                return (*self)[i];
-            } else if (i<0 && -i<=size_) {
-                return (*self)[size_+i];
-            } else {
-                throw std::out_of_range("time-grid index out of range");
-            }
-        }
-        Time dt(Integer i) const {
-            Integer size_ = static_cast<Integer>(self->size());
-            if (i>=0 && i<size_) {
-                return self->dt(i);
-            } else if (i<0 && -i<=size_) {
-                return self->dt(size_+i);
-            } else {
-                throw std::out_of_range("time-grid index out of range");
-            }
+        Time __getitem__(Size i) {
+            return (*self)[i];
         }
     }
 };

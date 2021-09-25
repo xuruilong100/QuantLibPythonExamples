@@ -16,6 +16,7 @@ class ExchangeRate {
         Direct,
         Derived
     };
+    ExchangeRate();
     ExchangeRate(
         const Currency& source,
         const Currency& target,

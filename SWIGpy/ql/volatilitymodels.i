@@ -1,12 +1,14 @@
-#ifndef ql_volatilitymodels_i
-#define ql_volatilitymodels_i
+#ifndef ql_volatility_models_i
+#define ql_volatility_models_i
 
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
 
 %{
+using QuantLib::VolatilityCompositor;
 using QuantLib::ConstantEstimator;
+using QuantLib::Garch11;
 using QuantLib::ParkinsonSigma;
 using QuantLib::SimpleLocalEstimator;
 using QuantLib::GarmanKlassSigma1;
@@ -16,10 +18,81 @@ using QuantLib::GarmanKlassSigma5;
 using QuantLib::GarmanKlassSigma6;
 %}
 
-class ConstantEstimator {
+class VolatilityCompositor {
+  private:
+    VolatilityCompositor();
+  public:
+    typedef TimeSeries<Volatility> time_series;
+    time_series calculate(const time_series& volatilitySeries);
+    void calibrate(const time_series& volatilitySeries);
+};
+
+class ConstantEstimator : public VolatilityCompositor {
   public:
     ConstantEstimator(Size size);
-    TimeSeries<Volatility> calculate(const TimeSeries<Volatility>&);
+};
+
+class Garch11 : public VolatilityCompositor {
+  public:
+    enum Mode {
+        MomentMatchingGuess,   /*!< The initial guess is a moment
+                                    matching estimates for
+                                    mean(r2), acf(0), and acf(1). */
+        GammaGuess,            /*!< The initial guess is an
+                                    estimate of gamma based on the
+                                    property:
+                                    acf(i+1) = gamma*acf(i) for i > 1. */
+        BestOfTwo,             /*!< The best of the two above modes */
+        DoubleOptimization     /*!< Double optimization */
+    };
+
+    Garch11(Real a, Real b, Real vl);
+    Garch11(const time_series& qs, Mode mode = BestOfTwo);
+
+    Real alpha() const;
+    Real beta() const;
+    Real omega() const;
+    Real ltVol() const;
+    Real logLikelihood() const;
+    Mode mode() const;
+
+    void calibrate(const time_series &quoteSeries, OptimizationMethod &method, const EndCriteria &endCriteria);
+    void calibrate(const time_series &quoteSeries, OptimizationMethod &method, const EndCriteria &endCriteria, const Array &initialGuess);
+    Real forecast(Real r, Real sigma2) const;
+    static time_series calculate(const time_series &quoteSeries, Real alpha, Real beta, Real omega);
+    %extend {
+        void calibrate(const std::vector<Real> x) {
+            self->calibrate(x.begin(), x.end());
+        }
+        void calibrate(
+            const std::vector<Real> x,
+            OptimizationMethod &method, EndCriteria endCriteria) {
+            self->calibrate(
+                x.begin(), x.end(),
+                method, endCriteria);
+        }
+        void calibrate(
+            const std::vector<Real> x,
+            OptimizationMethod &method,
+            EndCriteria endCriteria,
+            const Array &initialGuess) {
+            self->calibrate(
+                x.begin(), x.end(),
+                method, endCriteria,
+                initialGuess);
+        }
+        static Real to_r2 (
+            const std::vector<Real> x,
+            std::vector< Volatility > &r2) {
+                return Garch11::to_r2(x.begin(), x.end(), r2);
+        }
+        static Real costFunction(
+            const std::vector<Real> x, Real alpha, Real beta, Real omega) {
+                return Garch11::costFunction(
+                    x.begin(), x.end(),
+                    alpha, beta, omega);
+        }
+    }
 };
 
 class ParkinsonSigma {

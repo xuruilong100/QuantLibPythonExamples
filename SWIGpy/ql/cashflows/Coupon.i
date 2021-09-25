@@ -16,15 +16,16 @@ class Coupon : public CashFlow {
     Coupon();
   public:
     Real nominal() const;
-    Date accrualStartDate() const;
-    Date accrualEndDate() const;
-    Date referencePeriodStart() const;
-    Date referencePeriodEnd() const;
-    Date exCouponDate() const;
-    Real rate() const;
+    const Date& accrualStartDate() const;
+    const Date& accrualEndDate() const;
+    const Date& referencePeriodStart() const;
+    const Date& referencePeriodEnd() const;
     Time accrualPeriod() const;
     BigInteger accrualDays() const;
+    Real rate() const;
     DayCounter dayCounter() const;
+    Time accruedPeriod(const Date &) const;
+    BigInteger accruedDays(const Date &) const;
     Real accruedAmount(const Date& date) const;
 };
 

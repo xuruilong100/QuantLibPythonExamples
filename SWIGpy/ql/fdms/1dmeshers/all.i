@@ -1,5 +1,5 @@
-#ifndef ql_fdm1dmeshers_all_i
-#define ql_fdm1dmeshers_all_i
+#ifndef ql_fdms_1dmeshers_all_i
+#define ql_fdms_1dmeshers_all_i
 
 %include ../ql/types.i
 %include ../ql/common.i
@@ -7,9 +7,9 @@
 %include ../ql/fdms/Fdm1dMesher.i
 
 %{
-using QuantLib::FdmBlackScholesMesher;
 using QuantLib::Concentrating1dMesher;
 using QuantLib::ExponentialJump1dMesher;
+using QuantLib::FdmBlackScholesMesher;
 using QuantLib::FdmCEV1dMesher;
 using QuantLib::FdmHestonVarianceMesher;
 using QuantLib::FdmHestonLocalVolatilityVarianceMesher;
@@ -17,31 +17,8 @@ using QuantLib::Uniform1dMesher;
 using QuantLib::FdmSimpleProcess1dMesher;
 using QuantLib::Predefined1dMesher;
 using QuantLib::Glued1dMesher;
+using QuantLib::FdmBlackScholesMultiStrikeMesher;
 %}
-
-%shared_ptr(FdmBlackScholesMesher)
-class FdmBlackScholesMesher : public Fdm1dMesher {
-  public:
-    %feature("kwargs") FdmBlackScholesMesher;
-    FdmBlackScholesMesher(
-        Size size,
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
-        Time maturity, Real strike,
-        doubleOrNull xMinConstraint = Null<Real>(),
-        doubleOrNull xMaxConstraint = Null<Real>(),
-        Real eps = 0.0001,
-        Real scaleFactor = 1.5,
-        const std::pair<Real, Real>& cPoint = (std::pair<Real, Real>(Null<Real>(), Null<Real>())),
-        const std::vector<ext::shared_ptr<Dividend> >& dividendSchedule = std::vector<ext::shared_ptr<Dividend> >(),
-        const ext::shared_ptr<FdmQuantoHelper>& fdmQuantoHelper = ext::shared_ptr<FdmQuantoHelper>(),
-        Real spotAdjustment = 0.0);
-
-    static ext::shared_ptr<GeneralizedBlackScholesProcess> processHelper(
-         const Handle<Quote>& s0,
-         const Handle<YieldTermStructure>& rTS,
-         const Handle<YieldTermStructure>& qTS,
-         Volatility vol);
-};
 
 %template(Concentrating1dMesherPoint) ext::tuple<Real, Real, bool>;
 %template(Concentrating1dMesherPointVector) std::vector<ext::tuple<Real, Real, bool> >;
@@ -64,8 +41,48 @@ class Concentrating1dMesher : public Fdm1dMesher {
 class ExponentialJump1dMesher : public Fdm1dMesher {
    public:
      ExponentialJump1dMesher(
-         Size steps, Real beta, Real jumpIntensity,
-         Real eta, Real eps = 1e-3);
+        Size steps, Real beta, Real jumpIntensity,
+        Real eta, Real eps = 1e-3);
+    Real jumpSizeDensity(Real x) const; // t->\inf
+    Real jumpSizeDensity(Real x, Time t) const;
+    Real jumpSizeDistribution(Real x) const; // t->\inf
+    Real jumpSizeDistribution(Real x, Time t) const;
+};
+
+%shared_ptr(FdmBlackScholesMesher)
+class FdmBlackScholesMesher : public Fdm1dMesher {
+  public:
+    %feature("kwargs") FdmBlackScholesMesher;
+    FdmBlackScholesMesher(
+        Size size,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Time maturity, Real strike,
+        Real xMinConstraint = Null<Real>(),
+        Real xMaxConstraint = Null<Real>(),
+        Real eps = 0.0001,
+        Real scaleFactor = 1.5,
+        const std::pair<Real, Real>& cPoint = (std::pair<Real, Real>(Null<Real>(), Null<Real>())),
+        const std::vector<ext::shared_ptr<Dividend> >& dividendSchedule = std::vector<ext::shared_ptr<Dividend> >(),
+        const ext::shared_ptr<FdmQuantoHelper>& fdmQuantoHelper = ext::shared_ptr<FdmQuantoHelper>(),
+        Real spotAdjustment = 0.0);
+
+    static ext::shared_ptr<GeneralizedBlackScholesProcess> processHelper(
+         const Handle<Quote>& s0,
+         const Handle<YieldTermStructure>& rTS,
+         const Handle<YieldTermStructure>& qTS,
+         Volatility vol);
+};
+
+%shared_ptr(FdmBlackScholesMultiStrikeMesher)
+class FdmBlackScholesMultiStrikeMesher : public Fdm1dMesher {
+  public:
+    FdmBlackScholesMultiStrikeMesher(
+        Size size,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Time maturity, const std::vector<Real>& strikes,
+        Real eps = 0.0001,
+        Real scaleFactor = 1.5,
+        const std::pair<Real, Real>& cPoint = (std::pair<Real, Real>(Null<Real>(), Null<Real>())));
 };
 
 %shared_ptr(FdmCEV1dMesher)
@@ -89,7 +106,8 @@ class FdmHestonVarianceMesher : public Fdm1dMesher {
         const ext::shared_ptr<HestonProcess> & process,
         Time maturity,
         Size tAvgSteps = 10,
-        Real epsilon = 0.0001);
+        Real epsilon = 0.0001,
+        Real mixingFactor = 1.0);
 
     Real volaEstimate() const;
 };
@@ -103,7 +121,8 @@ class FdmHestonLocalVolatilityVarianceMesher : public Fdm1dMesher {
         const ext::shared_ptr<LocalVolTermStructure>& leverageFct,
         Time maturity,
         Size tAvgSteps = 10,
-        Real epsilon = 0.0001);
+        Real epsilon = 0.0001,
+        Real mixingFactor = 1.0);
 
     Real volaEstimate() const;
 };
@@ -117,13 +136,15 @@ class FdmSimpleProcess1dMesher : public Fdm1dMesher {
         Time maturity,
         Size tAvgSteps = 10,
         Real epsilon = 0.0001,
-        doubleOrNull mandatoryPoint = Null<Real>());
+        Real mandatoryPoint = Null<Real>());
 };
 
-%shared_ptr(Uniform1dMesher)
-class Uniform1dMesher : public Fdm1dMesher {
+%shared_ptr(Glued1dMesher)
+class Glued1dMesher : public Fdm1dMesher {
   public:
-    Uniform1dMesher(Real start, Real end, Size size);
+    Glued1dMesher(
+        const Fdm1dMesher& leftMesher,
+        const Fdm1dMesher& rightMesher);
 };
 
 %shared_ptr(Predefined1dMesher)
@@ -133,12 +154,10 @@ class Predefined1dMesher : public Fdm1dMesher {
         const std::vector<Real>& x);
 };
 
-%shared_ptr(Glued1dMesher)
-class Glued1dMesher : public Fdm1dMesher {
+%shared_ptr(Uniform1dMesher)
+class Uniform1dMesher : public Fdm1dMesher {
   public:
-    Glued1dMesher(
-        const Fdm1dMesher& leftMesher,
-        const Fdm1dMesher& rightMesher);
+    Uniform1dMesher(Real start, Real end, Size size);
 };
 
 #endif

@@ -15,73 +15,46 @@ using QuantLib::YoYOptionletHelper;
 %shared_ptr(ZeroCouponInflationSwapHelper)
 class ZeroCouponInflationSwapHelper : public BootstrapHelper<ZeroInflationTermStructure> {
   public:
-    // using extend to prevent deprecation warning
-    %extend {
-        ZeroCouponInflationSwapHelper(
-            const Handle<Quote>& quote,
-            const Period& lag,    // lag on swap observation of index
-            const Date& maturity,
-            const Calendar& calendar,
-            BusinessDayConvention bcd,
-            const DayCounter& dayCounter,
-            const ext::shared_ptr<ZeroInflationIndex>& index,
-            const Handle<YieldTermStructure>& nominalTS = Handle<YieldTermStructure>()) {
-
-            return new ZeroCouponInflationSwapHelper(
-                quote, lag, maturity,
-                calendar, bcd,
-                dayCounter, index,
-                nominalTS);
-        }
-    }
+    ZeroCouponInflationSwapHelper(
+        const Handle<Quote>& quote,
+        const Period& lag,    // lag on swap observation of index
+        const Date& maturity,
+        Calendar calendar,
+        BusinessDayConvention bcd,
+        DayCounter dayCounter,
+        ext::shared_ptr<ZeroInflationIndex> zii,
+        Handle<YieldTermStructure> nominalTermStructure);
 };
 
 %shared_ptr(YearOnYearInflationSwapHelper)
 class YearOnYearInflationSwapHelper : public BootstrapHelper<YoYInflationTermStructure> {
   public:
-    // using extend to prevent deprecation warning
-    %extend {
-        YearOnYearInflationSwapHelper(
-            const Handle<Quote>& quote,
-            const Period& lag,
-            const Date& maturity,
-            const Calendar& calendar,
-            BusinessDayConvention bdc,
-            const DayCounter& dayCounter,
-            const ext::shared_ptr<YoYInflationIndex>& index,
-            const Handle<YieldTermStructure>& nominalTS = Handle<YieldTermStructure>()) {
-            return new YearOnYearInflationSwapHelper(
-                quote, lag, maturity,
-                calendar, bdc,
-                dayCounter, index,
-                nominalTS);
-        }
-    }
+    YearOnYearInflationSwapHelper(
+        const Handle<Quote>& quote,
+        const Period& lag,
+        const Date& maturity,
+        Calendar calendar,
+        BusinessDayConvention bdc,
+        DayCounter dayCounter,
+        ext::shared_ptr<YoYInflationIndex> yii,
+        Handle<YieldTermStructure> nominalTermStructure);
 };
 
 %shared_ptr(YoYOptionletHelper)
 class YoYOptionletHelper : public BootstrapHelper<YoYOptionletVolatilitySurface> {
   public:
-    %extend {
-        YoYOptionletHelper(
-            const Handle<Quote>& price,
-            Real notional,
-            YoYInflationCapFloor::Type capFloorType,
-            Period& lag,
-            const DayCounter& yoyDayCounter,
-            const Calendar& paymentCalendar,
-            Natural fixingDays,
-            const ext::shared_ptr<YoYInflationIndex>& index,
-            Rate strike,
-            Size n,
-            const ext::shared_ptr<PricingEngine>& pricer) {
-            ext::shared_ptr<YoYInflationCapFloorEngine> engine = ext::dynamic_pointer_cast<YoYInflationCapFloorEngine>(pricer);
-            return new YoYOptionletHelper(
-                price, notional, capFloorType, lag,
-                yoyDayCounter, paymentCalendar, fixingDays,
-                index, strike, n, engine);
-        }
-    }
+    YoYOptionletHelper(
+        const Handle<Quote>& price,
+        Real notional,
+        YoYInflationCapFloor::Type capFloorType,
+        Period& lag,
+        DayCounter yoyDayCounter,
+        Calendar paymentCalendar,
+        Natural fixingDays,
+        ext::shared_ptr<YoYInflationIndex> index,
+        Rate strike,
+        Size n,
+        ext::shared_ptr<YoYInflationCapFloorEngine> pricer);
 };
 
 #endif

@@ -14,73 +14,60 @@ using QuantLib::KirkEngine;
 using QuantLib::Fd2dBlackScholesVanillaEngine;
 using QuantLib::MCEverestEngine;
 using QuantLib::MCHimalayaEngine;
+using QuantLib::AnalyticEuropeanMargrabeEngine;
+using QuantLib::AnalyticAmericanMargrabeEngine;
+using QuantLib::MCPagodaEngine;
+using QuantLib::AnalyticTwoAssetCorrelationEngine;
+using QuantLib::MakeMCEuropeanBasketEngine;
+using QuantLib::MakeMCAmericanBasketEngine;
+using QuantLib::MakeMCEverestEngine;
+using QuantLib::MakeMCHimalayaEngine;
+using QuantLib::MakeMCPagodaEngine;
 %}
 
 %shared_ptr(MCEuropeanBasketEngine<PseudoRandom>);
 %shared_ptr(MCEuropeanBasketEngine<LowDiscrepancy>);
 template <class RNG>
 class MCEuropeanBasketEngine : public PricingEngine {
-    %feature("kwargs") MCEuropeanBasketEngine;
-
   public:
-    %extend {
-        MCEuropeanBasketEngine(
-            const ext::shared_ptr<StochasticProcessArray>& process,
-            intOrNull timeSteps = Null<Size>(),
-            intOrNull timeStepsPerYear = Null<Size>(),
-            bool brownianBridge = false,
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0) {
-            return new MCEuropeanBasketEngine<RNG>(
-                process,
-                timeSteps,
-                timeStepsPerYear,
-                brownianBridge,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed);
-        }
-    }
+    MCEuropeanBasketEngine(
+        ext::shared_ptr<StochasticProcessArray>,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
 };
 
 %template(MCPREuropeanBasketEngine) MCEuropeanBasketEngine<PseudoRandom>;
 %template(MCLDEuropeanBasketEngine) MCEuropeanBasketEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCEuropeanBasketEngine(
-        process,
-        traits,
-        timeSteps=None,
-        timeStepsPerYear=None,
-        brownianBridge=False,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPREuropeanBasketEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDEuropeanBasketEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        timeSteps,
-        timeStepsPerYear,
-        brownianBridge,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed)
-%}
+template <class RNG = PseudoRandom, class S = Statistics>
+class MakeMCEuropeanBasketEngine {
+  public:
+    MakeMCEuropeanBasketEngine(ext::shared_ptr<StochasticProcessArray>);
+    // named parameters
+    MakeMCEuropeanBasketEngine& withSteps(Size steps);
+    MakeMCEuropeanBasketEngine& withStepsPerYear(Size steps);
+    MakeMCEuropeanBasketEngine& withBrownianBridge(bool b = true);
+    MakeMCEuropeanBasketEngine& withAntitheticVariate(bool b = true);
+    MakeMCEuropeanBasketEngine& withSamples(Size samples);
+    MakeMCEuropeanBasketEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCEuropeanBasketEngine& withMaxSamples(Size samples);
+    MakeMCEuropeanBasketEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPREuropeanBasketEngine) MakeMCEuropeanBasketEngine<PseudoRandom>;
+%template(MakeMCLDEuropeanBasketEngine) MakeMCEuropeanBasketEngine<LowDiscrepancy>;
 
 %shared_ptr(MCAmericanBasketEngine<PseudoRandom>);
 %shared_ptr(MCAmericanBasketEngine<LowDiscrepancy>);
@@ -89,83 +76,57 @@ class MCAmericanBasketEngine : public PricingEngine {
     %feature("kwargs") MCAmericanBasketEngine;
 
   public:
-    %extend {
-        MCAmericanBasketEngine(
-            const ext::shared_ptr<StochasticProcessArray>& process,
-            intOrNull timeSteps = Null<Size>(),
-            intOrNull timeStepsPerYear = Null<Size>(),
-            bool brownianBridge = false,
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0,
-            Size nCalibrationSamples = Null<Size>(),
-            Size polynomOrder = 2,
-            LsmBasisSystem::PolynomType polynomType = LsmBasisSystem::Monomial) {
-            return new MCAmericanBasketEngine<RNG>(
-                process,
-                timeSteps,
-                timeStepsPerYear,
-                brownianBridge,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed,
-                nCalibrationSamples,
-                polynomOrder,
-                polynomType);
-        }
-    }
+    MCAmericanBasketEngine(
+        const ext::shared_ptr<StochasticProcessArray> &,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed,
+        Size nCalibrationSamples=Null<Size>(),
+        Size polynomOrder=2,
+        LsmBasisSystem::PolynomType polynomType=LsmBasisSystem::Monomial);
 };
 
 %template(MCPRAmericanBasketEngine) MCAmericanBasketEngine<PseudoRandom>;
 %template(MCLDAmericanBasketEngine) MCAmericanBasketEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCAmericanBasketEngine(
-        process,
-        traits,
-        timeSteps=None,
-        timeStepsPerYear=None,
-        brownianBridge=False,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0,
-        nCalibrationSamples=None,
-        polynomOrder=2,
-        polynomType=LsmBasisSystem.Monomial):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPRAmericanBasketEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDAmericanBasketEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        timeSteps,
-        timeStepsPerYear,
-        brownianBridge,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed,
-        nCalibrationSamples,
-        polynomOrder,
-        polynomType)
-%}
+template <class RNG>
+class MakeMCAmericanBasketEngine {
+  public:
+    MakeMCAmericanBasketEngine(ext::shared_ptr<StochasticProcessArray>);
+    // named parameters
+    MakeMCAmericanBasketEngine& withSteps(Size steps);
+    MakeMCAmericanBasketEngine& withStepsPerYear(Size steps);
+    MakeMCAmericanBasketEngine& withBrownianBridge(bool b = true);
+    MakeMCAmericanBasketEngine& withAntitheticVariate(bool b = true);
+    MakeMCAmericanBasketEngine& withSamples(Size samples);
+    MakeMCAmericanBasketEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCAmericanBasketEngine& withMaxSamples(Size samples);
+    MakeMCAmericanBasketEngine& withSeed(BigNatural seed);
+    MakeMCAmericanBasketEngine& withCalibrationSamples(Size samples);
+    MakeMCAmericanBasketEngine& withPolynomialOrder(Size polynmOrder);
+    MakeMCAmericanBasketEngine& withBasisSystem(LsmBasisSystem::PolynomType polynomType);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPRAmericanBasketEngine) MakeMCAmericanBasketEngine<PseudoRandom>;
+%template(MakeMCLDAmericanBasketEngine) MakeMCAmericanBasketEngine<LowDiscrepancy>;
 
 %shared_ptr(StulzEngine)
 class StulzEngine : public PricingEngine {
   public:
     StulzEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process1,
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process2,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process1,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process2,
         Real correlation);
 };
 
@@ -173,8 +134,8 @@ class StulzEngine : public PricingEngine {
 class KirkEngine : public PricingEngine {
   public:
     KirkEngine(
-        const ext::shared_ptr<BlackProcess>& process1,
-        const ext::shared_ptr<BlackProcess>& process2,
+        ext::shared_ptr<BlackProcess> process1,
+        ext::shared_ptr<BlackProcess> process2,
         Real correlation);
 };
 
@@ -198,124 +159,152 @@ class Fd2dBlackScholesVanillaEngine : public PricingEngine {
 %shared_ptr(MCEverestEngine<LowDiscrepancy>);
 template <class RNG>
 class MCEverestEngine : public PricingEngine {
-    %feature("kwargs") MCEverestEngine;
-
   public:
-    %extend {
-        MCEverestEngine(
-            const ext::shared_ptr<StochasticProcessArray>& process,
-            Size timeSteps = Null<Size>(),
-            Size timeStepsPerYear = Null<Size>(),
-            bool brownianBridge = false,
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0) {
-            return new MCEverestEngine<RNG>(
-                process,
-                timeSteps,
-                timeStepsPerYear,
-                brownianBridge,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed);
-        }
-    }
+    MCEverestEngine(
+        ext::shared_ptr<StochasticProcessArray>,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
 };
 
 %template(MCPREverestEngine) MCEverestEngine<PseudoRandom>;
 %template(MCLDEverestEngine) MCEverestEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCEverestEngine(
-        process,
-        traits,
-        timeSteps=None,
-        timeStepsPerYear=None,
-        brownianBridge=False,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPREverestEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDEverestEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        timeSteps,
-        timeStepsPerYear,
-        brownianBridge,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed)
-%}
+template <class RNG>
+class MakeMCEverestEngine {
+  public:
+    explicit MakeMCEverestEngine(ext::shared_ptr<StochasticProcessArray>);
+    // named parameters
+    MakeMCEverestEngine& withSteps(Size steps);
+    MakeMCEverestEngine& withStepsPerYear(Size steps);
+    MakeMCEverestEngine& withBrownianBridge(bool b = true);
+    MakeMCEverestEngine& withAntitheticVariate(bool b = true);
+    MakeMCEverestEngine& withSamples(Size samples);
+    MakeMCEverestEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCEverestEngine& withMaxSamples(Size samples);
+    MakeMCEverestEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPREverestEngine) MakeMCEverestEngine<PseudoRandom>;
+%template(MakeMCLDEverestEngine) MakeMCEverestEngine<LowDiscrepancy>;
 
 %shared_ptr(MCHimalayaEngine<PseudoRandom>);
 %shared_ptr(MCHimalayaEngine<LowDiscrepancy>);
 template <class RNG>
 class MCHimalayaEngine : public PricingEngine {
-    %feature("kwargs") MCHimalayaEngine;
-
   public:
-    %extend {
-        MCHimalayaEngine(
-            const ext::shared_ptr<StochasticProcessArray>& process,
-            bool brownianBridge = false,
-            bool antitheticVariate = false,
-            intOrNull requiredSamples = Null<Size>(),
-            doubleOrNull requiredTolerance = Null<Real>(),
-            intOrNull maxSamples = Null<Size>(),
-            BigInteger seed = 0) {
-            return new MCHimalayaEngine<RNG>(
-                process,
-                brownianBridge,
-                antitheticVariate,
-                requiredSamples,
-                requiredTolerance,
-                maxSamples,
-                seed);
-        }
-    }
+    MCHimalayaEngine(
+        ext::shared_ptr<StochasticProcessArray>,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
 };
 
 %template(MCPRHimalayaEngine) MCHimalayaEngine<PseudoRandom>;
 %template(MCLDHimalayaEngine) MCHimalayaEngine<LowDiscrepancy>;
 
-%pythoncode %{
-def MCHimalayaEngine(
-        process,
-        traits,
-        brownianBridge=False,
-        antitheticVariate=False,
-        requiredSamples=None,
-        requiredTolerance=None,
-        maxSamples=None,
-        seed=0):
-    traits = traits.lower()
-    if traits == "pr" or traits == "pseudorandom":
-        cls = MCPRHimalayaEngine
-    elif traits == "ld" or traits == "lowdiscrepancy":
-        cls = MCLDHimalayaEngine
-    else:
-        raise RuntimeError("unknown MC traits: %s" % traits);
-    return cls(
-        process,
-        brownianBridge,
-        antitheticVariate,
-        requiredSamples,
-        requiredTolerance,
-        maxSamples,
-        seed)
-%}
+template <class RNG>
+class MakeMCHimalayaEngine {
+  public:
+    explicit MakeMCHimalayaEngine(ext::shared_ptr<StochasticProcessArray>);
+    // named parameters
+    MakeMCHimalayaEngine& withBrownianBridge(bool b = true);
+    MakeMCHimalayaEngine& withAntitheticVariate(bool b = true);
+    MakeMCHimalayaEngine& withSamples(Size samples);
+    MakeMCHimalayaEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCHimalayaEngine& withMaxSamples(Size samples);
+    MakeMCHimalayaEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPRHimalayaEngine) MakeMCHimalayaEngine<PseudoRandom>;
+%template(MakeMCLDHimalayaEngine) MakeMCHimalayaEngine<LowDiscrepancy>;
+
+%shared_ptr(AnalyticAmericanMargrabeEngine)
+class AnalyticAmericanMargrabeEngine : public PricingEngine {
+  public:
+    AnalyticAmericanMargrabeEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process1,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process2,
+        Real correlation);
+};
+
+%shared_ptr(AnalyticEuropeanMargrabeEngine)
+class AnalyticEuropeanMargrabeEngine : public PricingEngine {
+  public:
+    AnalyticEuropeanMargrabeEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process1,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process2,
+        Real correlation);
+};
+
+
+%shared_ptr(MCPagodaEngine<PseudoRandom>)
+%shared_ptr(MCPagodaEngine<LowDiscrepancy>)
+template <class RNG>
+class MCPagodaEngine : public PricingEngine {
+  public:
+    MCPagodaEngine(
+        ext::shared_ptr<StochasticProcessArray>,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
+};
+
+%template(MCPRPagodaEngine) MCPagodaEngine<PseudoRandom>;
+%template(MCLDPagodaEngine) MCPagodaEngine<LowDiscrepancy>;
+
+template <class RNG>
+class MakeMCPagodaEngine {
+  public:
+    explicit MakeMCPagodaEngine(ext::shared_ptr<StochasticProcessArray>);
+    // named parameters
+    MakeMCPagodaEngine& withBrownianBridge(bool b = true);
+    MakeMCPagodaEngine& withAntitheticVariate(bool b = true);
+    MakeMCPagodaEngine& withSamples(Size samples);
+    MakeMCPagodaEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCPagodaEngine& withMaxSamples(Size samples);
+    MakeMCPagodaEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(* $self);
+        }
+    }
+};
+
+%template(MakeMCPRPagodaEngine) MakeMCPagodaEngine<PseudoRandom>;
+%template(MakeMCLDPagodaEngine) MakeMCPagodaEngine<LowDiscrepancy>;
+
+%shared_ptr(AnalyticTwoAssetCorrelationEngine)
+class AnalyticTwoAssetCorrelationEngine : public PricingEngine {
+  public:
+    AnalyticTwoAssetCorrelationEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> p1,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> p2,
+        Handle<Quote> correlation);
+};
 
 #endif

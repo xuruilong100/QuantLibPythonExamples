@@ -36,8 +36,9 @@ flatRate(const ext::shared_ptr<Quote>& forward,
 ext::shared_ptr<YieldTermStructure>
 flatRate(Rate forward,
          const DayCounter& dc) {
-    return flatRate(ext::shared_ptr<Quote>(new SimpleQuote(forward)),
-                    dc);
+    return flatRate(
+        ext::shared_ptr<Quote>(new SimpleQuote(forward)),
+        dc);
 }
 
 ext::shared_ptr<BlackVolTermStructure>

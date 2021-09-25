@@ -9,7 +9,6 @@
 %{
 using QuantLib::FixedRateBondForward;
 using QuantLib::ForwardRateAgreement;
-using QuantLib::OvernightIndexFuture;
 %}
 
 %shared_ptr(FixedRateBondForward)
@@ -45,32 +44,7 @@ class ForwardRateAgreement : public Forward {
         bool useIndexedCoupon = true);
 
     Date fixingDate() const;
-    Real spotIncome(const Handle<YieldTermStructure>& discount) const;
-    Real spotValue() const;
     InterestRate forwardRate() const;
-};
-
-%shared_ptr(OvernightIndexFuture)
-class OvernightIndexFuture : public Forward {
-  public:
-    enum NettingType { Averaging, Compounding };
-
-    %extend {
-        OvernightIndexFuture(
-            const ext::shared_ptr<OvernightIndex>& overnightIndex,
-            const Date& valueDate,
-            const Date& maturityDate,
-            const Handle<YieldTermStructure>& discountCurve,
-            const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
-            NettingType subPeriodsNettingType = Compounding) {
-            return new OvernightIndexFuture(
-                overnightIndex, ext::shared_ptr<Payoff>(),
-                valueDate, maturityDate, discountCurve,
-                convexityAdjustment, subPeriodsNettingType);
-        }
-    }
-
-    Real convexityAdjustment() const;
 };
 
 #endif

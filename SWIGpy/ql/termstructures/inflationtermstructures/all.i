@@ -52,39 +52,40 @@ class YoYCapFloorTermPriceSurface : public InflationTermStructure {
   private:
     YoYCapFloorTermPriceSurface();
   public:
-    virtual std::pair<std::vector<Time>, std::vector<Rate> > atmYoYSwapTimeRates() const;
-    virtual std::pair<std::vector<Date>, std::vector<Rate> > atmYoYSwapDateRates() const;
-    virtual ext::shared_ptr<YoYInflationTermStructure> YoYTS() const;
+    std::pair<std::vector<Time>, std::vector<Rate> > atmYoYSwapTimeRates() const;
+    std::pair<std::vector<Date>, std::vector<Rate> > atmYoYSwapDateRates() const;
+    ext::shared_ptr<YoYInflationTermStructure> YoYTS() const;
     ext::shared_ptr<YoYInflationIndex> yoyIndex();
-    virtual BusinessDayConvention businessDayConvention() const;
-    virtual Natural fixingDays() const;
-    virtual Real price(const Date& d, Rate k);
-    virtual Real capPrice(const Date& d, Rate k);
-    virtual Real floorPrice(const Date& d, Rate k);
-    virtual Rate atmYoYSwapRate(const Date &d,
-                                bool extrapolate = true);
-    virtual Rate atmYoYRate(const Date &d,
-                            const Period &obsLag = Period(-1,Days),
-                            bool extrapolate = true);
-    virtual Real price(const Period& d, Rate k) const;
-    virtual Real capPrice(const Period& d, Rate k) const;
-    virtual Real floorPrice(const Period& d, Rate k) const;
-    virtual Rate atmYoYSwapRate(const Period &d,
-                                bool extrapolate = true) const;
-    virtual Rate atmYoYRate(const Period &d,
-                            const Period &obsLag = Period(-1,Days),
-                            bool extrapolate = true) const;
-
-    virtual std::vector<Rate> strikes();
-    virtual std::vector<Rate> capStrikes();
-    virtual std::vector<Rate> floorStrikes();
-    virtual std::vector<Period> maturities();
-    virtual Rate minStrike() const;
-    virtual Rate maxStrike() const;
-    virtual Date minMaturity() const;
-    virtual Date maxMaturity() const;
-
-    virtual Date yoyOptionDateFromTenor(const Period& p) const;
+    BusinessDayConvention businessDayConvention() const;
+    Natural fixingDays() const;
+    Real price(const Date& d, Rate k);
+    Real capPrice(const Date& d, Rate k);
+    Real floorPrice(const Date& d, Rate k);
+    Rate atmYoYSwapRate(
+        const Date &d, bool extrapolate = true);
+    Rate atmYoYRate(
+        const Date &d,
+        const Period &obsLag = Period(-1,Days),
+        bool extrapolate = true);
+    Real price(const Period& d, Rate k) const;
+    Real capPrice(const Period& d, Rate k) const;
+    Real floorPrice(const Period& d, Rate k) const;
+    Rate atmYoYSwapRate(
+        const Period &d,
+        bool extrapolate = true) const;
+    Rate atmYoYRate(
+        const Period &d,
+        const Period &obsLag = Period(-1,Days),
+        bool extrapolate = true) const;
+    std::vector<Rate> strikes();
+    std::vector<Rate> capStrikes();
+    std::vector<Rate> floorStrikes();
+    std::vector<Period> maturities();
+    Rate minStrike() const;
+    Rate maxStrike() const;
+    Date minMaturity() const;
+    Date maxMaturity() const;
+    Date yoyOptionDateFromTenor(const Period& p) const;
 };
 
 %define export_yoy_capfloor_termpricesurface(Name,Interpolator2D, Interpolator1D)
@@ -139,14 +140,13 @@ class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
         const Period& lag,
         Frequency frequency,
         bool indexIsInterpolated,
-        Rate baseRate,
-        const Handle<YieldTermStructure>& nominalTS,
+        Rate baseZeroRate,
         const std::vector<ext::shared_ptr<BootstrapHelper<ZeroInflationTermStructure>>>& instruments,
         Real accuracy = 1.0e-12,
         const Interpolator& i = Interpolator());
-    const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
-
+    const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
     std::vector<std::pair<Date, Real>> nodes() const;
 };
 
@@ -164,15 +164,14 @@ class PiecewiseYoYInflationCurve : public YoYInflationTermStructure {
         const Period& lag,
         Frequency frequency,
         bool indexIsInterpolated,
-        Rate baseRate,
-        const Handle<YieldTermStructure>& nominalTS,
+        Rate baseYoYRate,
         const std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure> > >& instruments,
         Real accuracy = 1.0e-12,
         const Interpolator& i = Interpolator());
-    const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
-
-    std::vector<std::pair<Date,Real> > nodes() const;
+    const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
+    std::vector<std::pair<Date, Real>> nodes() const;
 };
 
 %template(PiecewiseYoYInflation) PiecewiseYoYInflationCurve<Linear>;
@@ -190,15 +189,13 @@ class InterpolatedZeroInflationCurve : public ZeroInflationTermStructure {
         const Period& lag,
         Frequency frequency,
         bool indexIsInterpolated,
-        const Handle<YieldTermStructure>& yTS,
-        const std::vector<Date>& dates,
+        std::vector<Date> dates,
         const std::vector<Rate>& rates,
         const Interpolator& interpolator = Interpolator());
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
     const std::vector<Real>& data() const;
     const std::vector<Rate>& rates() const;
-
     std::vector<std::pair<Date, Rate>> nodes() const;
 };
 
@@ -217,18 +214,15 @@ class InterpolatedYoYInflationCurve : public YoYInflationTermStructure {
         const Period& lag,
         Frequency frequency,
         bool indexIsInterpolated,
-        const Handle<YieldTermStructure>& yTS,
-        const std::vector<Date>& dates,
+        std::vector<Date> dates,
         const std::vector<Rate>& rates,
         const Interpolator& interpolator = Interpolator());
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
     const std::vector<Real>& data() const;
     const std::vector<Rate>& rates() const;
-
     std::vector<std::pair<Date, Rate>> nodes() const;
 };
-
 
 %template(YoYInflationCurve) InterpolatedYoYInflationCurve<Linear>;
 

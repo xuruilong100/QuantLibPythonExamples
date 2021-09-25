@@ -19,13 +19,13 @@ class Seasonality {
     Seasonality();
 
   public:
-    virtual Rate correctZeroRate(
+    Rate correctZeroRate(
         const Date& d, const Rate r,
         const InflationTermStructure& iTS) const;
-    virtual Rate correctYoYRate(
+    Rate correctYoYRate(
         const Date& d, const Rate r,
         const InflationTermStructure& iTS) const;
-    virtual bool isConsistent(
+    bool isConsistent(
         const InflationTermStructure& iTS);
 };
 
@@ -36,10 +36,18 @@ class MultiplicativePriceSeasonality : public Seasonality {
         const Date& seasonalityBaseDate,
         Frequency frequency,
         const std::vector<Rate>& seasonalityFactors);
+    void set(
+        const Date &seasonalityBaseDate,
+        Frequency frequency,
+        std::vector<Rate> seasonalityFactors);
+    Date seasonalityBaseDate() const;
+    Frequency frequency() const;
+    std::vector<Rate> seasonalityFactors() const;
+    Rate seasonalityFactor(const Date &d) const;
 };
 
 %shared_ptr(KerkhofSeasonality)
-class KerkhofSeasonality : public Seasonality {
+class KerkhofSeasonality : public MultiplicativePriceSeasonality {
   public:
     KerkhofSeasonality(
         const Date& seasonalityBaseDate,
@@ -52,18 +60,14 @@ class YoYOptionletStripper {
     YoYOptionletStripper();
 
   public:
-    %extend {
-        virtual void initialize(
-            const ext::shared_ptr<YoYCapFloorTermPriceSurface>& surf,
-            const ext::shared_ptr<PricingEngine>& pricer,
-            Real slope) const {
-            ext::shared_ptr<YoYInflationCapFloorEngine> engine = ext::dynamic_pointer_cast<YoYInflationCapFloorEngine>(pricer);
-            return (self)->initialize(surf, engine, slope);
-        }
-    }
-    virtual Rate maxStrike() const;
-    virtual std::vector<Rate> strikes() const;
-    virtual std::pair<std::vector<Rate>, std::vector<Volatility>> slice(const Date& d) const;
+    void initialize(
+        const ext::shared_ptr<YoYCapFloorTermPriceSurface> &,
+        const ext::shared_ptr<YoYInflationCapFloorEngine> &,
+        Real slope) const;
+    Rate minStrike() const;
+    Rate maxStrike() const;
+    std::vector<Rate> strikes() const;
+    std::pair<std::vector<Rate>, std::vector<Volatility>> slice(const Date& d) const;
 };
 
 %shared_ptr(InterpolatedYoYOptionletStripper<Linear>)

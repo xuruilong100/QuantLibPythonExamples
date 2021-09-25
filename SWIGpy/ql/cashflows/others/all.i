@@ -20,13 +20,13 @@ class SimpleCashFlow : public CashFlow {
 };
 
 %shared_ptr(Redemption)
-class Redemption : public CashFlow {
+class Redemption : public SimpleCashFlow {
   public:
     Redemption(Real amount, const Date& date);
 };
 
 %shared_ptr(AmortizingPayment)
-class AmortizingPayment : public CashFlow {
+class AmortizingPayment : public SimpleCashFlow {
   public:
     AmortizingPayment(Real amount, const Date& date);
 };

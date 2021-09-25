@@ -11,14 +11,13 @@ using QuantLib::FdmInnerValueCalculator;
 
 %shared_ptr(FdmInnerValueCalculator)
 class FdmInnerValueCalculator {
-  public:
-    virtual Real innerValue(
-        const FdmLinearOpIterator& iter, Time t);
-    virtual Real avgInnerValue(
-        const FdmLinearOpIterator& iter, Time t);
-
   private:
     FdmInnerValueCalculator();
+  public:
+    Real innerValue(
+        const FdmLinearOpIterator& iter, Time t);
+    Real avgInnerValue(
+        const FdmLinearOpIterator& iter, Time t);
 };
 
 #endif
