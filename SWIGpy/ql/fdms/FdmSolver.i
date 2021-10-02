@@ -184,20 +184,13 @@ class FdmHestonHullWhiteSolver : public LazyObject {
 class FdmHestonSolver : public LazyObject {
   public:
     %feature("kwargs") FdmHestonSolver;
-    %extend {
-        FdmHestonSolver(
-            const ext::shared_ptr<HestonProcess>& process,
-            const FdmSolverDesc& solverDesc,
-            const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
-            const ext::shared_ptr<FdmQuantoHelper>& quantoHelper = ext::shared_ptr<FdmQuantoHelper>(),
-            const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>()) {
-                return new FdmHestonSolver(
-                    Handle<HestonProcess>(process),
-                    solverDesc, schemeDesc,
-                    Handle<FdmQuantoHelper>(quantoHelper),
-                    leverageFct);
-        }
-    }
+    FdmHestonSolver(
+        Handle<HestonProcess> process,
+        FdmSolverDesc solverDesc,
+        const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
+        Handle<FdmQuantoHelper> quantoHelper = Handle<FdmQuantoHelper>(),
+        ext::shared_ptr<LocalVolTermStructure> leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
+        Real mixingFactor = 1.0);
 
     Real valueAt(Real s, Real v) const;
     Real thetaAt(Real s, Real v) const;

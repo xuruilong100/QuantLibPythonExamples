@@ -24,5 +24,6 @@ class HestonModel : public CalibratedModel {
 };
 
 %template(HestonModelHandle) Handle<HestonModel>;
+%template(RelinkableHestonModelHandle) RelinkableHandle<HestonModel>;
 
 #endif

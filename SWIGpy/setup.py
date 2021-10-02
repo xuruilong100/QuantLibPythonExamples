@@ -11,7 +11,7 @@ ql_module = Extension(
     include_dirs=['/usr/include/'],
     library_dirs=['/usr/lib/'],
     libraries=['QuantLib'],
-    extra_compile_args=['-fopenmp', '-Wno-unused', '-w'],
+    extra_compile_args=['-fopenmp', '-Wno-unused', '-w', '-ferror-limit=0'],
     extra_link_args=['-fopenmp'])
 
 setup(

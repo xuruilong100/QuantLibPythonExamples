@@ -18,6 +18,7 @@ using QuantLib::AnalyticPTDHestonEngine;
 using QuantLib::AnalyticPDFHestonEngine;
 using QuantLib::BaroneAdesiWhaleyApproximationEngine;
 using QuantLib::BatesEngine;
+using QuantLib::BatesDoubleExpEngine;
 using QuantLib::BjerksundStenslandApproximationEngine;
 using QuantLib::COSHestonEngine;
 using QuantLib::ExponentialFittingHestonEngine;
@@ -51,6 +52,11 @@ using QuantLib::MakeFdHestonVanillaEngine;
 using QuantLib::MakeFdBlackScholesVanillaEngine;
 using QuantLib::MakeMCAmericanEngine;
 using QuantLib::MakeMCEuropeanGJRGARCHEngine;
+using QuantLib::AnalyticHestonHullWhiteEngine;
+using QuantLib::AnalyticH1HWEngine;
+using QuantLib::BatesDetJumpEngine;
+using QuantLib::BatesDoubleExpDetJumpEngine;
+using QuantLib::JumpDiffusionEngine;
 %}
 
 %shared_ptr(AnalyticCEVEngine);
@@ -300,7 +306,7 @@ class BaroneAdesiWhaleyApproximationEngine : public PricingEngine {
 };
 
 %shared_ptr(BatesEngine)
-class BatesEngine : public PricingEngine {
+class BatesEngine : public AnalyticHestonEngine {
   public:
     BatesEngine(
         const ext::shared_ptr<BatesModel>& model,
@@ -309,6 +315,17 @@ class BatesEngine : public PricingEngine {
         const ext::shared_ptr<BatesModel>& model,
         Real relTolerance,
         Size maxEvaluations);
+};
+
+%shared_ptr(BatesDoubleExpEngine)
+class BatesDoubleExpEngine : public AnalyticHestonEngine {
+  public:
+    explicit BatesDoubleExpEngine(
+        const ext::shared_ptr<BatesDoubleExpModel>& model,
+        Size integrationOrder = 144);
+    BatesDoubleExpEngine(
+        const ext::shared_ptr<BatesDoubleExpModel>& model,
+        Real relTolerance, Size maxEvaluations);
 };
 
 %shared_ptr(BjerksundStenslandApproximationEngine);
@@ -746,5 +763,68 @@ class MakeMCEuropeanGJRGARCHEngine {
 
 %template(MakeMCPREuropeanGJRGARCHEngine) MakeMCEuropeanGJRGARCHEngine<PseudoRandom>;
 %template(MakeMCLDEuropeanGJRGARCHEngine) MakeMCEuropeanGJRGARCHEngine<LowDiscrepancy>;
+
+%shared_ptr(AnalyticHestonHullWhiteEngine)
+class AnalyticHestonHullWhiteEngine : public AnalyticHestonEngine {
+  public:
+    AnalyticHestonHullWhiteEngine(
+        const ext::shared_ptr<HestonModel>& hestonModel,
+        ext::shared_ptr<HullWhite> hullWhiteModel,
+        Size integrationOrder = 144);
+
+    AnalyticHestonHullWhiteEngine(
+        const ext::shared_ptr<HestonModel>& model,
+        ext::shared_ptr<HullWhite> hullWhiteModel,
+        Real relTolerance,
+        Size maxEvaluations);
+};
+
+%shared_ptr(AnalyticH1HWEngine)
+class AnalyticH1HWEngine : public AnalyticHestonHullWhiteEngine {
+  public:
+    AnalyticH1HWEngine(
+        const ext::shared_ptr<HestonModel>& model,
+        const ext::shared_ptr<HullWhite>& hullWhiteModel,
+        Real rhoSr,
+        Size integrationOrder = 144);
+
+    AnalyticH1HWEngine(
+        const ext::shared_ptr<HestonModel>& model,
+        const ext::shared_ptr<HullWhite>& hullWhiteModel,
+        Real rhoSr,
+        Real relTolerance,
+        Size maxEvaluations);
+};
+
+%shared_ptr(BatesDetJumpEngine)
+class BatesDetJumpEngine : public BatesEngine {
+  public:
+    explicit BatesDetJumpEngine(
+        const ext::shared_ptr<BatesDetJumpModel>& model,
+        Size integrationOrder = 144);
+    BatesDetJumpEngine(
+        const ext::shared_ptr<BatesDetJumpModel>& model,
+        Real relTolerance, Size maxEvaluations);
+};
+
+%shared_ptr(BatesDoubleExpDetJumpEngine)
+class BatesDoubleExpDetJumpEngine : public BatesDoubleExpEngine {
+  public:
+    explicit BatesDoubleExpDetJumpEngine(
+        const ext::shared_ptr<BatesDoubleExpDetJumpModel>& model,
+        Size integrationOrder = 144);
+    BatesDoubleExpDetJumpEngine(
+        const ext::shared_ptr<BatesDoubleExpDetJumpModel>& model,
+        Real relTolerance, Size maxEvaluations);
+};
+
+%shared_ptr(JumpDiffusionEngine)
+class JumpDiffusionEngine : public PricingEngine {
+  public:
+    JumpDiffusionEngine(
+        ext::shared_ptr<Merton76Process>,
+        Real relativeAccuracy_ = 1e-4,
+        Size maxIterations = 100);
+};
 
 #endif

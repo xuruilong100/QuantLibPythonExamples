@@ -10,10 +10,20 @@
 %{
 using QuantLib::Day;
 using QuantLib::Year;
+using QuantLib::Hour;
+using QuantLib::Minute;
+using QuantLib::Second;
+using QuantLib::Millisecond;
+using QuantLib::Microsecond;
 %}
 
 typedef Integer Day;
 typedef Integer Year;
+typedef Integer Hour;
+typedef Integer Minute;
+typedef Integer Second;
+typedef Integer Millisecond;
+typedef Integer Microsecond;
 
 %{
 using QuantLib::Period;
@@ -114,6 +124,7 @@ class PeriodParser {
 };
 
 %{
+#define QL_HIGH_RESOLUTION_DATE
 using QuantLib::Date;
 using QuantLib::DateParser;
 %}
@@ -139,6 +150,18 @@ class Date {
     Date();
     Date(Day d, Month m, Year y);
     Date(BigInteger serialNumber);
+    %#ifdef QL_HIGH_RESOLUTION_DATE
+    %extend {
+        Date(Day d, Month m, Year y,
+             Hour hours, Minute minutes, Second seconds,
+             Millisecond millisec = 0,
+             Microsecond microsec = 0) {
+            return new Date(
+                d, m, y, hours, minutes, seconds,
+                millisec, microsec);
+        }
+    }
+    %#endif
     // access functions
     Weekday weekday() const;
     Day dayOfMonth() const;
@@ -146,6 +169,17 @@ class Date {
     Month month() const;
     Year year() const;
     BigInteger serialNumber() const;
+
+    %#ifdef QL_HIGH_RESOLUTION_DATE
+    Hour hours() const;
+    Minute minutes() const;
+    Second seconds() const;
+    Millisecond milliseconds() const;
+    Microsecond microseconds() const;
+    Time fractionOfDay() const;
+    Time fractionOfSecond() const;
+    %#endif
+
     // static methods
     static bool isLeap(Year y);
     static Date minDate();
@@ -155,6 +189,12 @@ class Date {
     static bool isEndOfMonth(const Date&);
     static Date nextWeekday(const Date&, Weekday);
     static Date nthWeekday(Size n, Weekday, Month m, Year y);
+
+    %#ifdef QL_HIGH_RESOLUTION_DATE
+    static Date localDateTime();
+    static Date universalDateTime();
+    %#endif
+
     Date operator+(BigInteger days) const;
     Date operator-(BigInteger days) const;
     Date operator+(const Period&) const;
@@ -181,28 +221,12 @@ class Date {
         }
         std::string __str__() {
             std::ostringstream out;
-        /* %#ifdef QL_HIGH_RESOLUTION_DATE
-            out << QuantLib::io::iso_datetime(*self);
-        %#else */
             out << *self;
-        /* %#endif */
             return out.str();
         }
         std::string __repr__() {
             std::ostringstream out;
-            if (*self == Date())
-                out << "Date()";
-            else
-        /* %#ifdef QL_HIGH_RESOLUTION_DATE
-            out << "Date(" << self->dayOfMonth() << ","
-                << int(self->month()) << "," << self->year() << ","
-                << self->hours() << "," << self->minutes() << ","
-                << self->seconds() << "," << self->milliseconds() << ","
-                << self->microseconds() << ")";
-        %#else */
-            out << "Date(" << self->dayOfMonth() << ","
-                << int(self->month()) << "," << self->year() << ")";
-        /* %#endif */
+            out << *self;
             return out.str();
         }
         std::string ISO() {

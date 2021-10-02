@@ -1,7 +1,9 @@
 TEST_MESSAGE = print
 
-QL_EPSILON = 1.0e-12
-M_PI = 3.14159265358979323846
-
 true = True
 false = False
+
+
+def timeToDays(t,
+               daysPerYear=360.0):
+    return round(t * daysPerYear)

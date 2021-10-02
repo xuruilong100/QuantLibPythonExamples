@@ -368,6 +368,27 @@ class Date(object):
     def serialNumber(self):
         return _QuantLib.Date_serialNumber(self)
 
+    def hours(self):
+        return _QuantLib.Date_hours(self)
+
+    def minutes(self):
+        return _QuantLib.Date_minutes(self)
+
+    def seconds(self):
+        return _QuantLib.Date_seconds(self)
+
+    def milliseconds(self):
+        return _QuantLib.Date_milliseconds(self)
+
+    def microseconds(self):
+        return _QuantLib.Date_microseconds(self)
+
+    def fractionOfDay(self):
+        return _QuantLib.Date_fractionOfDay(self)
+
+    def fractionOfSecond(self):
+        return _QuantLib.Date_fractionOfSecond(self)
+
     @staticmethod
     def isLeap(y):
         return _QuantLib.Date_isLeap(y)
@@ -399,6 +420,14 @@ class Date(object):
     @staticmethod
     def nthWeekday(n, arg2, m, y):
         return _QuantLib.Date_nthWeekday(n, arg2, m, y)
+
+    @staticmethod
+    def localDateTime():
+        return _QuantLib.Date_localDateTime()
+
+    @staticmethod
+    def universalDateTime():
+        return _QuantLib.Date_universalDateTime()
 
     def __add__(self, *args):
         return _QuantLib.Date___add__(self, *args)
@@ -490,6 +519,12 @@ def Date_nextWeekday(arg1, arg2):
 
 def Date_nthWeekday(n, arg2, m, y):
     return _QuantLib.Date_nthWeekday(n, arg2, m, y)
+
+def Date_localDateTime():
+    return _QuantLib.Date_localDateTime()
+
+def Date_universalDateTime():
+    return _QuantLib.Date_universalDateTime()
 
 class DateParser(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -2664,6 +2699,17 @@ September = _QuantLib.September
 October = _QuantLib.October
 November = _QuantLib.November
 December = _QuantLib.December
+Jan = _QuantLib.Jan
+Feb = _QuantLib.Feb
+Mar = _QuantLib.Mar
+Apr = _QuantLib.Apr
+Jun = _QuantLib.Jun
+Jul = _QuantLib.Jul
+Aug = _QuantLib.Aug
+Sep = _QuantLib.Sep
+Oct = _QuantLib.Oct
+Nov = _QuantLib.Nov
+Dec = _QuantLib.Dec
 Days = _QuantLib.Days
 Weeks = _QuantLib.Weeks
 Months = _QuantLib.Months
@@ -3401,10 +3447,38 @@ class PricingEngine(Observable):
     def __init__(self, *args, **kwargs):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+
+    def getArguments(self):
+        return _QuantLib.PricingEngine_getArguments(self)
+
+    def getResults(self):
+        return _QuantLib.PricingEngine_getResults(self)
     __swig_destroy__ = _QuantLib.delete_PricingEngine
 
 # Register PricingEngine in _QuantLib:
 _QuantLib.PricingEngine_swigregister(PricingEngine)
+
+class arguments(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _QuantLib.delete_arguments
+
+# Register arguments in _QuantLib:
+_QuantLib.arguments_swigregister(arguments)
+
+class results(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _QuantLib.delete_results
+
+# Register results in _QuantLib:
+_QuantLib.results_swigregister(results)
 
 class Instrument(LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -3427,6 +3501,12 @@ class Instrument(LazyObject):
 
     def setPricingEngine(self, arg2):
         return _QuantLib.Instrument_setPricingEngine(self, arg2)
+
+    def setupArguments(self, arg2):
+        return _QuantLib.Instrument_setupArguments(self, arg2)
+
+    def fetchResults(self, arg2):
+        return _QuantLib.Instrument_fetchResults(self, arg2)
     __swig_destroy__ = _QuantLib.delete_Instrument
 
 # Register Instrument in _QuantLib:
@@ -6666,6 +6746,23 @@ class HestonModelHandle(object):
 
 # Register HestonModelHandle in _QuantLib:
 _QuantLib.HestonModelHandle_swigregister(HestonModelHandle)
+
+class RelinkableHestonModelHandle(HestonModelHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableHestonModelHandle_swiginit(self, _QuantLib.new_RelinkableHestonModelHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableHestonModelHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableHestonModelHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableHestonModelHandle
+
+# Register RelinkableHestonModelHandle in _QuantLib:
+_QuantLib.RelinkableHestonModelHandle_swigregister(RelinkableHestonModelHandle)
 
 class ShortRateModel(CalibratedModel):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -13300,7 +13397,7 @@ class BaroneAdesiWhaleyApproximationEngine(PricingEngine):
 # Register BaroneAdesiWhaleyApproximationEngine in _QuantLib:
 _QuantLib.BaroneAdesiWhaleyApproximationEngine_swigregister(BaroneAdesiWhaleyApproximationEngine)
 
-class BatesEngine(PricingEngine):
+class BatesEngine(AnalyticHestonEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -13310,6 +13407,17 @@ class BatesEngine(PricingEngine):
 
 # Register BatesEngine in _QuantLib:
 _QuantLib.BatesEngine_swigregister(BatesEngine)
+
+class BatesDoubleExpEngine(AnalyticHestonEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BatesDoubleExpEngine_swiginit(self, _QuantLib.new_BatesDoubleExpEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_BatesDoubleExpEngine
+
+# Register BatesDoubleExpEngine in _QuantLib:
+_QuantLib.BatesDoubleExpEngine_swigregister(BatesDoubleExpEngine)
 
 class BjerksundStenslandApproximationEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -14068,6 +14176,61 @@ class MakeMCLDEuropeanGJRGARCHEngine(object):
 
 # Register MakeMCLDEuropeanGJRGARCHEngine in _QuantLib:
 _QuantLib.MakeMCLDEuropeanGJRGARCHEngine_swigregister(MakeMCLDEuropeanGJRGARCHEngine)
+
+class AnalyticHestonHullWhiteEngine(AnalyticHestonEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.AnalyticHestonHullWhiteEngine_swiginit(self, _QuantLib.new_AnalyticHestonHullWhiteEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_AnalyticHestonHullWhiteEngine
+
+# Register AnalyticHestonHullWhiteEngine in _QuantLib:
+_QuantLib.AnalyticHestonHullWhiteEngine_swigregister(AnalyticHestonHullWhiteEngine)
+
+class AnalyticH1HWEngine(AnalyticHestonHullWhiteEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.AnalyticH1HWEngine_swiginit(self, _QuantLib.new_AnalyticH1HWEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_AnalyticH1HWEngine
+
+# Register AnalyticH1HWEngine in _QuantLib:
+_QuantLib.AnalyticH1HWEngine_swigregister(AnalyticH1HWEngine)
+
+class BatesDetJumpEngine(BatesEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BatesDetJumpEngine_swiginit(self, _QuantLib.new_BatesDetJumpEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_BatesDetJumpEngine
+
+# Register BatesDetJumpEngine in _QuantLib:
+_QuantLib.BatesDetJumpEngine_swigregister(BatesDetJumpEngine)
+
+class BatesDoubleExpDetJumpEngine(BatesDoubleExpEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BatesDoubleExpDetJumpEngine_swiginit(self, _QuantLib.new_BatesDoubleExpDetJumpEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_BatesDoubleExpDetJumpEngine
+
+# Register BatesDoubleExpDetJumpEngine in _QuantLib:
+_QuantLib.BatesDoubleExpDetJumpEngine_swigregister(BatesDoubleExpDetJumpEngine)
+
+class JumpDiffusionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, relativeAccuracy_=1e-4, maxIterations=100):
+        _QuantLib.JumpDiffusionEngine_swiginit(self, _QuantLib.new_JumpDiffusionEngine(arg2, relativeAccuracy_, maxIterations))
+    __swig_destroy__ = _QuantLib.delete_JumpDiffusionEngine
+
+# Register JumpDiffusionEngine in _QuantLib:
+_QuantLib.JumpDiffusionEngine_swigregister(JumpDiffusionEngine)
 
 class YoYInflationCapFloorEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -16587,6 +16750,58 @@ class FdmQuantoHelper(object):
 
 # Register FdmQuantoHelper in _QuantLib:
 _QuantLib.FdmQuantoHelper_swigregister(FdmQuantoHelper)
+
+class FdmQuantoHelperHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FdmQuantoHelperHandle_swiginit(self, _QuantLib.new_FdmQuantoHelperHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.FdmQuantoHelperHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.FdmQuantoHelperHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.FdmQuantoHelperHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.FdmQuantoHelperHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.FdmQuantoHelperHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.FdmQuantoHelperHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.FdmQuantoHelperHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_FdmQuantoHelperHandle
+
+    def quantoAdjustment(self, *args):
+        return _QuantLib.FdmQuantoHelperHandle_quantoAdjustment(self, *args)
+
+# Register FdmQuantoHelperHandle in _QuantLib:
+_QuantLib.FdmQuantoHelperHandle_swigregister(FdmQuantoHelperHandle)
+
+class RelinkableFdmQuantoHelperHandle(FdmQuantoHelperHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableFdmQuantoHelperHandle_swiginit(self, _QuantLib.new_RelinkableFdmQuantoHelperHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableFdmQuantoHelperHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableFdmQuantoHelperHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableFdmQuantoHelperHandle
+
+# Register RelinkableFdmQuantoHelperHandle in _QuantLib:
+_QuantLib.RelinkableFdmQuantoHelperHandle_swigregister(RelinkableFdmQuantoHelperHandle)
 
 class FdmHestonGreensFct(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -27777,6 +27992,133 @@ class HestonProcess(StochasticProcess):
 # Register HestonProcess in _QuantLib:
 _QuantLib.HestonProcess_swigregister(HestonProcess)
 
+class HestonProcessHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.HestonProcessHandle_swiginit(self, _QuantLib.new_HestonProcessHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.HestonProcessHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.HestonProcessHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.HestonProcessHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.HestonProcessHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.HestonProcessHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.HestonProcessHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.HestonProcessHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_HestonProcessHandle
+
+    def v0(self):
+        return _QuantLib.HestonProcessHandle_v0(self)
+
+    def rho(self):
+        return _QuantLib.HestonProcessHandle_rho(self)
+
+    def kappa(self):
+        return _QuantLib.HestonProcessHandle_kappa(self)
+
+    def theta(self):
+        return _QuantLib.HestonProcessHandle_theta(self)
+
+    def sigma(self):
+        return _QuantLib.HestonProcessHandle_sigma(self)
+
+    def s0(self):
+        return _QuantLib.HestonProcessHandle_s0(self)
+
+    def dividendYield(self):
+        return _QuantLib.HestonProcessHandle_dividendYield(self)
+
+    def riskFreeRate(self):
+        return _QuantLib.HestonProcessHandle_riskFreeRate(self)
+
+    def pdf(self, x, v, t, eps=1e-3):
+        return _QuantLib.HestonProcessHandle_pdf(self, x, v, t, eps)
+
+    def size(self):
+        return _QuantLib.HestonProcessHandle_size(self)
+
+    def factors(self):
+        return _QuantLib.HestonProcessHandle_factors(self)
+
+    def initialValues(self):
+        return _QuantLib.HestonProcessHandle_initialValues(self)
+
+    def drift(self, t, x):
+        return _QuantLib.HestonProcessHandle_drift(self, t, x)
+
+    def diffusion(self, t, x):
+        return _QuantLib.HestonProcessHandle_diffusion(self, t, x)
+
+    def expectation(self, t0, x0, dt):
+        return _QuantLib.HestonProcessHandle_expectation(self, t0, x0, dt)
+
+    def stdDeviation(self, t0, x0, dt):
+        return _QuantLib.HestonProcessHandle_stdDeviation(self, t0, x0, dt)
+
+    def covariance(self, t0, x0, dt):
+        return _QuantLib.HestonProcessHandle_covariance(self, t0, x0, dt)
+
+    def evolve(self, t0, x0, dt, dw):
+        return _QuantLib.HestonProcessHandle_evolve(self, t0, x0, dt, dw)
+
+    def apply(self, x0, dx):
+        return _QuantLib.HestonProcessHandle_apply(self, x0, dx)
+
+    def time(self, arg2):
+        return _QuantLib.HestonProcessHandle_time(self, arg2)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.HestonProcessHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.HestonProcessHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.HestonProcessHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.HestonProcessHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.HestonProcessHandle_deepUpdate(self)
+
+    def notifyObservers(self):
+        return _QuantLib.HestonProcessHandle_notifyObservers(self)
+
+# Register HestonProcessHandle in _QuantLib:
+_QuantLib.HestonProcessHandle_swigregister(HestonProcessHandle)
+
+class RelinkableHestonProcessHandle(HestonProcessHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableHestonProcessHandle_swiginit(self, _QuantLib.new_RelinkableHestonProcessHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableHestonProcessHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableHestonProcessHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableHestonProcessHandle
+
+# Register RelinkableHestonProcessHandle in _QuantLib:
+_QuantLib.RelinkableHestonProcessHandle_swigregister(RelinkableHestonProcessHandle)
+
 class HestonSLVProcess(StochasticProcess):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -30127,6 +30469,17 @@ class SafeFixedLocalVolSurface(LocalVolTermStructure):
 # Register SafeFixedLocalVolSurface in _QuantLib:
 _QuantLib.SafeFixedLocalVolSurface_swigregister(SafeFixedLocalVolSurface)
 
+class CustomicLocalVolatility(LocalVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CustomicLocalVolatility_swiginit(self, _QuantLib.new_CustomicLocalVolatility(*args))
+    __swig_destroy__ = _QuantLib.delete_CustomicLocalVolatility
+
+# Register CustomicLocalVolatility in _QuantLib:
+_QuantLib.CustomicLocalVolatility_swigregister(CustomicLocalVolatility)
+
 class ConstantSwaptionVolatility(SwaptionVolatilityStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -30616,22 +30969,22 @@ class YoYOptionletVolatilitySurfaceHandle(object):
 # Register YoYOptionletVolatilitySurfaceHandle in _QuantLib:
 _QuantLib.YoYOptionletVolatilitySurfaceHandle_swigregister(YoYOptionletVolatilitySurfaceHandle)
 
-class RelinkableYoYOptionletVolatilitySurface(YoYOptionletVolatilitySurfaceHandle):
+class RelinkableYoYOptionletVolatilitySurfaceHandle(YoYOptionletVolatilitySurfaceHandle):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, *args):
-        _QuantLib.RelinkableYoYOptionletVolatilitySurface_swiginit(self, _QuantLib.new_RelinkableYoYOptionletVolatilitySurface(*args))
+        _QuantLib.RelinkableYoYOptionletVolatilitySurfaceHandle_swiginit(self, _QuantLib.new_RelinkableYoYOptionletVolatilitySurfaceHandle(*args))
 
     def linkTo(self, arg2, registerAsObserver=True):
-        return _QuantLib.RelinkableYoYOptionletVolatilitySurface_linkTo(self, arg2, registerAsObserver)
+        return _QuantLib.RelinkableYoYOptionletVolatilitySurfaceHandle_linkTo(self, arg2, registerAsObserver)
 
     def reset(self):
-        return _QuantLib.RelinkableYoYOptionletVolatilitySurface_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RelinkableYoYOptionletVolatilitySurface
+        return _QuantLib.RelinkableYoYOptionletVolatilitySurfaceHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableYoYOptionletVolatilitySurfaceHandle
 
-# Register RelinkableYoYOptionletVolatilitySurface in _QuantLib:
-_QuantLib.RelinkableYoYOptionletVolatilitySurface_swigregister(RelinkableYoYOptionletVolatilitySurface)
+# Register RelinkableYoYOptionletVolatilitySurfaceHandle in _QuantLib:
+_QuantLib.RelinkableYoYOptionletVolatilitySurfaceHandle_swigregister(RelinkableYoYOptionletVolatilitySurfaceHandle)
 
 class CapFloorTermVolatilityStructure(VolatilityTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

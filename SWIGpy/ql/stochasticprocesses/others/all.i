@@ -115,6 +115,9 @@ class HestonProcess : public StochasticProcess {
     Real pdf(Real x, Real v, Time t, Real eps=1e-3) const;
 };
 
+%template(HestonProcessHandle) Handle<HestonProcess>;
+%template(RelinkableHestonProcessHandle) RelinkableHandle<HestonProcess>;
+
 %shared_ptr(HestonSLVProcess);
 class HestonSLVProcess : public StochasticProcess {
   public:

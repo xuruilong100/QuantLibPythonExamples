@@ -85,13 +85,14 @@ class TwoAssetCorrelationOption : public MultiAssetOption {
 %shared_ptr(VanillaVPPOption)
 class VanillaVPPOption : public MultiAssetOption {
   public:
-    VanillaVPPOption(Real heatRate,
-                     Real pMin, Real pMax,
-                     Size tMinUp, Size tMinDown,
-                     Real startUpFuel, Real startUpFixCost,
-                     const ext::shared_ptr<SwingExercise>& exercise,
-                     Size nStarts = Null<Size>(),
-                     Size nRunningHours = Null<Size>());
+    VanillaVPPOption(
+        Real heatRate,
+        Real pMin, Real pMax,
+        Size tMinUp, Size tMinDown,
+        Real startUpFuel, Real startUpFixCost,
+        const ext::shared_ptr<SwingExercise>& exercise,
+        Size nStarts = Null<Size>(),
+        Size nRunningHours = Null<Size>());
 };
 
 #endif

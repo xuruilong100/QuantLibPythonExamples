@@ -34,6 +34,8 @@ using QuantLib::InflationCouponPricer;
 
 %{
 typedef StochasticProcess::discretization discretization;
+typedef PricingEngine::arguments arguments;
+typedef PricingEngine::results results;
 %}
 
 %shared_ptr(Observable)
@@ -73,6 +75,19 @@ class LazyObject : public Observer, public Observable {
 class PricingEngine : public Observable {
   private:
     PricingEngine();
+  public:
+    arguments* getArguments() const;
+    const results* getResults() const;
+};
+
+class arguments {
+  private:
+    arguments();
+};
+
+class results {
+  private:
+    results();
 };
 
 %shared_ptr(Instrument)
@@ -86,6 +101,8 @@ class Instrument : public LazyObject {
     bool isExpired() const;
     void setPricingEngine(
         const ext::shared_ptr<PricingEngine>&);
+    void setupArguments(PricingEngine::arguments*) const;
+    void fetchResults(const PricingEngine::results*) const;
 };
 
 %template(InstrumentVector) std::vector<ext::shared_ptr<Instrument> >;

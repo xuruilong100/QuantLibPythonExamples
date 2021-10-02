@@ -121,6 +121,9 @@ class FdmQuantoHelper {
         const Array& equityVol, Time t1, Time t2) const;
 };
 
+%template(FdmQuantoHelperHandle) Handle<FdmQuantoHelper>;
+%template(RelinkableFdmQuantoHelperHandle) RelinkableHandle<FdmQuantoHelper>;
+
 class FdmHestonGreensFct {
   public:
     enum Algorithm {
