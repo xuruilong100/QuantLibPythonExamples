@@ -12,6 +12,7 @@ using QuantLib::LazyObject;
 %{
 using QuantLib::Extrapolator;
 using QuantLib::PricingEngine;
+using QuantLib::BasketGeneratingEngine;
 using QuantLib::Instrument;
 using QuantLib::TermStructure;
 using QuantLib::Event;
@@ -88,6 +89,24 @@ class arguments {
 class results {
   private:
     results();
+};
+
+%shared_ptr(BasketGeneratingEngine)
+class BasketGeneratingEngine {
+  private:
+    BasketGeneratingEngine();
+  public:
+    typedef enum CalibrationBasketType {
+        Naive,
+        MaturityStrikeByDeltaGamma
+    } CalibrationBasketType;
+
+    std::vector<ext::shared_ptr<BlackCalibrationHelper>>
+    calibrationBasket(
+        const ext::shared_ptr<Exercise>& exercise,
+        const ext::shared_ptr<SwapIndex>& standardSwapBase,
+        const ext::shared_ptr<SwaptionVolatilityStructure>& swaptionVolatility,
+        CalibrationBasketType basketType = MaturityStrikeByDeltaGamma) const;
 };
 
 %shared_ptr(Instrument)
@@ -286,17 +305,20 @@ class BootstrapHelper : public Observer, public Observable {
     Date latestDate() const;
 };
 
+typedef BootstrapHelper<YieldTermStructure> RateHelper;
+typedef BootstrapHelper<DefaultProbabilityTermStructure> DefaultProbabilityHelper;
+
 %template(RateHelper) BootstrapHelper<YieldTermStructure>;
 %template(DefaultProbabilityHelper) BootstrapHelper<DefaultProbabilityTermStructure>;
 %template(ZeroHelper) BootstrapHelper<ZeroInflationTermStructure>;
 %template(YoYHelper) BootstrapHelper<YoYInflationTermStructure>;
 %template(YoYOptionHelper) BootstrapHelper<YoYOptionletVolatilitySurface>;
 
-%template(RateHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YieldTermStructure> > >;
-%template(DefaultProbabilityHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<DefaultProbabilityTermStructure> > >;
-%template(ZeroHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<ZeroInflationTermStructure> > >;
-%template(YoYHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure> > >;
-%template(YoYOptionHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYOptionletVolatilitySurface> > >;
+%template(RateHelperVector) std::vector<ext::shared_ptr<RateHelper>>;
+%template(DefaultProbabilityHelperVector) std::vector<ext::shared_ptr<DefaultProbabilityHelper>>;
+%template(ZeroHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<ZeroInflationTermStructure>>>;
+%template(YoYHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure>>>;
+%template(YoYOptionHelperVector) std::vector<ext::shared_ptr<BootstrapHelper<YoYOptionletVolatilitySurface>>>;
 
 %shared_ptr(Quote)
 class Quote : public Observable {
@@ -310,7 +332,7 @@ class Quote : public Observable {
 %template(QuoteHandle) Handle<Quote>;
 %template(RelinkableQuoteHandle) RelinkableHandle<Quote>;
 
-// typedef BootstrapHelper<YieldTermStructure> RateHelper;
+//typedef BootstrapHelper<YieldTermStructure> RateHelper;
 /* %shared_ptr(RateHelper)
 class RateHelper : public Observer, public Observable {
   private:

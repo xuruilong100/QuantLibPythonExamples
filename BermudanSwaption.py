@@ -16,9 +16,13 @@ swaptionVols = [
 
 def calibrateModel(model,
                    helpers):
+    helpersClone = ql.CalibrationHelperVector()
+    for h in helpers:
+        helpersClone.push_back(h)
+
     om = ql.LevenbergMarquardt()
     model.calibrate(
-        helpers,
+        helpersClone,
         om,
         ql.EndCriteria(400, 100, 1.0e-8, 1.0e-8, 1.0e-8))
 

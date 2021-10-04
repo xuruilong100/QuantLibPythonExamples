@@ -37,7 +37,7 @@ schedule = ql.Schedule(
 dividends = ql.DividendSchedule()
 callability = ql.CallabilitySchedule()
 coupons = ql.DoubleVector(1, 0.05)
-bondDayCount = ql.Thirty360()
+bondDayCount = ql.Thirty360(ql.Thirty360.BondBasis)
 
 callLength = [2, 4]  # Call dates, years 2, 4.
 putLength = [3]  # Put dates year 3
@@ -49,16 +49,16 @@ putPrices = [105.0]
 for i in range(len(callLength)):
     callability.push_back(
         ql.SoftCallability(
-            ql.CallabilityPrice(
-                callPrices[i], ql.CallabilityPrice.Clean),
+            ql.BondPrice(
+                callPrices[i], ql.BondPrice.Clean),
             schedule[callLength[i]],
             1.20))
 
 for i in range(len(putLength)):
     callability.push_back(
         ql.Callability(
-            ql.CallabilityPrice(
-                putPrices[i], ql.CallabilityPrice.Clean),
+            ql.BondPrice(
+                putPrices[i], ql.BondPrice.Clean),
             ql.Callability.Put,
             schedule[putLength[i]]))
 

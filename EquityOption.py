@@ -174,17 +174,11 @@ timeSteps = 1
 # Monte Carlo Method: MC (crude)
 method = 'MC (crude)'
 mcSeed = 42
-mcengine1 = ql.MCPREuropeanEngine(
-    bsmProcess,
-    timeSteps=timeSteps,
-    requiredTolerance=0.02,
-    seed=mcSeed)
-# mcengine1 = ql.MCEuropeanEngine(
-#     bsmProcess,
-#     'PseudoRandom',
-#     timeSteps=timeSteps,
-#     requiredTolerance=0.02,
-#     seed=mcSeed)
+mcengine1 = ql.MakeMCPREuropeanEngine(bsmProcess)
+mcengine1.withSteps(timeSteps)
+mcengine1.withAbsoluteTolerance(0.02)
+mcengine1.withSeed(mcSeed)
+mcengine1 = mcengine1.makeEngine()
 
 europeanOption.setPricingEngine(mcengine1)
 tab.add_row([method, europeanOption.NPV(), 'N/A', 'N/A'])
@@ -192,35 +186,24 @@ tab.add_row([method, europeanOption.NPV(), 'N/A', 'N/A'])
 # Monte Carlo Method: QMC (Sobol)
 method = 'QMC (Sobol)'
 nSamples = 32768  # 2^15
-mcengine2 = ql.MCLDEuropeanEngine(
-    bsmProcess,
-    timeSteps=timeSteps,
-    requiredSamples=nSamples)
-# mcengine2 = ql.MCEuropeanEngine(
-#     bsmProcess,
-#     'LowDiscrepancy',
-#     timeSteps=timeSteps,
-#     requiredSamples=nSamples)
+mcengine2 = ql.MakeMCLDEuropeanEngine(bsmProcess)
+mcengine2.withSteps(timeSteps)
+mcengine2.withSamples(nSamples)
+mcengine2 = mcengine2.makeEngine()
+
 europeanOption.setPricingEngine(mcengine2)
 tab.add_row([method, europeanOption.NPV(), 'N/A', 'N/A'])
 
 # Monte Carlo Method: MC (Longstaff Schwartz)
 method = 'MC (Longstaff Schwartz)'
-mcengine3 = ql.MCPRAmericanEngine(
-    bsmProcess,
-    timeSteps=100,
-    antitheticVariate=True,
-    nCalibrationSamples=4096,
-    requiredTolerance=0.02,
-    seed=mcSeed)
-# mcengine3 = ql.MCAmericanEngine(
-#     bsmProcess,
-#     'PseudoRandom',
-#     timeSteps=100,
-#     antitheticVariate=True,
-#     nCalibrationSamples=4096,
-#     requiredTolerance=0.02,
-#     seed=mcSeed)
+mcengine3 = ql.MakeMCPRAmericanEngine(bsmProcess)
+mcengine3.withSteps(100)
+mcengine3.withAntitheticVariate()
+mcengine3.withCalibrationSamples(4096)
+mcengine3.withAbsoluteTolerance(0.02)
+mcengine3.withSeed(mcSeed)
+mcengine3 = mcengine3.makeEngine()
+
 americanOption.setPricingEngine(mcengine3)
 tab.add_row([method, 'N/A', 'N/A', americanOption.NPV()])
 

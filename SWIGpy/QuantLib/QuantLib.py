@@ -3480,6 +3480,22 @@ class results(object):
 # Register results in _QuantLib:
 _QuantLib.results_swigregister(results)
 
+class BasketGeneratingEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    Naive = _QuantLib.BasketGeneratingEngine_Naive
+    MaturityStrikeByDeltaGamma = _QuantLib.BasketGeneratingEngine_MaturityStrikeByDeltaGamma
+
+    def calibrationBasket(self, *args):
+        return _QuantLib.BasketGeneratingEngine_calibrationBasket(self, *args)
+    __swig_destroy__ = _QuantLib.delete_BasketGeneratingEngine
+
+# Register BasketGeneratingEngine in _QuantLib:
+_QuantLib.BasketGeneratingEngine_swigregister(BasketGeneratingEngine)
+
 class Instrument(LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -13008,7 +13024,7 @@ class Gaussian1dJamshidianSwaptionEngine(PricingEngine):
 # Register Gaussian1dJamshidianSwaptionEngine in _QuantLib:
 _QuantLib.Gaussian1dJamshidianSwaptionEngine_swigregister(Gaussian1dJamshidianSwaptionEngine)
 
-class Gaussian1dNonstandardSwaptionEngine(PricingEngine):
+class Gaussian1dNonstandardSwaptionEngine(PricingEngine, BasketGeneratingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     NoProb = _QuantLib.Gaussian1dNonstandardSwaptionEngine_NoProb
@@ -13022,7 +13038,7 @@ class Gaussian1dNonstandardSwaptionEngine(PricingEngine):
 # Register Gaussian1dNonstandardSwaptionEngine in _QuantLib:
 _QuantLib.Gaussian1dNonstandardSwaptionEngine_swigregister(Gaussian1dNonstandardSwaptionEngine)
 
-class Gaussian1dFloatFloatSwaptionEngine(PricingEngine):
+class Gaussian1dFloatFloatSwaptionEngine(PricingEngine, BasketGeneratingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
     NoProb = _QuantLib.Gaussian1dFloatFloatSwaptionEngine_NoProb
@@ -20375,12 +20391,6 @@ class NonstandardSwaption(Option):
 
 # Register NonstandardSwaption in _QuantLib:
 _QuantLib.NonstandardSwaption_swigregister(NonstandardSwaption)
-
-
-class BasketGeneratingEngine(object):
-    class CalibrationBasketType(object):
-        Naive = 'Naive'
-        MaturityStrikeByDeltaGamma = 'MaturityStrikeByDeltaGamma'
 
 class Claim(Observer, Observable):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

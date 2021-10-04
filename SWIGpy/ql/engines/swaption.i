@@ -146,7 +146,7 @@ class Gaussian1dJamshidianSwaptionEngine : public PricingEngine {
 };
 
 %shared_ptr(Gaussian1dNonstandardSwaptionEngine)
-class Gaussian1dNonstandardSwaptionEngine : public PricingEngine {
+class Gaussian1dNonstandardSwaptionEngine : public PricingEngine, public BasketGeneratingEngine {
     %rename(NoProb) None;
 
   public:
@@ -174,7 +174,7 @@ class Gaussian1dNonstandardSwaptionEngine : public PricingEngine {
 };
 
 %shared_ptr(Gaussian1dFloatFloatSwaptionEngine)
-class Gaussian1dFloatFloatSwaptionEngine : public PricingEngine {
+class Gaussian1dFloatFloatSwaptionEngine : public PricingEngine, public BasketGeneratingEngine {
     %rename(NoProb) None;
 
   public:

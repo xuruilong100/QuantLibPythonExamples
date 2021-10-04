@@ -54,26 +54,6 @@ class FloatFloatSwaption : public Option {
         BasketGeneratingEngine::CalibrationBasketType basketType = BasketGeneratingEngine::MaturityStrikeByDeltaGamma) const;
 
     %extend {
-        /* std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
-            ext::shared_ptr<SwapIndex> swapIndex,
-            ext::shared_ptr<SwaptionVolatilityStructure> swaptionVolatility,
-            std::string typeStr) const {
-
-            BasketGeneratingEngine::CalibrationBasketType type;
-            if (typeStr == "Naive")
-                type = BasketGeneratingEngine::Naive;
-            else if (typeStr == "MaturityStrikeByDeltaGamma")
-                type = BasketGeneratingEngine::MaturityStrikeByDeltaGamma;
-            else
-                QL_FAIL("type " << typeStr << "unknown.");
-
-            std::vector<ext::shared_ptr<BlackCalibrationHelper>> hs = self->calibrationBasket(
-                swapIndex, swaptionVolatility, type);
-            std::vector<ext::shared_ptr<BlackCalibrationHelper>> helpers(hs.size());
-            for (Size i = 0; i < hs.size(); ++i)
-                helpers[i] = hs[i];
-            return helpers;
-        } */
         Real underlyingValue() {
             return self->result<Real>("underlyingValue");
         }
@@ -139,26 +119,6 @@ class NonstandardSwaption : public Option {
         BasketGeneratingEngine::CalibrationBasketType basketType = BasketGeneratingEngine::MaturityStrikeByDeltaGamma) const;
 
     %extend {
-        /* std::vector<ext::shared_ptr<BlackCalibrationHelper>> calibrationBasket(
-            ext::shared_ptr<SwapIndex> swapIndex,
-            ext::shared_ptr<SwaptionVolatilityStructure> swaptionVolatility,
-            std::string typeStr) const {
-
-            BasketGeneratingEngine::CalibrationBasketType type;
-            if (typeStr == "Naive")
-                type = BasketGeneratingEngine::Naive;
-            else if (typeStr == "MaturityStrikeByDeltaGamma")
-                type = BasketGeneratingEngine::MaturityStrikeByDeltaGamma;
-            else
-                QL_FAIL("type " << typeStr << "unknown.");
-
-            std::vector<ext::shared_ptr<BlackCalibrationHelper>> hs = self->calibrationBasket(
-                swapIndex, swaptionVolatility, type);
-            std::vector<ext::shared_ptr<BlackCalibrationHelper>> helpers(hs.size());
-            for (Size i = 0; i < hs.size(); ++i)
-                helpers[i] = hs[i];
-            return helpers;
-        } */
         std::vector<Real> probabilities() {
             return self->result<std::vector<Real>>("probabilities");
         }

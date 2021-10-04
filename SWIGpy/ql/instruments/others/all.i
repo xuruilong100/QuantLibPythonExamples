@@ -7,20 +7,12 @@
 %include ../ql/base.i
 
 %{
-using QuantLib::BasketGeneratingEngine;
 using QuantLib::Claim;
 using QuantLib::FaceValueClaim;
 using QuantLib::FaceValueAccrualClaim;
 using QuantLib::CompositeInstrument;
 using QuantLib::CreditDefaultSwap;
 using QuantLib::Stock;
-%}
-
-%pythoncode %{
-class BasketGeneratingEngine(object):
-    class CalibrationBasketType(object):
-        Naive = 'Naive'
-        MaturityStrikeByDeltaGamma = 'MaturityStrikeByDeltaGamma'
 %}
 
 %shared_ptr(Claim);

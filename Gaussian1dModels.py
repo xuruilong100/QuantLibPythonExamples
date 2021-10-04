@@ -126,7 +126,9 @@ underlying = ql.NonstandardSwap(
     ql.VanillaSwap(
         ql.VanillaSwap.Payer,
         1.0, fixedSchedule,
-        strike, ql.Thirty360(),
+        strike, 
+        ql.Thirty360(
+            ql.Thirty360.BondBasis),
         floatingSchedule,
         euribor6m, 0.00,
         ql.Actual360()))
@@ -176,7 +178,7 @@ swapBase = ql.EuriborSwapIsdaFixA(
 
 basket = swaption.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.Naive)
+    ql.BasketGeneratingEngine.Naive)
 
 printBasket(basket)
 
@@ -211,7 +213,7 @@ print("\nThere is another mode to generate a calibration basket called"
 
 basket = swaption.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.MaturityStrikeByDeltaGamma)
+    ql.BasketGeneratingEngine.MaturityStrikeByDeltaGamma)
 
 printBasket(basket)
 
@@ -256,7 +258,7 @@ underlying2 = ql.NonstandardSwap(
     ql.VanillaSwap.Payer,
     nominalFixed, nominalFloating,
     fixedSchedule,
-    strikes, ql.Thirty360(),
+    strikes, ql.Thirty360(ql.Thirty360.BondBasis),
     floatingSchedule, euribor6m, 1.0, 0.0,
     ql.Actual360())
 
@@ -266,7 +268,7 @@ swaption2.setPricingEngine(nonstandardSwaptionEngine)
 
 basket = swaption2.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.MaturityStrikeByDeltaGamma)
+    ql.BasketGeneratingEngine.MaturityStrikeByDeltaGamma)
 
 printBasket(basket)
 
@@ -288,7 +290,7 @@ underlying3 = ql.NonstandardSwap(
     ql.VanillaSwap.Receiver,
     nominalFixed2, nominalFloating2,
     fixedSchedule, strikes,
-    ql.Thirty360(), floatingSchedule,
+    ql.Thirty360(ql.Thirty360.BondBasis), floatingSchedule,
     euribor6m, 1.0, 0.0, ql.Actual360(),
     False, True)  # // final capital exchange
 
@@ -309,7 +311,7 @@ swaption3.setPricingEngine(nonstandardSwaptionEngine2)
 
 basket = swaption3.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.MaturityStrikeByDeltaGamma)
+    ql.BasketGeneratingEngine.MaturityStrikeByDeltaGamma)
 
 printBasket(basket)
 
@@ -337,7 +339,7 @@ oas.linkTo(oas100)
 
 basket = swaption3.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.MaturityStrikeByDeltaGamma)
+    ql.BasketGeneratingEngine.MaturityStrikeByDeltaGamma)
 
 printBasket(basket)
 
@@ -362,10 +364,10 @@ print("\nThe next instrument we look at is a CMS 10Y vs Euribor"
 underlying4 = ql.FloatFloatSwap(
     ql.VanillaSwap.Payer, 1.0, 1.0,
     fixedSchedule, swapBase,
-    ql.Thirty360(), floatingSchedule,
+    ql.Thirty360(ql.Thirty360.BondBasis), floatingSchedule,
     euribor6m, ql.Actual360(), False,
-    False, 1.0, 0.0, ql.RealNull(),
-    ql.RealNull(), 1.0, 0.0010)
+    False, 1.0, 0.0, ql.NullReal(),
+    ql.NullReal(), 1.0, 0.0010)
 
 swaption4 = ql.FloatFloatSwaption(underlying4, exercise)
 
@@ -403,7 +405,7 @@ print("\nWe generate a naive calibration basket and calibrate"
 
 basket = swaption4.calibrationBasket(
     swapBase, swaptionVol.currentLink(),
-    ql.BasketGeneratingEngine.CalibrationBasketType.Naive)
+    ql.BasketGeneratingEngine.Naive)
 
 for i in range(len(basket)):
     basket[i].setPricingEngine(swaptionEngine)
