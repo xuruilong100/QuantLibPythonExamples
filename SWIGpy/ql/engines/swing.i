@@ -29,7 +29,7 @@ class FdSimpleExtOUJumpSwingEngine : public PricingEngine {
             const ext::shared_ptr<ExtOUWithJumpsProcess>& process,
             const ext::shared_ptr<YieldTermStructure>& rTS,
             Size tGrid = 50, Size xGrid = 200, Size yGrid=50,
-            const std::vector<std::pair<Time,Real> >& shape = std::vector<std::pair<Time,Real> >(),
+            const std::vector<std::pair<Time,Real>>& shape = std::vector<std::pair<Time,Real>>(),
             const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer()) {
             ext::shared_ptr<FdSimpleExtOUJumpSwingEngine::Shape> curve(
                 new FdSimpleExtOUJumpSwingEngine::Shape(shape));

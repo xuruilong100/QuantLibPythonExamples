@@ -22,7 +22,7 @@ using QuantLib::SwaptionVolCube1x;
 using QuantLib::SwaptionVolCube2;
 %}
 
-%shared_ptr(ConstantSwaptionVolatility);
+%shared_ptr(ConstantSwaptionVolatility)
 class ConstantSwaptionVolatility : public SwaptionVolatilityStructure {
   public:
     ConstantSwaptionVolatility(
@@ -92,7 +92,7 @@ class TenorSwaptionVTS : public SwaptionVolatilityStructure {
                      DayCounter targFixedDC);
 };
 
-%shared_ptr(SwaptionVolatilityDiscrete);
+%shared_ptr(SwaptionVolatilityDiscrete)
 class SwaptionVolatilityDiscrete : public SwaptionVolatilityStructure {
     private:
         SwaptionVolatilityDiscrete();
@@ -105,7 +105,7 @@ class SwaptionVolatilityDiscrete : public SwaptionVolatilityStructure {
         const Date optionDateFromTime(Time optionTime) const;
 };
 
-%shared_ptr(SwaptionVolatilityMatrix);
+%shared_ptr(SwaptionVolatilityMatrix)
 class SwaptionVolatilityMatrix : public SwaptionVolatilityDiscrete {
   public:
     SwaptionVolatilityMatrix(
@@ -113,22 +113,22 @@ class SwaptionVolatilityMatrix : public SwaptionVolatilityDiscrete {
         BusinessDayConvention bdc,
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
-        const std::vector<std::vector<Handle<Quote> > >& vols,
+        const std::vector<std::vector<Handle<Quote>>>& vols,
         const DayCounter& dayCounter,
         bool flatExtrapolation = false,
         VolatilityType type = ShiftedLognormal,
-        const std::vector<std::vector<Real> >& shifts = std::vector<std::vector<Real> >());
+        const std::vector<std::vector<Real>>& shifts = std::vector<std::vector<Real>>());
     SwaptionVolatilityMatrix(
         const Date& referenceDate,
         const Calendar& calendar,
         BusinessDayConvention bdc,
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
-        const std::vector<std::vector<Handle<Quote> > >& vols,
+        const std::vector<std::vector<Handle<Quote>>>& vols,
         const DayCounter& dayCounter,
         bool flatExtrapolation = false,
         VolatilityType type = ShiftedLognormal,
-        const std::vector<std::vector<Real> >& shifts = std::vector<std::vector<Real> >());
+        const std::vector<std::vector<Real>>& shifts = std::vector<std::vector<Real>>());
     SwaptionVolatilityMatrix(
         const Calendar& calendar,
         BusinessDayConvention bdc,
@@ -170,7 +170,7 @@ class SwaptionVolatilityMatrix : public SwaptionVolatilityDiscrete {
         Time swapLength) const;
 };
 
-%shared_ptr(SwaptionVolatilityCube);
+%shared_ptr(SwaptionVolatilityCube)
 class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
   private:
     SwaptionVolatilityCube();
@@ -179,13 +179,13 @@ class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
         const Date& optionDate,
         const Period& swapTenor) const;
     Rate atmStrike(
-        const Period &optionTenor,
-        const Period &swapTenor) const;
-    Handle<SwaptionVolatilityStructure> atmVol () const;
-    const std::vector<Spread> & strikeSpreads () const;
-    const std::vector<std::vector< Handle< Quote > > > & volSpreads () const;
-    ext::shared_ptr<SwapIndex> swapIndexBase () const;
-    ext::shared_ptr<SwapIndex> shortSwapIndexBase () const;
+        const Period& optionTenor,
+        const Period& swapTenor) const;
+    Handle<SwaptionVolatilityStructure> atmVol() const;
+    const std::vector<Spread>& strikeSpreads() const;
+    const std::vector<std::vector<Handle<Quote>>>& volSpreads() const;
+    ext::shared_ptr<SwapIndex> swapIndexBase() const;
+    ext::shared_ptr<SwapIndex> shortSwapIndexBase() const;
     bool vegaWeightedSmileFit() const;
 };
 
@@ -200,11 +200,11 @@ class SwaptionVolCube1x : public SwaptionVolatilityCube {
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
         const std::vector<Spread>& strikeSpreads,
-        const std::vector<std::vector<Handle<Quote> > >& volSpreads,
+        const std::vector<std::vector<Handle<Quote>>>& volSpreads,
         const ext::shared_ptr<SwapIndex>& swapIndexBase,
         const ext::shared_ptr<SwapIndex>& shortSwapIndexBase,
         bool vegaWeightedSmileFit,
-        std::vector<std::vector<Handle<Quote> > > parametersGuess,
+        std::vector<std::vector<Handle<Quote>>> parametersGuess,
         std::vector<bool> isParameterFixed,
         bool isAtmCalibrated,
         ext::shared_ptr<EndCriteria> endCriteria = ext::shared_ptr<EndCriteria>(),
@@ -225,10 +225,10 @@ class SwaptionVolCube1x : public SwaptionVolatilityCube {
     Matrix volCubeAtmCalibrated() const;
     void recalibration(Real beta,
                        const Period& swapTenor);
-    void recalibration(const std::vector<Real> &beta,
+    void recalibration(const std::vector<Real>& beta,
                        const Period& swapTenor);
-    void recalibration(const std::vector<Period> &swapLengths,
-                       const std::vector<Real> &beta,
+    void recalibration(const std::vector<Period>& swapLengths,
+                       const std::vector<Real>& beta,
                        const Period& swapTenor);
     void updateAfterRecalibration();
 };
@@ -243,7 +243,7 @@ class SwaptionVolCube2 : public SwaptionVolatilityCube {
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
         const std::vector<Spread>& strikeSpreads,
-        const std::vector<std::vector<Handle<Quote> > >& volSpreads,
+        const std::vector<std::vector<Handle<Quote>>>& volSpreads,
         const ext::shared_ptr<SwapIndex>& swapIndex,
         const ext::shared_ptr<SwapIndex>& shortSwapIndex,
         bool vegaWeightedSmileFit);

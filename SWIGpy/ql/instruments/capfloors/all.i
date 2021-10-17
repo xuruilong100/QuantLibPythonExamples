@@ -15,7 +15,7 @@ using QuantLib::Collar;
 %shared_ptr(Cap)
 class Cap : public CapFloor {
   public:
-    Cap(const std::vector<ext::shared_ptr<CashFlow> >& leg,
+    Cap(const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& capRates);
 };
 
@@ -23,7 +23,7 @@ class Cap : public CapFloor {
 class Floor : public CapFloor {
   public:
     Floor(
-        const std::vector<ext::shared_ptr<CashFlow> >& leg,
+        const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& floorRates);
 };
 
@@ -31,7 +31,7 @@ class Floor : public CapFloor {
 class Collar : public CapFloor {
   public:
     Collar(
-        const std::vector<ext::shared_ptr<CashFlow> >& leg,
+        const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& capRates,
         const std::vector<Rate>& floorRates);
 };

@@ -21,7 +21,7 @@ class AbcdAtmVolCurve : public BlackAtmVolCurve, public LazyObject {
         Natural settlementDays,
         const Calendar& cal,
         const std::vector<Period>& optionTenors,
-        const std::vector<Handle<Quote> >& volsHandles,
+        const std::vector<Handle<Quote>>& volsHandles,
         std::vector<bool> inclusionInInterpolationFlag = std::vector<bool>(1, true),
         BusinessDayConvention bdc = Following,
         const DayCounter& dc = Actual365Fixed());
@@ -98,7 +98,7 @@ class SabrVolSurface : public InterestRateVolSurface {
         Handle<BlackAtmVolCurve>,
         const std::vector<Period>& optionTenors,
         std::vector<Spread> atmRateSpreads,
-        std::vector<std::vector<Handle<Quote> > > volSpreads);
+        std::vector<std::vector<Handle<Quote>>> volSpreads);
 
     const Handle<BlackAtmVolCurve>& atmCurve() const;
     std::vector<Volatility> volatilitySpreads(const Period&) const;

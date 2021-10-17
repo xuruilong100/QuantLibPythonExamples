@@ -32,6 +32,6 @@ class SoftCallability : public Callability {
     Real trigger() const;
 };
 
-%template(CallabilitySchedule) std::vector<ext::shared_ptr<Callability> >;
+%template(CallabilitySchedule) std::vector<ext::shared_ptr<Callability>>;
 
 #endif

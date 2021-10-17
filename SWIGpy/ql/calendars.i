@@ -15,8 +15,8 @@ class Calendar {
   public:
     bool empty() const;
     std::string name();
-    const std::set<Date> & addedHolidays() const;
-    const std::set<Date> & removedHolidays() const;
+    const std::set<Date>& addedHolidays() const;
+    const std::set<Date>& removedHolidays() const;
     bool isBusinessDay(const Date&);
     bool isHoliday(const Date&);
     bool isWeekend(Weekday w);

@@ -56,26 +56,26 @@ class Garch11 : public VolatilityCompositor {
     Real logLikelihood() const;
     Mode mode() const;
 
-    void calibrate(const time_series &quoteSeries, OptimizationMethod &method, const EndCriteria &endCriteria);
-    void calibrate(const time_series &quoteSeries, OptimizationMethod &method, const EndCriteria &endCriteria, const Array &initialGuess);
+    void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria);
+    void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria, const Array& initialGuess);
     Real forecast(Real r, Real sigma2) const;
-    static time_series calculate(const time_series &quoteSeries, Real alpha, Real beta, Real omega);
+    static time_series calculate(const time_series& quoteSeries, Real alpha, Real beta, Real omega);
     %extend {
         void calibrate(const std::vector<Real> x) {
             self->calibrate(x.begin(), x.end());
         }
         void calibrate(
             const std::vector<Real> x,
-            OptimizationMethod &method, EndCriteria endCriteria) {
+            OptimizationMethod& method, EndCriteria endCriteria) {
             self->calibrate(
                 x.begin(), x.end(),
                 method, endCriteria);
         }
         void calibrate(
             const std::vector<Real> x,
-            OptimizationMethod &method,
+            OptimizationMethod& method,
             EndCriteria endCriteria,
-            const Array &initialGuess) {
+            const Array& initialGuess) {
             self->calibrate(
                 x.begin(), x.end(),
                 method, endCriteria,
@@ -83,7 +83,7 @@ class Garch11 : public VolatilityCompositor {
         }
         static Real to_r2 (
             const std::vector<Real> x,
-            std::vector< Volatility > &r2) {
+            std::vector<Volatility>& r2) {
                 return Garch11::to_r2(x.begin(), x.end(), r2);
         }
         static Real costFunction(

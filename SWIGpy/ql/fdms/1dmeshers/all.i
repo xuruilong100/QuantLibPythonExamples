@@ -21,7 +21,7 @@ using QuantLib::FdmBlackScholesMultiStrikeMesher;
 %}
 
 %template(Concentrating1dMesherPoint) ext::tuple<Real, Real, bool>;
-%template(Concentrating1dMesherPointVector) std::vector<ext::tuple<Real, Real, bool> >;
+%template(Concentrating1dMesherPointVector) std::vector<ext::tuple<Real, Real, bool>>;
 
 %shared_ptr(Concentrating1dMesher)
 class Concentrating1dMesher : public Fdm1dMesher {
@@ -33,7 +33,7 @@ class Concentrating1dMesher : public Fdm1dMesher {
 
     Concentrating1dMesher(
         Real start, Real end, Size size,
-        const std::vector<ext::tuple<Real, Real, bool> >& cPoints,
+        const std::vector<ext::tuple<Real, Real, bool>>& cPoints,
         Real tol = 1e-8);
 };
 
@@ -62,7 +62,7 @@ class FdmBlackScholesMesher : public Fdm1dMesher {
         Real eps = 0.0001,
         Real scaleFactor = 1.5,
         const std::pair<Real, Real>& cPoint = (std::pair<Real, Real>(Null<Real>(), Null<Real>())),
-        const std::vector<ext::shared_ptr<Dividend> >& dividendSchedule = std::vector<ext::shared_ptr<Dividend> >(),
+        const std::vector<ext::shared_ptr<Dividend>>& dividendSchedule = std::vector<ext::shared_ptr<Dividend>>(),
         const ext::shared_ptr<FdmQuantoHelper>& fdmQuantoHelper = ext::shared_ptr<FdmQuantoHelper>(),
         Real spotAdjustment = 0.0);
 
@@ -103,7 +103,7 @@ class FdmHestonVarianceMesher : public Fdm1dMesher {
   public:
     FdmHestonVarianceMesher(
         Size size,
-        const ext::shared_ptr<HestonProcess> & process,
+        const ext::shared_ptr<HestonProcess>& process,
         Time maturity,
         Size tAvgSteps = 10,
         Real epsilon = 0.0001,

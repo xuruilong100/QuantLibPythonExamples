@@ -35,7 +35,7 @@ class FdmArithmeticAverageCondition : public FdmStepCondition {
     FdmArithmeticAverageCondition(
         std::vector<Time> averageTimes,
         Real, Size pastFixings,
-        const ext::shared_ptr<FdmMesher> & mesher,
+        const ext::shared_ptr<FdmMesher>& mesher,
         Size equityDirection);
 };
 
@@ -43,7 +43,7 @@ class FdmArithmeticAverageCondition : public FdmStepCondition {
 class FdmBermudanStepCondition : public FdmStepCondition {
   public:
     FdmBermudanStepCondition(
-        const std::vector<Date> & exerciseDates,
+        const std::vector<Date>& exerciseDates,
         const Date& referenceDate,
         const DayCounter& dayCounter,
         ext::shared_ptr<FdmMesher> mesher,
@@ -85,10 +85,10 @@ class FdmSnapshotCondition : public FdmStepCondition {
 %shared_ptr(FdmStepConditionComposite)
 class FdmStepConditionComposite : public FdmStepCondition {
 public:
-    typedef std::list<ext::shared_ptr<FdmStepCondition > > Conditions;
+    typedef std::list<ext::shared_ptr<FdmStepCondition>> Conditions;
 
     FdmStepConditionComposite(
-        const std::list<std::vector<Time> >& stoppingTimes,
+        const std::list<std::vector<Time>>& stoppingTimes,
         Conditions conditions);
 
     const std::vector<Time>& stoppingTimes() const;

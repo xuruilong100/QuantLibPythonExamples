@@ -34,7 +34,7 @@ typedef PiecewiseYieldCurve<SimpleZeroYield, Linear, QuantLib::GlobalBootstrap> 
 //typedef ext::shared_ptr<YieldTermStructure> FittedBondDiscountCurvePtr;
 %}
 
-%shared_ptr(ImpliedTermStructure);
+%shared_ptr(ImpliedTermStructure)
 class ImpliedTermStructure : public YieldTermStructure {
   public:
     ImpliedTermStructure(
@@ -42,7 +42,7 @@ class ImpliedTermStructure : public YieldTermStructure {
         const Date& referenceDate);
 };
 
-%shared_ptr(ZeroSpreadedTermStructure);
+%shared_ptr(ZeroSpreadedTermStructure)
 class ZeroSpreadedTermStructure : public YieldTermStructure {
   public:
     ZeroSpreadedTermStructure(
@@ -53,7 +53,7 @@ class ZeroSpreadedTermStructure : public YieldTermStructure {
         DayCounter dc = DayCounter());
 };
 
-%shared_ptr(ForwardSpreadedTermStructure);
+%shared_ptr(ForwardSpreadedTermStructure)
 class ForwardSpreadedTermStructure : public YieldTermStructure {
   public:
     ForwardSpreadedTermStructure(
@@ -68,7 +68,7 @@ class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure
   public:
     InterpolatedPiecewiseZeroSpreadedTermStructure(
         Handle<YieldTermStructure> curveHandle,
-        std::vector< Handle<Quote> > spreadHandles,
+        std::vector<Handle<Quote>> spreadHandles,
         const std::vector<Date>& dates,
         Compounding comp = QuantLib::Continuous,
         Frequency freq = QuantLib::NoFrequency,
@@ -79,7 +79,7 @@ class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure
 %template(SpreadedLinearZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>;
 %template(SpreadedBackwardFlatZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>;
 
-%shared_ptr(FlatForward);
+%shared_ptr(FlatForward)
 class FlatForward : public YieldTermStructure {
   public:
     FlatForward(
@@ -112,7 +112,7 @@ class FlatForward : public YieldTermStructure {
     Frequency compoundingFrequency() const;
 };
 
-%shared_ptr(UltimateForwardTermStructure);
+%shared_ptr(UltimateForwardTermStructure)
 class UltimateForwardTermStructure : public YieldTermStructure {
   public:
     UltimateForwardTermStructure(
@@ -147,17 +147,17 @@ class CompositeZeroYieldStructure : public YieldTermStructure {
 typedef PiecewiseYieldCurve<Traits, Interpolator> Name;
 %}
 
-%shared_ptr(Name);
+%shared_ptr(Name)
 class Name : public YieldTermStructure {
   public:
     %extend {
         Name(
-            const Date &referenceDate,
+            const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
-            const std::vector< Handle< Quote > > &jumps=std::vector< Handle< Quote > >(),
-            const std::vector< Date > &jumpDates=std::vector< Date >(),
-            const Interpolator &i=Interpolator(),
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps=std::vector<Handle<Quote>>(),
+            const std::vector<Date>& jumpDates=std::vector<Date>(),
+            const Interpolator& i=Interpolator(),
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
                     referenceDate,
@@ -172,10 +172,10 @@ class Name : public YieldTermStructure {
                         b.dontThrow, b.dontThrowSteps));
             }
      	Name(
-            const Date &referenceDate,
+            const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
-            const Interpolator &i,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
                     referenceDate,
@@ -188,9 +188,9 @@ class Name : public YieldTermStructure {
                         b.dontThrow, b.dontThrowSteps));
             }
      	Name(
-            const Date &referenceDate,
+            const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
+            const DayCounter& dayCounter,
             const IterativeBootstrap& b) {
                 return new Name(
                     referenceDate,
@@ -203,12 +203,12 @@ class Name : public YieldTermStructure {
             }
      	Name(
             Natural settlementDays,
-            const Calendar &calendar,
+            const Calendar& calendar,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
-            const std::vector< Handle< Quote > > &jumps=std::vector< Handle< Quote > >(),
-            const std::vector< Date > &jumpDates=std::vector< Date >(),
-            const Interpolator &i=Interpolator(),
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps=std::vector<Handle<Quote>>(),
+            const std::vector<Date>& jumpDates=std::vector<Date>(),
+            const Interpolator& i=Interpolator(),
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
                     settlementDays,
@@ -225,10 +225,10 @@ class Name : public YieldTermStructure {
             }
      	Name(
             Natural settlementDays,
-            const Calendar &calendar,
+            const Calendar& calendar,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
-            const Interpolator &i,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
                     settlementDays,
@@ -243,9 +243,9 @@ class Name : public YieldTermStructure {
             }
      	Name(
             Natural settlementDays,
-            const Calendar &calendar,
+            const Calendar& calendar,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter &dayCounter,
+            const DayCounter& dayCounter,
             const IterativeBootstrap& b) {
                 return new Name(
                     settlementDays,
@@ -346,7 +346,7 @@ class AdditionalDates {
 };
 %}
 
-%shared_ptr(GlobalLinearSimpleZeroCurve);
+%shared_ptr(GlobalLinearSimpleZeroCurve)
 class GlobalLinearSimpleZeroCurve : public YieldTermStructure {
   public:
     %extend {
@@ -394,14 +394,14 @@ class InterpolatedDiscountCurve : public YieldTermStructure {
     const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
     const std::vector<DiscountFactor>& discounts() const;
-    std::vector<std::pair<Date,DiscountFactor> > nodes() const;
+    std::vector<std::pair<Date,DiscountFactor>> nodes() const;
 };
 
 %template(DiscountCurve) InterpolatedDiscountCurve<LogLinear>;
 %template(MonotonicLogCubicDiscountCurve) InterpolatedDiscountCurve<MonotonicLogCubic>;
 %template(NaturalCubicDiscountCurve) InterpolatedDiscountCurve<SplineCubic>;
 
-%shared_ptr(FittedBondDiscountCurve);
+%shared_ptr(FittedBondDiscountCurve)
 class FittedBondDiscountCurve : public YieldTermStructure {
   public:
     FittedBondDiscountCurve(
@@ -441,7 +441,7 @@ class InterpolatedZeroCurve : public YieldTermStructure {
         const std::vector<Rate>& yields,
         const DayCounter& dayCounter,
         const Calendar& calendar = Calendar(),
-        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
         const std::vector<Date>& jumpDates = std::vector<Date>(),
         const Interpolator& interpolator = Interpolator(),
         Compounding compounding = Continuous,
@@ -466,7 +466,7 @@ class InterpolatedZeroCurve : public YieldTermStructure {
     const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
     const std::vector<Rate>& zeroRates() const;
-    std::vector<std::pair<Date,Rate> > nodes() const;
+    std::vector<std::pair<Date,Rate>> nodes() const;
 };
 
 %template(ZeroCurve) InterpolatedZeroCurve<Linear>;
@@ -485,7 +485,7 @@ class InterpolatedForwardCurve : public YieldTermStructure {
         const std::vector<Rate>& forwards,
         const DayCounter& dayCounter,
         const Calendar& cal = Calendar(),
-        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
         const std::vector<Date>& jumpDates = std::vector<Date>(),
         const Interpolator& interpolator = Interpolator());
     InterpolatedForwardCurve(
@@ -504,7 +504,7 @@ class InterpolatedForwardCurve : public YieldTermStructure {
     const std::vector<Real>& data() const;
     const std::vector<Date>& dates() const;
     const std::vector<Rate>& forwards() const;
-    std::vector<std::pair<Date,Rate> > nodes() const;
+    std::vector<std::pair<Date,Rate>> nodes() const;
 };
 
 %template(ForwardCurve) InterpolatedForwardCurve<BackwardFlat>;

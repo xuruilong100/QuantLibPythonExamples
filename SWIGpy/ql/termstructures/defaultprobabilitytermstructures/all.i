@@ -22,7 +22,7 @@ using QuantLib::InterpolatedSurvivalProbabilityCurve;
 using QuantLib::PiecewiseDefaultCurve;
 %}
 
-%shared_ptr(FlatHazardRate);
+%shared_ptr(FlatHazardRate)
 class FlatHazardRate : public DefaultProbabilityTermStructure {
   public:
     FlatHazardRate(
@@ -55,7 +55,7 @@ class InterpolatedHazardRateCurve : public DefaultProbabilityTermStructure {
         const std::vector<Rate>& hazardRates,
         const DayCounter& dayCounter,
         const Calendar& cal = Calendar(),
-        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
         const std::vector<Date>& jumpDates = std::vector<Date>(),
         const Interpolator& interpolator = Interpolator());
     InterpolatedHazardRateCurve(
@@ -88,7 +88,7 @@ class InterpolatedDefaultDensityCurve : public DefaultProbabilityTermStructure {
         const std::vector<Real>& densities,
         const DayCounter& dayCounter,
         const Calendar& calendar = Calendar(),
-        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
         const std::vector<Date>& jumpDates = std::vector<Date>(),
         const Interpolator& interpolator = Interpolator());
     InterpolatedDefaultDensityCurve(
@@ -121,7 +121,7 @@ class InterpolatedSurvivalProbabilityCurve : public DefaultProbabilityTermStruct
         const std::vector<Probability>& probabilities,
         const DayCounter& dayCounter,
         const Calendar& calendar = Calendar(),
-        const std::vector<Handle<Quote> >& jumps = std::vector<Handle<Quote> >(),
+        const std::vector<Handle<Quote>>& jumps = std::vector<Handle<Quote>>(),
         const std::vector<Date>& jumpDates = std::vector<Date>(),
         const Interpolator& interpolator = Interpolator());
     InterpolatedSurvivalProbabilityCurve(
@@ -139,7 +139,7 @@ class InterpolatedSurvivalProbabilityCurve : public DefaultProbabilityTermStruct
     const std::vector<Date>& dates() const;
     const std::vector<Real>& data() const;
     const std::vector<Probability>& survivalProbabilities() const;
-    std::vector<std::pair<Date, Real> > nodes() const;
+    std::vector<std::pair<Date, Real>> nodes() const;
 };
 
 %template(SurvivalProbabilityCurve) InterpolatedSurvivalProbabilityCurve<Linear>;
@@ -149,7 +149,7 @@ class InterpolatedSurvivalProbabilityCurve : public DefaultProbabilityTermStruct
 typedef PiecewiseDefaultCurve<Traits, Interpolator> Name;
 %}
 
-%shared_ptr(Name);
+%shared_ptr(Name)
 class Name : public DefaultProbabilityTermStructure {
   public:
     %extend {

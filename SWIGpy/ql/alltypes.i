@@ -1106,13 +1106,20 @@ using QuantLib::sabrFlochKennedyVolatility;
 using QuantLib::sabrVolatility;
 using QuantLib::shiftedSabrVolatility;
 using QuantLib::transpose;
+using QuantLib::ExtendedAdditiveEQPBinomialTree;
+using QuantLib::ExtendedCoxRossRubinstein;
+using QuantLib::ExtendedJarrowRudd;
+using QuantLib::ExtendedJoshi4;
+using QuantLib::ExtendedLeisenReimer;
+using QuantLib::ExtendedTian;
+using QuantLib::ExtendedTrigeorgis;
+using QuantLib::ForwardPerformanceVanillaEngine;
 %}
 
 %{
 typedef QuantLib::Bond::Price BondPrice;
 typedef QuantLib::BoundaryCondition<FdmLinearOp> FdmBoundaryCondition;
 typedef QuantLib::FittedBondDiscountCurve::FittingMethod FittingMethod;
-typedef QuantLib::ForwardVanillaEngine<AnalyticEuropeanEngine> ForwardEuropeanEngine;
 typedef QuantLib::LowDiscrepancy::rsg_type GaussianLowDiscrepancySequenceGenerator;
 typedef QuantLib::LowDiscrepancy::ursg_type UniformLowDiscrepancySequenceGenerator;
 typedef QuantLib::Matrix::row_iterator MatrixRow;

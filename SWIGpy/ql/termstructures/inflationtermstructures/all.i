@@ -17,12 +17,12 @@ using QuantLib::InterpolatedZeroInflationCurve;
 using QuantLib::InterpolatedYoYInflationCurve;
 %}
 
-%shared_ptr(YoYInflationTermStructure);
+%shared_ptr(YoYInflationTermStructure)
 class YoYInflationTermStructure : public InflationTermStructure {
   private:
     YoYInflationTermStructure();
   public:
-    Rate yoyRate(const Date &d, const Period& instObsLag = Period(-1,Days),
+    Rate yoyRate(const Date& d, const Period& instObsLag = Period(-1,Days),
                  bool forceLinearInterpolation = false,
                  bool extrapolate = false) const;
     Rate yoyRate(Time t,
@@ -32,12 +32,12 @@ class YoYInflationTermStructure : public InflationTermStructure {
 %template(YoYInflationTermStructureHandle) Handle<YoYInflationTermStructure>;
 %template(RelinkableYoYInflationTermStructureHandle) RelinkableHandle<YoYInflationTermStructure>;
 
-%shared_ptr(ZeroInflationTermStructure);
+%shared_ptr(ZeroInflationTermStructure)
 class ZeroInflationTermStructure : public InflationTermStructure {
   private:
     ZeroInflationTermStructure();
   public:
-    Rate zeroRate(const Date &d, const Period& instObsLag = Period(-1,Days),
+    Rate zeroRate(const Date& d, const Period& instObsLag = Period(-1,Days),
                   bool forceLinearInterpolation = false,
                   bool extrapolate = false) const;
     Rate zeroRate(Time t,
@@ -52,8 +52,8 @@ class YoYCapFloorTermPriceSurface : public InflationTermStructure {
   private:
     YoYCapFloorTermPriceSurface();
   public:
-    std::pair<std::vector<Time>, std::vector<Rate> > atmYoYSwapTimeRates() const;
-    std::pair<std::vector<Date>, std::vector<Rate> > atmYoYSwapDateRates() const;
+    std::pair<std::vector<Time>, std::vector<Rate>> atmYoYSwapTimeRates() const;
+    std::pair<std::vector<Date>, std::vector<Rate>> atmYoYSwapDateRates() const;
     ext::shared_ptr<YoYInflationTermStructure> YoYTS() const;
     ext::shared_ptr<YoYInflationIndex> yoyIndex();
     BusinessDayConvention businessDayConvention() const;
@@ -62,20 +62,20 @@ class YoYCapFloorTermPriceSurface : public InflationTermStructure {
     Real capPrice(const Date& d, Rate k);
     Real floorPrice(const Date& d, Rate k);
     Rate atmYoYSwapRate(
-        const Date &d, bool extrapolate = true);
+        const Date& d, bool extrapolate = true);
     Rate atmYoYRate(
-        const Date &d,
-        const Period &obsLag = Period(-1,Days),
+        const Date& d,
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = true);
     Real price(const Period& d, Rate k) const;
     Real capPrice(const Period& d, Rate k) const;
     Real floorPrice(const Period& d, Rate k) const;
     Rate atmYoYSwapRate(
-        const Period &d,
+        const Period& d,
         bool extrapolate = true) const;
     Rate atmYoYRate(
-        const Period &d,
-        const Period &obsLag = Period(-1,Days),
+        const Period& d,
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = true) const;
     std::vector<Rate> strikes();
     std::vector<Rate> capStrikes();
@@ -94,7 +94,7 @@ class YoYCapFloorTermPriceSurface : public InflationTermStructure {
 typedef InterpolatedYoYCapFloorTermPriceSurface<Interpolator2D, Interpolator1D> Name;
 %}
 
-%shared_ptr(Name);
+%shared_ptr(Name)
 class Name : public YoYCapFloorTermPriceSurface {
   public:
     %extend {
@@ -165,7 +165,7 @@ class PiecewiseYoYInflationCurve : public YoYInflationTermStructure {
         Frequency frequency,
         bool indexIsInterpolated,
         Rate baseYoYRate,
-        const std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure> > >& instruments,
+        const std::vector<ext::shared_ptr<BootstrapHelper<YoYInflationTermStructure>>>& instruments,
         Real accuracy = 1.0e-12,
         const Interpolator& i = Interpolator());
     const std::vector<Time>& times() const;

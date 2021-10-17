@@ -225,7 +225,7 @@ def sabrData():
     for i in [alpha, beta, nu, rho, forward, maturity]:
         parameter.push_back(i)
 
-    return (data, parameter)
+    return data, parameter
 
 
 class AndreasenHugeVolatilityInterplTest(unittest.TestCase):

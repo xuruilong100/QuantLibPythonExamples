@@ -55,7 +55,7 @@ def getFixedLocalVolFromHeston(hestonModel,
     for i in range(1, len(timeGrid)):
         expiries[i - 1] = timeGrid[i]
 
-    surface = SafeFixedLocalVolSurface(
+    surface = FixedLocalVolSurface(
         todaysDate, expiries,
         strikes, localVolMatrix, dc)
     return surface
@@ -155,7 +155,7 @@ def createSmoothImpliedVol(dc, cal):
         BlackVarianceSurface.ConstantExtrapolation)
     volTS.setInterpolationBicubic()
 
-    return (surfaceStrikes, dates, volTS)
+    return surfaceStrikes, dates, volTS
 
 
 class FokkerPlanckFwdTestCase(object):
@@ -308,15 +308,15 @@ def fokkerPlanckPrice2D(p, mesher):
     y.reserve(layout.dim()[1])
 
     endIter = layout.end()
-    iter = layout.begin()
+    ly = layout.begin()
 
-    while iter.notEqual(endIter):
-        if iter.coordinates()[1] == 0:
-            x.push_back(mesher.location(iter, 0))
-        if iter.coordinates()[0] == 0:
-            y.push_back(mesher.location(iter, 1))
+    while ly.notEqual(endIter):
+        if ly.coordinates()[1] == 0:
+            x.push_back(mesher.location(ly, 0))
+        if ly.coordinates()[0] == 0:
+            y.push_back(mesher.location(ly, 1))
 
-        iter.increment()
+        ly.increment()
 
     simpson = DiscreteSimpsonIntegral()
     integral = SafeFdmMesherIntegral(mesher, simpson)
@@ -479,16 +479,16 @@ class HestonSLVModelTest(unittest.TestCase):
 
                 pd = Array(len(p))
 
-                iter = layout.begin()
-                while iter.notEqual(layout.end()):
-                    idx = iter.index()
-                    s = exp(mesher.location(iter, 0))
+                ly = layout.begin()
+                while ly.notEqual(layout.end()):
+                    idx = ly.index()
+                    s = exp(mesher.location(ly, 0))
 
                     pd[idx] = payoff(s) * p[idx]
                     if transformationType == FdmSquareRootFwdOp.Power:
-                        v = mesher.location(iter, 1)
+                        v = mesher.location(ly, 1)
                         pd[idx] *= pow(v, -alpha)
-                    iter.increment()
+                    ly.increment()
 
                 calculated = fokkerPlanckPrice2D(pd, mesher) * rTS.discount(nextMaturityDate)
 
@@ -900,7 +900,7 @@ class HestonSLVModelTest(unittest.TestCase):
             s = DiscreteSimpsonIntegral()
             il = SafeFdmMesherIntegral(
                 mesher, s)
-            il.thisown = False
+
             calculated = il.integrate(p)
 
             tol = 0.005
@@ -965,9 +965,9 @@ class HestonSLVModelTest(unittest.TestCase):
 
             self.assertFalse(abs(expected - calculated) > tol)
 
+    @unittest.skipIf(skipSlowTest, "testHestonFokkerPlanckFwdEquation is VERY SLOW")
     def testHestonFokkerPlanckFwdEquation(self):
         TEST_MESSAGE(
-            "VERY SLOW",
             "Testing Fokker-Planck forward equation for the Heston process...")
 
         testCases = [
@@ -1094,11 +1094,11 @@ class HestonSLVModelTest(unittest.TestCase):
         rndCalculator = SquareRootProcessRNDCalculator(
             v0, kappa, theta, sigma)
         layout = mesher.layout()
-        iter = layout.begin()
-        while iter.notEqual(layout.end()):
-            x = mesher.location(iter, 0)
-            if v != mesher.location(iter, 1):
-                v = mesher.location(iter, 1)
+        ly = layout.begin()
+        while ly.notEqual(layout.end()):
+            x = mesher.location(ly, 0)
+            if v != mesher.location(ly, 1):
+                v = mesher.location(ly, 1)
                 #  the extreme tail probabilities of the non central
                 #  chi square distribution lead to numerical exceptions
                 #  on some platforms
@@ -1108,8 +1108,8 @@ class HestonSLVModelTest(unittest.TestCase):
                     p_v = 0.0
 
             p_x = 1.0 / (sqrt(M_TWOPI * bsV0 * eT)) * exp(-0.5 * (x - x0) ** 2 / (bsV0 * eT))
-            p[iter.index()] = p_v * p_x
-            iter.increment()
+            p[ly.index()] = p_v * p_x
+            ly.increment()
 
         dt = (maturity - eT) / tGrid
 
@@ -1127,7 +1127,7 @@ class HestonSLVModelTest(unittest.TestCase):
         m = createLocalVolMatrixFromProcess(
             lvProcess, denseStrikes, dates, times)
 
-        leverage = SafeFixedLocalVolSurface(
+        leverage = FixedLocalVolSurface(
             todaysDate, dates, denseStrikes, m, dc)
 
         lvEngine = AnalyticEuropeanEngine(lvProcess)
@@ -1159,13 +1159,13 @@ class HestonSLVModelTest(unittest.TestCase):
                 Option.Put, strike, 1.0)
 
             pd = Array(len(p))
-            iter = layout.begin()
-            while iter.notEqual(layout.end()):
-                idx = iter.index()
-                s = exp(mesher.location(iter, 0))
+            ly = layout.begin()
+            while ly.notEqual(layout.end()):
+                idx = ly.index()
+                s = exp(mesher.location(ly, 0))
 
                 pd[idx] = payoff(s) * p[idx]
-                iter.increment()
+                ly.increment()
 
             calculated = fokkerPlanckPrice2D(pd, mesher) * rTS.discount(maturityDate)
 
@@ -1288,9 +1288,9 @@ class HestonSLVModelTest(unittest.TestCase):
                 self.assertFalse(abs(expected - calcConcentrated) > tol)
                 self.assertFalse(abs(expected - calcShifted) > tol)
 
+    @unittest.skipIf(skipSlowTest, "testFDMCalibration is VERY SLOW")
     def testFDMCalibration(self):
         TEST_MESSAGE(
-            "VERY SLOW",
             "Testing stochastic local volatility calibration case ")
 
         backup = SavedSettings()
@@ -1494,9 +1494,9 @@ class HestonSLVModelTest(unittest.TestCase):
                 self.assertFalse(abs(analyticNPV - hestonNPV) > tol)
                 self.assertFalse(abs(analyticNPV - localVolNPV) > tol)
 
+    @unittest.skipIf(skipSlowTest, "testBarrierPricingMixedModels is VERY SLOW")
     def testBarrierPricingMixedModels(self):
         TEST_MESSAGE(
-            "VERY SLOW",
             "Testing Barrier pricing with mixed models...")
 
         backup = SavedSettings()
@@ -1709,241 +1709,238 @@ class HestonSLVModelTest(unittest.TestCase):
             "SKIP",
             "Testing double no touch pricing with SLV and mixing...")
 
-    #
-    #     backup = SavedSettings()
-    #
-    #     # /*
-    #     #  A more detailed description of this test case can found on
-    #     #  https://hpcquantlib.wordpress.com/2016/01/10/monte-carlo-calibration-of-the-heston-stochastic-local-volatiltiy-model/
-    #     #
-    #     #  The comparison of Black-Scholes and SLV prices is derived
-    #     #  from figure 8.8 in Iain J. Clark's book,
-    #     #  Foreign Exchange Option Pricing: A Practitioner’s Guide
-    #     # */
-    #     dc = ActualActual(ActualActual.ISDA)
-    #     todaysDate = Date(5, January, 2016)
-    #     maturityDate = todaysDate + Period(1, Years)
-    #     Settings.instance().evaluationDate = todaysDate
-    #
-    #     s0 = 100
-    #     spot = QuoteHandle(SimpleQuote(s0))
-    #     r = 0.02
-    #     q = 0.01
-    #
-    #     #  parameter of the "calibrated" Heston model
-    #     kappa = 1.0
-    #     theta = 0.06
-    #     rho = -0.8
-    #     sigma = 0.8
-    #     v0 = 0.09
-    #
-    #     rTs = YieldTermStructureHandle(flatRate(r, dc))
-    #     qTs = YieldTermStructureHandle(flatRate(q, dc))
-    #
-    #     hestonModel = HestonModel(
-    #         HestonProcess(
-    #             rTs, qTs, spot, v0, kappa, theta, sigma, rho))
-    #
-    #     europeanExercise = EuropeanExercise(maturityDate)
-    #
-    #     vanillaOption = VanillaOption(
-    #         PlainVanillaPayoff(Option.Call, s0),
-    #         europeanExercise)
-    #
-    #     vanillaOption.setPricingEngine(
-    #         AnalyticHestonEngine(hestonModel))
-    #
-    #     implVol = vanillaOption.impliedVolatility(
-    #         vanillaOption.NPV(),
-    #         GeneralizedBlackScholesProcess(
-    #             spot, qTs, rTs,
-    #             BlackVolTermStructureHandle(
-    #                 flatVol(sqrt(theta), dc))))
-    #
-    #     analyticEngine = AnalyticDoubleBarrierBinaryEngine(
-    #         GeneralizedBlackScholesProcess(
-    #             spot, qTs, rTs,
-    #             BlackVolTermStructureHandle(
-    #                 flatVol(implVol, dc))))
-    #
-    #     expiries = DoubleVector()
-    #     timeStepPeriod = Period(1, Weeks)
-    #     expiry = todaysDate + timeStepPeriod
-    #     while expiry <= maturityDate:
-    #         expiries.push_back(
-    #             dc.yearFraction(todaysDate, expiry))
-    #         expiry = expiry + timeStepPeriod
-    #
-    #     timeGrid = TimeGrid(expiries)
-    #
-    #     #  first build the True local vol surface from another Heston model
-    #     sf = getFixedLocalVolFromHeston(hestonModel, timeGrid)
-    #
-    #     localVol = LocalVolTermStructureHandle(sf)
-    #
-    #     sobolGeneratorFactory = SobolBrownianGeneratorFactory(
-    #         SobolBrownianGenerator.Diagonal, 1234,
-    #         SobolRsg.JoeKuoD7)
-    #
-    #     xGrid = 100
-    #     nSim = 20000
-    #
-    #     eta = 0.90
-    #     hp = HestonProcess(
-    #         rTs, qTs, spot, v0, kappa,
-    #         theta, eta * sigma, rho)
-    #     mod = HestonModel(hp)
-    #
-    #     modHestonModel = HestonModelHandle(mod)
-    #
-    #     leverageFct = HestonSLVMCModel(
-    #         localVol, modHestonModel,
-    #         sobolGeneratorFactory,
-    #         maturityDate, 182,
-    #         xGrid, nSim).leverageFunction()
-    #
-    #     h = FdmSchemeDesc.Hundsdorfer()
-    #
-    #     fdEngine = FdHestonDoubleBarrierEngine(
-    #         modHestonModel.currentLink(),
-    #         51, 101, 31, 0,
-    #         h, leverageFct)
-    #
-    #     expected = [
-    #         0.0334, 0.1141, 0.1319, 0.0957, 0.0464, 0.0058, -0.0192,
-    #         -0.0293, -0.0297, -0.0251, -0.0192, -0.0134, -0.0084, -0.0045,
-    #         -0.0015, 0.0005, 0.0017, 0.0020]
-    #     tol = 1e-2
-    #
-    #     for i in range(18):
-    #         dist = 10.0 + 5.0 * i
-    #
-    #         barrier_lo = max(s0 - dist, 1e-2)
-    #         barrier_hi = s0 + dist
-    #         doubleBarrier = DoubleBarrierOption(
-    #             DoubleBarrier.KnockOut,
-    #             barrier_lo, barrier_hi, 0.0,
-    #             CashOrNothingPayoff(
-    #                 Option.Call, 0.0, 1.0),
-    #             europeanExercise)
-    #
-    #         doubleBarrier.setPricingEngine(analyticEngine)
-    #         bsNPV = doubleBarrier.NPV()
-    #
-    #         doubleBarrier.setPricingEngine(fdEngine)
-    #         slvNPV = doubleBarrier.NPV()
-    #
-    #         diff = slvNPV - bsNPV
-    #         self.assertFalse(abs(diff - expected[i]) > tol)
+        # backup = SavedSettings()
+        #
+        # #  A more detailed description of this test case can found on
+        # #  https://hpcquantlib.wordpress.com/2016/01/10/monte-carlo-calibration-of-the-heston-stochastic-local-volatiltiy-model/
+        # #
+        # #  The comparison of Black-Scholes and SLV prices is derived
+        # #  from figure 8.8 in Iain J. Clark's book,
+        # #  Foreign Exchange Option Pricing: A Practitioner’s Guide
+        #
+        # dc = ActualActual(ActualActual.ISDA)
+        # todaysDate = Date(5, January, 2016)
+        # maturityDate = todaysDate + Period(1, Years)
+        # Settings.instance().evaluationDate = todaysDate
+        #
+        # s0 = 100
+        # spot = QuoteHandle(SimpleQuote(s0))
+        # r = 0.02
+        # q = 0.01
+        #
+        # #  parameter of the "calibrated" Heston model
+        # kappa = 1.0
+        # theta = 0.06
+        # rho = -0.8
+        # sigma = 0.8
+        # v0 = 0.09
+        #
+        # rTs = YieldTermStructureHandle(flatRate(r, dc))
+        # qTs = YieldTermStructureHandle(flatRate(q, dc))
+        #
+        # hestonModel = HestonModel(
+        #     HestonProcess(
+        #         rTs, qTs, spot, v0, kappa, theta, sigma, rho))
+        #
+        # europeanExercise = EuropeanExercise(maturityDate)
+        #
+        # vanillaOption = VanillaOption(
+        #     PlainVanillaPayoff(Option.Call, s0),
+        #     europeanExercise)
+        #
+        # vanillaOption.setPricingEngine(
+        #     AnalyticHestonEngine(hestonModel))
+        #
+        # implVol = vanillaOption.impliedVolatility(
+        #     vanillaOption.NPV(),
+        #     GeneralizedBlackScholesProcess(
+        #         spot, qTs, rTs,
+        #         BlackVolTermStructureHandle(
+        #             flatVol(sqrt(theta), dc))))
+        #
+        # analyticEngine = AnalyticDoubleBarrierBinaryEngine(
+        #     GeneralizedBlackScholesProcess(
+        #         spot, qTs, rTs,
+        #         BlackVolTermStructureHandle(
+        #             flatVol(implVol, dc))))
+        #
+        # expiries = DoubleVector()
+        # timeStepPeriod = Period(1, Weeks)
+        # expiry = todaysDate + timeStepPeriod
+        # while expiry <= maturityDate:
+        #     expiries.push_back(
+        #         dc.yearFraction(todaysDate, expiry))
+        #     expiry = expiry + timeStepPeriod
+        #
+        # timeGrid = TimeGrid(expiries)
+        #
+        # #  first build the True local vol surface from another Heston model
+        # sf = getFixedLocalVolFromHeston(hestonModel, timeGrid)
+        #
+        # localVol = LocalVolTermStructureHandle(sf)
+        #
+        # sobolGeneratorFactory = SobolBrownianGeneratorFactory(
+        #     SobolBrownianGenerator.Diagonal, 1234,
+        #     SobolRsg.JoeKuoD7)
+        #
+        # xGrid = 100
+        # nSim = 20000
+        #
+        # eta = 0.90
+        # hp = HestonProcess(
+        #     rTs, qTs, spot, v0, kappa,
+        #     theta, eta * sigma, rho)
+        # mod = HestonModel(hp)
+        #
+        # modHestonModel = HestonModelHandle(mod)
+        #
+        # leverageFct = HestonSLVMCModel(
+        #     localVol, modHestonModel,
+        #     sobolGeneratorFactory,
+        #     maturityDate, 182,
+        #     xGrid, nSim).leverageFunction()
+        #
+        # h = FdmSchemeDesc.Hundsdorfer()
+        #
+        # fdEngine = FdHestonDoubleBarrierEngine(
+        #     modHestonModel.currentLink(),
+        #     51, 101, 31, 0,
+        #     h, leverageFct)
+        #
+        # expected = [
+        #     0.0334, 0.1141, 0.1319, 0.0957, 0.0464, 0.0058, -0.0192,
+        #     -0.0293, -0.0297, -0.0251, -0.0192, -0.0134, -0.0084, -0.0045,
+        #     -0.0015, 0.0005, 0.0017, 0.0020]
+        # tol = 1e-2
+        #
+        # for i in range(18):
+        #     dist = 10.0 + 5.0 * i
+        #
+        #     barrier_lo = max(s0 - dist, 1e-2)
+        #     barrier_hi = s0 + dist
+        #     doubleBarrier = DoubleBarrierOption(
+        #         DoubleBarrier.KnockOut,
+        #         barrier_lo, barrier_hi, 0.0,
+        #         CashOrNothingPayoff(
+        #             Option.Call, 0.0, 1.0),
+        #         europeanExercise)
+        #
+        #     doubleBarrier.setPricingEngine(analyticEngine)
+        #     bsNPV = doubleBarrier.NPV()
+        #
+        #     doubleBarrier.setPricingEngine(fdEngine)
+        #     slvNPV = doubleBarrier.NPV()
+        #
+        #     diff = slvNPV - bsNPV
+        #     self.assertFalse(abs(diff - expected[i]) > tol)
 
     def testForwardSkewSLV(self):
         TEST_MESSAGE(
             "SKIP",
             "Testing the implied volatility skew of forward starting options in SLV model...")
 
-    def testDiffusionAndDriftSlvProcess(self):
+    def testADiffusionAndDriftSlvProcess(self):
         TEST_MESSAGE(
             "SKIP",
             "Testing diffusion and drift of the SLV process...")
 
-    #
-    #     backup = SavedSettings()
-    #
-    #     todaysDate = Date(6, June, 2020)
-    #     Settings.instance().evaluationDate = todaysDate
-    #
-    #     dc = Actual365Fixed()
-    #     maturityDate = todaysDate + Period(6, Months)
-    #     maturity = dc.yearFraction(todaysDate, maturityDate)
-    #
-    #     s0 = 100
-    #     spot = QuoteHandle(SimpleQuote(s0))
-    #     r = -0.005
-    #     q = 0.04
-    #
-    #     rTs = YieldTermStructureHandle(flatRate(todaysDate, r, dc))
-    #     qTs = YieldTermStructureHandle(flatRate(todaysDate, q, dc))
-    #     hp = HestonProcess(
-    #         rTs, qTs, spot, 0.1, 1.0, 0.13, 0.8, 0.4)
-    #     hm = HestonModel(hp)
-    #     tg = TimeGrid(maturity, 20)
-    #
-    #     localVol = getFixedLocalVolFromHeston(hm, tg)
-    #
-    #     kappa = 2.5
-    #     theta = 1.0
-    #     rho = -0.75
-    #     sigma = 2.4
-    #     v0 = 1.0
-    #
-    #     hestonProcess = HestonProcess(
-    #         rTs, qTs, spot, v0, kappa, theta, sigma, rho)
-    #
-    #     hestonModel = HestonModelHandle(
-    #         HestonModel(hestonProcess))
-    #
-    #     slvProcess = HestonSLVProcess(
-    #         hestonProcess, localVol)
-    #
-    #     option = VanillaOption(
-    #         PlainVanillaPayoff(Option.Call, s0),
-    #         EuropeanExercise(maturityDate))
-    #     engine = FdHestonVanillaEngine(
-    #         hestonModel.currentLink(),
-    #         26, 201, 101, 0,
-    #         FdmSchemeDesc.ModifiedCraigSneyd(),
-    #         localVol)
-    #     engine.thisown = False
-    #     option.setPricingEngine(engine)
-    #
-    #     expected = option.NPV()
-    #
-    #     nSims = 16733
-    #     nTimeSteps = 40
-    #     df = rTs.discount(maturity)
-    #
-    #     rsg = SobolBrownianBridgeRsg(
-    #         2, nTimeSteps,
-    #         SobolBrownianGenerator.Diagonal,
-    #         12345,
-    #         SobolRsg.JoeKuoD7)
-    #
-    #     x = Array(2)
-    #     xt = Array(2)
-    #     dw = Array(2)
-    #     stats = GeneralStatistics()
-    #
-    #     dt = maturity / nTimeSteps
-    #     sqrtDt = sqrt(dt)
-    #
-    #     for i in range(nSims):
-    #         t = 0.0
-    #         x[0] = s0
-    #         x[1] = v0
-    #
-    #         n = rsg.nextSequence().value()
-    #
-    #         for j in range(nTimeSteps):
-    #             dw[0] = n[j]
-    #             dw[1] = n[j + nTimeSteps]
-    #
-    #             #  full truncation scheme
-    #             xt[0] = x[0]
-    #             xt[1] = x[1] if x[1] > 0 else 0.0
-    #
-    #             x = slvProcess.apply(
-    #                 x,
-    #                 slvProcess.diffusion(t, xt) * sqrtDt * dw + slvProcess.drift(t, xt) * dt)
-    #             t += dt
-    #
-    #         stats.add(df * option.payoff()(x[0]))
-    #
-    #     calculated = stats.mean()
-    #     errorEstimate = stats.errorEstimate()
-    #
-    #     diff = abs(expected - calculated)
-    #
-    #     self.assertFalse(diff > 2.35 * errorEstimate)
+        # backup = SavedSettings()
+        #
+        # todaysDate = Date(6, June, 2020)
+        # Settings.instance().evaluationDate = todaysDate
+        #
+        # dc = Actual365Fixed()
+        # maturityDate = todaysDate + Period(6, Months)
+        # maturity = dc.yearFraction(todaysDate, maturityDate)
+        #
+        # s0 = 100
+        # spot = QuoteHandle(SimpleQuote(s0))
+        # r = -0.005
+        # q = 0.04
+        #
+        # rTS = YieldTermStructureHandle(flatRate(todaysDate, r, dc))
+        # qTS = YieldTermStructureHandle(flatRate(todaysDate, q, dc))
+        # hp = HestonProcess(
+        #     rTS, qTS, spot, 0.1, 1.0, 0.13, 0.8, 0.4)
+        # hm = HestonModel(hp)
+        # tg = TimeGrid(maturity, 20)
+        #
+        # localVol = getFixedLocalVolFromHeston(hm, tg)
+        #
+        # kappa = 2.5
+        # theta = 1.0
+        # rho = -0.75
+        # sigma = 2.4
+        # v0 = 1.0
+        #
+        # hestonProcess = HestonProcess(
+        #     rTS, qTS, spot, v0, kappa, theta, sigma, rho)
+        #
+        # hestonModel = HestonModelHandle(
+        #     HestonModel(hestonProcess))
+        #
+        # slvProcess = HestonSLVProcess(
+        #     hestonProcess, localVol)
+        #
+        # option = VanillaOption(
+        #     PlainVanillaPayoff(Option.Call, s0),
+        #     EuropeanExercise(maturityDate))
+        # engine = FdHestonVanillaEngine(
+        #     hestonModel.currentLink(),
+        #     26, 201, 101, 0,
+        #     FdmSchemeDesc.ModifiedCraigSneyd(),
+        #     localVol)
+        #
+        # option.setPricingEngine(engine)
+        #
+        # expected = option.NPV()
+        #
+        # nSims = 16733
+        # nTimeSteps = 40
+        # df = rTS.discount(maturity)
+        #
+        # rsg = SobolBrownianBridgeRsg(
+        #     2, nTimeSteps,
+        #     SobolBrownianGenerator.Diagonal,
+        #     12345,
+        #     SobolRsg.JoeKuoD7)
+        #
+        # x = Array(2)
+        # xt = Array(2)
+        # dw = Array(2)
+        # stats = GeneralStatistics()
+        #
+        # dt = maturity / nTimeSteps
+        # sqrtDt = sqrt(dt)
+        #
+        # for i in range(nSims):
+        #     t = 0.0
+        #     x[0] = s0
+        #     x[1] = v0
+        #
+        #     n = rsg.nextSequence().value()
+        #
+        #     for j in range(nTimeSteps):
+        #         dw[0] = n[j]
+        #         dw[1] = n[j + nTimeSteps]
+        #
+        #         #  full truncation scheme
+        #         xt[0] = x[0]
+        #         xt[1] = x[1] if x[1] > 0 else 0.0
+        #
+        #         x = slvProcess.apply(
+        #             x,
+        #             slvProcess.diffusion(t, xt) * sqrtDt * dw + slvProcess.drift(t, xt) * dt)
+        #         t += dt
+        #
+        #     stats.add(df * option.payoff()(x[0]))
+        #
+        # calculated = stats.mean()
+        # errorEstimate = stats.errorEstimate()
+        #
+        # diff = abs(expected - calculated)
+        #
+        # self.assertFalse(diff > 2.35 * errorEstimate)
 
     def testMonteCarloVsFdmPricing(self):
         TEST_MESSAGE(

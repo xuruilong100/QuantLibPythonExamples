@@ -20,7 +20,7 @@ class StepCondition {
 };
 
 %template(FdmStepCondition) StepCondition<Array>;
-%template(FdmStepConditionVector) std::vector<ext::shared_ptr<StepCondition<Array> > > ;
+%template(FdmStepConditionVector) std::vector<ext::shared_ptr<StepCondition<Array>>> ;
 
 typedef StepCondition<Array> FdmStepCondition;
 

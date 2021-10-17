@@ -81,7 +81,7 @@ class CmsMarketCalibration {
     static Real reversionTransformDirect(Real y);
 };
 
-%shared_ptr(StrippedOptionletBase);
+%shared_ptr(StrippedOptionletBase)
 class StrippedOptionletBase : public LazyObject {
   private:
     StrippedOptionletBase();
@@ -100,7 +100,7 @@ class StrippedOptionletBase : public LazyObject {
     Real displacement() const;
 };
 
-%shared_ptr(OptionletStripper);
+%shared_ptr(OptionletStripper)
 class OptionletStripper : public StrippedOptionletBase {
   private:
     OptionletStripper();
@@ -112,7 +112,7 @@ class OptionletStripper : public StrippedOptionletBase {
     ext::shared_ptr<IborIndex> iborIndex() const;
 };
 
-%shared_ptr(StrippedOptionlet);
+%shared_ptr(StrippedOptionlet)
 class StrippedOptionlet : public StrippedOptionletBase {
   public:
     StrippedOptionlet(Natural settlementDays,

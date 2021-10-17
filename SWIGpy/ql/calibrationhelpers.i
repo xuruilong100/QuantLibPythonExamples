@@ -68,8 +68,8 @@ class BlackCalibrationHelper : public CalibrationHelper {
     }
 %}
 
-%template(CalibrationHelperVector) std::vector<ext::shared_ptr<CalibrationHelper> >;
-%template(BlackCalibrationHelperVector) std::vector<ext::shared_ptr<BlackCalibrationHelper> >;
+%template(CalibrationHelperVector) std::vector<ext::shared_ptr<CalibrationHelper>>;
+%template(BlackCalibrationHelperVector) std::vector<ext::shared_ptr<BlackCalibrationHelper>>;
 
 %shared_ptr(CapHelper)
 class CapHelper : public BlackCalibrationHelper {

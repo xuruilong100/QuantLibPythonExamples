@@ -10,7 +10,7 @@
 using QuantLib::LocalVolTermStructure;
 %}
 
-%shared_ptr(LocalVolTermStructure);
+%shared_ptr(LocalVolTermStructure)
 class LocalVolTermStructure : public VolatilityTermStructure {
   private:
     LocalVolTermStructure();

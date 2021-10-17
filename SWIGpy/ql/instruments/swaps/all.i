@@ -243,12 +243,12 @@ class FloatFloatSwap : public Swap {
         const boost::optional<BusinessDayConvention>& paymentConvention2 = boost::none);
 
     Swap::Type type() const;
-    const std::vector<Real> &nominal1() const;
-    const std::vector<Real> &nominal2() const;
-    const Schedule &schedule1() const;
-    const Schedule &schedule2() const;
-    const ext::shared_ptr<InterestRateIndex> &index1() const;
-    const ext::shared_ptr<InterestRateIndex> &index2() const;
+    const std::vector<Real>& nominal1() const;
+    const std::vector<Real>& nominal2() const;
+    const Schedule& schedule1() const;
+    const Schedule& schedule2() const;
+    const ext::shared_ptr<InterestRateIndex>& index1() const;
+    const ext::shared_ptr<InterestRateIndex>& index2() const;
     std::vector<Real> spread1() const;
     std::vector<Real> spread2() const;
     std::vector<Real> gearing1() const;
@@ -257,12 +257,12 @@ class FloatFloatSwap : public Swap {
     std::vector<Rate> flooredRate1() const;
     std::vector<Rate> cappedRate2() const;
     std::vector<Rate> flooredRate2() const;
-    const DayCounter &dayCount1() const;
-    const DayCounter &dayCount2() const;
+    const DayCounter& dayCount1() const;
+    const DayCounter& dayCount2() const;
     BusinessDayConvention paymentConvention1() const;
     BusinessDayConvention paymentConvention2() const;
-    const Leg &leg1() const;
-    const Leg &leg2() const;
+    const Leg& leg1() const;
+    const Leg& leg2() const;
 };
 
 %shared_ptr(IrregularSwap)
@@ -409,21 +409,21 @@ class NonstandardSwap : public Swap {
         boost::optional<BusinessDayConvention> paymentConvention = boost::none);
      // Inspectors
     VanillaSwap::Type type() const;
-    const std::vector<Real> &fixedNominal() const;
-    const std::vector<Real> &floatingNominal() const;
-    const Schedule &fixedSchedule() const;
-    const std::vector<Real> &fixedRate() const;
-    const DayCounter &fixedDayCount() const;
-    const Schedule &floatingSchedule() const;
-    const ext::shared_ptr<IborIndex> &iborIndex() const;
+    const std::vector<Real>& fixedNominal() const;
+    const std::vector<Real>& floatingNominal() const;
+    const Schedule& fixedSchedule() const;
+    const std::vector<Real>& fixedRate() const;
+    const DayCounter& fixedDayCount() const;
+    const Schedule& floatingSchedule() const;
+    const ext::shared_ptr<IborIndex>& iborIndex() const;
     Spread spread() const;
     Real gearing() const;
     const std::vector<Spread>& spreads() const;
     const std::vector<Real>& gearings() const;
-    const DayCounter &floatingDayCount() const;
+    const DayCounter& floatingDayCount() const;
     BusinessDayConvention paymentConvention() const;
-    const Leg &fixedLeg() const;
-    const Leg &floatingLeg() const;
+    const Leg& fixedLeg() const;
+    const Leg& floatingLeg() const;
 };
 
 %shared_ptr(YearOnYearInflationSwap)

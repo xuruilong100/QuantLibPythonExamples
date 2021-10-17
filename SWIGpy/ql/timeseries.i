@@ -10,7 +10,7 @@ using QuantLib::TimeSeries;
 using QuantLib::IntervalPrice;
 %}
 
-template <class T, class Container = std::map<Date, T> >
+template <class T, class Container = std::map<Date, T>>
 class TimeSeries {
     %rename(__len__) size;
   public:

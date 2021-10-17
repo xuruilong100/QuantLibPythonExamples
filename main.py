@@ -5,8 +5,11 @@ from testsuite.andreasenhugevolatilityinterpl import AndreasenHugeVolatilityInte
 from testsuite.array import ArrayTest
 from testsuite.asianoptions import AsianOptionTest
 from testsuite.batesmodel import BatesModelTest
+from testsuite.blackformula import BlackFormulaTest
 from testsuite.europeanoption import EuropeanOptionTest
+from testsuite.extendedtrees import ExtendedTreesTest
 from testsuite.fdheston import FdHestonTest
+from testsuite.forwardoption import ForwardOptionTest
 from testsuite.hestonmodel import HestonModelTest
 from testsuite.hestonslvmodel import HestonSLVModelTest
 
@@ -14,7 +17,9 @@ if __name__ == '__main__':
     unittest.main()
 
 '''
-Ran 134 tests in 5955.070
+skipSlowTest = False
+Ran 159 tests in 6084.616
 
-OK
+skipSlowTest = True
+Ran 159 tests in 608.531s
 '''

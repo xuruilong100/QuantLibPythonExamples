@@ -13,7 +13,7 @@ using QuantLib::YoYOptionletStripper;
 using QuantLib::InterpolatedYoYOptionletStripper;
 %}
 
-%shared_ptr(Seasonality);
+%shared_ptr(Seasonality)
 class Seasonality {
   private:
     Seasonality();
@@ -37,13 +37,13 @@ class MultiplicativePriceSeasonality : public Seasonality {
         Frequency frequency,
         const std::vector<Rate>& seasonalityFactors);
     void set(
-        const Date &seasonalityBaseDate,
+        const Date& seasonalityBaseDate,
         Frequency frequency,
         std::vector<Rate> seasonalityFactors);
     Date seasonalityBaseDate() const;
     Frequency frequency() const;
     std::vector<Rate> seasonalityFactors() const;
-    Rate seasonalityFactor(const Date &d) const;
+    Rate seasonalityFactor(const Date& d) const;
 };
 
 %shared_ptr(KerkhofSeasonality)
@@ -61,8 +61,8 @@ class YoYOptionletStripper {
 
   public:
     void initialize(
-        const ext::shared_ptr<YoYCapFloorTermPriceSurface> &,
-        const ext::shared_ptr<YoYInflationCapFloorEngine> &,
+        const ext::shared_ptr<YoYCapFloorTermPriceSurface>& ,
+        const ext::shared_ptr<YoYInflationCapFloorEngine>& ,
         Real slope) const;
     Rate minStrike() const;
     Rate maxStrike() const;

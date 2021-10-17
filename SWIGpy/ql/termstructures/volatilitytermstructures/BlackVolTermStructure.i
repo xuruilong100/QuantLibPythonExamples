@@ -10,7 +10,7 @@
 using QuantLib::BlackVolTermStructure;
 %}
 
-%shared_ptr(BlackVolTermStructure);
+%shared_ptr(BlackVolTermStructure)
 class BlackVolTermStructure : public VolatilityTermStructure {
   private:
     BlackVolTermStructure();

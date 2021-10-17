@@ -181,8 +181,8 @@ class MfStateProcess : public StochasticProcess1D {
   public:
     MfStateProcess(
         Real reversion,
-        const Array &times,
-        const Array &vols);
+        const Array& times,
+        const Array& vols);
 };
 
 %shared_ptr(OrnsteinUhlenbeckProcess)
@@ -231,8 +231,8 @@ class VarianceGammaProcess : public StochasticProcess1D {
 class GsrProcess : public ForwardMeasureProcess1D {
   public:
     GsrProcess(
-        const Array &times, const Array &vols,
-        const Array &reversions, const Real T = 60.0);
+        const Array& times, const Array& vols,
+        const Array& reversions, const Real T = 60.0);
     Real sigma(Time t);
     Real reversion(Time t);
     Real y(Time t);

@@ -116,22 +116,22 @@ class EndCriteria {
         EndCriteria::Type& ecType) const;
     bool checkMaxIterations(
         Size iteration,
-        EndCriteria::Type &ecType) const;
+        EndCriteria::Type& ecType) const;
     bool checkStationaryPoint(
         Real xOld, Real xNew,
-        Size &statStateIterations,
-        EndCriteria::Type &ecType) const;
+        Size& statStateIterations,
+        EndCriteria::Type& ecType) const;
     bool checkStationaryFunctionValue(
         Real fxOld, Real fxNew,
-        Size &statStateIterations,
-        EndCriteria::Type &ecType) const;
+        Size& statStateIterations,
+        EndCriteria::Type& ecType) const;
     bool checkStationaryFunctionAccuracy(
         Real f,
         bool positiveOptimization,
-        EndCriteria::Type &ecType) const;
+        EndCriteria::Type& ecType) const;
     bool checkZeroGradientNorm(
         Real gNorm,
-        EndCriteria::Type &ecType) const;
+        EndCriteria::Type& ecType) const;
 };
 
 %shared_ptr(LineSearch)

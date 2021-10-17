@@ -1370,7 +1370,7 @@ class AsianOptionTest(unittest.TestCase):
 
         mcEngine = mcEngine.makeEngine()
 
-        type = Option.Call
+        optType = Option.Call
         averageType = Average.Geometric
 
         for strike in strikes:
@@ -1384,7 +1384,7 @@ class AsianOptionTest(unittest.TestCase):
                         fixingDates[i] = expiryDate - i * 30
 
                     europeanExercise = EuropeanExercise(expiryDate)
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(optType, strike)
 
                     runningAccumulator = 1.0
                     pastFixingsCount = 0

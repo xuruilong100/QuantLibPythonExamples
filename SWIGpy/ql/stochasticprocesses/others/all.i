@@ -118,7 +118,7 @@ class HestonProcess : public StochasticProcess {
 %template(HestonProcessHandle) Handle<HestonProcess>;
 %template(RelinkableHestonProcessHandle) RelinkableHandle<HestonProcess>;
 
-%shared_ptr(HestonSLVProcess);
+%shared_ptr(HestonSLVProcess)
 class HestonSLVProcess : public StochasticProcess {
   public:
     HestonSLVProcess(
@@ -143,8 +143,8 @@ class HybridHestonHullWhiteProcess : public StochasticProcess {
     enum Discretization { Euler, BSMHullWhite };
 
     HybridHestonHullWhiteProcess(
-      const ext::shared_ptr<HestonProcess> & hestonProcess,
-      const ext::shared_ptr<HullWhiteForwardProcess> & hullWhiteProcess,
+      const ext::shared_ptr<HestonProcess>& hestonProcess,
+      const ext::shared_ptr<HullWhiteForwardProcess>& hullWhiteProcess,
       Real corrEquityShortRate,
       Discretization discretization = BSMHullWhite);
 
@@ -179,20 +179,20 @@ class KlugeExtOUProcess : public StochasticProcess {
     ext::shared_ptr<LfmCovarianceParameterization> covarParam() const;
 
     Size nextIndexReset(Time t) const;
-    const std::vector<Time> & fixingTimes() const;
-    const std::vector<Date> & fixingDates() const;
-    const std::vector<Time> & accrualStartTimes() const;
-    const std::vector<Time> & accrualEndTimes() const;
+    const std::vector<Time>& fixingTimes() const;
+    const std::vector<Date>& fixingDates() const;
+    const std::vector<Time>& accrualStartTimes() const;
+    const std::vector<Time>& accrualEndTimes() const;
     std::vector<DiscountFactor> discountBond(
-        const std::vector<Rate> & rates) const;
+        const std::vector<Rate>& rates) const;
 }; */
 
 %shared_ptr(StochasticProcessArray)
 class StochasticProcessArray : public StochasticProcess {
   public:
     StochasticProcessArray(
-        const std::vector<ext::shared_ptr<StochasticProcess1D> >&array,
-        const Matrix &correlation);
+        const std::vector<ext::shared_ptr<StochasticProcess1D>>&array,
+        const Matrix& correlation);
     const ext::shared_ptr<StochasticProcess1D>& process(Size i) const;
     Matrix correlation() const;
 };

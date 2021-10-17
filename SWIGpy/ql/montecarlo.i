@@ -69,7 +69,7 @@ class PathGenerator {
 
 %template(GaussianPathGenerator) PathGenerator<GaussianRandomSequenceGenerator>;
 %template(GaussianSobolPathGenerator) PathGenerator<GaussianLowDiscrepancySequenceGenerator>;
-%template(InvCumulativeMersenneTwisterPathGenerator) PathGenerator<InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal> >;
+%template(InvCumulativeMersenneTwisterPathGenerator) PathGenerator<InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal>>;
 
 class MultiPath {
     %rename(__len__) pathSize;

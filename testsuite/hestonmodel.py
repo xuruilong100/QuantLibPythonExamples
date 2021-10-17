@@ -743,21 +743,21 @@ class HestonModelTest(unittest.TestCase):
         highVolOfVol = HestonParameter(0.07, 1.0, 0.04, 5.0, -0.75)
         kappaEqSigRho = HestonParameter(0.07, 0.4, 0.04, 0.5, 0.8)
 
-        params = []
-        params.append(equityfx)
-        params.append(highCorr)
-        params.append(lowVolOfVol)
-        params.append(highVolOfVol)
-        params.append(kappaEqSigRho)
+        params = [
+            equityfx,
+            highCorr,
+            lowVolOfVol,
+            highVolOfVol,
+            kappaEqSigRho]
 
         tol = [1e-3, 1e-3, 0.2, 0.01, 1e-3]
         idx = 0
-        for iter in params:
+        for p in params:
             s0 = QuoteHandle(SimpleQuote(1.0))
             process = HestonProcess(
                 riskFreeTS, dividendTS,
-                s0, iter.v0, iter.kappa,
-                iter.theta, iter.sigma, iter.rho)
+                s0, p.v0, p.kappa,
+                p.theta, p.sigma, p.rho)
             model = HestonModel(process)
             lobattoEngine = AnalyticHestonEngine(
                 model, 1e-10, 1000000)
@@ -1808,8 +1808,7 @@ class HestonModelTest(unittest.TestCase):
 
         q3 = 1 / 6. * s0.value() * stdDev * (2 * stdDev - d) * n(d)
         q4 = 1 / 24. * s0.value() * stdDev * (d * d - 3 * d * stdDev - 1) * n(d)
-        q5 = 1 / 72. * s0.value() * stdDev * \
-             (d * d * d * d - 5 * d * d * d * stdDev - 6 * d * d + 15 * d * stdDev + 3) * n(d)
+        q5 = 1 / 72. * s0.value() * stdDev * (d * d * d * d - 5 * d * d * d * stdDev - 6 * d * d + 15 * d * stdDev + 3) * n(d)
 
         bsNPV = blackFormula(
             Option.Call, strike, fwd, stdDev, df)
@@ -1838,7 +1837,7 @@ class HestonModelTest(unittest.TestCase):
                 Option.Call, strike, fwd,
                 bsNPV + skew * q3 + kurt * q4 + skew * skew * q5, df)) ** 2,
             # implied vol as control variate
-            (implStdDev) ** 2,
+            implStdDev ** 2,
             # remaining function becomes zero for u . 0
             -8.0 * log(engine.chF(0, -0.5, maturity)[0])]
 
@@ -2455,17 +2454,17 @@ class HestonModelTest(unittest.TestCase):
     def testLocalVolFromHestonModel(self):
         TEST_MESSAGE("Testing Local Volatility pricing from Heston Model...")
 
-        backup=SavedSettings()
+        backup = SavedSettings()
 
         todaysDate = Date(28, June, 2021)
         Settings.instance().evaluationDate = todaysDate
 
         dc = Actual365Fixed()
 
-        rTS=YieldTermStructureHandle(flatRate(0.15, dc))
-        qTS=YieldTermStructureHandle(flatRate(0.05, dc))
+        rTS = YieldTermStructureHandle(flatRate(0.15, dc))
+        qTS = YieldTermStructureHandle(flatRate(0.05, dc))
 
-        s0=QuoteHandle(SimpleQuote(100.0))
+        s0 = QuoteHandle(SimpleQuote(100.0))
 
         v0 = 0.1
         rho = -0.75
@@ -2477,7 +2476,7 @@ class HestonModelTest(unittest.TestCase):
             HestonProcess(
                 rTS, qTS, s0, v0, kappa, theta, sigma, rho))
 
-        option=VanillaOption(
+        option = VanillaOption(
             PlainVanillaPayoff(Option.Call, 120.0),
             EuropeanExercise(todaysDate + Period(1, Years)))
 

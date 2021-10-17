@@ -9,10 +9,10 @@
 using QuantLib::FdmLinearOp;
 using QuantLib::BoundaryCondition;
 typedef BoundaryCondition<FdmLinearOp> FdmBoundaryCondition;
-typedef std::vector<ext::shared_ptr<FdmBoundaryCondition> > FdmBoundaryConditionSet;
+typedef std::vector<ext::shared_ptr<FdmBoundaryCondition>> FdmBoundaryConditionSet;
 %}
 
-%shared_ptr(FdmBoundaryCondition);
+%shared_ptr(FdmBoundaryCondition)
 class FdmBoundaryCondition {
    %rename(NoSide) None;
   private:
@@ -27,8 +27,8 @@ class FdmBoundaryCondition {
     void setTime(Time t);
 };
 
-typedef std::vector<ext::shared_ptr<FdmBoundaryCondition> > FdmBoundaryConditionSet;
-%template(FdmBoundaryConditionSet) std::vector<ext::shared_ptr<FdmBoundaryCondition> >;
+typedef std::vector<ext::shared_ptr<FdmBoundaryCondition>> FdmBoundaryConditionSet;
+%template(FdmBoundaryConditionSet) std::vector<ext::shared_ptr<FdmBoundaryCondition>>;
 
 
 #endif

@@ -45,7 +45,7 @@ class SubPeriodsPricer: public FloatingRateCouponPricer {
     Rate capletRate(Rate effectiveCap) const;
     Real floorletPrice(Rate effectiveFloor) const;
     Rate floorletRate(Rate effectiveFloor) const;
-    void initialize(const FloatingRateCoupon &coupon);
+    void initialize(const FloatingRateCoupon& coupon);
 };
 
 %shared_ptr(CmsCouponPricer)
@@ -59,7 +59,7 @@ class CmsCouponPricer : public FloatingRateCouponPricer {
         const Handle<SwaptionVolatilityStructure>& v = Handle<SwaptionVolatilityStructure>());
 };
 
-%template(CmsCouponPricerVector) std::vector<ext::shared_ptr<CmsCouponPricer> >;
+%template(CmsCouponPricerVector) std::vector<ext::shared_ptr<CmsCouponPricer>>;
 
 %shared_ptr(CmsSpreadCouponPricer)
 class CmsSpreadCouponPricer : public FloatingRateCouponPricer {
@@ -68,7 +68,7 @@ class CmsSpreadCouponPricer : public FloatingRateCouponPricer {
   public:
     Handle<Quote> correlation() const;
     void setCorrelation(
-        const Handle<Quote> &correlation = Handle<Quote>());
+        const Handle<Quote>& correlation = Handle<Quote>());
 };
 
 %shared_ptr(IborCouponPricer)
@@ -108,18 +108,18 @@ class LinearTsrPricer : public CmsCouponPricer {
     struct Settings {
 
         Settings();
-        Settings &withRateBound(const Real lowerRateBound = 0.0001,
+        Settings& withRateBound(const Real lowerRateBound = 0.0001,
                                 const Real upperRateBound = 2.0000);
-        Settings &withVegaRatio(const Real vegaRatio = 0.01);
-        Settings &withVegaRatio(const Real vegaRatio,
+        Settings& withVegaRatio(const Real vegaRatio = 0.01);
+        Settings& withVegaRatio(const Real vegaRatio,
                                 const Real lowerRateBound,
                                 const Real upperRateBound);
-        Settings &withPriceThreshold(const Real priceThreshold = 1.0E-8);
-        Settings &withPriceThreshold(const Real priceThreshold,
+        Settings& withPriceThreshold(const Real priceThreshold = 1.0E-8);
+        Settings& withPriceThreshold(const Real priceThreshold,
                                      const Real lowerRateBound,
                                      const Real upperRateBound);
-        Settings &withBSStdDevs(const Real stdDevs = 3.0);
-        Settings &withBSStdDevs(const Real stdDevs,
+        Settings& withBSStdDevs(const Real stdDevs = 3.0);
+        Settings& withBSStdDevs(const Real stdDevs,
                                 const Real lowerRateBound,
                                 const Real upperRateBound);
         enum Strategy {
@@ -131,10 +131,10 @@ class LinearTsrPricer : public CmsCouponPricer {
     };
 
     LinearTsrPricer(
-        const Handle<SwaptionVolatilityStructure> &swaptionVol,
-        const Handle<Quote> &meanReversion,
-        const Handle<YieldTermStructure> &couponDiscountCurve = Handle<YieldTermStructure>(),
-        const LinearTsrPricer::Settings &settings = LinearTsrPricer::Settings());
+        const Handle<SwaptionVolatilityStructure>& swaptionVol,
+        const Handle<Quote>& meanReversion,
+        const Handle<YieldTermStructure>& couponDiscountCurve = Handle<YieldTermStructure>(),
+        const LinearTsrPricer::Settings& settings = LinearTsrPricer::Settings());
 };
 
 %shared_ptr(LognormalCmsSpreadPricer)
@@ -142,8 +142,8 @@ class LognormalCmsSpreadPricer : public CmsSpreadCouponPricer {
   public:
     LognormalCmsSpreadPricer(
         const ext::shared_ptr<CmsCouponPricer>& cmsPricer,
-        const Handle<Quote> &correlation,
-        const Handle<YieldTermStructure> &couponDiscountCurve = Handle<YieldTermStructure>(),
+        const Handle<Quote>& correlation,
+        const Handle<YieldTermStructure>& couponDiscountCurve = Handle<YieldTermStructure>(),
         const Size IntegrationPoints = 16,
         const boost::optional<VolatilityType> volatilityType = boost::none,
         const Real shift1 = Null<Real>(), const Real shift2 = Null<Real>());

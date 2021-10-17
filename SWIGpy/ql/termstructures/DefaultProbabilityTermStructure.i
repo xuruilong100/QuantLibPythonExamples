@@ -10,7 +10,7 @@
 using QuantLib::DefaultProbabilityTermStructure;
 %}
 
-%shared_ptr(DefaultProbabilityTermStructure);
+%shared_ptr(DefaultProbabilityTermStructure)
 class DefaultProbabilityTermStructure : public TermStructure {
   private:
     DefaultProbabilityTermStructure();

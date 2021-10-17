@@ -202,7 +202,7 @@ class AnalyticDoubleBarrierEngine : public PricingEngine {
         int series = 5);
 };
 
-%shared_ptr(FdHestonDoubleBarrierEngine);
+%shared_ptr(FdHestonDoubleBarrierEngine)
 class FdHestonDoubleBarrierEngine : public PricingEngine {
   public:
     FdHestonDoubleBarrierEngine(

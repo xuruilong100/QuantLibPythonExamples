@@ -15,7 +15,7 @@ using QuantLib::CreditDefaultSwap;
 using QuantLib::Stock;
 %}
 
-%shared_ptr(Claim);
+%shared_ptr(Claim)
 class Claim : public Observer, public Observable {
   private:
     Claim();

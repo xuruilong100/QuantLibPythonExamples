@@ -95,7 +95,7 @@ class Thirty360 : public DayCounter {
     };
     Thirty360(
         Convention c,
-        const Date &terminationDate=Date());
+        const Date& terminationDate=Date());
 };
 
 class Thirty365 : public DayCounter {};

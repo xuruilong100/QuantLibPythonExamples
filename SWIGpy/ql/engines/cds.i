@@ -44,7 +44,7 @@ class IsdaCdsEngine : public PricingEngine {
         Handle<DefaultProbabilityTermStructure> probability,
         Real recoveryRate,
         Handle<YieldTermStructure> discountCurve,
-        const boost::optional<bool> &includeSettlementDateFlows=boost::none,
+        const boost::optional<bool>& includeSettlementDateFlows=boost::none,
         NumericalFix numericalFix=Taylor,
         AccrualBias accrualBias=HalfDayBias,
         ForwardsInCouponPeriod forwardsInCouponPeriod=Piecewise);

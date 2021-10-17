@@ -10,7 +10,7 @@
 using QuantLib::KirkSpreadOptionEngine;
 %}
 
-%shared_ptr(KirkSpreadOptionEngine);
+%shared_ptr(KirkSpreadOptionEngine)
 class KirkSpreadOptionEngine : public PricingEngine {
   public:
     KirkSpreadOptionEngine(

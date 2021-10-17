@@ -10,7 +10,7 @@
 using QuantLib::InflationTermStructure;
 %}
 
-%shared_ptr(InflationTermStructure);
+%shared_ptr(InflationTermStructure)
 class InflationTermStructure : public TermStructure {
   private:
     InflationTermStructure();
@@ -24,7 +24,7 @@ class InflationTermStructure : public TermStructure {
     void setSeasonality(
         const ext::shared_ptr<Seasonality>& seasonality = ext::shared_ptr<Seasonality>());
     ext::shared_ptr<Seasonality> seasonality() const;
-    bool hasSeasonality() const;    
+    bool hasSeasonality() const;
 };
 
 %inline %{

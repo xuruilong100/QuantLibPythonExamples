@@ -68,7 +68,7 @@ class DouglasScheme  {
   public:
     DouglasScheme(
         Real theta,
-        const ext::shared_ptr<FdmLinearOpComposite> & map,
+        const ext::shared_ptr<FdmLinearOpComposite>& map,
         const FdmBoundaryConditionSet& bcSet = FdmBoundaryConditionSet());
 
     void step(Array& a, Time t);

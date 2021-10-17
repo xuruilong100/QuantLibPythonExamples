@@ -30,18 +30,18 @@ typedef QuantLib::TenorOptionletVTS::CorrelationStructure TenorOptionletVTSCorre
 typedef QuantLib::TenorOptionletVTS::TwoParameterCorrelation TwoParameterCorrelation;
 %}
 
-%shared_ptr(OptionletVolatilityStructure);
+%shared_ptr(OptionletVolatilityStructure)
 class OptionletVolatilityStructure : public VolatilityTermStructure {
   private:
     OptionletVolatilityStructure();
   public:
-    Volatility volatility(const Period &optionTenor,
+    Volatility volatility(const Period& optionTenor,
                           Rate strike, bool extrapolate = false) const;
     Volatility volatility(const Date&, Real strike,
                           bool extrapolate = false) const;
     Volatility volatility(Time, Real strike,
                           bool extrapolate = false) const;
-    Real blackVariance(const Period &optionTenor,
+    Real blackVariance(const Period& optionTenor,
                        Rate strike, bool extrapolate=false) const;
     Real blackVariance(const Date&, Rate strike,
                        bool extrapolate = false) const ;
@@ -68,12 +68,12 @@ class YoYOptionletVolatilitySurface : public VolatilityTermStructure {
     Volatility volatility(
         const Date& maturityDate,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility volatility(
         const Period& optionTenor,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility volatility(Time time, Rate strike) const;
     VolatilityType volatilityType() const;
@@ -81,19 +81,19 @@ class YoYOptionletVolatilitySurface : public VolatilityTermStructure {
     Volatility totalVariance(
         const Date& exerciseDate,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility totalVariance(
         const Period& optionTenor,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Period observationLag() const;
     Frequency frequency() const;
     bool indexIsInterpolated() const;
     Date baseDate() const;
     Time timeFromBase(
-        const Date &date,
+        const Date& date,
         const Period& obsLag = Period(-1,Days)) const;
     Volatility baseLevel() const;
 };
@@ -102,7 +102,7 @@ class YoYOptionletVolatilitySurface : public VolatilityTermStructure {
 %template(RelinkableYoYOptionletVolatilitySurfaceHandle) RelinkableHandle<YoYOptionletVolatilitySurface>;
 
 
-%shared_ptr(CapFloorTermVolatilityStructure);
+%shared_ptr(CapFloorTermVolatilityStructure)
 class CapFloorTermVolatilityStructure : public VolatilityTermStructure {
   private:
     CapFloorTermVolatilityStructure();
@@ -118,7 +118,7 @@ class CapFloorTermVolatilityStructure : public VolatilityTermStructure {
 %template(CapFloorTermVolatilityStructureHandle) Handle<CapFloorTermVolatilityStructure>;
 %template(RelinkableCapFloorTermVolatilityStructureHandle) RelinkableHandle<CapFloorTermVolatilityStructure>;
 
-%shared_ptr(CapFloorTermVolCurve);
+%shared_ptr(CapFloorTermVolCurve)
 class CapFloorTermVolCurve : public CapFloorTermVolatilityStructure {
   public:
     CapFloorTermVolCurve(
@@ -126,14 +126,14 @@ class CapFloorTermVolCurve : public CapFloorTermVolatilityStructure {
         const Calendar& calendar,
         BusinessDayConvention bdc,
         const std::vector<Period>& optionTenors,
-        const std::vector<Handle<Quote> >& vols,
+        const std::vector<Handle<Quote>>& vols,
         const DayCounter& dc = Actual365Fixed());
     CapFloorTermVolCurve(
         const Date& settlementDate,
         const Calendar& calendar,
         BusinessDayConvention bdc,
         const std::vector<Period>& optionTenors,
-        const std::vector<Handle<Quote> >& vols,
+        const std::vector<Handle<Quote>>& vols,
         const DayCounter& dc = Actual365Fixed());
     CapFloorTermVolCurve(
         const Date& settlementDate,
@@ -154,7 +154,7 @@ class CapFloorTermVolCurve : public CapFloorTermVolatilityStructure {
     const std::vector<Time>& optionTimes() const;
 };
 
-%shared_ptr(CapFloorTermVolSurface);
+%shared_ptr(CapFloorTermVolSurface)
 class CapFloorTermVolSurface : public CapFloorTermVolatilityStructure {
   public:
     CapFloorTermVolSurface(
@@ -195,18 +195,7 @@ class CapFloorTermVolSurface : public CapFloorTermVolatilityStructure {
     const std::vector<Rate>& strikes() const;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-%shared_ptr(ConstantOptionletVolatility);
+%shared_ptr(ConstantOptionletVolatility)
 class ConstantOptionletVolatility : public OptionletVolatilityStructure {
   public:
     ConstantOptionletVolatility(
@@ -243,7 +232,7 @@ class ConstantOptionletVolatility : public OptionletVolatilityStructure {
         const Real shift = 0.0);
 };
 
-%shared_ptr(StrippedOptionletAdapter);
+%shared_ptr(StrippedOptionletAdapter)
 class StrippedOptionletAdapter : public OptionletVolatilityStructure {
   public:
     StrippedOptionletAdapter(
@@ -269,10 +258,10 @@ class ConstantYoYOptionletVolatility : public YoYOptionletVolatilitySurface {
     ConstantYoYOptionletVolatility(
         Handle<Quote> v,
         Natural settlementDays,
-        const Calendar &,
+        const Calendar& ,
         BusinessDayConvention bdc,
-        const DayCounter &dc,
-        const Period &observationLag,
+        const DayCounter& dc,
+        const Period& observationLag,
         Frequency frequency,
         bool indexIsInterpolated,
         Rate minStrike=-1.0,
@@ -290,18 +279,18 @@ class InterpolatedYoYOptionletVolatilityCurve : public YoYOptionletVolatilitySur
         const Calendar&,
         BusinessDayConvention bdc,
         const DayCounter& dc,
-        const Period &lag,
+        const Period& lag,
         Frequency frequency,
         bool indexIsInterpolated,
-        const std::vector<Date> &d,
-        const std::vector<Volatility> &v,
+        const std::vector<Date>& d,
+        const std::vector<Volatility>& v,
         Rate minStrike,
         Rate maxStrike,
-        const Interpolator1D &i = Interpolator1D());
-    const std::vector<Time> & times() const;
-    const std::vector<Date> & dates() const;
-    const std::vector<Real> & data() const;
-    std::vector< std::pair< Date, Real > > nodes() const;
+        const Interpolator1D& i = Interpolator1D());
+    const std::vector<Time>& times() const;
+    const std::vector<Date>& dates() const;
+    const std::vector<Real>& data() const;
+    std::vector<std::pair<Date, Real>> nodes() const;
 };
 
 %template(InterpolatedYoYInflationOptionletVolatilityCurve) InterpolatedYoYOptionletVolatilityCurve<Linear>;
@@ -312,15 +301,15 @@ class KInterpolatedYoYOptionletVolatilitySurface : public YoYOptionletVolatility
   public:
     KInterpolatedYoYOptionletVolatilitySurface(
         Natural settlementDays,
-        const Calendar &,
+        const Calendar& ,
         BusinessDayConvention bdc,
-        const DayCounter &dc,
-        const Period &lag,
-        const ext::shared_ptr< YoYCapFloorTermPriceSurface > &capFloorPrices,
-        ext::shared_ptr< YoYInflationCapFloorEngine > pricer,
-        ext::shared_ptr< YoYOptionletStripper > yoyOptionletStripper,
+        const DayCounter& dc,
+        const Period& lag,
+        const ext::shared_ptr<YoYCapFloorTermPriceSurface>& capFloorPrices,
+        ext::shared_ptr<YoYInflationCapFloorEngine> pricer,
+        ext::shared_ptr<YoYOptionletStripper> yoyOptionletStripper,
         Real slope,
-        const Interpolator1D &interpolator=Interpolator1D(),
+        const Interpolator1D& interpolator=Interpolator1D(),
         VolatilityType volType=ShiftedLognormal,
         Real displacement=0.0);
 
@@ -338,30 +327,30 @@ class CPIVolatilitySurface : public VolatilityTermStructure {
     Volatility volatility(
         const Date& maturityDate,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility volatility(
         const Period& optionTenor,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility volatility(Time time, Rate strike) const;
     Volatility totalVariance(
         const Date& exerciseDate,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Volatility totalVariance(
         const Period& optionTenor,
         Rate strike,
-        const Period &obsLag = Period(-1,Days),
+        const Period& obsLag = Period(-1,Days),
         bool extrapolate = false) const;
     Period observationLag() const;
     Frequency frequency() const;
     bool indexIsInterpolated() const;
     Date baseDate() const;
     Time timeFromBase(
-        const Date &date,
+        const Date& date,
         const Period& obsLag = Period(-1,Days)) const;
     Volatility baseLevel() const;
 };
@@ -413,10 +402,10 @@ class ConstantCapFloorTermVolatility : public CapFloorTermVolatilityStructure {
 class CapletVarianceCurve : public OptionletVolatilityStructure {
   public:
     CapletVarianceCurve(
-        const Date &referenceDate,
-        const std::vector< Date > &dates,
-        const std::vector< Volatility > &capletVolCurve,
-        const DayCounter &dayCounter,
+        const Date& referenceDate,
+        const std::vector<Date>& dates,
+        const std::vector<Volatility>& capletVolCurve,
+        const DayCounter& dayCounter,
         VolatilityType type = ShiftedLognormal,
         Real displacement = 0.0);
 };

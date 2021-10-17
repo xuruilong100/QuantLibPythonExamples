@@ -130,7 +130,7 @@ class Gaussian1dSwaptionEngine : public PricingEngine {
         Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
         const Gaussian1dSwaptionEngine::Probabilities probabilities = Gaussian1dSwaptionEngine::None);
     Gaussian1dSwaptionEngine(
-        const Handle<Gaussian1dModel> &model,
+        const Handle<Gaussian1dModel>& model,
         const int integrationPoints = 64, const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
@@ -164,7 +164,7 @@ class Gaussian1dNonstandardSwaptionEngine : public PricingEngine, public BasketG
         const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
         const Gaussian1dNonstandardSwaptionEngine::Probabilities probabilities = Gaussian1dNonstandardSwaptionEngine::None);
     Gaussian1dNonstandardSwaptionEngine(
-        const Handle<Gaussian1dModel> &model,
+        const Handle<Gaussian1dModel>& model,
         const int integrationPoints = 64, const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
@@ -195,13 +195,13 @@ class Gaussian1dFloatFloatSwaptionEngine : public PricingEngine, public BasketGe
         const Gaussian1dFloatFloatSwaptionEngine::Probabilities probabilities =
         Gaussian1dFloatFloatSwaptionEngine::None);
     Gaussian1dFloatFloatSwaptionEngine(
-        const Handle<Gaussian1dModel> &model,
+        const Handle<Gaussian1dModel>& model,
         const int integrationPoints = 64,
         const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
-        const Handle<Quote> &oas = Handle<Quote>(),
-        const Handle<YieldTermStructure> &discountCurve = Handle<YieldTermStructure>(),
+        const Handle<Quote>& oas = Handle<Quote>(),
+        const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
         const bool includeTodaysExercise = false,
         const Gaussian1dFloatFloatSwaptionEngine::Probabilities probabilities =
         Gaussian1dFloatFloatSwaptionEngine::None);

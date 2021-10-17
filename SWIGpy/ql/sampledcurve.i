@@ -12,7 +12,7 @@ using QuantLib::SampledCurve;
 class SampledCurve {
   public:
     SampledCurve(Size gridSize = 0);
-    SampledCurve(const Array &grid);
+    SampledCurve(const Array& grid);
     //! \name inspectors
     const Array& grid() const;
     const Array& values() const;
@@ -33,21 +33,21 @@ class SampledCurve {
     void regridLogGrid(Real min, Real max);
     void shiftGrid(Real s);
     void scaleGrid(Real s);
-    void regrid(const Array &new_grid);
+    void regrid(const Array& new_grid);
     %extend {
         void sample(PyObject *func) {
             const UnaryFunction f(func);
             self->sample(f);
         }
-        void regrid(const Array &new_grid, PyObject *func) {
+        void regrid(const Array& new_grid, PyObject *func) {
             const UnaryFunction f(func);
             self->regrid(new_grid, f);
         }
-        const SampledCurve & transform(PyObject *x) {
+        const SampledCurve& transform(PyObject *x) {
             const UnaryFunction f(x);
             return self->transform(f);
         }
-        const SampledCurve & transformGrid(PyObject *x) {
+        const SampledCurve& transformGrid(PyObject *x) {
             const UnaryFunction f(x);
             return self->transformGrid(f);
         }

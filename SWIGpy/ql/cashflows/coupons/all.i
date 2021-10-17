@@ -153,7 +153,7 @@ class IborCoupon : public FloatingRateCoupon {
     static void createIndexedCoupons();
     static bool usingAtParCoupons();
     const ext::shared_ptr<IborIndex>& iborIndex() const;
-    const Date & fixingEndDate() const;
+    const Date& fixingEndDate() const;
 };
 
 %shared_ptr(CappedFlooredCoupon)

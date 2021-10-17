@@ -10,13 +10,13 @@
 using QuantLib::VolatilityTermStructure;
 %}
 
-%shared_ptr(VolatilityTermStructure);
+%shared_ptr(VolatilityTermStructure)
 class VolatilityTermStructure : public TermStructure {
   private:
     VolatilityTermStructure();
   public:
     BusinessDayConvention businessDayConvention() const;
-    Date optionDateFromTenor(const Period &) const;
+    Date optionDateFromTenor(const Period& ) const;
     Real minStrike() const;
     Real maxStrike() const;
 };

@@ -31,7 +31,7 @@ class BatesDoubleExpModel : public HestonModel {
     %rename(lambdaParameter) lambda;
   public:
     explicit BatesDoubleExpModel(
-        const ext::shared_ptr<HestonProcess> & process,
+        const ext::shared_ptr<HestonProcess>& process,
         Real lamda = 0.1,
         Real nuUp = 0.1,
         Real nuDown = 0.1,

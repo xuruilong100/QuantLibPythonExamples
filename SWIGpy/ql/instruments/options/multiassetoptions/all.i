@@ -64,7 +64,7 @@ class PagodaOption : public MultiAssetOption {
                  Real fraction);
 };
 
-%shared_ptr(SpreadOption);
+%shared_ptr(SpreadOption)
 class SpreadOption : public MultiAssetOption {
 public:
   SpreadOption(

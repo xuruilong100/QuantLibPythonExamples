@@ -119,8 +119,8 @@ class HaltonRsg {
         unsigned long seed = 0,
         bool randomStart = true,
         bool randomShift = false);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -190,8 +190,8 @@ class UniformRandomSequenceGenerator {
     UniformRandomSequenceGenerator(
         Size dimensionality,
         const UniformRandomGenerator& rng);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -201,8 +201,8 @@ class UniformLowDiscrepancySequenceGenerator {
         Size dimensionality,
         BigInteger seed=0,
         SobolRsg::DirectionIntegers directionIntegers = QuantLib::SobolRsg::Jaeckel);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -216,8 +216,8 @@ class InverseCumulativeRsg {
     InverseCumulativeRsg(
         const U& uniformSequenceGenerator,
         const I& inverseCumulative);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -237,8 +237,8 @@ class GaussianRandomSequenceGenerator {
   public:
     GaussianRandomSequenceGenerator(
         const UniformRandomSequenceGenerator& uniformSequenceGenerator);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 
@@ -246,8 +246,8 @@ class GaussianLowDiscrepancySequenceGenerator {
   public:
     GaussianLowDiscrepancySequenceGenerator(
         const UniformLowDiscrepancySequenceGenerator& u);
-    const Sample<std::vector<Real> >& nextSequence() const;
-    const Sample<std::vector<Real> >& lastSequence() const;
+    const Sample<std::vector<Real>>& nextSequence() const;
+    const Sample<std::vector<Real>>& lastSequence() const;
     Size dimension() const;
 };
 

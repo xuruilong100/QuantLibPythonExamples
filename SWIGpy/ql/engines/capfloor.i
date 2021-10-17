@@ -33,8 +33,7 @@ class BlackCapFloorEngine : public PricingEngine {
     BlackCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         const Handle<Quote>& vol,
-        const DayCounter
-        &dc=Actual365Fixed(),
+        const DayCounter& dc=Actual365Fixed(),
         Real displacement=0.0);
     BlackCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
@@ -55,7 +54,7 @@ class BachelierCapFloorEngine : public PricingEngine {
     BachelierCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         const Handle<Quote>& vol,
-        const DayCounter &dc=Actual365Fixed());
+        const DayCounter& dc=Actual365Fixed());
  	BachelierCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         Handle<OptionletVolatilityStructure> vol);

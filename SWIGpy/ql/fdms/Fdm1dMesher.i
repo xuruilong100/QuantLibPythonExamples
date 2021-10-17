@@ -21,6 +21,6 @@ class Fdm1dMesher {
     const std::vector<Real>& locations();
 };
 
-%template(Fdm1dMesherVector) std::vector<ext::shared_ptr<Fdm1dMesher> >;
+%template(Fdm1dMesherVector) std::vector<ext::shared_ptr<Fdm1dMesher>>;
 
 #endif

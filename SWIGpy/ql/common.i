@@ -313,7 +313,7 @@ class Sample {
 
 %template(SampleNumber) Sample<Real>;
 %template(SampleArray) Sample<Array>;
-%template(SampleRealVector) Sample<std::vector<Real> >;
+%template(SampleRealVector) Sample<std::vector<Real>>;
 
 bool close(Real x, Real y);
 bool close(Real x, Real y, Size n);

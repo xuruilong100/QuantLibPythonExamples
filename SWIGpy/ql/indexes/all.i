@@ -188,9 +188,7 @@ class SwapIndex : public InterestRateIndex {
         const Period& tenor) const;
 };
 
-namespace std {
-    %template(SwapIndexVector) vector<ext::shared_ptr<SwapIndex> >;
-}
+%template(SwapIndexVector) std::vector<ext::shared_ptr<SwapIndex>>;
 
 %shared_ptr(SwapSpreadIndex)
 class SwapSpreadIndex : public InterestRateIndex {
@@ -266,9 +264,9 @@ using QuantLib::Name;
 %shared_ptr(Name)
 class Name : public SwapIndex {
   public:
-    Name(const Period &tenor,
+    Name(const Period& tenor,
          const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
-    Name(const Period &tenor,
+    Name(const Period& tenor,
          const Handle<YieldTermStructure>& h1,
          const Handle<YieldTermStructure>& h2);
 };

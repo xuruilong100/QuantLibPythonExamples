@@ -393,7 +393,7 @@ class FdmSabrOp : public FdmLinearOpComposite {
 class FdmZabrOp : public FdmLinearOpComposite {
   public:
     FdmZabrOp(
-        const ext::shared_ptr<FdmMesher> & mesher,
+        const ext::shared_ptr<FdmMesher>& mesher,
         const Real beta,
         const Real nu,
         const Real rho,
@@ -404,8 +404,8 @@ class FdmZabrOp : public FdmLinearOpComposite {
 class FdmDupire1dOp : public FdmLinearOpComposite {
   public:
     FdmDupire1dOp(
-        const ext::shared_ptr<FdmMesher> & mesher,
-        const Array &localVolatility);
+        const ext::shared_ptr<FdmMesher>& mesher,
+        const Array& localVolatility);
 };
 
 %shared_ptr(FdmBlackScholesFwdOp)
@@ -439,7 +439,7 @@ class FdmHestonFwdOp : public FdmLinearOpComposite {
         const ext::shared_ptr<FdmMesher>& mesher,
         const ext::shared_ptr<HestonProcess>& process,
         FdmSquareRootFwdOp::TransformationType type = FdmSquareRootFwdOp::Plain,
-        const ext::shared_ptr<LocalVolTermStructure> & leverageFct = ext::shared_ptr<LocalVolTermStructure>());
+        const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>());
 };
 
 %shared_ptr(FirstDerivativeOp)

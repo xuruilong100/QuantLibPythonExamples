@@ -106,7 +106,7 @@ bool extractArray(PyObject* source, Array* target) {
     }
 }
 
-%typecheck(QL_TYPECHECK_ARRAY) const Array & {
+%typecheck(QL_TYPECHECK_ARRAY) const Array& {
     /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         Size size = PySequence_Size($input);
@@ -194,7 +194,7 @@ bool extractArray(PyObject* source, Array* target) {
     }
 }
 
-%typemap(in) const Matrix & (Matrix temp) {
+%typemap(in) const Matrix& (Matrix temp) {
     if (PyTuple_Check($input) || PyList_Check($input)) {
         Size rows, cols;
         rows = (PyTuple_Check($input) ?
@@ -273,7 +273,7 @@ bool extractArray(PyObject* source, Array* target) {
     }
 }
 
-%typecheck(QL_TYPECHECK_MATRIX) const Matrix & {
+%typecheck(QL_TYPECHECK_MATRIX) const Matrix& {
     /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         $1 = 1;

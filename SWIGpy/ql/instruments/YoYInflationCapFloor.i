@@ -42,7 +42,7 @@ class YoYInflationCapFloor : public Instrument {
         Volatility maxVol = 4.0) const;
     %extend {
         std::vector<Real> optionletPrices() {
-            return self->result<std::vector<Real> >("optionletsPrice");
+            return self->result<std::vector<Real>>("optionletsPrice");
         }
     }
 };

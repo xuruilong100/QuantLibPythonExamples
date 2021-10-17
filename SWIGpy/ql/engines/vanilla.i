@@ -36,15 +36,7 @@ using QuantLib::MCAmericanEngine;
 using QuantLib::MCEuropeanEngine;
 using QuantLib::MakeMCEuropeanEngine;
 using QuantLib::VarianceGammaEngine;
-using QuantLib::CrankNicolson;
 using QuantLib::BinomialVanillaEngine;
-using QuantLib::CoxRossRubinstein;
-using QuantLib::JarrowRudd;
-using QuantLib::AdditiveEQPBinomialTree;
-using QuantLib::Trigeorgis;
-using QuantLib::Tian;
-using QuantLib::LeisenReimer;
-using QuantLib::Joshi4;
 using QuantLib::MCEuropeanHestonEngine;
 using QuantLib::MCEuropeanGJRGARCHEngine;
 using QuantLib::MakeMCEuropeanHestonEngine;
@@ -59,7 +51,25 @@ using QuantLib::BatesDoubleExpDetJumpEngine;
 using QuantLib::JumpDiffusionEngine;
 %}
 
-%shared_ptr(AnalyticCEVEngine);
+%{
+using QuantLib::CrankNicolson;
+using QuantLib::AdditiveEQPBinomialTree;
+using QuantLib::CoxRossRubinstein;
+using QuantLib::JarrowRudd;
+using QuantLib::Joshi4;
+using QuantLib::LeisenReimer;
+using QuantLib::Tian;
+using QuantLib::Trigeorgis;
+using QuantLib::ExtendedAdditiveEQPBinomialTree;
+using QuantLib::ExtendedCoxRossRubinstein;
+using QuantLib::ExtendedJarrowRudd;
+using QuantLib::ExtendedJoshi4;
+using QuantLib::ExtendedLeisenReimer;
+using QuantLib::ExtendedTian;
+using QuantLib::ExtendedTrigeorgis;
+%}
+
+%shared_ptr(AnalyticCEVEngine)
 class AnalyticCEVEngine : public PricingEngine {
   public:
     AnalyticCEVEngine(
@@ -67,13 +77,20 @@ class AnalyticCEVEngine : public PricingEngine {
         Handle<YieldTermStructure> rTS);
 };
 
+%shared_ptr(BinomialVanillaEngine<AdditiveEQPBinomialTree>)
 %shared_ptr(BinomialVanillaEngine<CoxRossRubinstein>)
 %shared_ptr(BinomialVanillaEngine<JarrowRudd>)
-%shared_ptr(BinomialVanillaEngine<AdditiveEQPBinomialTree>)
-%shared_ptr(BinomialVanillaEngine<Trigeorgis>)
-%shared_ptr(BinomialVanillaEngine<Tian>)
-%shared_ptr(BinomialVanillaEngine<LeisenReimer>)
 %shared_ptr(BinomialVanillaEngine<Joshi4>)
+%shared_ptr(BinomialVanillaEngine<LeisenReimer>)
+%shared_ptr(BinomialVanillaEngine<Tian>)
+%shared_ptr(BinomialVanillaEngine<Trigeorgis>)
+%shared_ptr(BinomialVanillaEngine<ExtendedAdditiveEQPBinomialTree>)
+%shared_ptr(BinomialVanillaEngine<ExtendedCoxRossRubinstein>)
+%shared_ptr(BinomialVanillaEngine<ExtendedJarrowRudd>)
+%shared_ptr(BinomialVanillaEngine<ExtendedJoshi4>)
+%shared_ptr(BinomialVanillaEngine<ExtendedLeisenReimer>)
+%shared_ptr(BinomialVanillaEngine<ExtendedTian>)
+%shared_ptr(BinomialVanillaEngine<ExtendedTrigeorgis>)
 template <class T>
 class BinomialVanillaEngine : public PricingEngine {
   public:
@@ -83,12 +100,19 @@ class BinomialVanillaEngine : public PricingEngine {
 };
 
 %template(BinomialCRRVanillaEngine) BinomialVanillaEngine<CoxRossRubinstein>;
-%template(BinomialJRVanillaEngine) BinomialVanillaEngine<JarrowRudd>;
 %template(BinomialEQPVanillaEngine) BinomialVanillaEngine<AdditiveEQPBinomialTree>;
-%template(BinomialTrigeorgisVanillaEngine) BinomialVanillaEngine<Trigeorgis>;
-%template(BinomialTianVanillaEngine) BinomialVanillaEngine<Tian>;
-%template(BinomialLRVanillaEngine) BinomialVanillaEngine<LeisenReimer>;
 %template(BinomialJ4VanillaEngine) BinomialVanillaEngine<Joshi4>;
+%template(BinomialJRVanillaEngine) BinomialVanillaEngine<JarrowRudd>;
+%template(BinomialLRVanillaEngine) BinomialVanillaEngine<LeisenReimer>;
+%template(BinomialTianVanillaEngine) BinomialVanillaEngine<Tian>;
+%template(BinomialTrigeorgisVanillaEngine) BinomialVanillaEngine<Trigeorgis>;
+%template(BinomialExCRRVanillaEngine) BinomialVanillaEngine<ExtendedCoxRossRubinstein>;
+%template(BinomialExEQPVanillaEngine) BinomialVanillaEngine<ExtendedAdditiveEQPBinomialTree>;
+%template(BinomialExJ4VanillaEngine) BinomialVanillaEngine<ExtendedJoshi4>;
+%template(BinomialExJRVanillaEngine) BinomialVanillaEngine<ExtendedJarrowRudd>;
+%template(BinomialExLRVanillaEngine) BinomialVanillaEngine<ExtendedLeisenReimer>;
+%template(BinomialExTianVanillaEngine) BinomialVanillaEngine<ExtendedTian>;
+%template(BinomialExTrigeorgisVanillaEngine) BinomialVanillaEngine<ExtendedTrigeorgis>;
 
 %shared_ptr(AnalyticBSMHullWhiteEngine)
 class AnalyticBSMHullWhiteEngine : public PricingEngine {
@@ -298,7 +322,7 @@ class AnalyticPDFHestonEngine : public PricingEngine {
     Real cdf(Real X, Time t) const;
 };
 
-%shared_ptr(BaroneAdesiWhaleyApproximationEngine);
+%shared_ptr(BaroneAdesiWhaleyApproximationEngine)
 class BaroneAdesiWhaleyApproximationEngine : public PricingEngine {
   public:
     BaroneAdesiWhaleyApproximationEngine(
@@ -328,7 +352,7 @@ class BatesDoubleExpEngine : public AnalyticHestonEngine {
         Real relTolerance, Size maxEvaluations);
 };
 
-%shared_ptr(BjerksundStenslandApproximationEngine);
+%shared_ptr(BjerksundStenslandApproximationEngine)
 class BjerksundStenslandApproximationEngine : public PricingEngine {
   public:
     BjerksundStenslandApproximationEngine(
@@ -441,7 +465,7 @@ class FdBatesVanillaEngine : public PricingEngine {
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
 };
 
-%shared_ptr(FdCEVVanillaEngine);
+%shared_ptr(FdCEVVanillaEngine)
 class FdCEVVanillaEngine : public PricingEngine {
   public:
     FdCEVVanillaEngine(
@@ -509,7 +533,7 @@ class MakeFdHestonVanillaEngine {
     }
 };
 
-%shared_ptr(FdSabrVanillaEngine);
+%shared_ptr(FdSabrVanillaEngine)
 class FdSabrVanillaEngine : public PricingEngine {
   public:
     FdSabrVanillaEngine(
@@ -530,7 +554,7 @@ class FFTVarianceGammaEngine : public PricingEngine {
         const ext::shared_ptr<VarianceGammaProcess>& process,
         Real logStrikeSpacing = 0.001);
     void precalculate(
-        const std::vector<ext::shared_ptr<Instrument> >& optionList);
+        const std::vector<ext::shared_ptr<Instrument>>& optionList);
 };
 
 %shared_ptr(FFTVanillaEngine)
@@ -540,7 +564,7 @@ class FFTVanillaEngine : public PricingEngine {
         const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Real logStrikeSpacing = 0.001);
     void precalculate(
-        const std::vector<ext::shared_ptr<Instrument> >& optionList);
+        const std::vector<ext::shared_ptr<Instrument>>& optionList);
 };
 
 %shared_ptr(HestonExpansionEngine)
@@ -561,7 +585,7 @@ class IntegralEngine : public PricingEngine {
         ext::shared_ptr<GeneralizedBlackScholesProcess>);
 };
 
-%shared_ptr(JuQuadraticApproximationEngine);
+%shared_ptr(JuQuadraticApproximationEngine)
 class JuQuadraticApproximationEngine : public PricingEngine {
   public:
     JuQuadraticApproximationEngine(
@@ -574,7 +598,7 @@ template <class RNG>
 class MCEuropeanEngine : public PricingEngine {
   public:
     MCEuropeanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Size timeSteps,
         Size timeStepsPerYear,
         bool brownianBridge,
@@ -619,7 +643,7 @@ template <class RNG>
 class MCAmericanEngine : public PricingEngine {
   public:
     MCAmericanEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Size timeSteps,
         Size timeStepsPerYear,
         bool antitheticVariate,
@@ -631,7 +655,7 @@ class MCAmericanEngine : public PricingEngine {
         Size polynomOrder,
         LsmBasisSystem::PolynomType polynomType,
         Size nCalibrationSamples=Null<Size>(),
-        const boost::optional<bool> &antitheticVariateCalibration=boost::none,
+        const boost::optional<bool>& antitheticVariateCalibration=boost::none,
         BigNatural seedCalibration=Null<Size>());
 };
 
@@ -681,7 +705,7 @@ template <class RNG>
 class MCEuropeanHestonEngine : public PricingEngine {
   public:
     MCEuropeanHestonEngine(
-        const ext::shared_ptr<HestonProcess> &,
+        const ext::shared_ptr<HestonProcess>& ,
         Size timeSteps,
         Size timeStepsPerYear,
         bool antitheticVariate,
@@ -728,7 +752,7 @@ template <class RNG>
 class MCEuropeanGJRGARCHEngine : public PricingEngine {
   public:
     MCEuropeanGJRGARCHEngine(
-        const ext::shared_ptr<GJRGARCHProcess> &,
+        const ext::shared_ptr<GJRGARCHProcess>& ,
         Size timeSteps,
         Size timeStepsPerYear,
         bool antitheticVariate,

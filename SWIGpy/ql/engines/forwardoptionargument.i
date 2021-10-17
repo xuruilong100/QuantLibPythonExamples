@@ -9,20 +9,33 @@
 
 %{
 using QuantLib::ForwardVanillaEngine;
+using QuantLib::ForwardPerformanceVanillaEngine;
 using QuantLib::AnalyticHestonForwardEuropeanEngine;
 using QuantLib::MCForwardEuropeanBSEngine;
 using QuantLib::MCForwardEuropeanHestonEngine;
 using QuantLib::MakeMCForwardEuropeanBSEngine;
 using QuantLib::MakeMCForwardEuropeanHestonEngine;
-typedef ForwardVanillaEngine<AnalyticEuropeanEngine> ForwardEuropeanEngine;
 %}
 
-%shared_ptr(ForwardEuropeanEngine)
-class ForwardEuropeanEngine : public PricingEngine {
+%shared_ptr(ForwardVanillaEngine<AnalyticEuropeanEngine>)
+template <class Engine>
+class ForwardVanillaEngine : public PricingEngine {
   public:
-    ForwardEuropeanEngine(
+    ForwardVanillaEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess>);
 };
+
+%template(ForwardEuropeanEngine) ForwardVanillaEngine<AnalyticEuropeanEngine>;
+
+%shared_ptr(ForwardPerformanceVanillaEngine<AnalyticEuropeanEngine>)
+template <class Engine>
+class ForwardPerformanceVanillaEngine : public ForwardVanillaEngine<Engine> {
+  public:
+    ForwardPerformanceVanillaEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>&);
+};
+
+%template(ForwardPerformanceEuropeanEngine) ForwardPerformanceVanillaEngine<AnalyticEuropeanEngine>;
 
 %shared_ptr(AnalyticHestonForwardEuropeanEngine)
 class AnalyticHestonForwardEuropeanEngine : public PricingEngine {
@@ -33,7 +46,7 @@ class AnalyticHestonForwardEuropeanEngine : public PricingEngine {
     Real propagator(
         Time resetTime, Real varReset) const;
     ext::shared_ptr<AnalyticHestonEngine> forwardChF(
-        Handle<Quote> &spotReset, Real varReset) const;
+        Handle<Quote>& spotReset, Real varReset) const;
 };
 
 %shared_ptr(MCForwardEuropeanBSEngine<PseudoRandom>);
@@ -42,7 +55,7 @@ template <class RNG>
 class MCForwardEuropeanBSEngine : public PricingEngine {
   public:
     MCForwardEuropeanBSEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Size timeSteps,
         Size timeStepsPerYear,
         bool brownianBridge,
@@ -86,7 +99,7 @@ template <class RNG>
 class MCForwardEuropeanHestonEngine : public PricingEngine {
   public:
     MCForwardEuropeanHestonEngine(
-        const ext::shared_ptr<HestonProcess> &process,
+        const ext::shared_ptr<HestonProcess>& process,
         Size timeSteps,
         Size timeStepsPerYear,
         bool antitheticVariate,

@@ -24,7 +24,7 @@ using QuantLib::GapPayoff;
 using QuantLib::VanillaForwardPayoff;
 %}
 
-%shared_ptr(Payoff);
+%shared_ptr(Payoff)
 class Payoff {
   private:
     Payoff();
@@ -47,8 +47,8 @@ class BasketPayoff : public Payoff {
   private:
     BasketPayoff();
   public:
-    Real operator()(const Array &a) const;
-    Real accumulate(const Array &a) const;
+    Real operator()(const Array& a) const;
+    Real accumulate(const Array& a) const;
     ext::shared_ptr<Payoff> basePayoff();
 };
 

@@ -24,8 +24,8 @@ class Coupon : public CashFlow {
     BigInteger accrualDays() const;
     Real rate() const;
     DayCounter dayCounter() const;
-    Time accruedPeriod(const Date &) const;
-    BigInteger accruedDays(const Date &) const;
+    Time accruedPeriod(const Date& ) const;
+    BigInteger accruedDays(const Date& ) const;
     Real accruedAmount(const Date& date) const;
 };
 

@@ -25,7 +25,7 @@ class FdmLinearOpIterator {
         std::vector<Size> coordinates,
         Size index);
     FdmLinearOpIterator(
-        const Disposable<FdmLinearOpIterator> & from);
+        const Disposable<FdmLinearOpIterator>& from);
 
     Size index() const;
     const std::vector<Size>& coordinates() const;

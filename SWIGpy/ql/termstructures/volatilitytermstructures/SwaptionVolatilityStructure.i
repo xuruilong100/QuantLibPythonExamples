@@ -10,7 +10,7 @@
 using QuantLib::SwaptionVolatilityStructure;
 %}
 
-%shared_ptr(SwaptionVolatilityStructure);
+%shared_ptr(SwaptionVolatilityStructure)
 class SwaptionVolatilityStructure : public VolatilityTermStructure {
   private:
     SwaptionVolatilityStructure();

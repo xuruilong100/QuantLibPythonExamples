@@ -20,11 +20,6 @@ class EngineType(object):
     FFT = 'FFT'
 
 
-def timeToDays(t):
-    # FLOATING_POINT_EXCEPTION
-    return Period(int(t * 360 + 0.5), Days)
-
-
 def makeProcess(u,
                 q,
                 r,
@@ -130,8 +125,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                samples,
                                tolerance,
                                testGreeks=False):
-        calculated = dict()
-        expected = dict()
 
         # test options
         types = [Option.Call, Option.Put]
@@ -723,7 +716,7 @@ class EuropeanOptionTest(unittest.TestCase):
                                             implVol = option.impliedVolatility(
                                                 value, process,
                                                 tolerance, maxEvaluations)
-                                        except Exception as e:
+                                        except Exception:
                                             self.fail('implied vol calculation failed.')
 
                                     if abs(implVol - v) > tolerance:
@@ -1080,11 +1073,11 @@ class EuropeanOptionTest(unittest.TestCase):
                 # check local vol pricing
                 # delta/gamma are not the same by definition (model implied greeks)
 
-                for i in schemeDescs.keys():
+                for k in schemeDescs.keys():
                     option.setPricingEngine(
                         FdBlackScholesVanillaEngine(
                             process, 25, 100, 0,
-                            schemeDescs[i], True, 0.35))
+                            schemeDescs[k], True, 0.35))
                     calculatedNPV = option.NPV()
                     self.assertFalse(
                         abs(expectedNPV - calculatedNPV) > tol * expectedNPV)

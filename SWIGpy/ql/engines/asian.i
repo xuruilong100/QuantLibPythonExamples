@@ -98,8 +98,8 @@ class AnalyticDiscreteGeometricAveragePriceAsianHestonEngine : public PricingEng
             Real wr, Real wi,
             Time t, Time T,
             Size kStar,
-            const std::vector<Time> &t_n,
-            const std::vector<Time> &tauK) const {
+            const std::vector<Time>& t_n,
+            const std::vector<Time>& tauK) const {
             std::complex<Real> s(sr, si), w(wr, wi);
             std::complex<Real> tmp = self->Phi(
                 s, w, t, T, kStar, t_n, tauK);
@@ -122,7 +122,7 @@ template <class RNG>
 class MCDiscreteArithmeticAPEngine : public PricingEngine {
   public:
     MCDiscreteArithmeticAPEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         bool brownianBridge,
         bool antitheticVariate,
         bool controlVariate,
@@ -165,7 +165,7 @@ template <class RNG>
 class MCDiscreteArithmeticAPHestonEngine : public PricingEngine {
   public:
     MCDiscreteArithmeticAPHestonEngine(
-        const ext::shared_ptr<HestonProcess> &process,
+        const ext::shared_ptr<HestonProcess>& process,
         bool antitheticVariate,
         Size requiredSamples,
         Real requiredTolerance,
@@ -209,7 +209,7 @@ template <class RNG>
 class MCDiscreteArithmeticASEngine : public PricingEngine {
   public:
     MCDiscreteArithmeticASEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         bool brownianBridge,
         bool antitheticVariate,
         Size requiredSamples,
@@ -251,7 +251,7 @@ class MCDiscreteGeometricAPEngine : public PricingEngine {
     %feature("kwargs") MCDiscreteGeometricAPEngine;
   public:
     MCDiscreteGeometricAPEngine(
-        const ext::shared_ptr<GeneralizedBlackScholesProcess> &process,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         bool brownianBridge,
         bool antitheticVariate,
         Size requiredSamples,
@@ -292,7 +292,7 @@ template <class RNG>
 class MCDiscreteGeometricAPHestonEngine : public PricingEngine {
   public:
     MCDiscreteGeometricAPHestonEngine(
-        const ext::shared_ptr<HestonProcess> &process,
+        const ext::shared_ptr<HestonProcess>& process,
         bool antitheticVariate,
         Size requiredSamples,
         Real requiredTolerance,

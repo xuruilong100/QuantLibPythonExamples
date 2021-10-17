@@ -13,22 +13,20 @@
 %template(BoolVector) std::vector<bool>;
 
 %template(DoublePair) std::pair<double, double>;
-%template(DoublePairVector) std::vector<std::pair<double, double> >;
-%template(PairDoubleVector) std::pair<std::vector<double>, std::vector<double> >;
+%template(DoublePairVector) std::vector<std::pair<double, double>>;
+%template(PairDoubleVector) std::pair<std::vector<double>, std::vector<double>>;
 
 %template(NodePair) std::pair<Date, double>;
-%template(NodeVector) std::vector<std::pair<Date, double> >;
+%template(NodeVector) std::vector<std::pair<Date, double>>;
 
-%template(DoubleVectorVector) std::vector<std::vector<Real> >;
+%template(DoubleVectorVector) std::vector<std::vector<Real>>;
 
-namespace std {
-    %template(QuoteVector) vector<ext::shared_ptr<Quote> >;
-    %template(QuoteVectorVector) vector<vector<ext::shared_ptr<Quote> > >;
-    %template(QuoteHandleVector) vector<Handle<Quote> >;
-    %template(QuoteHandleVectorVector) vector<vector<Handle<Quote> > >;
-    %template(RelinkableQuoteHandleVector) vector<RelinkableHandle<Quote> >;
-    %template(RelinkableQuoteHandleVectorVector) vector<vector<RelinkableHandle<Quote> > >;
-}
+%template(QuoteVector) std::vector<ext::shared_ptr<Quote>>;
+%template(QuoteVectorVector) std::vector<std::vector<ext::shared_ptr<Quote>>>;
+%template(QuoteHandleVector) std::vector<Handle<Quote>>;
+%template(QuoteHandleVectorVector) std::vector<std::vector<Handle<Quote>>>;
+%template(RelinkableQuoteHandleVector) std::vector<RelinkableHandle<Quote>>;
+%template(RelinkableQuoteHandleVectorVector) std::vector<std::vector<RelinkableHandle<Quote>>>;
 
 %{
 template <class T, class U>

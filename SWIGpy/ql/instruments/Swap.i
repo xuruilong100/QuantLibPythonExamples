@@ -14,14 +14,14 @@ using QuantLib::Swap;
 class Swap : public Instrument {
   public:
     enum Type { Receiver = -1 , Payer = 1 };
-    Swap(const std::vector<ext::shared_ptr<CashFlow> >& firstLeg,
-         const std::vector<ext::shared_ptr<CashFlow> >& secondLeg);
+    Swap(const std::vector<ext::shared_ptr<CashFlow>>& firstLeg,
+         const std::vector<ext::shared_ptr<CashFlow>>& secondLeg);
     Swap(const std::vector<Leg>& legs,
          const std::vector<bool>& payer);
     Size numberOfLegs() const;
     Date startDate();
     Date maturityDate();
-    const Leg & leg(Size i);
+    const Leg& leg(Size i);
     Real legNPV(Size j) const;
     Real legBPS(Size k) const;
     DiscountFactor startDiscounts(Size j) const;

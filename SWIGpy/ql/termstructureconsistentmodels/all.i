@@ -41,7 +41,7 @@ class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
         const Date& fixing,
         const Date& referenceDate = Null<Date>(),
         Real y = 0.0,
-        const ext::shared_ptr< IborIndex >& iborIdx=ext::shared_ptr< IborIndex >()) const;
+        const ext::shared_ptr<IborIndex>& iborIdx=ext::shared_ptr<IborIndex>()) const;
     Real swapRate(
         const Date& fixing, const Period& tenor,
         const Date& referenceDate = Null<Date>(), Real y = 0.0,
@@ -77,14 +77,14 @@ class Gsr : public Gaussian1dModel, public CalibratedModel {
     // constant mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
-        std::vector<Handle<Quote> > volatilities,
+        std::vector<Handle<Quote>> volatilities,
         const Handle<Quote>& reversion,
         Real T = 60.0);
     // piecewise mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
-        std::vector<Handle<Quote> > volatilities,
-        std::vector<Handle<Quote> > reversions,
+        std::vector<Handle<Quote>> volatilities,
+        std::vector<Handle<Quote>> reversions,
         Real T = 60.0);
 
     Real numeraireTime() const;
@@ -164,14 +164,14 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
         std::vector<Real> adjustmentFactors_;
         std::vector<Real> digitalsAdjustmentFactors_;
         std::vector<std::string> messages_;
-        std::vector<std::vector<Real> > smileStrikes_;
-        std::vector<std::vector<Real> > marketRawCallPremium_;
-        std::vector<std::vector<Real> > marketRawPutPremium_;
-        std::vector<std::vector<Real> > marketCallPremium_;
-        std::vector<std::vector<Real> > marketPutPremium_;
-        std::vector<std::vector<Real> > modelCallPremium_;
-        std::vector<std::vector<Real> > modelPutPremium_;
-        std::vector<std::vector<Real> > marketVega_;
+        std::vector<std::vector<Real>> smileStrikes_;
+        std::vector<std::vector<Real>> marketRawCallPremium_;
+        std::vector<std::vector<Real>> marketRawPutPremium_;
+        std::vector<std::vector<Real>> marketCallPremium_;
+        std::vector<std::vector<Real>> marketPutPremium_;
+        std::vector<std::vector<Real>> modelCallPremium_;
+        std::vector<std::vector<Real>> modelPutPremium_;
+        std::vector<std::vector<Real>> marketVega_;
         std::vector<Real> marketZerorate_;
         std::vector<Real> modelZerorate_;
     };
@@ -205,23 +205,23 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
     const Array& volatility();
 
     void calibrate(
-        const std::vector<ext::shared_ptr<CalibrationHelper> >& helper,
+        const std::vector<ext::shared_ptr<CalibrationHelper>>& helper,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
         const std::vector<Real>& weights = std::vector<Real>(),
         const std::vector<bool>& fixParameters = std::vector<bool>());
     void calibrate(
-        const std::vector<ext::shared_ptr<BlackCalibrationHelper> >& helper,
+        const std::vector<ext::shared_ptr<BlackCalibrationHelper>>& helper,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
         const std::vector<Real>& weights = std::vector<Real>(),
         const std::vector<bool>& fixParameters = std::vector<bool>());
 
-    std::vector<std::pair<Size, Size> > arbitrageIndices() const;
+    std::vector<std::pair<Size, Size>> arbitrageIndices() const;
     void forceArbitrageIndices(
-        const std::vector<std::pair<Size,Size> >& indices);
+        const std::vector<std::pair<Size,Size>>& indices);
 };
 
 #endif

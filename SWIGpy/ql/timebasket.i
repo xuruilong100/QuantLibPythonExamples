@@ -16,7 +16,7 @@ class TimeBasket {
     TimeBasket(const std::vector<Date>&, const std::vector<Real>&);
     Size size();
     TimeBasket rebin(const std::vector<Date>&) const;
-    bool hasDate(const Date &) const;
+    bool hasDate(const Date& ) const;
     %extend {
         Real __getitem__(const Date& d) {
             return (*self)[d];

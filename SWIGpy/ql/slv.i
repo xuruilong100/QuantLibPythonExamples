@@ -55,7 +55,7 @@ class SobolBrownianGenerator : public BrownianGenerator {
         const std::vector<std::vector<Real>>& variates);
 };
 
-%shared_ptr(BrownianGeneratorFactory);
+%shared_ptr(BrownianGeneratorFactory)
 class BrownianGeneratorFactory {
   private:
     BrownianGeneratorFactory();
@@ -64,13 +64,13 @@ class BrownianGeneratorFactory {
         Size factors, Size steps);
 };
 
-%shared_ptr(MTBrownianGeneratorFactory);
+%shared_ptr(MTBrownianGeneratorFactory)
 class MTBrownianGeneratorFactory : public BrownianGeneratorFactory {
   public:
     MTBrownianGeneratorFactory(unsigned long seed = 0);
 };
 
-%shared_ptr(SobolBrownianGeneratorFactory);
+%shared_ptr(SobolBrownianGeneratorFactory)
 class SobolBrownianGeneratorFactory : public BrownianGeneratorFactory {
   public:
     SobolBrownianGeneratorFactory(

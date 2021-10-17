@@ -321,13 +321,13 @@ class CallableFixedRateBond : public CallableBond {
     CallableFixedRateBond(
         Natural settlementDays,
         Real faceAmount,
-        const Schedule &schedule,
+        const Schedule& schedule,
         const std::vector<Rate>& coupons,
         const DayCounter& accrualDayCounter,
         BusinessDayConvention paymentConvention,
         Real redemption,
         Date issueDate,
-        const std::vector<ext::shared_ptr<Callability> >& putCallSchedule,
+        const std::vector<ext::shared_ptr<Callability>>& putCallSchedule,
         const Period& exCouponPeriod = Period(),
         const Calendar& exCouponCalendar = Calendar(),
         BusinessDayConvention exCouponConvention = Unadjusted,
@@ -347,7 +347,7 @@ class CallableZeroCouponBond : public CallableBond {
         BusinessDayConvention paymentConvention = Following,
         Real redemption = 100.0,
         const Date& issueDate = Date(),
-        const std::vector<ext::shared_ptr<Callability> >& putCallSchedule = std::vector<ext::shared_ptr<Callability> >());
+        const std::vector<ext::shared_ptr<Callability>>& putCallSchedule = std::vector<ext::shared_ptr<Callability>>());
 };
 
 %shared_ptr(ConvertibleBond)
@@ -367,8 +367,8 @@ class ConvertibleFixedCouponBond : public ConvertibleBond {
     ConvertibleFixedCouponBond(
         const ext::shared_ptr<Exercise>& exercise,
         Real conversionRatio,
-        const std::vector<ext::shared_ptr<Dividend> >& dividends,
-        const std::vector<ext::shared_ptr<Callability> >& callability,
+        const std::vector<ext::shared_ptr<Dividend>>& dividends,
+        const std::vector<ext::shared_ptr<Callability>>& callability,
         const Handle<Quote>& creditSpread,
         const Date& issueDate,
         Natural settlementDays,
@@ -388,8 +388,8 @@ class ConvertibleFloatingRateBond : public ConvertibleBond {
     ConvertibleFloatingRateBond(
         const ext::shared_ptr<Exercise>& exercise,
         Real conversionRatio,
-        const std::vector<ext::shared_ptr<Dividend> >& dividends,
-        const std::vector<ext::shared_ptr<Callability> >& callability,
+        const std::vector<ext::shared_ptr<Dividend>>& dividends,
+        const std::vector<ext::shared_ptr<Callability>>& callability,
         const Handle<Quote>& creditSpread,
         const Date& issueDate,
         Natural settlementDays,
@@ -411,8 +411,8 @@ class ConvertibleZeroCouponBond : public ConvertibleBond {
     ConvertibleZeroCouponBond(
         const ext::shared_ptr<Exercise>& exercise,
         Real conversionRatio,
-        const std::vector<ext::shared_ptr<Dividend> >& dividends,
-        const std::vector<ext::shared_ptr<Callability> >& callability,
+        const std::vector<ext::shared_ptr<Dividend>>& dividends,
+        const std::vector<ext::shared_ptr<Callability>>& callability,
         const Handle<Quote>& creditSpread,
         const Date& issueDate,
         Natural settlementDays,
@@ -427,9 +427,9 @@ class ZeroCouponBond : public Bond {
   public:
     ZeroCouponBond(
         Natural settlementDays,
-        const Calendar &calendar,
+        const Calendar& calendar,
         Real faceAmount,
-        const Date & maturityDate,
+        const Date& maturityDate,
         BusinessDayConvention paymentConvention = QuantLib::Following,
         Real redemption = 100.0,
         const Date& issueDate = Date());

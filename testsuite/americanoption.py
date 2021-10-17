@@ -472,9 +472,9 @@ class AmericanOptionTest(unittest.TestCase):
         maturityDate = today + Period(5, Years)
 
         class TestDescription(object):
-            def __init__(self, strike, type, expected):
+            def __init__(self, strike, optType, expected):
                 self.strike = strike
-                self.type = type
+                self.type = optType
                 self.expected = expected
 
         testDescriptions = [
@@ -488,10 +488,10 @@ class AmericanOptionTest(unittest.TestCase):
 
         for desc in testDescriptions:
             strike = desc.strike
-            type = desc.type
+            optType = desc.type
 
             option = VanillaOption(
-                PlainVanillaPayoff(type, strike),
+                PlainVanillaPayoff(optType, strike),
                 AmericanExercise(maturityDate))
 
             option.setPricingEngine(engine)

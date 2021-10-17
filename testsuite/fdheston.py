@@ -255,7 +255,7 @@ class FdHestonTest(unittest.TestCase):
         analyticEngine = AnalyticBarrierEngine(bsProcess)
 
         for value in values:
-            exDate = todaysDate + Period(timeToDays(value.t, 365), Days)
+            exDate = todaysDate + timeToDays(value.t, 365)
             exercise = EuropeanExercise(exDate)
 
             as_simple_quote(spot.currentLink()).setValue(value.s)

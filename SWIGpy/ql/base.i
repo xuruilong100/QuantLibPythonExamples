@@ -47,7 +47,7 @@ class Observable {
     void notifyObservers();
 };
 
-%shared_ptr(Observer);
+%shared_ptr(Observer)
 class Observer {
   private:
     Observer();
@@ -61,7 +61,7 @@ class Observer {
     void deepUpdate();
 };
 
-%shared_ptr(LazyObject);
+%shared_ptr(LazyObject)
 class LazyObject : public Observer, public Observable {
   private:
     LazyObject();
@@ -124,7 +124,7 @@ class Instrument : public LazyObject {
     void fetchResults(const PricingEngine::results*) const;
 };
 
-%template(InstrumentVector) std::vector<ext::shared_ptr<Instrument> >;
+%template(InstrumentVector) std::vector<ext::shared_ptr<Instrument>>;
 
 %shared_ptr(Extrapolator)
 class Extrapolator {
@@ -168,11 +168,11 @@ class CashFlow : public Event {
   public:
     Real amount() const;
     Date exCouponDate() const;
-    bool tradingExCoupon(const Date &refDate=Date()) const;
+    bool tradingExCoupon(const Date& refDate=Date()) const;
 };
 
-%template(Leg) std::vector<ext::shared_ptr<CashFlow> >;
-typedef std::vector<ext::shared_ptr<CashFlow> > Leg;
+%template(Leg) std::vector<ext::shared_ptr<CashFlow>>;
+typedef std::vector<ext::shared_ptr<CashFlow>> Leg;
 %template(LegVector) std::vector<Leg>;
 
 %shared_ptr(CalibratedModel)
@@ -181,7 +181,7 @@ class CalibratedModel : public Observer, public Observable {
     CalibratedModel();
   public:
     void calibrate(
-        const std::vector<ext::shared_ptr<CalibrationHelper> >& helper,
+        const std::vector<ext::shared_ptr<CalibrationHelper>>& helper,
         OptimizationMethod& method,
         const EndCriteria& endCriteria,
         const Constraint& constraint = Constraint(),
@@ -189,12 +189,12 @@ class CalibratedModel : public Observer, public Observable {
         const std::vector<bool>& fixParameters = std::vector<bool>());
     Real value(
         const Array& params,
-        const std::vector<ext::shared_ptr<CalibrationHelper> >& helpers);
+        const std::vector<ext::shared_ptr<CalibrationHelper>>& helpers);
     const ext::shared_ptr<Constraint>& constraint() const;
     EndCriteria::Type endCriteria() const;
     const Array& problemValues() const;
     Array params() const;
-    void setParams(const Array &params);
+    void setParams(const Array& params);
     Integer functionEvaluation() const;
 };
 
@@ -243,7 +243,7 @@ class Index : public Observable {
     }
 };
 
-%shared_ptr(SmileSection);
+%shared_ptr(SmileSection)
 class SmileSection : public Observer, public Observable {
   private:
     SmileSection();
@@ -282,7 +282,7 @@ class SmileSection : public Observer, public Observable {
         Real shift = 0.0) const;
 };
 
-%template(SmileSectionVector) std::vector<ext::shared_ptr<SmileSection> >;
+%template(SmileSectionVector) std::vector<ext::shared_ptr<SmileSection>>;
 
 %shared_ptr(BootstrapHelper<YieldTermStructure>)
 %shared_ptr(BootstrapHelper<DefaultProbabilityTermStructure>)
@@ -393,11 +393,11 @@ class StochasticProcess : public Observer, public Observable {
     Time time(const Date&) const;
 };
 
-%template(StochasticProcessVector) std::vector<ext::shared_ptr<StochasticProcess> >;
+%template(StochasticProcessVector) std::vector<ext::shared_ptr<StochasticProcess>>;
 
 %template(CalibrationErrorTuple) ext::tuple<Real, Real, Real>;
-%template(CalibrationPair) std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote> >;
-%template(CalibrationSet) std::vector<std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote> > >;
+%template(CalibrationPair) std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>;
+%template(CalibrationSet) std::vector<std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>>;
 
 %shared_ptr(AndreasenHugeVolatilityInterpl)
 class AndreasenHugeVolatilityInterpl : public LazyObject {
@@ -477,10 +477,10 @@ class FloatingRateCouponPricer : public Observer, public Observable {
     Rate capletRate(Rate effectiveCap) const;
     Real floorletPrice(Rate effectiveFloor) const;
     Rate floorletRate(Rate effectiveFloor) const;
-    void initialize(const FloatingRateCoupon &coupon);
+    void initialize(const FloatingRateCoupon& coupon);
 };
 
-%template(FloatingRateCouponPricerVector) std::vector<ext::shared_ptr<FloatingRateCouponPricer> >;
+%template(FloatingRateCouponPricerVector) std::vector<ext::shared_ptr<FloatingRateCouponPricer>>;
 
 void setCouponPricer(
     const Leg&,
@@ -488,7 +488,7 @@ void setCouponPricer(
 
 void setCouponPricers(
     const Leg& leg,
-    const std::vector<ext::shared_ptr<FloatingRateCouponPricer> >&);
+    const std::vector<ext::shared_ptr<FloatingRateCouponPricer>>&);
 
 void setCouponPricers(
     const Leg& leg,
@@ -583,7 +583,7 @@ struct GlobalBootstrap {
     GlobalBootstrap(
         Real accuracy = Null<double>());
     GlobalBootstrap(
-        const std::vector<ext::shared_ptr<RateHelper> >& additionalHelpers,
+        const std::vector<ext::shared_ptr<RateHelper>>& additionalHelpers,
         const std::vector<Date>& additionalDates,
         Real accuracy = Null<double>());
 };

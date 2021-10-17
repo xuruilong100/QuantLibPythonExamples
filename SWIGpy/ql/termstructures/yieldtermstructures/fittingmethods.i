@@ -33,7 +33,7 @@ class FittingMethod {
     Array l2() const;
     ext::shared_ptr<OptimizationMethod> optimizationMethod() const;
     DiscountFactor discount(
-        const Array &x, Time t) const;
+        const Array& x, Time t) const;
 };
 
 class ExponentialSplinesFitting : public FittingMethod {

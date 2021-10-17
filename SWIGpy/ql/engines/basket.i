@@ -77,7 +77,7 @@ class MCAmericanBasketEngine : public PricingEngine {
 
   public:
     MCAmericanBasketEngine(
-        const ext::shared_ptr<StochasticProcessArray> &,
+        const ext::shared_ptr<StochasticProcessArray>& ,
         Size timeSteps,
         Size timeStepsPerYear,
         bool brownianBridge,

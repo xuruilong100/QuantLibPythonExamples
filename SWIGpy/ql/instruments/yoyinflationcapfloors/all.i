@@ -16,7 +16,7 @@ using QuantLib::YoYInflationCollar;
 class YoYInflationCap : public YoYInflationCapFloor {
   public:
     YoYInflationCap(
-        const std::vector<ext::shared_ptr<CashFlow> >& leg,
+        const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& capRates);
 };
 
@@ -24,7 +24,7 @@ class YoYInflationCap : public YoYInflationCapFloor {
 class YoYInflationFloor : public YoYInflationCapFloor {
   public:
     YoYInflationFloor(
-        const std::vector<ext::shared_ptr<CashFlow> >& leg,
+        const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& floorRates);
 };
 
@@ -32,7 +32,7 @@ class YoYInflationFloor : public YoYInflationCapFloor {
 class YoYInflationCollar : public YoYInflationCapFloor {
   public:
     YoYInflationCollar(
-        const std::vector<ext::shared_ptr<CashFlow> >& leg,
+        const std::vector<ext::shared_ptr<CashFlow>>& leg,
         const std::vector<Rate>& capRates,
         const std::vector<Rate>& floorRates);
 };

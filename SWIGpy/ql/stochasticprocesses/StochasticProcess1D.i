@@ -50,6 +50,6 @@ class StochasticProcess1D : public StochasticProcess {
       Real apply(Real x0, Real dx) const;
 };
 
-%template(StochasticProcess1DVector) std::vector<ext::shared_ptr<StochasticProcess1D> >;
+%template(StochasticProcess1DVector) std::vector<ext::shared_ptr<StochasticProcess1D>>;
 
 #endif

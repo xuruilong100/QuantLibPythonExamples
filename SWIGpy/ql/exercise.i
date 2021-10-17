@@ -50,7 +50,7 @@ class RebatedExercise : public Exercise {
                     BusinessDayConvention rebatePaymentConvention = Following);
     Real rebate(Size index) const;
     Date rebatePaymentDate(Size index) const;
-    const std::vector<Real> &rebates() const;
+    const std::vector<Real>& rebates() const;
 };
 
 %shared_ptr(EarlyExercise)

@@ -12614,6 +12614,17 @@ class ForwardEuropeanEngine(PricingEngine):
 # Register ForwardEuropeanEngine in _QuantLib:
 _QuantLib.ForwardEuropeanEngine_swigregister(ForwardEuropeanEngine)
 
+class ForwardPerformanceEuropeanEngine(ForwardEuropeanEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.ForwardPerformanceEuropeanEngine_swiginit(self, _QuantLib.new_ForwardPerformanceEuropeanEngine(arg2))
+    __swig_destroy__ = _QuantLib.delete_ForwardPerformanceEuropeanEngine
+
+# Register ForwardPerformanceEuropeanEngine in _QuantLib:
+_QuantLib.ForwardPerformanceEuropeanEngine_swigregister(ForwardPerformanceEuropeanEngine)
+
 class AnalyticHestonForwardEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -13099,17 +13110,6 @@ class BinomialCRRVanillaEngine(PricingEngine):
 # Register BinomialCRRVanillaEngine in _QuantLib:
 _QuantLib.BinomialCRRVanillaEngine_swigregister(BinomialCRRVanillaEngine)
 
-class BinomialJRVanillaEngine(PricingEngine):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, process, timeSteps):
-        _QuantLib.BinomialJRVanillaEngine_swiginit(self, _QuantLib.new_BinomialJRVanillaEngine(process, timeSteps))
-    __swig_destroy__ = _QuantLib.delete_BinomialJRVanillaEngine
-
-# Register BinomialJRVanillaEngine in _QuantLib:
-_QuantLib.BinomialJRVanillaEngine_swigregister(BinomialJRVanillaEngine)
-
 class BinomialEQPVanillaEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -13121,27 +13121,27 @@ class BinomialEQPVanillaEngine(PricingEngine):
 # Register BinomialEQPVanillaEngine in _QuantLib:
 _QuantLib.BinomialEQPVanillaEngine_swigregister(BinomialEQPVanillaEngine)
 
-class BinomialTrigeorgisVanillaEngine(PricingEngine):
+class BinomialJ4VanillaEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, process, timeSteps):
-        _QuantLib.BinomialTrigeorgisVanillaEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisVanillaEngine(process, timeSteps))
-    __swig_destroy__ = _QuantLib.delete_BinomialTrigeorgisVanillaEngine
+        _QuantLib.BinomialJ4VanillaEngine_swiginit(self, _QuantLib.new_BinomialJ4VanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJ4VanillaEngine
 
-# Register BinomialTrigeorgisVanillaEngine in _QuantLib:
-_QuantLib.BinomialTrigeorgisVanillaEngine_swigregister(BinomialTrigeorgisVanillaEngine)
+# Register BinomialJ4VanillaEngine in _QuantLib:
+_QuantLib.BinomialJ4VanillaEngine_swigregister(BinomialJ4VanillaEngine)
 
-class BinomialTianVanillaEngine(PricingEngine):
+class BinomialJRVanillaEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, process, timeSteps):
-        _QuantLib.BinomialTianVanillaEngine_swiginit(self, _QuantLib.new_BinomialTianVanillaEngine(process, timeSteps))
-    __swig_destroy__ = _QuantLib.delete_BinomialTianVanillaEngine
+        _QuantLib.BinomialJRVanillaEngine_swiginit(self, _QuantLib.new_BinomialJRVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJRVanillaEngine
 
-# Register BinomialTianVanillaEngine in _QuantLib:
-_QuantLib.BinomialTianVanillaEngine_swigregister(BinomialTianVanillaEngine)
+# Register BinomialJRVanillaEngine in _QuantLib:
+_QuantLib.BinomialJRVanillaEngine_swigregister(BinomialJRVanillaEngine)
 
 class BinomialLRVanillaEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -13154,16 +13154,104 @@ class BinomialLRVanillaEngine(PricingEngine):
 # Register BinomialLRVanillaEngine in _QuantLib:
 _QuantLib.BinomialLRVanillaEngine_swigregister(BinomialLRVanillaEngine)
 
-class BinomialJ4VanillaEngine(PricingEngine):
+class BinomialTianVanillaEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, process, timeSteps):
-        _QuantLib.BinomialJ4VanillaEngine_swiginit(self, _QuantLib.new_BinomialJ4VanillaEngine(process, timeSteps))
-    __swig_destroy__ = _QuantLib.delete_BinomialJ4VanillaEngine
+        _QuantLib.BinomialTianVanillaEngine_swiginit(self, _QuantLib.new_BinomialTianVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTianVanillaEngine
 
-# Register BinomialJ4VanillaEngine in _QuantLib:
-_QuantLib.BinomialJ4VanillaEngine_swigregister(BinomialJ4VanillaEngine)
+# Register BinomialTianVanillaEngine in _QuantLib:
+_QuantLib.BinomialTianVanillaEngine_swigregister(BinomialTianVanillaEngine)
+
+class BinomialTrigeorgisVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialTrigeorgisVanillaEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTrigeorgisVanillaEngine
+
+# Register BinomialTrigeorgisVanillaEngine in _QuantLib:
+_QuantLib.BinomialTrigeorgisVanillaEngine_swigregister(BinomialTrigeorgisVanillaEngine)
+
+class BinomialExCRRVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExCRRVanillaEngine_swiginit(self, _QuantLib.new_BinomialExCRRVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExCRRVanillaEngine
+
+# Register BinomialExCRRVanillaEngine in _QuantLib:
+_QuantLib.BinomialExCRRVanillaEngine_swigregister(BinomialExCRRVanillaEngine)
+
+class BinomialExEQPVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExEQPVanillaEngine_swiginit(self, _QuantLib.new_BinomialExEQPVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExEQPVanillaEngine
+
+# Register BinomialExEQPVanillaEngine in _QuantLib:
+_QuantLib.BinomialExEQPVanillaEngine_swigregister(BinomialExEQPVanillaEngine)
+
+class BinomialExJ4VanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExJ4VanillaEngine_swiginit(self, _QuantLib.new_BinomialExJ4VanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExJ4VanillaEngine
+
+# Register BinomialExJ4VanillaEngine in _QuantLib:
+_QuantLib.BinomialExJ4VanillaEngine_swigregister(BinomialExJ4VanillaEngine)
+
+class BinomialExJRVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExJRVanillaEngine_swiginit(self, _QuantLib.new_BinomialExJRVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExJRVanillaEngine
+
+# Register BinomialExJRVanillaEngine in _QuantLib:
+_QuantLib.BinomialExJRVanillaEngine_swigregister(BinomialExJRVanillaEngine)
+
+class BinomialExLRVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExLRVanillaEngine_swiginit(self, _QuantLib.new_BinomialExLRVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExLRVanillaEngine
+
+# Register BinomialExLRVanillaEngine in _QuantLib:
+_QuantLib.BinomialExLRVanillaEngine_swigregister(BinomialExLRVanillaEngine)
+
+class BinomialExTianVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExTianVanillaEngine_swiginit(self, _QuantLib.new_BinomialExTianVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExTianVanillaEngine
+
+# Register BinomialExTianVanillaEngine in _QuantLib:
+_QuantLib.BinomialExTianVanillaEngine_swigregister(BinomialExTianVanillaEngine)
+
+class BinomialExTrigeorgisVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps):
+        _QuantLib.BinomialExTrigeorgisVanillaEngine_swiginit(self, _QuantLib.new_BinomialExTrigeorgisVanillaEngine(process, timeSteps))
+    __swig_destroy__ = _QuantLib.delete_BinomialExTrigeorgisVanillaEngine
+
+# Register BinomialExTrigeorgisVanillaEngine in _QuantLib:
+_QuantLib.BinomialExTrigeorgisVanillaEngine_swigregister(BinomialExTrigeorgisVanillaEngine)
 
 class AnalyticBSMHullWhiteEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -30437,47 +30525,6 @@ class LocalVolCurve(LocalVolTermStructure):
 
 # Register LocalVolCurve in _QuantLib:
 _QuantLib.LocalVolCurve_swigregister(LocalVolCurve)
-
-class SafeFixedLocalVolSurface(LocalVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.SafeFixedLocalVolSurface_swiginit(self, _QuantLib.new_SafeFixedLocalVolSurface(*args))
-
-    def setInterpolationLinearFlat(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationLinearFlat(self, *args)
-
-    def setInterpolationBackwardFlat(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationBackwardFlat(self, *args)
-
-    def setInterpolationConvexMonotone(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationConvexMonotone(self, *args)
-
-    def setInterpolationCubic(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationCubic(self, *args)
-
-    def setInterpolationForwardFlat(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationForwardFlat(self, *args)
-
-    def setInterpolationLinear(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationLinear(self, *args)
-
-    def setInterpolationLogLinear(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationLogLinear(self, *args)
-
-    def setInterpolationDefaultLogCubic(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationDefaultLogCubic(self, *args)
-
-    def setInterpolationMonotonicLogCubic(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationMonotonicLogCubic(self, *args)
-
-    def setInterpolationKrugerLog(self, *args):
-        return _QuantLib.SafeFixedLocalVolSurface_setInterpolationKrugerLog(self, *args)
-    __swig_destroy__ = _QuantLib.delete_SafeFixedLocalVolSurface
-
-# Register SafeFixedLocalVolSurface in _QuantLib:
-_QuantLib.SafeFixedLocalVolSurface_swigregister(SafeFixedLocalVolSurface)
 
 class CustomicLocalVolatility(LocalVolTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

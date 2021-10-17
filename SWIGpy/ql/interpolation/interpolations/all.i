@@ -157,18 +157,18 @@ class NoArbSabrInterpolation : public Interpolation {
   public:
     %extend {
         NoArbSabrInterpolation(
-            const Array &x, // x = strikes
-            const Array &y, // y = volatilities
+            const Array& x, // x = strikes
+            const Array& y, // y = volatilities
             Time t,         // option expiry
-            const Real &forward,
+            const Real& forward,
             Real alpha, Real beta, Real nu, Real rho,
             bool alphaIsFixed,
             bool betaIsFixed,
             bool nuIsFixed,
             bool rhoIsFixed,
             bool vegaWeighted = true,
-            const ext::shared_ptr<EndCriteria> &endCriteria = ext::shared_ptr<EndCriteria>(),
-            const ext::shared_ptr<OptimizationMethod> &optMethod = ext::shared_ptr<OptimizationMethod>(),
+            const ext::shared_ptr<EndCriteria>& endCriteria = ext::shared_ptr<EndCriteria>(),
+            const ext::shared_ptr<OptimizationMethod>& optMethod = ext::shared_ptr<OptimizationMethod>(),
             const Real errorAccept = 0.0020,
             const bool useMaxError = false,
             const Size maxGuesses = 50,
@@ -200,7 +200,7 @@ class NoArbSabrInterpolation : public Interpolation {
     Real rho() const;
     Real rmsError() const;
     Real maxError() const;
-    const std::vector<Real> & interpolationWeights() const;
+    const std::vector<Real>& interpolationWeights() const;
     EndCriteria::Type endCriteria();
 };
 
@@ -209,18 +209,18 @@ class SABRInterpolation : public Interpolation {
   public:
     %extend {
         SABRInterpolation(
-            const Array &x, // x = strikes
-            const Array &y, // y = volatilities
+            const Array& x, // x = strikes
+            const Array& y, // y = volatilities
             Time t,         // option expiry
-            const Real &forward,
+            const Real& forward,
             Real alpha, Real beta, Real nu, Real rho,
             bool alphaIsFixed,
             bool betaIsFixed,
             bool nuIsFixed,
             bool rhoIsFixed,
             bool vegaWeighted = true,
-            const ext::shared_ptr<EndCriteria> &endCriteria = ext::shared_ptr<EndCriteria>(),
-            const ext::shared_ptr<OptimizationMethod> &optMethod = ext::shared_ptr<OptimizationMethod>(),
+            const ext::shared_ptr<EndCriteria>& endCriteria = ext::shared_ptr<EndCriteria>(),
+            const ext::shared_ptr<OptimizationMethod>& optMethod = ext::shared_ptr<OptimizationMethod>(),
             const Real errorAccept = 0.0020,
             const bool useMaxError = false,
             const Size maxGuesses = 50,
@@ -251,7 +251,7 @@ class SABRInterpolation : public Interpolation {
     Real rho() const;
     Real rmsError() const;
     Real maxError() const;
-    const std::vector<Real> & interpolationWeights() const;
+    const std::vector<Real>& interpolationWeights() const;
     EndCriteria::Type endCriteria();
 };
 
@@ -260,17 +260,17 @@ class SviInterpolation : public Interpolation {
   public:
     %extend {
         SviInterpolation(
-            const Array &x, // x = strikes
-            const Array &y, // y = volatilities
+            const Array& x, // x = strikes
+            const Array& y, // y = volatilities
             Time t,         // option expiry
-            const Real &forward,
+            const Real& forward,
             Real a, Real b, Real sigma, Real rho, Real m,
             bool aIsFixed, bool bIsFixed, bool sigmaIsFixed,
             bool rhoIsFixed,
             bool mIsFixed,
             bool vegaWeighted = true,
-            const ext::shared_ptr<EndCriteria> &endCriteria = ext::shared_ptr<EndCriteria>(),
-            const ext::shared_ptr<OptimizationMethod> &optMethod = ext::shared_ptr<OptimizationMethod>(),
+            const ext::shared_ptr<EndCriteria>& endCriteria = ext::shared_ptr<EndCriteria>(),
+            const ext::shared_ptr<OptimizationMethod>& optMethod = ext::shared_ptr<OptimizationMethod>(),
             const Real errorAccept = 0.0020,
             const bool useMaxError = false,
             const Size maxGuesses = 50) {
@@ -298,7 +298,7 @@ class SviInterpolation : public Interpolation {
     Real m() const;
     Real rmsError() const;
     Real maxError() const;
-    const std::vector<Real> &interpolationWeights() const;
+    const std::vector<Real>& interpolationWeights() const;
     EndCriteria::Type endCriteria();
 };
 

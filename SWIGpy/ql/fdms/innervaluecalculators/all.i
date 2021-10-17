@@ -62,7 +62,7 @@ class FdmEscrowedLogInnerValueCalculator: public FdmInnerValueCalculator {
 %shared_ptr(FdmExpExtOUInnerValueCalculator)
 class FdmExpExtOUInnerValueCalculator : public FdmInnerValueCalculator {
   public:
-    typedef std::vector<std::pair<Time, Real> > Shape;
+    typedef std::vector<std::pair<Time, Real>> Shape;
 
     FdmExpExtOUInnerValueCalculator(
         ext::shared_ptr<Payoff> payoff,

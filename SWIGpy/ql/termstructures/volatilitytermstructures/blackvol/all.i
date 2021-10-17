@@ -42,7 +42,7 @@ class HestonBlackVolSurface : public BlackVolTermStructure {
         const AnalyticHestonEngine::Integration& integration = AnalyticHestonEngine::Integration::gaussLaguerre(164));
 };
 
-%shared_ptr(BlackConstantVol);
+%shared_ptr(BlackConstantVol)
 class BlackConstantVol : public BlackVolTermStructure {
   public:
     BlackConstantVol(
@@ -75,7 +75,7 @@ class AndreasenHugeVolatilityAdapter : public BlackVolTermStructure {
         Real eps = 1e-6);
 };
 
-%shared_ptr(BlackVarianceCurve);
+%shared_ptr(BlackVarianceCurve)
 class BlackVarianceCurve : public BlackVolTermStructure {
   public:
     BlackVarianceCurve(
@@ -111,7 +111,7 @@ class BlackVarianceCurve : public BlackVolTermStructure {
     }
 };
 
-%shared_ptr(BlackVarianceSurface);
+%shared_ptr(BlackVarianceSurface)
 class BlackVarianceSurface : public BlackVolTermStructure {
     %feature("kwargs") BlackVarianceSurface;
 
@@ -153,7 +153,7 @@ class ExtendedBlackVarianceCurve : public BlackVarianceTermStructure {
     ExtendedBlackVarianceCurve(
         const Date& referenceDate,
         const std::vector<Date>& dates,
-        std::vector<Handle<Quote> > volatilities,
+        std::vector<Handle<Quote>> volatilities,
         DayCounter dayCounter,
         bool forceMonotoneVariance = true);
 
@@ -196,7 +196,7 @@ class ExtendedBlackVarianceSurface : public BlackVarianceTermStructure {
         const Calendar& calendar,
         const std::vector<Date>& dates,
         std::vector<Real> strikes,
-        const std::vector<Handle<Quote> >& volatilities,
+        const std::vector<Handle<Quote>>& volatilities,
         DayCounter dayCounter,
         Extrapolation lowerExtrapolation = InterpolatorDefaultExtrapolation,
         Extrapolation upperExtrapolation = InterpolatorDefaultExtrapolation);

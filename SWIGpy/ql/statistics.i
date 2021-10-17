@@ -22,7 +22,7 @@ class GeneralStatistics {
   public:
     GeneralStatistics();
     Size samples() const;
-    const std::vector<std::pair<Real,Real> >& data() const;
+    const std::vector<std::pair<Real,Real>>& data() const;
     Real weightSum() const;
     Real mean() const;
     Real variance() const;
