@@ -1,11 +1,3 @@
-// Undefine symbols that are also used in quantlib
-
-/* %{
-#ifdef barrier
-#undef barrier
-#endif
-%} */
-
 %{
 #include <ql/quantlib.hpp>
 
@@ -23,8 +15,6 @@
 #undef BOOST_LIB_NAME
 #endif
 #endif
-
-// add here SWIG version check
 
 #if defined(_MSC_VER)         // Microsoft Visual C++ 6.0
 // disable Swig-dependent warnings
@@ -62,7 +52,6 @@
 %include ../ql/cashflows/CashFlows.i
 %include ../ql/cashflows/Coupon.i
 %include ../ql/cashflows/Dividend.i
-//%include ../ql/cashflows/FloatingRateCouponPricer.i
 %include ../ql/cashflows/Leg.i
 %include ../ql/cashflows/coupons/all.i
 %include ../ql/cashflows/dividends/all.i

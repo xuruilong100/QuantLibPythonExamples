@@ -27,7 +27,6 @@ class SafeInterpolation {
 %{
 typedef SafeInterpolation<QuantLib::T> Safe##T;
 %}
-//%rename(Alias) Safe##T;
 class Safe##T {
   public:
     Safe##T(
@@ -114,7 +113,6 @@ class SafeInterpolation2D {
 %{
 typedef SafeInterpolation2D<QuantLib::T> Safe##T;
 %}
-//%rename(Alias) Safe##T;
 class Safe##T {
   public:
     Safe##T(
@@ -176,7 +174,6 @@ class SafeSABRInterpolation {
 };
 %}
 
-//%rename(SABRInterpolation) SafeSABRInterpolation;
 class SafeSABRInterpolation {
   public:
     SafeSABRInterpolation(
@@ -248,7 +245,6 @@ class SafeConvexMonotoneInterpolation {
 };
 %}
 
-//%rename(ConvexMonotoneInterpolation) SafeConvexMonotoneInterpolation;
 class SafeConvexMonotoneInterpolation {
   public:
     SafeConvexMonotoneInterpolation(

@@ -217,9 +217,9 @@ class FdmHullWhiteSolver : public LazyObject {
     Real valueAt(Real r) const;
 };
 
-%shared_ptr(FdmNdimSolver<4>);
-%shared_ptr(FdmNdimSolver<5>);
-%shared_ptr(FdmNdimSolver<6>);
+%shared_ptr(FdmNdimSolver<4>)
+%shared_ptr(FdmNdimSolver<5>)
+%shared_ptr(FdmNdimSolver<6>)
 template <Size N>
 class FdmNdimSolver : public LazyObject {
   public:

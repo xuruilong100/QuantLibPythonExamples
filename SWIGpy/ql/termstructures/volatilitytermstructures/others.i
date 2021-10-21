@@ -270,7 +270,7 @@ class ConstantYoYOptionletVolatility : public YoYOptionletVolatilitySurface {
         Real displacement=0.0);
 };
 
-%shared_ptr(InterpolatedYoYOptionletVolatilityCurve<Linear>);
+%shared_ptr(InterpolatedYoYOptionletVolatilityCurve<Linear>)
 template <class Interpolator1D>
 class InterpolatedYoYOptionletVolatilityCurve : public YoYOptionletVolatilitySurface {
   public:
@@ -295,7 +295,7 @@ class InterpolatedYoYOptionletVolatilityCurve : public YoYOptionletVolatilitySur
 
 %template(InterpolatedYoYInflationOptionletVolatilityCurve) InterpolatedYoYOptionletVolatilityCurve<Linear>;
 
-%shared_ptr(KInterpolatedYoYOptionletVolatilitySurface<Linear>);
+%shared_ptr(KInterpolatedYoYOptionletVolatilitySurface<Linear>)
 template <class Interpolator1D>
 class KInterpolatedYoYOptionletVolatilitySurface : public YoYOptionletVolatilitySurface {
   public:

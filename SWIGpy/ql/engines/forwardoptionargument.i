@@ -49,8 +49,8 @@ class AnalyticHestonForwardEuropeanEngine : public PricingEngine {
         Handle<Quote>& spotReset, Real varReset) const;
 };
 
-%shared_ptr(MCForwardEuropeanBSEngine<PseudoRandom>);
-%shared_ptr(MCForwardEuropeanBSEngine<LowDiscrepancy>);
+%shared_ptr(MCForwardEuropeanBSEngine<PseudoRandom>)
+%shared_ptr(MCForwardEuropeanBSEngine<LowDiscrepancy>)
 template <class RNG>
 class MCForwardEuropeanBSEngine : public PricingEngine {
   public:
@@ -73,7 +73,7 @@ class MakeMCForwardEuropeanBSEngine {
   public:
     explicit MakeMCForwardEuropeanBSEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
-    // named parameters
+
     MakeMCForwardEuropeanBSEngine& withSteps(Size steps);
     MakeMCForwardEuropeanBSEngine& withStepsPerYear(Size steps);
     MakeMCForwardEuropeanBSEngine& withBrownianBridge(bool b = false);
@@ -82,7 +82,7 @@ class MakeMCForwardEuropeanBSEngine {
     MakeMCForwardEuropeanBSEngine& withMaxSamples(Size samples);
     MakeMCForwardEuropeanBSEngine& withSeed(BigNatural seed);
     MakeMCForwardEuropeanBSEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -93,8 +93,8 @@ class MakeMCForwardEuropeanBSEngine {
 %template(MakeMCPRForwardEuropeanBSEngine) MakeMCForwardEuropeanBSEngine<PseudoRandom>;
 %template(MakeMCLDForwardEuropeanBSEngine) MakeMCForwardEuropeanBSEngine<LowDiscrepancy>;
 
-%shared_ptr(MCForwardEuropeanHestonEngine<PseudoRandom>);
-%shared_ptr(MCForwardEuropeanHestonEngine<LowDiscrepancy>);
+%shared_ptr(MCForwardEuropeanHestonEngine<PseudoRandom>)
+%shared_ptr(MCForwardEuropeanHestonEngine<LowDiscrepancy>)
 template <class RNG>
 class MCForwardEuropeanHestonEngine : public PricingEngine {
   public:
@@ -117,7 +117,7 @@ template <class RNG>
 class MakeMCForwardEuropeanHestonEngine {
   public:
     explicit MakeMCForwardEuropeanHestonEngine(ext::shared_ptr<HestonProcess> process);
-    // named parameters
+
     MakeMCForwardEuropeanHestonEngine& withSteps(Size steps);
     MakeMCForwardEuropeanHestonEngine& withStepsPerYear(Size steps);
     MakeMCForwardEuropeanHestonEngine& withSamples(Size samples);
@@ -126,7 +126,7 @@ class MakeMCForwardEuropeanHestonEngine {
     MakeMCForwardEuropeanHestonEngine& withSeed(BigNatural seed);
     MakeMCForwardEuropeanHestonEngine& withAntitheticVariate(bool b = true);
     MakeMCForwardEuropeanHestonEngine& withControlVariate(bool b = false);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);

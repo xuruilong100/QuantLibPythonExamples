@@ -191,7 +191,7 @@ class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
 
 struct SwaptionVolCubeSabrModel { };
 
-%shared_ptr(SwaptionVolCube1x<SwaptionVolCubeSabrModel>);
+%shared_ptr(SwaptionVolCube1x<SwaptionVolCubeSabrModel>)
 template<class Model>
 class SwaptionVolCube1x : public SwaptionVolatilityCube {
   public:
@@ -235,7 +235,7 @@ class SwaptionVolCube1x : public SwaptionVolatilityCube {
 
 %template(SwaptionVolCube1) SwaptionVolCube1x<SwaptionVolCubeSabrModel>;
 
-%shared_ptr(SwaptionVolCube2);
+%shared_ptr(SwaptionVolCube2)
 class SwaptionVolCube2 : public SwaptionVolatilityCube {
   public:
     SwaptionVolCube2(

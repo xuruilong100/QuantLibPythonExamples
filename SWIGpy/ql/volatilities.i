@@ -127,7 +127,7 @@ class StrippedOptionlet : public StrippedOptionletBase {
                       Real displacement = 0.0);
 };
 
-%shared_ptr(OptionletStripper1);
+%shared_ptr(OptionletStripper1)
 class OptionletStripper1 : public OptionletStripper {
     %feature("kwargs") OptionletStripper1;
   public:
@@ -147,7 +147,7 @@ class OptionletStripper1 : public OptionletStripper {
     Rate switchStrike() const;
 };
 
-%shared_ptr(OptionletStripper2);
+%shared_ptr(OptionletStripper2)
 class OptionletStripper2 : public OptionletStripper {
   public:
     OptionletStripper2(

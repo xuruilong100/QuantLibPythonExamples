@@ -14,9 +14,7 @@ using QuantLib::G2Process;
 using QuantLib::HestonProcess;
 using QuantLib::HestonSLVProcess;
 using QuantLib::HybridHestonHullWhiteProcess;
-//using QuantLib::JointStochasticProcess;
 using QuantLib::KlugeExtOUProcess;
-//using QuantLib::LiborForwardModelProcess;
 using QuantLib::StochasticProcessArray;
 %}
 
@@ -166,26 +164,6 @@ class KlugeExtOUProcess : public StochasticProcess {
     ext::shared_ptr<ExtendedOrnsteinUhlenbeckProcess> getExtOUProcess() const;
     Real rho() const;
 };
-
-/* class LiborForwardModelProcess : public StochasticProcess {
-  public:
-    LiborForwardModelProcess(
-        Size size, ext::shared_ptr<IborIndex> index);
-
-    ext::shared_ptr<IborIndex> index() const;
-    Leg cashFlows(Real amount = 1.0) const;
-    void setCovarParam(
-           const ext::shared_ptr<LfmCovarianceParameterization>& param);
-    ext::shared_ptr<LfmCovarianceParameterization> covarParam() const;
-
-    Size nextIndexReset(Time t) const;
-    const std::vector<Time>& fixingTimes() const;
-    const std::vector<Date>& fixingDates() const;
-    const std::vector<Time>& accrualStartTimes() const;
-    const std::vector<Time>& accrualEndTimes() const;
-    std::vector<DiscountFactor> discountBond(
-        const std::vector<Rate>& rates) const;
-}; */
 
 %shared_ptr(StochasticProcessArray)
 class StochasticProcessArray : public StochasticProcess {

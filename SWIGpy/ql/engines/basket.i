@@ -25,8 +25,8 @@ using QuantLib::MakeMCHimalayaEngine;
 using QuantLib::MakeMCPagodaEngine;
 %}
 
-%shared_ptr(MCEuropeanBasketEngine<PseudoRandom>);
-%shared_ptr(MCEuropeanBasketEngine<LowDiscrepancy>);
+%shared_ptr(MCEuropeanBasketEngine<PseudoRandom>)
+%shared_ptr(MCEuropeanBasketEngine<LowDiscrepancy>)
 template <class RNG>
 class MCEuropeanBasketEngine : public PricingEngine {
   public:
@@ -49,7 +49,7 @@ template <class RNG = PseudoRandom, class S = Statistics>
 class MakeMCEuropeanBasketEngine {
   public:
     MakeMCEuropeanBasketEngine(ext::shared_ptr<StochasticProcessArray>);
-    // named parameters
+
     MakeMCEuropeanBasketEngine& withSteps(Size steps);
     MakeMCEuropeanBasketEngine& withStepsPerYear(Size steps);
     MakeMCEuropeanBasketEngine& withBrownianBridge(bool b = true);
@@ -58,7 +58,7 @@ class MakeMCEuropeanBasketEngine {
     MakeMCEuropeanBasketEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCEuropeanBasketEngine& withMaxSamples(Size samples);
     MakeMCEuropeanBasketEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -69,8 +69,8 @@ class MakeMCEuropeanBasketEngine {
 %template(MakeMCPREuropeanBasketEngine) MakeMCEuropeanBasketEngine<PseudoRandom>;
 %template(MakeMCLDEuropeanBasketEngine) MakeMCEuropeanBasketEngine<LowDiscrepancy>;
 
-%shared_ptr(MCAmericanBasketEngine<PseudoRandom>);
-%shared_ptr(MCAmericanBasketEngine<LowDiscrepancy>);
+%shared_ptr(MCAmericanBasketEngine<PseudoRandom>)
+%shared_ptr(MCAmericanBasketEngine<LowDiscrepancy>)
 template <class RNG>
 class MCAmericanBasketEngine : public PricingEngine {
     %feature("kwargs") MCAmericanBasketEngine;
@@ -98,7 +98,7 @@ template <class RNG>
 class MakeMCAmericanBasketEngine {
   public:
     MakeMCAmericanBasketEngine(ext::shared_ptr<StochasticProcessArray>);
-    // named parameters
+
     MakeMCAmericanBasketEngine& withSteps(Size steps);
     MakeMCAmericanBasketEngine& withStepsPerYear(Size steps);
     MakeMCAmericanBasketEngine& withBrownianBridge(bool b = true);
@@ -110,7 +110,7 @@ class MakeMCAmericanBasketEngine {
     MakeMCAmericanBasketEngine& withCalibrationSamples(Size samples);
     MakeMCAmericanBasketEngine& withPolynomialOrder(Size polynmOrder);
     MakeMCAmericanBasketEngine& withBasisSystem(LsmBasisSystem::PolynomType polynomType);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -155,8 +155,8 @@ class Fd2dBlackScholesVanillaEngine : public PricingEngine {
         Real illegalLocalVolOverwrite = -Null<Real>());
 };
 
-%shared_ptr(MCEverestEngine<PseudoRandom>);
-%shared_ptr(MCEverestEngine<LowDiscrepancy>);
+%shared_ptr(MCEverestEngine<PseudoRandom>)
+%shared_ptr(MCEverestEngine<LowDiscrepancy>)
 template <class RNG>
 class MCEverestEngine : public PricingEngine {
   public:
@@ -179,7 +179,7 @@ template <class RNG>
 class MakeMCEverestEngine {
   public:
     explicit MakeMCEverestEngine(ext::shared_ptr<StochasticProcessArray>);
-    // named parameters
+
     MakeMCEverestEngine& withSteps(Size steps);
     MakeMCEverestEngine& withStepsPerYear(Size steps);
     MakeMCEverestEngine& withBrownianBridge(bool b = true);
@@ -188,7 +188,7 @@ class MakeMCEverestEngine {
     MakeMCEverestEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCEverestEngine& withMaxSamples(Size samples);
     MakeMCEverestEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -199,8 +199,8 @@ class MakeMCEverestEngine {
 %template(MakeMCPREverestEngine) MakeMCEverestEngine<PseudoRandom>;
 %template(MakeMCLDEverestEngine) MakeMCEverestEngine<LowDiscrepancy>;
 
-%shared_ptr(MCHimalayaEngine<PseudoRandom>);
-%shared_ptr(MCHimalayaEngine<LowDiscrepancy>);
+%shared_ptr(MCHimalayaEngine<PseudoRandom>)
+%shared_ptr(MCHimalayaEngine<LowDiscrepancy>)
 template <class RNG>
 class MCHimalayaEngine : public PricingEngine {
   public:
@@ -221,14 +221,14 @@ template <class RNG>
 class MakeMCHimalayaEngine {
   public:
     explicit MakeMCHimalayaEngine(ext::shared_ptr<StochasticProcessArray>);
-    // named parameters
+
     MakeMCHimalayaEngine& withBrownianBridge(bool b = true);
     MakeMCHimalayaEngine& withAntitheticVariate(bool b = true);
     MakeMCHimalayaEngine& withSamples(Size samples);
     MakeMCHimalayaEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCHimalayaEngine& withMaxSamples(Size samples);
     MakeMCHimalayaEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -280,14 +280,14 @@ template <class RNG>
 class MakeMCPagodaEngine {
   public:
     explicit MakeMCPagodaEngine(ext::shared_ptr<StochasticProcessArray>);
-    // named parameters
+
     MakeMCPagodaEngine& withBrownianBridge(bool b = true);
     MakeMCPagodaEngine& withAntitheticVariate(bool b = true);
     MakeMCPagodaEngine& withSamples(Size samples);
     MakeMCPagodaEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCPagodaEngine& withMaxSamples(Size samples);
     MakeMCPagodaEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);

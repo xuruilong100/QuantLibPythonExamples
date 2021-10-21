@@ -62,25 +62,21 @@ class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
 %shared_ptr(Gsr)
 class Gsr : public Gaussian1dModel, public CalibratedModel {
   public:
-    // constant mean reversion
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
         const std::vector<Real>& volatilities,
         Real reversion,
         Real T = 60.0);
-    // piecewise mean reversion (with same step dates as volatilities)
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
         const std::vector<Real>& volatilities,
         const std::vector<Real>& reversions,
         Real T = 60.0);
-    // constant mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
         std::vector<Handle<Quote>> volatilities,
         const Handle<Quote>& reversion,
         Real T = 60.0);
-    // piecewise mean reversion with floating model data
     Gsr(const Handle<YieldTermStructure>& termStructure,
         std::vector<Date> volstepdates,
         std::vector<Handle<Quote>> volatilities,
@@ -176,7 +172,6 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
         std::vector<Real> modelZerorate_;
     };
 
-    // Constructor for a swaption smile calibrated model
     MarkovFunctional(
         const Handle<YieldTermStructure>& termStructure,
         Real reversion,
@@ -187,7 +182,6 @@ class MarkovFunctional : public Gaussian1dModel, public CalibratedModel {
         const std::vector<Period>& swaptionTenors,
         const ext::shared_ptr<SwapIndex>& swapIndexBase,
         MarkovFunctional::ModelSettings modelSettings = ModelSettings());
-    // Constructor for a caplet smile calibrated model
     MarkovFunctional(
         const Handle<YieldTermStructure>& termStructure,
         Real reversion,

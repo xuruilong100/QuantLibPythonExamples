@@ -43,9 +43,9 @@ class ExponentialJump1dMesher : public Fdm1dMesher {
      ExponentialJump1dMesher(
         Size steps, Real beta, Real jumpIntensity,
         Real eta, Real eps = 1e-3);
-    Real jumpSizeDensity(Real x) const; // t->\inf
+    Real jumpSizeDensity(Real x) const;
     Real jumpSizeDensity(Real x, Time t) const;
-    Real jumpSizeDistribution(Real x) const; // t->\inf
+    Real jumpSizeDistribution(Real x) const;
     Real jumpSizeDistribution(Real x, Time t) const;
 };
 

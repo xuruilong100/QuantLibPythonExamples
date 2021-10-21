@@ -157,9 +157,9 @@ class NoArbSabrInterpolation : public Interpolation {
   public:
     %extend {
         NoArbSabrInterpolation(
-            const Array& x, // x = strikes
-            const Array& y, // y = volatilities
-            Time t,         // option expiry
+            const Array& x,
+            const Array& y,
+            Time t,
             const Real& forward,
             Real alpha, Real beta, Real nu, Real rho,
             bool alphaIsFixed,
@@ -209,9 +209,9 @@ class SABRInterpolation : public Interpolation {
   public:
     %extend {
         SABRInterpolation(
-            const Array& x, // x = strikes
-            const Array& y, // y = volatilities
-            Time t,         // option expiry
+            const Array& x,
+            const Array& y,
+            Time t,
             const Real& forward,
             Real alpha, Real beta, Real nu, Real rho,
             bool alphaIsFixed,
@@ -260,9 +260,9 @@ class SviInterpolation : public Interpolation {
   public:
     %extend {
         SviInterpolation(
-            const Array& x, // x = strikes
-            const Array& y, // y = volatilities
-            Time t,         // option expiry
+            const Array& x,
+            const Array& y,
+            Time t,
             const Real& forward,
             Real a, Real b, Real sigma, Real rho, Real m,
             bool aIsFixed, bool bIsFixed, bool sigmaIsFixed,

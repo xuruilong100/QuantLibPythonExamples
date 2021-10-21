@@ -100,6 +100,6 @@ class Thirty360 : public DayCounter {
 
 class Thirty365 : public DayCounter {};
 
-}    // namespace QuantLib
+}
 
 #endif

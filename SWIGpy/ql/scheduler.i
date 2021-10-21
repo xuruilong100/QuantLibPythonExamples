@@ -31,7 +31,6 @@ using QuantLib::MakeSchedule;
 
 class Schedule {
     %rename(__len__) size;
-    //%ignore date;
 
   public:
     Schedule(

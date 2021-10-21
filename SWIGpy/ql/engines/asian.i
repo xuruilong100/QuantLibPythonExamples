@@ -116,8 +116,8 @@ class AnalyticDiscreteGeometricAverageStrikeAsianEngine : public PricingEngine {
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
-%shared_ptr(MCDiscreteArithmeticAPEngine<PseudoRandom>);
-%shared_ptr(MCDiscreteArithmeticAPEngine<LowDiscrepancy>);
+%shared_ptr(MCDiscreteArithmeticAPEngine<PseudoRandom>)
+%shared_ptr(MCDiscreteArithmeticAPEngine<LowDiscrepancy>)
 template <class RNG>
 class MCDiscreteArithmeticAPEngine : public PricingEngine {
   public:
@@ -140,7 +140,7 @@ class MakeMCDiscreteArithmeticAPEngine {
   public:
     explicit MakeMCDiscreteArithmeticAPEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
-    // named parameters
+
     MakeMCDiscreteArithmeticAPEngine& withBrownianBridge(bool b = true);
     MakeMCDiscreteArithmeticAPEngine& withSamples(Size samples);
     MakeMCDiscreteArithmeticAPEngine& withAbsoluteTolerance(Real tolerance);
@@ -148,7 +148,7 @@ class MakeMCDiscreteArithmeticAPEngine {
     MakeMCDiscreteArithmeticAPEngine& withSeed(BigNatural seed);
     MakeMCDiscreteArithmeticAPEngine& withAntitheticVariate(bool b = true);
     MakeMCDiscreteArithmeticAPEngine& withControlVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -159,8 +159,8 @@ class MakeMCDiscreteArithmeticAPEngine {
 %template(MakeMCPRDiscreteArithmeticAPEngine) MakeMCDiscreteArithmeticAPEngine<PseudoRandom>;
 %template(MakeMCLDDiscreteArithmeticAPEngine) MakeMCDiscreteArithmeticAPEngine<LowDiscrepancy>;
 
-%shared_ptr(MCDiscreteArithmeticAPHestonEngine<PseudoRandom>);
-%shared_ptr(MCDiscreteArithmeticAPHestonEngine<LowDiscrepancy>);
+%shared_ptr(MCDiscreteArithmeticAPHestonEngine<PseudoRandom>)
+%shared_ptr(MCDiscreteArithmeticAPHestonEngine<LowDiscrepancy>)
 template <class RNG>
 class MCDiscreteArithmeticAPHestonEngine : public PricingEngine {
   public:
@@ -183,7 +183,7 @@ template <class RNG>
 class MakeMCDiscreteArithmeticAPHestonEngine {
   public:
     explicit MakeMCDiscreteArithmeticAPHestonEngine(ext::shared_ptr<HestonProcess> process);
-    // named parameters
+
     MakeMCDiscreteArithmeticAPHestonEngine& withSamples(Size samples);
     MakeMCDiscreteArithmeticAPHestonEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCDiscreteArithmeticAPHestonEngine& withMaxSamples(Size samples);
@@ -192,7 +192,7 @@ class MakeMCDiscreteArithmeticAPHestonEngine {
     MakeMCDiscreteArithmeticAPHestonEngine& withSteps(Size steps);
     MakeMCDiscreteArithmeticAPHestonEngine& withStepsPerYear(Size steps);
     MakeMCDiscreteArithmeticAPHestonEngine& withControlVariate(bool b = false);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -203,8 +203,8 @@ class MakeMCDiscreteArithmeticAPHestonEngine {
 %template(MakeMCPRDiscreteArithmeticAPHestonEngine) MakeMCDiscreteArithmeticAPHestonEngine<PseudoRandom>;
 %template(MakeMCLDDiscreteArithmeticAPHestonEngine) MakeMCDiscreteArithmeticAPHestonEngine<LowDiscrepancy>;
 
-%shared_ptr(MCDiscreteArithmeticASEngine<PseudoRandom>);
-%shared_ptr(MCDiscreteArithmeticASEngine<LowDiscrepancy>);
+%shared_ptr(MCDiscreteArithmeticASEngine<PseudoRandom>)
+%shared_ptr(MCDiscreteArithmeticASEngine<LowDiscrepancy>)
 template <class RNG>
 class MCDiscreteArithmeticASEngine : public PricingEngine {
   public:
@@ -226,14 +226,14 @@ class MakeMCDiscreteArithmeticASEngine {
   public:
     explicit MakeMCDiscreteArithmeticASEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
-    // named parameters
+
     MakeMCDiscreteArithmeticASEngine& withBrownianBridge(bool b = true);
     MakeMCDiscreteArithmeticASEngine& withSamples(Size samples);
     MakeMCDiscreteArithmeticASEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCDiscreteArithmeticASEngine& withMaxSamples(Size samples);
     MakeMCDiscreteArithmeticASEngine& withSeed(BigNatural seed);
     MakeMCDiscreteArithmeticASEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -244,8 +244,8 @@ class MakeMCDiscreteArithmeticASEngine {
 %template(MakeMCPRDiscreteArithmeticASEngine) MakeMCDiscreteArithmeticASEngine<PseudoRandom>;
 %template(MakeMCLDDiscreteArithmeticASEngine) MakeMCDiscreteArithmeticASEngine<LowDiscrepancy>;
 
-%shared_ptr(MCDiscreteGeometricAPEngine<PseudoRandom>);
-%shared_ptr(MCDiscreteGeometricAPEngine<LowDiscrepancy>);
+%shared_ptr(MCDiscreteGeometricAPEngine<PseudoRandom>)
+%shared_ptr(MCDiscreteGeometricAPEngine<LowDiscrepancy>)
 template <class RNG>
 class MCDiscreteGeometricAPEngine : public PricingEngine {
     %feature("kwargs") MCDiscreteGeometricAPEngine;
@@ -268,14 +268,14 @@ class MakeMCDiscreteGeometricAPEngine {
   public:
     explicit MakeMCDiscreteGeometricAPEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
-    // named parameters
+
     MakeMCDiscreteGeometricAPEngine& withBrownianBridge(bool b = true);
     MakeMCDiscreteGeometricAPEngine& withSamples(Size samples);
     MakeMCDiscreteGeometricAPEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCDiscreteGeometricAPEngine& withMaxSamples(Size samples);
     MakeMCDiscreteGeometricAPEngine& withSeed(BigNatural seed);
     MakeMCDiscreteGeometricAPEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -286,8 +286,8 @@ class MakeMCDiscreteGeometricAPEngine {
 %template(MakeMCPRDiscreteGeometricAPEngine) MakeMCDiscreteGeometricAPEngine<PseudoRandom>;
 %template(MakeMCLDDiscreteGeometricAPEngine) MakeMCDiscreteGeometricAPEngine<LowDiscrepancy>;
 
-%shared_ptr(MCDiscreteGeometricAPHestonEngine<PseudoRandom>);
-%shared_ptr(MCDiscreteGeometricAPHestonEngine<LowDiscrepancy>);
+%shared_ptr(MCDiscreteGeometricAPHestonEngine<PseudoRandom>)
+%shared_ptr(MCDiscreteGeometricAPHestonEngine<LowDiscrepancy>)
 template <class RNG>
 class MCDiscreteGeometricAPHestonEngine : public PricingEngine {
   public:
@@ -310,7 +310,7 @@ class MakeMCDiscreteGeometricAPHestonEngine {
   public:
     explicit MakeMCDiscreteGeometricAPHestonEngine(
         ext::shared_ptr<HestonProcess> process);
-    // named parameters
+
     MakeMCDiscreteGeometricAPHestonEngine& withSamples(Size samples);
     MakeMCDiscreteGeometricAPHestonEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCDiscreteGeometricAPHestonEngine& withMaxSamples(Size samples);
@@ -318,7 +318,7 @@ class MakeMCDiscreteGeometricAPHestonEngine {
     MakeMCDiscreteGeometricAPHestonEngine& withAntitheticVariate(bool b = true);
     MakeMCDiscreteGeometricAPHestonEngine& withSteps(Size steps);
     MakeMCDiscreteGeometricAPHestonEngine& withStepsPerYear(Size steps);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);

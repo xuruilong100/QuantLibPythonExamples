@@ -408,7 +408,6 @@ Array Pow(const Array&, Real);
 
 class DefaultLexicographicalViewColumn {
   private:
-    // access control - no constructor exported
     DefaultLexicographicalViewColumn();
   public:
     %extend {

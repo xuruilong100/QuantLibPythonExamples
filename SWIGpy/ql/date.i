@@ -162,10 +162,10 @@ class Date {
         }
     }
     %#endif
-    // access functions
+
     Weekday weekday() const;
     Day dayOfMonth() const;
-    Day dayOfYear() const;        // one-based
+    Day dayOfYear() const;
     Month month() const;
     Year year() const;
     BigInteger serialNumber() const;
@@ -180,7 +180,6 @@ class Date {
     Time fractionOfSecond() const;
     %#endif
 
-    // static methods
     static bool isLeap(Year y);
     static Date minDate();
     static Date maxDate();

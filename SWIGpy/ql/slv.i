@@ -49,7 +49,7 @@ class SobolBrownianGenerator : public BrownianGenerator {
         Ordering ordering,
         unsigned long seed = 0,
         SobolRsg::DirectionIntegers directionIntegers = SobolRsg::Jaeckel);
-    // test interface
+    
     const std::vector<std::vector<Size>>& orderedIndices() const;
     std::vector<std::vector<Real>> transform(
         const std::vector<std::vector<Real>>& variates);

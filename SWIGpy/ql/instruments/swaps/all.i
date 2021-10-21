@@ -37,8 +37,8 @@ class ArithmeticAverageOIS : public Swap {
         const Schedule& overnightLegSchedule,
         Spread spread = 0.0,
         Real meanReversionSpeed = 0.03,
-        Real volatility = 0.00, // NO convexity adjustment by default
-        bool byApprox = false); // TRUE to use Katsumi Takada approximation
+        Real volatility = 0.00,
+        bool byApprox = false);
     ArithmeticAverageOIS(
         ArithmeticAverageOIS::Type type,
         const std::vector<Real>& nominals,
@@ -49,8 +49,8 @@ class ArithmeticAverageOIS : public Swap {
         const Schedule& overnightLegSchedule,
         Spread spread = 0.0,
         Real meanReversionSpeed = 0.03,
-        Real volatility = 0.00, // NO convexity adjustment by default
-        bool byApprox = false); // TRUE to use Katsumi Takada approximation
+        Real volatility = 0.00,
+        bool byApprox = false);
 
     ArithmeticAverageOIS::Type type() const;
     Real nominal() const;
@@ -122,13 +122,12 @@ class AssetSwap : public Swap {
               const DayCounter& floatingDayCount = DayCounter(),
               Date dealMaturity = Date(),
               bool payBondCoupon = false);
-    // results
+
     Spread fairSpread() const;
     Real floatingLegBPS() const;
     Real floatingLegNPV() const;
     Real fairCleanPrice() const;
     Real fairNonParRepayment() const;
-    // inspectors
     bool parSwap() const;
     Spread spread() const;
     Real cleanPrice() const;
@@ -165,21 +164,17 @@ class CPISwap : public Swap {
 
     Real floatLegNPV() const;
     Spread fairSpread() const;
-    // fixed rate x inflation
     Real fixedLegNPV() const;
     Rate fairRate() const;
-    // inspectors
     CPISwap::Type type() const;
     Real nominal() const;
     bool subtractInflationNominal() const;
-    // float+spread
     Spread spread() const;
     const DayCounter& floatDayCount() const;
     const Schedule& floatSchedule() const;
     const BusinessDayConvention& floatPaymentRoll() const;
     Natural fixingDays() const;
     const ext::shared_ptr<IborIndex>& floatIndex() const;
-    // fixed rate x inflation
     Rate fixedRate() const;
     Real baseCPI() const;
     const DayCounter& fixedDayCount() const;
@@ -189,7 +184,6 @@ class CPISwap : public Swap {
     const ext::shared_ptr<ZeroInflationIndex>& fixedIndex() const;
     CPI::InterpolationType observationInterpolation() const;
     Real inflationNominal() const;
-    // legs
     const Leg& cpiLeg() const;
     const Leg& floatLeg() const;
 };
@@ -407,7 +401,6 @@ class NonstandardSwap : public Swap {
         bool intermediateCapitalExchange = false,
         bool finalCapitalExchange = false,
         boost::optional<BusinessDayConvention> paymentConvention = boost::none);
-     // Inspectors
     VanillaSwap::Type type() const;
     const std::vector<Real>& fixedNominal() const;
     const std::vector<Real>& floatingNominal() const;

@@ -17,7 +17,7 @@ class ZeroCouponInflationSwapHelper : public BootstrapHelper<ZeroInflationTermSt
   public:
     ZeroCouponInflationSwapHelper(
         const Handle<Quote>& quote,
-        const Period& lag,    // lag on swap observation of index
+        const Period& lag,
         const Date& maturity,
         Calendar calendar,
         BusinessDayConvention bcd,

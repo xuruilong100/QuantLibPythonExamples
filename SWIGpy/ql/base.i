@@ -332,22 +332,6 @@ class Quote : public Observable {
 %template(QuoteHandle) Handle<Quote>;
 %template(RelinkableQuoteHandle) RelinkableHandle<Quote>;
 
-//typedef BootstrapHelper<YieldTermStructure> RateHelper;
-/* %shared_ptr(RateHelper)
-class RateHelper : public Observer, public Observable {
-  private:
-    RateHelper();
-  public:
-    const Handle<Quote>& quote() const;
-    Date latestDate() const;
-    Date earliestDate() const;
-    Date maturityDate() const;
-    Date latestRelevantDate() const;
-    Date pillarDate() const;
-    Real impliedQuote() const;
-    Real quoteError() const;
-}; */
-
 %shared_ptr(discretization)
 class discretization {
   private:
@@ -408,8 +392,8 @@ class AndreasenHugeVolatilityInterpl : public LazyObject {
         CubicSpline
     };
     enum CalibrationType {
-        Call = 1,    // Option::Call,
-        Put = -1,    // Option::Put,
+        Call = 1,
+        Put = -1,
         CallPut
     };
 
@@ -447,7 +431,6 @@ class AffineModel : public Observable {
   private:
     AffineModel();
   public:
-    //! Implied discount curve
     DiscountFactor discount(Time t) const;
     Real discountBond(
         Time now,

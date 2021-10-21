@@ -13,21 +13,17 @@ class SampledCurve {
   public:
     SampledCurve(Size gridSize = 0);
     SampledCurve(const Array& grid);
-    //! \name inspectors
     const Array& grid() const;
     const Array& values() const;
     Real gridValue(Size i) const;
     Real value(Size i) const;
     Size size() const;
     bool empty() const;
-    //! \name modifiers
     void setGrid(const Array&);
     void setValues(const Array&);
-    //! \name calculations
     Real valueAtCenter() const;
     Real firstDerivativeAtCenter() const;
     Real secondDerivativeAtCenter() const;
-    //! \name utilities
     void swap(SampledCurve&);
     void setLogGrid(Real min, Real max);
     void regridLogGrid(Real min, Real max);

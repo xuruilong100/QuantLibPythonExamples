@@ -271,12 +271,6 @@ class VanillaOption : public OneAssetOption {
 %shared_ptr(WriterExtensibleOption)
 class WriterExtensibleOption : public OneAssetOption {
   public:
-    /*!
-     \param payoff1    The first payoff
-     \param exercise1  The first exercise date
-     \param payoff2    The payoff of the extended option
-     \param exercise2  The second exercise date
-    */
     WriterExtensibleOption(
         const ext::shared_ptr<PlainVanillaPayoff>& payoff1,
         const ext::shared_ptr<Exercise>& exercise1,

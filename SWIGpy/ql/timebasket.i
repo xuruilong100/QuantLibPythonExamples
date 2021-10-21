@@ -40,8 +40,7 @@ class TimeBasket {
                     itemList, j, item);
             }
             return itemList;
-        }
-        // Python 2.2 methods
+        }        
         bool __contains__(const Date& d) {
             return self->hasDate(d);
         }

@@ -31,7 +31,6 @@ using QuantLib::FittedBondDiscountCurve;
 using QuantLib::InterpolatedZeroCurve;
 using QuantLib::InterpolatedForwardCurve;
 typedef PiecewiseYieldCurve<SimpleZeroYield, Linear, QuantLib::GlobalBootstrap> GlobalLinearSimpleZeroCurve;
-//typedef ext::shared_ptr<YieldTermStructure> FittedBondDiscountCurvePtr;
 %}
 
 %shared_ptr(ImpliedTermStructure)
@@ -61,8 +60,8 @@ class ForwardSpreadedTermStructure : public YieldTermStructure {
         Handle<Quote> spreadHandle);
 };
 
-%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>);
-%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>);
+%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>)
+%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>)
 template <class Interpolator>
 class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure {
   public:
@@ -123,7 +122,7 @@ class UltimateForwardTermStructure : public YieldTermStructure {
         Real alpha);
 };
 
-%shared_ptr(CompositeZeroYieldStructure<BinaryFunction>);
+%shared_ptr(CompositeZeroYieldStructure<BinaryFunction>)
 template <class F>
 class CompositeZeroYieldStructure : public YieldTermStructure {
   public:
@@ -378,9 +377,9 @@ class GlobalLinearSimpleZeroCurve : public YieldTermStructure {
     std::vector<std::pair<Date, Real>> nodes() const;
 };
 
-%shared_ptr(InterpolatedDiscountCurve<LogLinear>);
-%shared_ptr(InterpolatedDiscountCurve<MonotonicLogCubic>);
-%shared_ptr(InterpolatedDiscountCurve<SplineCubic>);
+%shared_ptr(InterpolatedDiscountCurve<LogLinear>)
+%shared_ptr(InterpolatedDiscountCurve<MonotonicLogCubic>)
+%shared_ptr(InterpolatedDiscountCurve<SplineCubic>)
 template <class Interpolator>
 class InterpolatedDiscountCurve : public YieldTermStructure {
   public:
@@ -427,12 +426,12 @@ class FittedBondDiscountCurve : public YieldTermStructure {
     const FittingMethod& fitResults() const;
 };
 
-%shared_ptr(InterpolatedZeroCurve<Linear>);
-%shared_ptr(InterpolatedZeroCurve<LogLinear>);
-%shared_ptr(InterpolatedZeroCurve<Cubic>);
-%shared_ptr(InterpolatedZeroCurve<SplineCubic>);
-%shared_ptr(InterpolatedZeroCurve<DefaultLogCubic>);
-%shared_ptr(InterpolatedZeroCurve<MonotonicCubic>);
+%shared_ptr(InterpolatedZeroCurve<Linear>)
+%shared_ptr(InterpolatedZeroCurve<LogLinear>)
+%shared_ptr(InterpolatedZeroCurve<Cubic>)
+%shared_ptr(InterpolatedZeroCurve<SplineCubic>)
+%shared_ptr(InterpolatedZeroCurve<DefaultLogCubic>)
+%shared_ptr(InterpolatedZeroCurve<MonotonicCubic>)
 template <class Interpolator>
 class InterpolatedZeroCurve : public YieldTermStructure {
   public:
@@ -476,7 +475,7 @@ class InterpolatedZeroCurve : public YieldTermStructure {
 %template(LogCubicZeroCurve) InterpolatedZeroCurve<DefaultLogCubic>;
 %template(MonotonicCubicZeroCurve) InterpolatedZeroCurve<MonotonicCubic>;
 
-%shared_ptr(InterpolatedForwardCurve<BackwardFlat>);
+%shared_ptr(InterpolatedForwardCurve<BackwardFlat>)
 template <class Interpolator>
 class InterpolatedForwardCurve : public YieldTermStructure {
   public:

@@ -91,7 +91,6 @@ struct FdmSchemeDesc {
     const FdmSchemeType type;
     const Real theta, mu;
 
-    // some default scheme descriptions
     static FdmSchemeDesc Douglas();
     static FdmSchemeDesc CrankNicolson();
     static FdmSchemeDesc ImplicitEuler();

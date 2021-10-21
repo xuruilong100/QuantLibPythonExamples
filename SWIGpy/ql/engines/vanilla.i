@@ -366,7 +366,6 @@ class COSHestonEngine : public PricingEngine {
         const ext::shared_ptr<HestonModel>& model,
         Real L = 16, Size N = 200);
 
-    // normalized characteristic function
     %extend {
         std::pair<Real, Real> chF(
             Real u, Real t) const {
@@ -498,12 +497,11 @@ class FdHestonVanillaEngine : public PricingEngine {
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         ext::shared_ptr<LocalVolTermStructure> leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         Real mixingFactor = 1.0);
-        // multiple strikes caching engine
+
         void update();
         void enableMultipleStrikesCaching(
             const std::vector<Real>& strikes);
 
-        // helper method for Heston like engines
         FdmSolverDesc getSolverDesc(
             Real equityScaleFactor) const;
 };
@@ -525,7 +523,7 @@ class MakeFdHestonVanillaEngine {
     MakeFdHestonVanillaEngine& withLeverageFunction(
         ext::shared_ptr<LocalVolTermStructure>& leverageFct);
 
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -592,8 +590,8 @@ class JuQuadraticApproximationEngine : public PricingEngine {
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
-%shared_ptr(MCEuropeanEngine<PseudoRandom>);
-%shared_ptr(MCEuropeanEngine<LowDiscrepancy>);
+%shared_ptr(MCEuropeanEngine<PseudoRandom>)
+%shared_ptr(MCEuropeanEngine<LowDiscrepancy>)
 template <class RNG>
 class MCEuropeanEngine : public PricingEngine {
   public:
@@ -617,7 +615,7 @@ class MakeMCEuropeanEngine {
   public:
     MakeMCEuropeanEngine(
         const ext::shared_ptr<GeneralizedBlackScholesProcess>& p);
-    // named parameters
+
     MakeMCEuropeanEngine& withSteps(Size steps);
     MakeMCEuropeanEngine& withStepsPerYear(Size steps);
     MakeMCEuropeanEngine& withBrownianBridge(bool b = true);
@@ -626,7 +624,7 @@ class MakeMCEuropeanEngine {
     MakeMCEuropeanEngine& withMaxSamples(Size samples);
     MakeMCEuropeanEngine& withSeed(BigNatural seed);
     MakeMCEuropeanEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -637,8 +635,8 @@ class MakeMCEuropeanEngine {
 %template(MakeMCPREuropeanEngine) MakeMCEuropeanEngine<PseudoRandom>;
 %template(MakeMCLDEuropeanEngine) MakeMCEuropeanEngine<LowDiscrepancy>;
 
-%shared_ptr(MCAmericanEngine<PseudoRandom>);
-%shared_ptr(MCAmericanEngine<LowDiscrepancy>);
+%shared_ptr(MCAmericanEngine<PseudoRandom>)
+%shared_ptr(MCAmericanEngine<LowDiscrepancy>)
 template <class RNG>
 class MCAmericanEngine : public PricingEngine {
   public:
@@ -666,7 +664,7 @@ template <class RNG>
 class MakeMCAmericanEngine {
   public:
     MakeMCAmericanEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
-    // named parameters
+
     MakeMCAmericanEngine& withSteps(Size steps);
     MakeMCAmericanEngine& withStepsPerYear(Size steps);
     MakeMCAmericanEngine& withSamples(Size samples);
@@ -680,7 +678,7 @@ class MakeMCAmericanEngine {
     MakeMCAmericanEngine& withCalibrationSamples(Size calibrationSamples);
     MakeMCAmericanEngine& withAntitheticVariateCalibration(bool b = true);
     MakeMCAmericanEngine& withSeedCalibration(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -699,8 +697,8 @@ class VarianceGammaEngine : public PricingEngine {
         Real absoluteError=1e-5);
 };
 
-%shared_ptr(MCEuropeanHestonEngine<PseudoRandom>);
-%shared_ptr(MCEuropeanHestonEngine<LowDiscrepancy>);
+%shared_ptr(MCEuropeanHestonEngine<PseudoRandom>)
+%shared_ptr(MCEuropeanHestonEngine<LowDiscrepancy>)
 template <class RNG>
 class MCEuropeanHestonEngine : public PricingEngine {
   public:
@@ -725,7 +723,7 @@ class MakeMCEuropeanHestonEngine {
   public:
     explicit MakeMCEuropeanHestonEngine(
         const ext::shared_ptr<P>& process);
-    // named parameters
+
     MakeMCEuropeanHestonEngine& withSteps(Size steps);
     MakeMCEuropeanHestonEngine& withStepsPerYear(Size steps);
     MakeMCEuropeanHestonEngine& withSamples(Size samples);
@@ -733,7 +731,7 @@ class MakeMCEuropeanHestonEngine {
     MakeMCEuropeanHestonEngine& withMaxSamples(Size samples);
     MakeMCEuropeanHestonEngine& withSeed(BigNatural seed);
     MakeMCEuropeanHestonEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -746,8 +744,8 @@ class MakeMCEuropeanHestonEngine {
 %template(MakeMCPREuropeanHestonSLVEngine) MakeMCEuropeanHestonEngine<PseudoRandom, GeneralStatistics, HestonSLVProcess>;
 %template(MakeMCLDEuropeanHestonSLVEngine) MakeMCEuropeanHestonEngine<LowDiscrepancy, GeneralStatistics, HestonSLVProcess>;
 
-%shared_ptr(MCEuropeanGJRGARCHEngine<PseudoRandom>);
-%shared_ptr(MCEuropeanGJRGARCHEngine<LowDiscrepancy>);
+%shared_ptr(MCEuropeanGJRGARCHEngine<PseudoRandom>)
+%shared_ptr(MCEuropeanGJRGARCHEngine<LowDiscrepancy>)
 template <class RNG>
 class MCEuropeanGJRGARCHEngine : public PricingEngine {
   public:
@@ -769,7 +767,7 @@ template <class RNG>
 class MakeMCEuropeanGJRGARCHEngine {
   public:
     MakeMCEuropeanGJRGARCHEngine(ext::shared_ptr<GJRGARCHProcess>);
-    // named parameters
+
     MakeMCEuropeanGJRGARCHEngine& withSteps(Size steps);
     MakeMCEuropeanGJRGARCHEngine& withStepsPerYear(Size steps);
     MakeMCEuropeanGJRGARCHEngine& withSamples(Size samples);
@@ -777,7 +775,7 @@ class MakeMCEuropeanGJRGARCHEngine {
     MakeMCEuropeanGJRGARCHEngine& withMaxSamples(Size samples);
     MakeMCEuropeanGJRGARCHEngine& withSeed(BigNatural seed);
     MakeMCEuropeanGJRGARCHEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);

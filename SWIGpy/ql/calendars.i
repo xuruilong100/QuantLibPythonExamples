@@ -263,7 +263,7 @@ class BespokeCalendar : public Calendar {
     BespokeCalendar(const std::string& name);
     void addWeekend(Weekday);
 };
-}    // namespace QuantLib
+}
 
 
 #endif

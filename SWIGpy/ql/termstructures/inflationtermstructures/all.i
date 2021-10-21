@@ -99,7 +99,7 @@ class Name : public YoYCapFloorTermPriceSurface {
   public:
     %extend {
         Name(Natural fixingDays,
-             const Period& yyLag,    // observation lag
+             const Period& yyLag,
              const ext::shared_ptr<YoYInflationIndex>& yii,
              Rate baseRate,
              const Handle<YieldTermStructure>& nominal,
@@ -127,7 +127,7 @@ class Name : public YoYCapFloorTermPriceSurface {
 
 export_yoy_capfloor_termpricesurface(YoYInflationCapFloorTermPriceSurface,Bicubic,Cubic);
 
-%shared_ptr(PiecewiseZeroInflationCurve<Linear>);
+%shared_ptr(PiecewiseZeroInflationCurve<Linear>)
 template <class Interpolator>
 class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
     %feature("kwargs") PiecewiseZeroInflationCurve;
@@ -152,7 +152,7 @@ class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
 
 %template(PiecewiseZeroInflation) PiecewiseZeroInflationCurve<Linear>;
 
-%shared_ptr(PiecewiseYoYInflationCurve<Linear>);
+%shared_ptr(PiecewiseYoYInflationCurve<Linear>)
 template <class Interpolator>
 class PiecewiseYoYInflationCurve : public YoYInflationTermStructure {
     %feature("kwargs") PiecewiseYoYInflationCurve;
@@ -176,7 +176,7 @@ class PiecewiseYoYInflationCurve : public YoYInflationTermStructure {
 
 %template(PiecewiseYoYInflation) PiecewiseYoYInflationCurve<Linear>;
 
-%shared_ptr(InterpolatedZeroInflationCurve<Linear>);
+%shared_ptr(InterpolatedZeroInflationCurve<Linear>)
 template <class Interpolator>
 class InterpolatedZeroInflationCurve : public ZeroInflationTermStructure {
     %feature("kwargs") InterpolatedZeroInflationCurve;
@@ -201,7 +201,7 @@ class InterpolatedZeroInflationCurve : public ZeroInflationTermStructure {
 
 %template(ZeroInflationCurve) InterpolatedZeroInflationCurve<Linear>;
 
-%shared_ptr(InterpolatedYoYInflationCurve<Linear>);
+%shared_ptr(InterpolatedYoYInflationCurve<Linear>)
 template <class Interpolator>
 class InterpolatedYoYInflationCurve : public YoYInflationTermStructure {
     %feature("kwargs") InterpolatedYoYInflationCurve;

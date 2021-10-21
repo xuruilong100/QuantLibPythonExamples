@@ -382,7 +382,6 @@ class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructu
         Spread basis = 0.0);
 };
 
-// allow use of RateHelper vectors
 %template(BondHelperVector) std::vector<ext::shared_ptr<BondHelper>>;
 
 %inline %{

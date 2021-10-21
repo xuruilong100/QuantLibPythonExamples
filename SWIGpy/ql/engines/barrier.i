@@ -41,8 +41,8 @@ class AnalyticBinaryBarrierEngine : public PricingEngine {
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
-%shared_ptr(MCBarrierEngine<PseudoRandom>);
-%shared_ptr(MCBarrierEngine<LowDiscrepancy>);
+%shared_ptr(MCBarrierEngine<PseudoRandom>)
+%shared_ptr(MCBarrierEngine<LowDiscrepancy>)
 template <class RNG>
 class MCBarrierEngine : public PricingEngine {
   public:
@@ -66,7 +66,7 @@ template <class RNG>
 class MakeMCBarrierEngine {
   public:
     MakeMCBarrierEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
-    // named parameters
+
     MakeMCBarrierEngine& withSteps(Size steps);
     MakeMCBarrierEngine& withStepsPerYear(Size steps);
     MakeMCBarrierEngine& withBrownianBridge(bool b = true);
@@ -76,7 +76,7 @@ class MakeMCBarrierEngine {
     MakeMCBarrierEngine& withMaxSamples(Size samples);
     MakeMCBarrierEngine& withBias(bool b = true);
     MakeMCBarrierEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(* $self);
@@ -153,13 +153,13 @@ Il max_steps is 0 (default value), max_steps is calculated by capping it to
 If max_steps is specified, it would limit binomial steps to this value.
 "
 
-%shared_ptr(BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>);
-%shared_ptr(BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>);
+%shared_ptr(BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>)
 template <class T, class U>
 class BinomialBarrierEngine : public PricingEngine {
   public:
@@ -230,8 +230,8 @@ Type values:
     wo:              Wulin-Yong engine
 "
 
-%shared_ptr(VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>);
-%shared_ptr(VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>);
+%shared_ptr(VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>)
+%shared_ptr(VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>)
 template <class E>
 class VannaVolgaDoubleBarrierEngine : public PricingEngine {
   public:
@@ -270,13 +270,13 @@ Type values:
     j4  or joshi4:                   Joshi 4th (smoothed) model
 "
 
-%shared_ptr(BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<Tian, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDermanKaniDoubleBarrierOption>);
-%shared_ptr(BinomialDoubleBarrierEngine<Joshi4, DiscretizedDermanKaniDoubleBarrierOption>);
+%shared_ptr(BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Tian, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDermanKaniDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Joshi4, DiscretizedDermanKaniDoubleBarrierOption>)
 template <class T, class U>
 class BinomialDoubleBarrierEngine : public PricingEngine {
   public:

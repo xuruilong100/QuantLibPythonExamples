@@ -45,8 +45,7 @@ class FlatHazardRate : public DefaultProbabilityTermStructure {
         const DayCounter&);
 };
 
-// add other instantiations both here and below the class
-%shared_ptr(InterpolatedHazardRateCurve<BackwardFlat>);
+%shared_ptr(InterpolatedHazardRateCurve<BackwardFlat>)
 template <class Interpolator>
 class InterpolatedHazardRateCurve : public DefaultProbabilityTermStructure {
   public:
@@ -78,8 +77,7 @@ class InterpolatedHazardRateCurve : public DefaultProbabilityTermStructure {
 
 %template(HazardRateCurve) InterpolatedHazardRateCurve<BackwardFlat>;
 
-// add other instantiations both here and below the class
-%shared_ptr(InterpolatedDefaultDensityCurve<Linear>);
+%shared_ptr(InterpolatedDefaultDensityCurve<Linear>)
 template <class Interpolator>
 class InterpolatedDefaultDensityCurve : public DefaultProbabilityTermStructure {
   public:
@@ -111,8 +109,7 @@ class InterpolatedDefaultDensityCurve : public DefaultProbabilityTermStructure {
 
 %template(DefaultDensityCurve) InterpolatedDefaultDensityCurve<Linear>;
 
-// add other instantiations both here and below the class
-%shared_ptr(InterpolatedSurvivalProbabilityCurve<Linear>);
+%shared_ptr(InterpolatedSurvivalProbabilityCurve<Linear>)
 template <class Interpolator>
 class InterpolatedSurvivalProbabilityCurve : public DefaultProbabilityTermStructure {
   public:
@@ -228,7 +225,6 @@ class Name : public DefaultProbabilityTermStructure {
 
 %enddef
 
-// add other instantiations if you need them
 export_piecewise_default_curve(PiecewiseFlatHazardRate,HazardRate,BackwardFlat);
 
 #endif

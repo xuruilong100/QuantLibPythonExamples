@@ -35,15 +35,10 @@ class ConstantEstimator : public VolatilityCompositor {
 class Garch11 : public VolatilityCompositor {
   public:
     enum Mode {
-        MomentMatchingGuess,   /*!< The initial guess is a moment
-                                    matching estimates for
-                                    mean(r2), acf(0), and acf(1). */
-        GammaGuess,            /*!< The initial guess is an
-                                    estimate of gamma based on the
-                                    property:
-                                    acf(i+1) = gamma*acf(i) for i > 1. */
-        BestOfTwo,             /*!< The best of the two above modes */
-        DoubleOptimization     /*!< Double optimization */
+        MomentMatchingGuess,
+        GammaGuess,
+        BestOfTwo,
+        DoubleOptimization
     };
 
     Garch11(Real a, Real b, Real vl);

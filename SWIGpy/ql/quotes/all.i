@@ -38,9 +38,7 @@ enum Seniority {
     SubLT2,
     JrSubT2,
     PrefT1,
-    // Unassigned value, allows for default RR quote
     NoSeniority,
-    // markit parlance
     SeniorSec     = SecDom,
     SeniorUnSec   = SnrFor,
     SubTier1      = PrefT1,
@@ -186,9 +184,6 @@ class RecoveryRateQuote : public Quote {
     Seniority seniority() const;
     Real setValue(Real value = Null<Real>());
     void reset();
-
-    /* template <Size N>
-    static std::map<Seniority, Real> makeIsdaMap(const Real (&(arrayIsdaRR))[N]); */
 };
 
 %shared_ptr(SimpleQuote)
