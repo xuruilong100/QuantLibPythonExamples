@@ -72,8 +72,7 @@ class BMAIndex : public InterestRateIndex {
   public:
     explicit BMAIndex(
         const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
-    BMAIndex(const Handle<YieldTermStructure>& h,
-             const Calendar& fixingCalendar);
+    
     bool isValidFixingDate(const Date& fixingDate) const;
     Handle<YieldTermStructure> forwardingTermStructure() const;
     Date maturityDate(const Date& valueDate) const;

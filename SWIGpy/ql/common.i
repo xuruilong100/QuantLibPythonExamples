@@ -733,6 +733,7 @@ struct DateGeneration {
         Forward,
         Zero,
         ThirdWednesday,
+        ThirdWednesdayInclusive,
         Twentieth,
         TwentiethIMM,
         OldCDS,

@@ -18,8 +18,7 @@ class InflationTermStructure : public TermStructure {
     Period observationLag() const;
     Frequency frequency() const;
     bool indexIsInterpolated() const;
-    Rate baseRate() const;
-    Handle<YieldTermStructure> nominalTermStructure() const;
+    Rate baseRate() const;    
     Date baseDate() const;
     void setSeasonality(
         const ext::shared_ptr<Seasonality>& seasonality = ext::shared_ptr<Seasonality>());

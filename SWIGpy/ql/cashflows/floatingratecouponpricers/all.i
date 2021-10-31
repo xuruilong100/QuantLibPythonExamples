@@ -79,6 +79,8 @@ class IborCouponPricer : public FloatingRateCouponPricer {
     Handle<OptionletVolatilityStructure> capletVolatility() const;
     void setCapletVolatility(
         const Handle<OptionletVolatilityStructure>& v = Handle<OptionletVolatilityStructure>());
+    bool useIndexedCoupon() const;
+    void initializeCachedData(const IborCoupon& coupon) const;
 };
 
 %shared_ptr(AnalyticHaganPricer)

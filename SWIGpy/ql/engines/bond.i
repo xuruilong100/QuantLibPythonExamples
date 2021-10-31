@@ -11,6 +11,7 @@ using QuantLib::DiscountingBondEngine;
 using QuantLib::TreeCallableFixedRateBondEngine;
 using QuantLib::BlackCallableFixedRateBondEngine;
 using QuantLib::BinomialConvertibleEngine;
+using QuantLib::RiskyBondEngine;
 %}
 
 %shared_ptr(DiscountingBondEngine)
@@ -68,5 +69,17 @@ class BinomialConvertibleEngine : public PricingEngine {
 %template(BinomialTianConvertibleEngine) BinomialConvertibleEngine<Tian>;
 %template(BinomialLRConvertibleEngine) BinomialConvertibleEngine<LeisenReimer>;
 %template(BinomialJ4ConvertibleEngine) BinomialConvertibleEngine<Joshi4>;
+
+%shared_ptr(RiskyBondEngine)
+class RiskyBondEngine : public PricingEngine {
+  public:
+    RiskyBondEngine(
+        Handle<DefaultProbabilityTermStructure> defaultTS,
+        Real recoveryRate,
+        Handle<YieldTermStructure> yieldTS);
+    Handle<DefaultProbabilityTermStructure> defaultTS() const;
+    Real recoveryRate() const;
+    Handle<YieldTermStructure> yieldTS() const;
+};
 
 #endif

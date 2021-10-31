@@ -1,7 +1,8 @@
 %{
+#include <utility>
 #include <ql/quantlib.hpp>
 
-#if QL_HEX_VERSION < 0x01230000
+#if QL_HEX_VERSION < 0x01240000
     #error using an old version of QuantLib, please update
 #endif
 
@@ -29,6 +30,10 @@
 // debug info too long etc etc
 #pragma warning(disable: 4786)
 #endif
+%}
+
+%{
+#define QL_HIGH_RESOLUTION_DATE
 %}
 
 %include ../ql/defines.i

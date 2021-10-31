@@ -252,22 +252,8 @@ class AnalyticHestonEngine : public PricingEngine {
     static ComplexLogFormula optimalControlVariate(
         Time t, Real v0, Real kappa, Real theta, Real sigma, Real rho);
 
-    %extend {
-        std::pair<Real, Real> chF(
-            Real real, Real imag, Time t) const {
-            const std::complex<Real> tmp = self->chF(
-                std::complex<Real>(real, imag), t);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-        std::pair<Real, Real> lnChF(
-            Real real, Real imag, Time t) const {
-            const std::complex<Real> tmp = self->lnChF(
-                std::complex<Real>(real, imag), t);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-    }
+    std::complex<Real> chF(const std::complex<Real>& z, Time t) const;
+    std::complex<Real> lnChF(const std::complex<Real>& z, Time t) const;
 };
 
 %shared_ptr(AnalyticPTDHestonEngine)
@@ -292,22 +278,8 @@ class AnalyticPTDHestonEngine : public PricingEngine {
         Real andersenPiterbargEpsilon = 1e-8);
     Size numberOfEvaluations() const;
 
-    %extend {
-        std::pair<Real, Real> chF(
-            Real real, Real imag, Time t) const {
-            const std::complex<Real> tmp = self->chF(
-                std::complex<Real>(real, imag), t);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-        std::pair<Real, Real> lnChF(
-            Real real, Real imag, Time t) const {
-            const std::complex<Real> tmp = self->lnChF(
-                std::complex<Real>(real, imag), t);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-    }
+    std::complex<Real> chF(const std::complex<Real>& z, Time t) const;
+    std::complex<Real> lnChF(const std::complex<Real>& z, Time t) const;
 };
 
 %shared_ptr(AnalyticPDFHestonEngine)
@@ -366,14 +338,7 @@ class COSHestonEngine : public PricingEngine {
         const ext::shared_ptr<HestonModel>& model,
         Real L = 16, Size N = 200);
 
-    %extend {
-        std::pair<Real, Real> chF(
-            Real u, Real t) const {
-            const std::complex<Real> tmp = self->chF(u, t);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-    }
+    std::complex<Real> chF(Real u, Real t) const;
 
     Real c1(Time t) const;
     Real c2(Time t) const;

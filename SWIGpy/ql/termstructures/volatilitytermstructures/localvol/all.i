@@ -140,7 +140,7 @@ class FixedLocalVolSurface : public LocalVolTermStructure {
                 return new FixedLocalVolSurface(
                     referenceDate,
                     times,
-                    table,
+                    std::move(table),
                     ptr,
                     dayCounter,
                     lowerExtrapolation,

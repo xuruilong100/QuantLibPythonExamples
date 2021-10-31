@@ -367,19 +367,6 @@ class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructu
         Handle<YieldTermStructure> collateralCurve,
         bool isFxBaseCurrencyCollateralCurrency,
         bool isBasisOnFxBaseCurrencyLeg);
-    const Leg& baseCurrencyLeg() const;
-    const Leg& quoteCurrencyLeg() const;
-    static ext::shared_ptr<Swap> buildCrossCurrencyLeg(
-        const Date& evaluationDate,
-        const Period& tenor,
-        Natural fixingDays,
-        const Calendar& calendar,
-        BusinessDayConvention convention,
-        bool endOfMonth,
-        const ext::shared_ptr<IborIndex>& idx,
-        VanillaSwap::Type type,
-        Real notional = 1.0,
-        Spread basis = 0.0);
 };
 
 %template(BondHelperVector) std::vector<ext::shared_ptr<BondHelper>>;

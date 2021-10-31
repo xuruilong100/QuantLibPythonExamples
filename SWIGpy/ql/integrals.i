@@ -114,7 +114,7 @@ class GaussKronrodNonAdaptive : public Integrator {
         Real absoluteAccuracy,
         Size maxEvaluations,
         Real relativeAccuracy);
-    //void setRelativeAccuracy(Real);
+    void setRelativeAccuracy(Real);
     Real relativeAccuracy() const;
 };
 

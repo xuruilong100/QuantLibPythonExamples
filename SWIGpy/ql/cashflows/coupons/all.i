@@ -24,6 +24,7 @@ using QuantLib::CappedFlooredIborCoupon;
 using QuantLib::CappedFlooredCmsCoupon;
 using QuantLib::CappedFlooredCmsSpreadCoupon;
 using QuantLib::SubPeriodsCoupon;
+typedef IborCoupon::Settings IborCouponSettings;
 %}
 
 struct RateAveraging {
@@ -149,11 +150,18 @@ class IborCoupon : public FloatingRateCoupon {
                const DayCounter& dayCounter = DayCounter(),
                bool isInArrears = false,
                const Date& exCouponDate = Date());
-    static void createAtParCoupons();
-    static void createIndexedCoupons();
-    static bool usingAtParCoupons();
+
     const ext::shared_ptr<IborIndex>& iborIndex() const;
     const Date& fixingEndDate() const;
+};
+
+class IborCouponSettings {
+  private:
+    IborCouponSettings();
+  public:
+    void createAtParCoupons();
+    void createIndexedCoupons();
+    bool usingAtParCoupons() const;
 };
 
 %shared_ptr(CappedFlooredCoupon)

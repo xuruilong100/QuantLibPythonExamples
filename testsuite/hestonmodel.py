@@ -1529,9 +1529,9 @@ class HestonModelTest(unittest.TestCase):
             True, expected, 1e-6, NullSize(),
             "Trapezoid with Andersen Piterbarg control variate")
 
+    @unittest.skip("not implemented")
     def testCosHestonCumulants(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing Heston COS cumulants...")
 
     def testCosHestonEngine(self):
@@ -1625,9 +1625,7 @@ class HestonModelTest(unittest.TestCase):
         for i in range(len(u)):
             for j in range(len(t)):
                 c = cosEngine.chF(u[i], t[j])
-                a = analyticEngine.chF(u[i], 0.0, t[j])
-                c = complex(c[0], c[1])
-                a = complex(a[0], a[1])
+                a = analyticEngine.chF(complex(u[i], 0.0), t[j])
 
                 error = np.abs(a - c)
 
@@ -1839,7 +1837,7 @@ class HestonModelTest(unittest.TestCase):
             # implied vol as control variate
             implStdDev ** 2,
             # remaining function becomes zero for u . 0
-            -8.0 * log(engine.chF(0, -0.5, maturity)[0])]
+            -8.0 * log(engine.chF(complex(0, -0.5), maturity).real)]
 
         for i in range(len(variances)):
             sigmaBS = sqrt(variances[i] / maturity)
@@ -1852,8 +1850,7 @@ class HestonModelTest(unittest.TestCase):
 
                 ex = np.exp(complex(0.0, u * (dd - sx)))
 
-                chf = engine.chF(z.real, z.imag, maturity)
-                chf = complex(chf[0], chf[1])
+                chf = engine.chF(z, maturity)
 
                 orig = (-ex * chf / (u * u + 0.25)).real
                 cv = (ex * (phiBS - chf) / (u * u + 0.25)).real
@@ -1960,15 +1957,13 @@ class HestonModelTest(unittest.TestCase):
                 for t in np.arange(0.1, 1.0, 0.3):
                     z = r * np.exp(complex(0, phi))
 
-                    a = analyticEngine.chF(z.real, z.imag, t)
-                    b = ptdHestonEngine.chF(z.real, z.imag, t)
-                    a = complex(a[0], a[1])
-                    b = complex(b[0], b[1])
+                    a = analyticEngine.chF(z, t)
+                    b = ptdHestonEngine.chF(z, t)
                     self.assertFalse(np.abs(a - b) > tol)
 
+    @unittest.skip("not implemented")
     def testPiecewiseTimeDependentComparison(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing piecewise time dependent ChF vs Heston ChF...")
 
     def testPiecewiseTimeDependentChFAsymtotic(self):
@@ -2056,8 +2051,7 @@ class HestonModelTest(unittest.TestCase):
         self.assertFalse(abs(uM - expectedUM) > 1e-5)
 
         u = 1e8
-        expectedlnChF = ptdHestonEngine.lnChF(u, 0.0, maturity)
-        expectedlnChF = complex(expectedlnChF[0], expectedlnChF[1])
+        expectedlnChF = ptdHestonEngine.lnChF(complex(u, 0.0), maturity)
         calculatedAsympotic = (D_u_inf * u + dd) * v0 + C_u_inf * u + cc + clog
         self.assertFalse(
             np.abs(expectedlnChF - calculatedAsympotic) > 0.01)
@@ -2097,9 +2091,7 @@ class HestonModelTest(unittest.TestCase):
         engine = AnalyticHestonEngine(hestonModel)
         expectedChF = complex(
             0.990463578538352651, 2.60693475987521132e-12)
-        calculatedChF = engine.chF(
-            0.55, -0.5, t)
-        calculatedChF = complex(calculatedChF[0], calculatedChF[1])
+        calculatedChF = engine.chF(complex(0.55, -0.5), t)
 
         diffChF = np.abs(expectedChF - calculatedChF)
         tolChF = 1e-12
@@ -2350,9 +2342,9 @@ class HestonModelTest(unittest.TestCase):
                     self.assertFalse(diff > 1e-12)
                 idx += 1
 
+    @unittest.skip("not implemented")
     def testHestonEngineIntegration(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing Heston engine integration signature...")
 
     def testOptimalControlVariateChoice(self):
@@ -2461,8 +2453,29 @@ class HestonModelTest(unittest.TestCase):
 
         dc = Actual365Fixed()
 
-        rTS = YieldTermStructureHandle(flatRate(0.15, dc))
-        qTS = YieldTermStructureHandle(flatRate(0.05, dc))
+        dates = DateVector(4)
+        dates[0] = todaysDate
+        dates[1] = todaysDate + Period(90, Days)
+        dates[2] = todaysDate + Period(180, Days)
+        dates[3] = todaysDate + Period(1, Years)
+        rates = DoubleVector(4)
+        rates[0] = 0.075
+        rates[1] = 0.05
+        rates[2] = 0.075
+        rates[3] = 0.1
+        rTS = YieldTermStructureHandle(
+            ZeroCurve(dates, rates, dc))
+
+        dates = DateVector(3)
+        dates[0] = todaysDate
+        dates[1] = todaysDate + Period(90, Days)
+        dates[2] = todaysDate + Period(1, Years)
+        rates = DoubleVector(3)
+        rates[0] = 0.06
+        rates[1] = 0.04
+        rates[2] = 0.12
+        qTS = YieldTermStructureHandle(
+            ZeroCurve(dates, rates, dc))
 
         s0 = QuoteHandle(SimpleQuote(100.0))
 
@@ -2497,10 +2510,10 @@ class HestonModelTest(unittest.TestCase):
                             HestonModelHandle(hestonModel),
                             AnalyticHestonEngine.OptimalCV,
                             AnalyticHestonEngineIntegration.gaussLaguerre(24)))),
-                25, 125, 1, FdmSchemeDesc.Douglas(), true, 0.4))
+                25, 125, 1, FdmSchemeDesc.Douglas(), True, 0.4))
 
         calculated = option.NPV()
 
-        tol = 0.005
+        tol = 0.002
         diff = abs(calculated - expected)
         self.assertFalse(diff > tol)

@@ -17,9 +17,7 @@ if __name__ == '__main__':
     unittest.main()
 
 '''
-skipSlowTest = False
-Ran 159 tests in 6084.616
+Ran 160 tests in 177.831s
 
-skipSlowTest = True
-Ran 159 tests in 608.531s
+OK (skipped=12)
 '''

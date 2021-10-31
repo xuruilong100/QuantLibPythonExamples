@@ -6,6 +6,7 @@
 
 %{
 using QuantLib::Money;
+typedef Money::Settings MoneySettings;
 %}
 
 class Money {
@@ -56,14 +57,17 @@ class Money {
         NoConversion,
         BaseCurrencyConversion,
         AutomatedConversion };
-    %extend {
-        static void setConversionType(ConversionType type) {
-            Money::conversionType = type;
-        }
-        static void setBaseCurrency(const Currency& c) {
-            Money::baseCurrency = c;
-        }
-    }
+};
+
+class MoneySettings {
+  private:
+    MoneySettings();
+  public:
+    const Money::ConversionType & conversionType() const;
+    Money::ConversionType & conversionType();
+
+    const Currency & baseCurrency() const;
+    Currency & baseCurrency();
 };
 
 #endif

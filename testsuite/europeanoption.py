@@ -1308,7 +1308,8 @@ class EuropeanOptionTest(unittest.TestCase):
         v = 0.2
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(u)
         volTS = flatVol(today, v, dc)

@@ -124,7 +124,6 @@ class PeriodParser {
 };
 
 %{
-#define QL_HIGH_RESOLUTION_DATE
 using QuantLib::Date;
 using QuantLib::DateParser;
 %}

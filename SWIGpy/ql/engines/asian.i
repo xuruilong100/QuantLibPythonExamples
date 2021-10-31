@@ -41,19 +41,12 @@ class AnalyticContinuousGeometricAveragePriceAsianHestonEngine : public PricingE
         ext::shared_ptr<HestonProcess> process,
         Size summationCutoff = 50,
         Real xiRightLimit = 100.0);
-    %extend {
-        std::pair<Real, Real> Phi (
-            Real sr, Real si,
-            Real wr, Real wi,
-            Real T, Real t = 0.0,
-            Size cutoff = 50) const {
-            std::complex<Real> s(sr, si), w(wr, wi);
-            std::complex<Real> tmp = self->Phi(
-                s, w, T, t, cutoff);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-    }
+    std::complex<Real> Phi(
+        const std::complex<Real>& s,
+        const std::complex<Real>& w,
+        Real T,
+        Real t = 0.0,
+        Size cutoff = 50) const;
 };
 
 %shared_ptr(ContinuousArithmeticAsianLevyEngine)
@@ -92,21 +85,14 @@ class AnalyticDiscreteGeometricAveragePriceAsianHestonEngine : public PricingEng
     AnalyticDiscreteGeometricAveragePriceAsianHestonEngine(
         ext::shared_ptr<HestonProcess> process,
         Real xiRightLimit = 100.0);
-    %extend {
-        std::pair<Real, Real> Phi (
-            Real sr, Real si,
-            Real wr, Real wi,
-            Time t, Time T,
-            Size kStar,
-            const std::vector<Time>& t_n,
-            const std::vector<Time>& tauK) const {
-            std::complex<Real> s(sr, si), w(wr, wi);
-            std::complex<Real> tmp = self->Phi(
-                s, w, t, T, kStar, t_n, tauK);
-            return std::pair<Real, Real>(
-                tmp.real(), tmp.imag());
-        }
-    }
+    std::complex<Real> Phi(
+        std::complex<Real> s,
+        std::complex<Real> w,
+        Time t,
+        Time T,
+        Size kStar,
+        const std::vector<Time>& t_n,
+        const std::vector<Time>& tauK) const;
 };
 
 %shared_ptr(AnalyticDiscreteGeometricAverageStrikeAsianEngine)

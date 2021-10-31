@@ -84,6 +84,12 @@ class Canada : public Calendar {
     Canada(Market m = Settlement);
 };
 
+class Chile : public Calendar {
+  public:
+    enum Market { SSE };
+    Chile(Market m = SSE);
+};
+
 class China : public Calendar {
   public:
     enum Market { SSE,
@@ -240,7 +246,7 @@ class UnitedStates : public Calendar {
                   NERC,
                   LiborImpact,
                   FederalReserve };
-    UnitedStates(Market m = Settlement);
+    explicit UnitedStates(Market market);
 };
 
 class NullCalendar : public Calendar {};

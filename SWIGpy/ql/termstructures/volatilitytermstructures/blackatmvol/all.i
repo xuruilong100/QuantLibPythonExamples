@@ -34,7 +34,7 @@ class AbcdAtmVolCurve : public BlackAtmVolCurve, public LazyObject {
     Real d() const;
     Real rmsError() const;
     Real maxError() const;
-    // EndCriteria::Type endCriteria() const;
+    EndCriteria::Type endCriteria() const;
 
     const std::vector<Period>& optionTenors() const;
     const std::vector<Period>& optionTenorsInInterpolation() const;

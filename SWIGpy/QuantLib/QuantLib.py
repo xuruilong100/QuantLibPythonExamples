@@ -2874,6 +2874,7 @@ class DateGeneration(object):
     Forward = _QuantLib.DateGeneration_Forward
     Zero = _QuantLib.DateGeneration_Zero
     ThirdWednesday = _QuantLib.DateGeneration_ThirdWednesday
+    ThirdWednesdayInclusive = _QuantLib.DateGeneration_ThirdWednesdayInclusive
     Twentieth = _QuantLib.DateGeneration_Twentieth
     TwentiethIMM = _QuantLib.DateGeneration_TwentiethIMM
     OldCDS = _QuantLib.DateGeneration_OldCDS
@@ -6184,6 +6185,18 @@ class Canada(Calendar):
 # Register Canada in _QuantLib:
 _QuantLib.Canada_swigregister(Canada)
 
+class Chile(Calendar):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    SSE = _QuantLib.Chile_SSE
+
+    def __init__(self, *args):
+        _QuantLib.Chile_swiginit(self, _QuantLib.new_Chile(*args))
+    __swig_destroy__ = _QuantLib.delete_Chile
+
+# Register Chile in _QuantLib:
+_QuantLib.Chile_swigregister(Chile)
+
 class China(Calendar):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -6588,8 +6601,8 @@ class UnitedStates(Calendar):
     LiborImpact = _QuantLib.UnitedStates_LiborImpact
     FederalReserve = _QuantLib.UnitedStates_FederalReserve
 
-    def __init__(self, *args):
-        _QuantLib.UnitedStates_swiginit(self, _QuantLib.new_UnitedStates(*args))
+    def __init__(self, market):
+        _QuantLib.UnitedStates_swiginit(self, _QuantLib.new_UnitedStates(market))
     __swig_destroy__ = _QuantLib.delete_UnitedStates
 
 # Register UnitedStates in _QuantLib:
@@ -8113,18 +8126,6 @@ class IborCoupon(FloatingRateCoupon):
     def __init__(self, *args, **kwargs):
         _QuantLib.IborCoupon_swiginit(self, _QuantLib.new_IborCoupon(*args, **kwargs))
 
-    @staticmethod
-    def createAtParCoupons():
-        return _QuantLib.IborCoupon_createAtParCoupons()
-
-    @staticmethod
-    def createIndexedCoupons():
-        return _QuantLib.IborCoupon_createIndexedCoupons()
-
-    @staticmethod
-    def usingAtParCoupons():
-        return _QuantLib.IborCoupon_usingAtParCoupons()
-
     def iborIndex(self):
         return _QuantLib.IborCoupon_iborIndex(self)
 
@@ -8135,14 +8136,25 @@ class IborCoupon(FloatingRateCoupon):
 # Register IborCoupon in _QuantLib:
 _QuantLib.IborCoupon_swigregister(IborCoupon)
 
-def IborCoupon_createAtParCoupons():
-    return _QuantLib.IborCoupon_createAtParCoupons()
+class IborCouponSettings(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
-def IborCoupon_createIndexedCoupons():
-    return _QuantLib.IborCoupon_createIndexedCoupons()
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
 
-def IborCoupon_usingAtParCoupons():
-    return _QuantLib.IborCoupon_usingAtParCoupons()
+    def createAtParCoupons(self):
+        return _QuantLib.IborCouponSettings_createAtParCoupons(self)
+
+    def createIndexedCoupons(self):
+        return _QuantLib.IborCouponSettings_createIndexedCoupons(self)
+
+    def usingAtParCoupons(self):
+        return _QuantLib.IborCouponSettings_usingAtParCoupons(self)
+    __swig_destroy__ = _QuantLib.delete_IborCouponSettings
+
+# Register IborCouponSettings in _QuantLib:
+_QuantLib.IborCouponSettings_swigregister(IborCouponSettings)
 
 class CappedFlooredCoupon(FloatingRateCoupon):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -8683,6 +8695,12 @@ class IborCouponPricer(FloatingRateCouponPricer):
 
     def setCapletVolatility(self, *args):
         return _QuantLib.IborCouponPricer_setCapletVolatility(self, *args)
+
+    def useIndexedCoupon(self):
+        return _QuantLib.IborCouponPricer_useIndexedCoupon(self)
+
+    def initializeCachedData(self, coupon):
+        return _QuantLib.IborCouponPricer_initializeCachedData(self, coupon)
     __swig_destroy__ = _QuantLib.delete_IborCouponPricer
 
 # Register IborCouponPricer in _QuantLib:
@@ -10293,8 +10311,8 @@ class AnalyticContinuousGeometricAveragePriceAsianHestonEngine(PricingEngine):
     def __init__(self, process, summationCutoff=50, xiRightLimit=100.0):
         _QuantLib.AnalyticContinuousGeometricAveragePriceAsianHestonEngine_swiginit(self, _QuantLib.new_AnalyticContinuousGeometricAveragePriceAsianHestonEngine(process, summationCutoff, xiRightLimit))
 
-    def Phi(self, sr, si, wr, wi, T, t=0.0, cutoff=50):
-        return _QuantLib.AnalyticContinuousGeometricAveragePriceAsianHestonEngine_Phi(self, sr, si, wr, wi, T, t, cutoff)
+    def Phi(self, s, w, T, t=0.0, cutoff=50):
+        return _QuantLib.AnalyticContinuousGeometricAveragePriceAsianHestonEngine_Phi(self, s, w, T, t, cutoff)
     __swig_destroy__ = _QuantLib.delete_AnalyticContinuousGeometricAveragePriceAsianHestonEngine
 
 # Register AnalyticContinuousGeometricAveragePriceAsianHestonEngine in _QuantLib:
@@ -10340,8 +10358,8 @@ class AnalyticDiscreteGeometricAveragePriceAsianHestonEngine(PricingEngine):
     def __init__(self, process, xiRightLimit=100.0):
         _QuantLib.AnalyticDiscreteGeometricAveragePriceAsianHestonEngine_swiginit(self, _QuantLib.new_AnalyticDiscreteGeometricAveragePriceAsianHestonEngine(process, xiRightLimit))
 
-    def Phi(self, sr, si, wr, wi, t, T, kStar, t_n, tauK):
-        return _QuantLib.AnalyticDiscreteGeometricAveragePriceAsianHestonEngine_Phi(self, sr, si, wr, wi, t, T, kStar, t_n, tauK)
+    def Phi(self, s, w, t, T, kStar, t_n, tauK):
+        return _QuantLib.AnalyticDiscreteGeometricAveragePriceAsianHestonEngine_Phi(self, s, w, t, T, kStar, t_n, tauK)
     __swig_destroy__ = _QuantLib.delete_AnalyticDiscreteGeometricAveragePriceAsianHestonEngine
 
 # Register AnalyticDiscreteGeometricAveragePriceAsianHestonEngine in _QuantLib:
@@ -12438,6 +12456,26 @@ class BinomialJ4ConvertibleEngine(PricingEngine):
 # Register BinomialJ4ConvertibleEngine in _QuantLib:
 _QuantLib.BinomialJ4ConvertibleEngine_swigregister(BinomialJ4ConvertibleEngine)
 
+class RiskyBondEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, defaultTS, recoveryRate, yieldTS):
+        _QuantLib.RiskyBondEngine_swiginit(self, _QuantLib.new_RiskyBondEngine(defaultTS, recoveryRate, yieldTS))
+
+    def defaultTS(self):
+        return _QuantLib.RiskyBondEngine_defaultTS(self)
+
+    def recoveryRate(self):
+        return _QuantLib.RiskyBondEngine_recoveryRate(self)
+
+    def yieldTS(self):
+        return _QuantLib.RiskyBondEngine_yieldTS(self)
+    __swig_destroy__ = _QuantLib.delete_RiskyBondEngine
+
+# Register RiskyBondEngine in _QuantLib:
+_QuantLib.RiskyBondEngine_swigregister(RiskyBondEngine)
+
 class AnalyticCapFloorEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -13338,11 +13376,11 @@ class AnalyticHestonEngine(PricingEngine):
     def optimalControlVariate(t, v0, kappa, theta, sigma, rho):
         return _QuantLib.AnalyticHestonEngine_optimalControlVariate(t, v0, kappa, theta, sigma, rho)
 
-    def chF(self, real, imag, t):
-        return _QuantLib.AnalyticHestonEngine_chF(self, real, imag, t)
+    def chF(self, z, t):
+        return _QuantLib.AnalyticHestonEngine_chF(self, z, t)
 
-    def lnChF(self, real, imag, t):
-        return _QuantLib.AnalyticHestonEngine_lnChF(self, real, imag, t)
+    def lnChF(self, z, t):
+        return _QuantLib.AnalyticHestonEngine_lnChF(self, z, t)
     __swig_destroy__ = _QuantLib.delete_AnalyticHestonEngine
 
 # Register AnalyticHestonEngine in _QuantLib:
@@ -13463,11 +13501,11 @@ class AnalyticPTDHestonEngine(PricingEngine):
     def numberOfEvaluations(self):
         return _QuantLib.AnalyticPTDHestonEngine_numberOfEvaluations(self)
 
-    def chF(self, real, imag, t):
-        return _QuantLib.AnalyticPTDHestonEngine_chF(self, real, imag, t)
+    def chF(self, z, t):
+        return _QuantLib.AnalyticPTDHestonEngine_chF(self, z, t)
 
-    def lnChF(self, real, imag, t):
-        return _QuantLib.AnalyticPTDHestonEngine_lnChF(self, real, imag, t)
+    def lnChF(self, z, t):
+        return _QuantLib.AnalyticPTDHestonEngine_lnChF(self, z, t)
     __swig_destroy__ = _QuantLib.delete_AnalyticPTDHestonEngine
 
 # Register AnalyticPTDHestonEngine in _QuantLib:
@@ -21817,6 +21855,9 @@ class GaussKronrodNonAdaptive(Integrator):
     def __init__(self, absoluteAccuracy, maxEvaluations, relativeAccuracy):
         _QuantLib.GaussKronrodNonAdaptive_swiginit(self, _QuantLib.new_GaussKronrodNonAdaptive(absoluteAccuracy, maxEvaluations, relativeAccuracy))
 
+    def setRelativeAccuracy(self, arg2):
+        return _QuantLib.GaussKronrodNonAdaptive_setRelativeAccuracy(self, arg2)
+
     def relativeAccuracy(self):
         return _QuantLib.GaussKronrodNonAdaptive_relativeAccuracy(self)
     __swig_destroy__ = _QuantLib.delete_GaussKronrodNonAdaptive
@@ -23780,24 +23821,27 @@ class Money(object):
     NoConversion = _QuantLib.Money_NoConversion
     BaseCurrencyConversion = _QuantLib.Money_BaseCurrencyConversion
     AutomatedConversion = _QuantLib.Money_AutomatedConversion
-
-    @staticmethod
-    def setConversionType(type):
-        return _QuantLib.Money_setConversionType(type)
-
-    @staticmethod
-    def setBaseCurrency(c):
-        return _QuantLib.Money_setBaseCurrency(c)
     __swig_destroy__ = _QuantLib.delete_Money
 
 # Register Money in _QuantLib:
 _QuantLib.Money_swigregister(Money)
 
-def Money_setConversionType(type):
-    return _QuantLib.Money_setConversionType(type)
+class MoneySettings(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
-def Money_setBaseCurrency(c):
-    return _QuantLib.Money_setBaseCurrency(c)
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def conversionType(self, *args):
+        return _QuantLib.MoneySettings_conversionType(self, *args)
+
+    def baseCurrency(self, *args):
+        return _QuantLib.MoneySettings_baseCurrency(self, *args)
+    __swig_destroy__ = _QuantLib.delete_MoneySettings
+
+# Register MoneySettings in _QuantLib:
+_QuantLib.MoneySettings_swigregister(MoneySettings)
 
 
 def getCovariance(volatilities, correlations):
@@ -25617,23 +25661,10 @@ class CrossCurrencyBasisSwapRateHelper(RateHelper):
 
     def __init__(self, basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg):
         _QuantLib.CrossCurrencyBasisSwapRateHelper_swiginit(self, _QuantLib.new_CrossCurrencyBasisSwapRateHelper(basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg))
-
-    def baseCurrencyLeg(self):
-        return _QuantLib.CrossCurrencyBasisSwapRateHelper_baseCurrencyLeg(self)
-
-    def quoteCurrencyLeg(self):
-        return _QuantLib.CrossCurrencyBasisSwapRateHelper_quoteCurrencyLeg(self)
-
-    @staticmethod
-    def buildCrossCurrencyLeg(evaluationDate, tenor, fixingDays, calendar, convention, endOfMonth, idx, type, notional=1.0, basis=0.0):
-        return _QuantLib.CrossCurrencyBasisSwapRateHelper_buildCrossCurrencyLeg(evaluationDate, tenor, fixingDays, calendar, convention, endOfMonth, idx, type, notional, basis)
     __swig_destroy__ = _QuantLib.delete_CrossCurrencyBasisSwapRateHelper
 
 # Register CrossCurrencyBasisSwapRateHelper in _QuantLib:
 _QuantLib.CrossCurrencyBasisSwapRateHelper_swigregister(CrossCurrencyBasisSwapRateHelper)
-
-def CrossCurrencyBasisSwapRateHelper_buildCrossCurrencyLeg(evaluationDate, tenor, fixingDays, calendar, convention, endOfMonth, idx, type, notional=1.0, basis=0.0):
-    return _QuantLib.CrossCurrencyBasisSwapRateHelper_buildCrossCurrencyLeg(evaluationDate, tenor, fixingDays, calendar, convention, endOfMonth, idx, type, notional, basis)
 
 class BondHelperVector(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -28784,9 +28815,6 @@ class InflationTermStructure(TermStructure):
     def baseRate(self):
         return _QuantLib.InflationTermStructure_baseRate(self)
 
-    def nominalTermStructure(self):
-        return _QuantLib.InflationTermStructure_nominalTermStructure(self)
-
     def baseDate(self):
         return _QuantLib.InflationTermStructure_baseDate(self)
 
@@ -29159,9 +29187,6 @@ class YoYInflationTermStructureHandle(object):
     def baseRate(self):
         return _QuantLib.YoYInflationTermStructureHandle_baseRate(self)
 
-    def nominalTermStructure(self):
-        return _QuantLib.YoYInflationTermStructureHandle_nominalTermStructure(self)
-
     def baseDate(self):
         return _QuantLib.YoYInflationTermStructureHandle_baseDate(self)
 
@@ -29299,9 +29324,6 @@ class ZeroInflationTermStructureHandle(object):
 
     def baseRate(self):
         return _QuantLib.ZeroInflationTermStructureHandle_baseRate(self)
-
-    def nominalTermStructure(self):
-        return _QuantLib.ZeroInflationTermStructureHandle_nominalTermStructure(self)
 
     def baseDate(self):
         return _QuantLib.ZeroInflationTermStructureHandle_baseDate(self)
@@ -30335,6 +30357,9 @@ class AbcdAtmVolCurve(BlackAtmVolCurve, LazyObject):
 
     def maxError(self):
         return _QuantLib.AbcdAtmVolCurve_maxError(self)
+
+    def endCriteria(self):
+        return _QuantLib.AbcdAtmVolCurve_endCriteria(self)
 
     def optionTenors(self):
         return _QuantLib.AbcdAtmVolCurve_optionTenors(self)

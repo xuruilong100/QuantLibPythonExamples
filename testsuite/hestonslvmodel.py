@@ -778,7 +778,7 @@ class HestonSLVModelTest(unittest.TestCase):
             "Testing Fokker-Planck forward equation for the square root process with stationary density...")
 
         # Documentation for this test case:
-        # http://www.spanderen.de/2013/05/04/fokker-planck-equation-feller-constraint-and-boundary-conditions/
+        # http:#www.spanderen.de/2013/05/04/fokker-planck-equation-feller-constraint-and-boundary-conditions/
 
         backup = SavedSettings()
 
@@ -1704,9 +1704,9 @@ class HestonSLVModelTest(unittest.TestCase):
             self.assertFalse(qualityFactor / nValues > 7.5)
             self.assertFalse(qualityFactor / nValues > 15.0)
 
+    @unittest.skip("not implemented")
     def testMoustacheGraph(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing double no touch pricing with SLV and mixing...")
 
         # backup = SavedSettings()
@@ -1834,14 +1834,14 @@ class HestonSLVModelTest(unittest.TestCase):
         #     diff = slvNPV - bsNPV
         #     self.assertFalse(abs(diff - expected[i]) > tol)
 
+    @unittest.skip("not implemented")
     def testForwardSkewSLV(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing the implied volatility skew of forward starting options in SLV model...")
 
+    @unittest.skip("not implemented")
     def testADiffusionAndDriftSlvProcess(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing diffusion and drift of the SLV process...")
 
         # backup = SavedSettings()
@@ -2014,3 +2014,144 @@ class HestonSLVModelTest(unittest.TestCase):
             self.assertFalse(priceError > 0.1)
             self.assertFalse(abs(priceFDM - priceMC) > 2.3 * priceError)
             self.assertFalse(priceFDM != priceFDMWithMix)
+
+    @unittest.skip("not implemented")
+    def testBarrierPricingMixedModelsMonteCarloVsFdmPricing(self):
+        TEST_MESSAGE(
+            "Testing European and Barrier Pricing for Monte-Carlo and FDM Pricing in Heston SLV models with a mixing factor...")
+
+        # epsilon = 0.015
+        #
+        # backup = SavedSettings()
+        # dc = ActualActual(ActualActual.ISDA)
+        # todaysDate = Date(1, Jul, 2021)
+        # maturityDate = todaysDate + Period(2, Years)
+        # maturity = dc.yearFraction(todaysDate, maturityDate)
+        # Settings.instance().evaluationDate = todaysDate
+        #
+        # s0 = 100
+        # spot = QuoteHandle(SimpleQuote(s0))
+        # r = 0.02
+        # q = 0.01
+        # mixingFactors = [1.0, 0.64, 0.3]
+        # requiredDates = DateVector()
+        #
+        # # Create two slightly different Heston models. The first will be our stochastic
+        # # vol model, the second is used to create a similar implied vol surface which
+        # # we fit a local vol model to
+        # kappa1 = 2.0
+        # theta1 = 0.12
+        # rho1 = -0.25
+        # sigma1 = 0.8
+        # v01 = 0.09
+        #
+        # kappa2 = 1.5
+        # theta2 = 0.11
+        # rho2 = -0.2
+        # sigma2 = 0.9
+        # v02 = 0.1
+        #
+        # rTS = YieldTermStructureHandle(flatRate(r, dc))
+        # qTS = YieldTermStructureHandle(flatRate(q, dc))
+        #
+        # hestonProcess = HestonProcess(
+        #     rTS, qTS, spot, v01, kappa1, theta1, sigma1, rho1)
+        #
+        # hestonModelPtr = HestonModel(hestonProcess)
+        #
+        # hestonProcess2 = HestonProcess(
+        #     rTS, qTS, spot, v02, kappa2, theta2, sigma2, rho2)
+        #
+        # hestonModelPtr2 = HestonModel(hestonProcess2)
+        #
+        # localVolPtr = getFixedLocalVolFromHeston(
+        #     hestonModelPtr2,
+        #     TimeGrid(maturity, 20))
+        #
+        # localVol = LocalVolTermStructureHandle(localVolPtr)
+        # localVol.enableExtrapolation()
+        # hestonModel = HestonModelHandle(hestonModelPtr)
+        # hestonModel2 = HestonModelHandle(hestonModelPtr2)
+        #
+        # # Create the options we will price - a vanilla and a barrier
+        # exercise = EuropeanExercise(maturityDate)
+        #
+        # strike = 100
+        # payoff = PlainVanillaPayoff(Option.Call, strike)
+        #
+        # vanillaOption = VanillaOption(payoff, exercise)
+        #
+        # rebate = 0.0
+        # barrier = 110.0
+        # barrierOption = BarrierOption(Barrier.UpOut, barrier, rebate, payoff, exercise)
+        #
+        # # hestonModel2 is our simulated local vol model, so its vanilla prices
+        # # should match the calibrated SLV model pricers
+        # hestonVanillaEngine = AnalyticHestonEngine(hestonModelPtr2)
+        # vanillaOption.setPricingEngine(hestonVanillaEngine)
+        # localVolPrice = vanillaOption.NPV()
+        #
+        # sobolGeneratorFactory = SobolBrownianGeneratorFactory(
+        #     SobolBrownianGenerator.Diagonal, 1234,
+        #     SobolRsg.JoeKuoD7)
+        #
+        # for mixingFactor in mixingFactors:
+        #     # Finite Difference calibration
+        #     logParams = HestonSLVFokkerPlanckFdmParams(
+        #         201, 401, 1000, 30, 2.0, 0, 2,
+        #         0.1, 1e-4, 10000,
+        #         1e-5, 1e-5, 0.0000025, 1.0, 0.1, 0.9, 1e-5,
+        #         FdmHestonGreensFct.Gaussian,
+        #         FdmSquareRootFwdOp.Log,
+        #         FdmSchemeDesc.ModifiedCraigSneyd())
+        #
+        #     leverageFctFDM = HestonSLVFDMModel(
+        #         localVol, hestonModel, maturityDate, logParams, false, requiredDates,
+        #         mixingFactor).leverageFunction()
+        #
+        #     # Monte-Carlo calibration
+        #     timeStepsPerYear = 365
+        #     nBins = 201
+        #     calibrationPaths = 65536
+        #
+        #     leverageFctMC = HestonSLVMCModel(
+        #         localVol, hestonModel,
+        #         sobolGeneratorFactory,
+        #         maturityDate, timeStepsPerYear, nBins, calibrationPaths, requiredDates,
+        #         mixingFactor).leverageFunction()
+        #
+        #     # Create SLV pricing engines with both leverage functions
+        #     fdEngineWithMixingFactor = FdHestonVanillaEngine(
+        #         hestonModelPtr, 100, 100, 50, 0,
+        #         FdmSchemeDesc.Hundsdorfer(), leverageFctFDM, mixingFactor)
+        #
+        #     mcEngineWithMixingFactor = FdHestonVanillaEngine(
+        #         hestonModelPtr, 100, 100, 50, 0,
+        #         FdmSchemeDesc.Hundsdorfer(), leverageFctMC, mixingFactor)
+        #
+        #     fdBarrierEngineWithMixingFactor = FdHestonBarrierEngine(
+        #         hestonModelPtr, 100, 100, 50, 0,
+        #         FdmSchemeDesc.Hundsdorfer(), leverageFctFDM, mixingFactor)
+        #
+        #     mcBarrierEngineWithMixingFactor = FdHestonBarrierEngine(
+        #         hestonModelPtr, 100, 100, 50, 0,
+        #         FdmSchemeDesc.Hundsdorfer(), leverageFctMC, mixingFactor)
+        #
+        #     # Price the vanilla and barrier with both engines
+        #     vanillaOption.setPricingEngine(fdEngineWithMixingFactor)
+        #     priceFDM = vanillaOption.NPV()
+        #
+        #     vanillaOption.setPricingEngine(mcEngineWithMixingFactor)
+        #     priceMC = vanillaOption.NPV()
+        #
+        #     barrierOption.setPricingEngine(fdBarrierEngineWithMixingFactor)
+        #     barrierPriceFDM = barrierOption.NPV()
+        #
+        #     barrierOption.setPricingEngine(mcBarrierEngineWithMixingFactor)
+        #     barrierPriceMC = barrierOption.NPV()
+        #
+        #     # Check MC and FDM vanilla prices against local vol, and ensure that the barrier
+        #     # prices from MC and FDM are also consistent
+        #     self.assertFalse(relativeError(priceFDM, localVolPrice, localVolPrice) > epsilon)
+        #     self.assertFalse(relativeError(priceMC, localVolPrice, localVolPrice) > epsilon)
+        #     self.assertFalse(relativeError(barrierPriceFDM, barrierPriceMC, barrierPriceMC) > epsilon)

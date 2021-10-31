@@ -16,7 +16,7 @@ ql_module = Extension(
 
 setup(
     name='QuantLib',
-    version='1.23',
+    version='1.24',
     author="xrl",
     author_email="xuruilong100@hotmail.com",
     description="Python bindings for the QuantLib",

@@ -1114,6 +1114,7 @@ using QuantLib::ExtendedLeisenReimer;
 using QuantLib::ExtendedTian;
 using QuantLib::ExtendedTrigeorgis;
 using QuantLib::ForwardPerformanceVanillaEngine;
+using QuantLib::RiskyBondEngine;
 %}
 
 %{
@@ -1137,6 +1138,7 @@ typedef QuantLib::StochasticProcess1D::discretization discretization1D;
 typedef QuantLib::StochasticProcess::discretization discretization;
 typedef QuantLib::TenorOptionletVTS::CorrelationStructure TenorOptionletVTSCorrelationStructure;
 typedef QuantLib::TenorOptionletVTS::TwoParameterCorrelation TwoParameterCorrelation;
+typedef IborCoupon::Settings IborCouponSettings;
 typedef double doubleOrNull;
 typedef int intOrNull;
 typedef std::vector<ext::shared_ptr<FdmBoundaryCondition>> FdmBoundaryConditionSet;

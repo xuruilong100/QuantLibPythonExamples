@@ -43,7 +43,8 @@ class ForwardOptionTest(unittest.TestCase):
         ]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -97,7 +98,8 @@ class ForwardOptionTest(unittest.TestCase):
         ]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -139,18 +141,18 @@ class ForwardOptionTest(unittest.TestCase):
 
         self._testForwardGreeks(ForwardPerformanceEuropeanEngine)
 
+    @unittest.skip("not implemented")
     def testGreeksInitialization(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing forward option greeks initialization...")
 
     def testMCPrices(self):
         TEST_MESSAGE("Testing forward option MC prices...")
 
-        tolerance = 5e-4
+        tol = [0.002, 0.001, 0.0006, 5e-4, 5e-4]
 
         timeSteps = 100
-        numberOfSamples = 32768
+        numberOfSamples = 5000
         mcSeed = 42
 
         q = 0.04
@@ -160,7 +162,8 @@ class ForwardOptionTest(unittest.TestCase):
 
         dc = Actual360()
         backup = SavedSettings()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(s)
         qRate = SimpleQuote(q)
@@ -187,8 +190,8 @@ class ForwardOptionTest(unittest.TestCase):
 
         moneyness = [0.8, 0.9, 1.0, 1.1, 1.2]
 
-        for moneynes in moneyness:
-            option = ForwardVanillaOption(moneynes, reset, payoff, exercise)
+        for moneyness_index in range(len(moneyness)):
+            option = ForwardVanillaOption(moneyness[moneyness_index], reset, payoff, exercise)
 
             option.setPricingEngine(analyticEngine)
             analyticPrice = option.NPV()
@@ -197,20 +200,43 @@ class ForwardOptionTest(unittest.TestCase):
             mcPrice = option.NPV()
 
             error = relativeError(analyticPrice, mcPrice, s)
-            self.assertFalse(error > tolerance)
+            self.assertFalse(error > tol[moneyness_index])
 
     def testHestonMCPrices(self):
         TEST_MESSAGE("Testing forward option Heston MC prices...")
 
         optionTypes = [Option.Call, Option.Put]
 
-        for optType in optionTypes:
+        mcForwardStartTolerance = [
+            [7e-4,  # Call, moneyness=0.8
+             8e-4,  # Call, moneyness=0.9
+             6e-4,  # Call, moneyness=1.0
+             5e-4,  # Call, moneyness=1.1
+             5e-4],  # Call, moneyness=1.2
+            [6e-4,  # Put, moneyness=0.8
+             5e-4,  # Put, moneyness=0.9
+             6e-4,  # Put, moneyness=1.0
+             0.001,  # Put, moneyness=1.1
+             0.001]];  # Put, moneyness=1.2
+
+        tol = [[9e-4,  # Call, moneyness=0.8
+                9e-4,  # Call, moneyness=0.9
+                6e-4,  # Call, moneyness=1.0
+                5e-4,  # Call, moneyness=1.1
+                5e-4],  # Call, moneyness=1.2
+               [6e-4,  # Put, moneyness=0.8
+                5e-4,  # Put, moneyness=0.9
+                8e-4,  # Put, moneyness=1.0
+                0.002,  # Put, moneyness=1.1
+                0.002]];  # Put, moneyness=1.2
+
+        for type_index in range(len(optionTypes)):
 
             mcTolerance = 5e-4
             analyticTolerance = 5e-4
 
             timeSteps = 50
-            numberOfSamples = 32768
+            numberOfSamples = 4095
             mcSeed = 42
 
             q = 0.04
@@ -227,12 +253,13 @@ class ForwardOptionTest(unittest.TestCase):
 
             dc = Actual360()
             backup = SavedSettings()
-            today = Settings.instance().evaluationDate
+            today = Date(16, Sep, 2015)
+            Settings.instance().evaluationDate = today
 
             exDate = today + Period(1, Years)
             exercise = EuropeanExercise(exDate)
             reset = today + Period(6, Months)
-            payoff = PlainVanillaPayoff(optType, 0.0)
+            payoff = PlainVanillaPayoff(optionTypes[type_index], 0.0)
 
             spot = SimpleQuote(s)
             qRate = SimpleQuote(q)
@@ -257,8 +284,8 @@ class ForwardOptionTest(unittest.TestCase):
 
             moneyness = [0.8, 0.9, 1.0, 1.1, 1.2]
 
-            for moneynes in moneyness:
-                option = ForwardVanillaOption(moneynes, reset, payoff, exercise)
+            for moneyness_index in range(len(moneyness)):
+                option = ForwardVanillaOption(moneyness[moneyness_index], reset, payoff, exercise)
 
                 option.setPricingEngine(analyticEngine)
                 analyticPrice = option.NPV()
@@ -267,7 +294,7 @@ class ForwardOptionTest(unittest.TestCase):
                 mcPrice = option.NPV()
 
                 mcError = relativeError(analyticPrice, mcPrice, s)
-                self.assertFalse(mcError > mcTolerance)
+                self.assertFalse(mcError > mcForwardStartTolerance[type_index][moneyness_index])
 
             # Test 2: Using an arbitrary Heston model, check that prices match semi-analytical
             # Heston prices when reset date is t=0
@@ -293,12 +320,12 @@ class ForwardOptionTest(unittest.TestCase):
 
             analyticForwardHestonEngine = AnalyticHestonForwardEuropeanEngine(hestonProcessSmile)
 
-            for moneynes in moneyness:
-                strike = s * moneynes
-                vanillaPayoff = PlainVanillaPayoff(optType, strike)
+            for moneyness_index in range(len(moneyness)):
+                strike = s * moneyness[moneyness_index]
+                vanillaPayoff = PlainVanillaPayoff(optionTypes[type_index], strike)
 
                 vanillaOption = VanillaOption(vanillaPayoff, exercise)
-                forwardOption = ForwardVanillaOption(moneynes, reset, payoff, exercise)
+                forwardOption = ForwardVanillaOption(moneyness[moneyness_index], reset, payoff, exercise)
 
                 vanillaOption.setPricingEngine(analyticHestonEngine)
                 analyticPrice = vanillaOption.NPV()
@@ -307,7 +334,8 @@ class ForwardOptionTest(unittest.TestCase):
                 mcPrice = forwardOption.NPV()
 
                 mcError = relativeError(analyticPrice, mcPrice, s)
-                self.assertFalse(mcError > mcTolerance)
+                tolerance = tol[type_index][moneyness_index]
+                self.assertFalse(mcError > tolerance)
 
                 # T=0, testing the Analytic Pricer's T=0 analytical solution
                 forwardOption.setPricingEngine(analyticForwardHestonEngine)
@@ -321,11 +349,23 @@ class ForwardOptionTest(unittest.TestCase):
 
         optionTypes = [Option.Call, Option.Put]
 
-        for optType in optionTypes:
+        tol = [[0.002,  # Call, moneyness=0.8, CV:false
+                0.002,  # Call, moneyness=0.8, CV:true
+                0.001,  # Call, moneyness=1.0, CV:false
+                0.001,  # Call, moneyness=1.8, CV:true
+                0.001,  # Call, moneyness=1.2, CV:false
+                0.001],  # Call, moneyness=1.2, CV:true
+               [0.001,  # Put, moneyness=0.8, CV:false
+                0.001,  # Put, moneyness=0.8, CV:true
+                0.003,  # Put, moneyness=1.0, CV:false
+                0.003,  # Put, moneyness=1.0, CV:true
+                0.003,  # Put, moneyness=1.2, CV:false
+                0.003]]  # Put, moneyness=1.2, CV:true
 
-            tolerance = 1e-3
+        for option_type_index in range(len(optionTypes)):
+
             timeSteps = 50
-            numberOfSamples = 16383
+            numberOfSamples = 5000
             mcSeed = 42
 
             q = 0.03
@@ -341,12 +381,13 @@ class ForwardOptionTest(unittest.TestCase):
 
             dc = Actual360()
             backup = SavedSettings()
-            today = Settings.instance().evaluationDate
+            today = Date(16, Sep, 2015)
+            Settings.instance().evaluationDate = today
 
             exDate = today + Period(1, Years)
             exercise = EuropeanExercise(exDate)
             reset = today + Period(6, Months)
-            payoff = PlainVanillaPayoff(optType, 0.0)
+            payoff = PlainVanillaPayoff(optionTypes[option_type_index], 0.0)
 
             spot = SimpleQuote(s)
             qRate = SimpleQuote(q)
@@ -367,14 +408,17 @@ class ForwardOptionTest(unittest.TestCase):
             mcEngineCv.withSteps(timeSteps)
             mcEngineCv.withSamples(numberOfSamples)
             mcEngineCv.withSeed(mcSeed)
-            mcEngineCv.withControlVariate(true)
+            mcEngineCv.withControlVariate(True)
             mcEngineCv = mcEngineCv.makeEngine()
 
             analyticEngine = AnalyticHestonForwardEuropeanEngine(hestonProcess)
 
             moneyness = [0.8, 1.0, 1.2]
 
-            for m in moneyness:
+            tol_2nd_index = 0
+
+            while tol_2nd_index < len(moneyness):
+                m = moneyness[tol_2nd_index]
                 option = ForwardVanillaOption(m, reset, payoff, exercise)
 
                 option.setPricingEngine(analyticEngine)
@@ -383,13 +427,15 @@ class ForwardOptionTest(unittest.TestCase):
                 option.setPricingEngine(mcEngine)
                 mcPrice = option.NPV()
                 error = relativeError(analyticPrice, mcPrice, s)
-
+                tolerance = tol[option_type_index][tol_2nd_index]
                 self.assertFalse(error > tolerance)
 
                 option.setPricingEngine(mcEngineCv)
                 mcPriceCv = option.NPV()
-
                 errorCv = relativeError(analyticPrice, mcPriceCv, s)
+                tol_2nd_index += 1
+                tolerance = tol[option_type_index][tol_2nd_index]
+                tol_2nd_index += 1
                 self.assertFalse(errorCv > tolerance)
 
     def _testForwardGreeks(self, Engine):
@@ -414,7 +460,8 @@ class ForwardOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)

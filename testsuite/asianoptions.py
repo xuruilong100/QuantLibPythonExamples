@@ -78,7 +78,8 @@ class AsianOptionTest(unittest.TestCase):
             "Testing analytic continuous geometric average-price Asians...")
         # data from "Option Pricing Formulas", Haug, pag.96-97
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(80.0)
         qRate = SimpleQuote(-0.03)
@@ -155,7 +156,7 @@ class AsianOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -284,7 +285,8 @@ class AsianOptionTest(unittest.TestCase):
         # bound the expected answer but are both out by ~5e-3
         tolerance = 1.0e-2
         dc = Actual365Fixed()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
         typeOpt = Option.Call
         averageType = Average.Geometric
 
@@ -351,7 +353,8 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing analytic discrete geometric average-price Asians...")
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -406,7 +409,8 @@ class AsianOptionTest(unittest.TestCase):
             2.0e-2, 3.0e-2, 3.0e-2, 4.0e-2, 2.0e-2, 1.0e-2, 1.0e-2, 2.0e-2,
             3.0e-2, 4.0e-2]
         dc = Actual365Fixed()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100.0))
         qRate = SimpleQuote(0.0)
@@ -433,7 +437,8 @@ class AsianOptionTest(unittest.TestCase):
             "Testing analytic discrete geometric average-strike Asians...")
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -480,7 +485,8 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete geometric average-price Asians...")
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -533,11 +539,12 @@ class AsianOptionTest(unittest.TestCase):
         # 30-day options need wider tolerance due to uncertainty around what "weekly
         # fixing" dates mean over a 30-day month!
         tol = [
-            4.0e-2, 2.0e-2, 2.0e-2, 3.0e-2, 3.0e-2, 6.0e-2,
-            1.0e-1, 1.0e-2, 2.0e-2, 2.0e-2, 4.0e-2, 6.0e-2,
-            2.0e-2, 1.0e-2, 1.0e-2, 1.0e-2, 4.0e-2, 6.0e-2]
+            4.0e-2, 2.0e-2, 2.0e-2, 4.0e-2, 8.0e-2, 2.0e-1,
+            1.0e-1, 4.0e-2, 3.0e-2, 2.0e-2, 9.0e-2, 2.0e-1,
+            2.0e-2, 1.0e-2, 2.0e-2, 2.0e-2, 7.0e-2, 2.0e-1]
         dc = Actual365Fixed()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100.0))
         qRate = SimpleQuote(0.0)
@@ -556,7 +563,7 @@ class AsianOptionTest(unittest.TestCase):
             spot, v0, kappa, theta, sigma, rho)
 
         engine = MakeMCLDDiscreteGeometricAPHestonEngine(hestonProcess)
-        engine.withSamples(32767)
+        engine.withSamples(8191)
         engine.withSeed(43)
         engine = engine.makeEngine()
 
@@ -602,7 +609,8 @@ class AsianOptionTest(unittest.TestCase):
             DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.89703362437)]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -681,7 +689,8 @@ class AsianOptionTest(unittest.TestCase):
         rho = -0.5
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -719,7 +728,7 @@ class AsianOptionTest(unittest.TestCase):
 
             engine = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess)
             engine.withSeed(42)
-            engine.withSamples(8191)
+            engine.withSamples(4095)
             engine = engine.makeEngine()
 
             option = DiscreteAveragingAsianOption(
@@ -731,7 +740,7 @@ class AsianOptionTest(unittest.TestCase):
             calculated = option.NPV()
             expected = cases[l].result
             # Bounds given in paper, "22.48 to 22.52"
-            tolerance = 2.0e-2
+            tolerance = 5.0e-2
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
 
@@ -739,14 +748,14 @@ class AsianOptionTest(unittest.TestCase):
             engine2 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess)
             engine2.withSeed(42)
             engine2.withSteps(48)
-            engine2.withSamples(8191)
-            engine2.withControlVariate(true)
+            engine2.withSamples(4095)
+            engine2.withControlVariate(True)
             engine2 = engine2.makeEngine()
 
             option.setPricingEngine(engine2)
             calculated = option.NPV()
             expected = cases[l].result
-            tolerance = 2.50e-2
+            tolerance = 3.00e-2
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
 
@@ -783,15 +792,14 @@ class AsianOptionTest(unittest.TestCase):
         engine3 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess2)
         engine3.withSeed(42)
         engine3.withSteps(180)
-        engine3.withSamples(16383)
-        engine3.withControlVariate(true)
+        engine3.withSamples(8191)
         engine3 = engine3.makeEngine()
 
         engine4 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess2)
         engine4.withSeed(42)
         engine4.withSteps(180)
-        engine4.withSamples(16383)
-        engine4.withControlVariate(true)
+        engine4.withSamples(8191)
+        engine4.withControlVariate(True)
         engine4 = engine4.makeEngine()
 
         fixingDates = DateVector(120)
@@ -810,7 +818,7 @@ class AsianOptionTest(unittest.TestCase):
 
             option.setPricingEngine(engine3)
             calculated = option.NPV()
-            tolerance = 5.0e-2
+            tolerance = 9.0e-2
             self.assertFalse(abs(calculated - expected) > tolerance)
 
             option.setPricingEngine(engine4)
@@ -859,7 +867,8 @@ class AsianOptionTest(unittest.TestCase):
             DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.81145760308)]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -939,7 +948,7 @@ class AsianOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -1049,7 +1058,8 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing use of past fixings in Asian options...")
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
         qRate = SimpleQuote(0.03)
@@ -1177,9 +1187,9 @@ class AsianOptionTest(unittest.TestCase):
 
         self.assertFalse(close(price3, price4))
 
+    @unittest.skip("not implemented")
     def testAllFixingsInThePast(self):
         TEST_MESSAGE(
-            "SKIP",
             "Testing Asian options with all fixing dates in the past...")
 
     def testLevyEngine(self):
@@ -1210,7 +1220,8 @@ class AsianOptionTest(unittest.TestCase):
             ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 180, 0.1552)]
 
         dc = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         for l in range(len(cases)):
             spot = SimpleQuote(cases[l].spot)
@@ -1254,7 +1265,8 @@ class AsianOptionTest(unittest.TestCase):
             VecerData(2.0, 0.05, 0.5, 2.0, 2, 0.350095, 2.0e-4)]
 
         dayCounter = Actual360()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
         typeOpt = Option.Call
         q = YieldTermStructureHandle(flatRate(today, 0.0, dayCounter))
         timeSteps = 200
@@ -1297,7 +1309,8 @@ class AsianOptionTest(unittest.TestCase):
                   3.7881, 5.2132, 7.2243, 9.9948, 12.0639, 0.1012, 0.5949, 1.4444,
                   2.9479, 5.3531, 7.3315]
         dc = Actual365Fixed()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
         spot = QuoteHandle(SimpleQuote(100.0))
         qRate = SimpleQuote(0.0)
         rRate = SimpleQuote(0.05)
@@ -1337,12 +1350,62 @@ class AsianOptionTest(unittest.TestCase):
 
         # 30-day options need wider tolerance due to uncertainty around what "weekly
         # fixing" dates mean over a 30-day month!
-        tolerance = 0.04
+
         days = [30, 90, 180, 360, 720]
         strikes = [90, 100, 110]
 
+        tol = [
+            [[0.04,  # strike=90, days=30, k=0
+              0.04,  # strike=90, days=30, k=1
+              ],
+             [0.04,  # strike=90, days=90, k=0
+              0.04,  # strike=90, days=90, k=1
+              ],
+             [0.04,  # strike=90, days=180, k=0
+              0.04,  # strike=90, days=180, k=1
+              ],
+             [0.05,  # strike=90, days=360, k=0
+              0.04,  # strike=90, days=360, k=1
+              ],
+             [0.04,  # strike=90, days=720, k=0
+              0.04,  # strike=90, days=720, k=1
+              ]],
+
+            [[0.04,  # strike=100, days=30, k=0
+              0.04,  # strike=100, days=30, k=1
+              ],
+             [0.04,  # strike=100, days=90, k=0
+              0.04,  # strike=100, days=90, k=1
+              ],
+             [0.04,  # strike=100, days=180, k=0
+              0.04,  # strike=100, days=180, k=1
+              ],
+             [0.06,  # strike=100, days=360, k=0
+              0.06,  # strike=100, days=360, k=1
+              ],
+             [0.06,  # strike=100, days=720, k=0
+              0.05,  # strike=100, days=720, k=1
+              ]],
+
+            [[0.04,  # strike=110, days=30, k=0
+              0.04,  # strike=110, days=30, k=1
+              ],
+             [0.04,  # strike=110, days=90, k=0
+              0.04,  # strike=110, days=90, k=1
+              ],
+             [0.04,  # strike=110, days=180, k=0
+              0.04,  # strike=110, days=180, k=1
+              ],
+             [0.05,  # strike=110, days=360, k=0
+              0.04,  # strike=110, days=360, k=1
+              ],
+             [0.06,  # strike=110, days=720, k=0
+              0.05,  # strike=110, days=720, k=1
+              ]]]
+
         dc = Actual365Fixed()
-        today = Settings.instance().evaluationDate
+        today = Date(16, Sep, 2015)
+        Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100))
         qRate = SimpleQuote(0.0)
@@ -1365,7 +1428,7 @@ class AsianOptionTest(unittest.TestCase):
             hestonProcess)
 
         mcEngine = MakeMCLDDiscreteGeometricAPHestonEngine(hestonProcess)
-        mcEngine.withSamples(32767)
+        mcEngine.withSamples(8191)
         mcEngine.withSeed(43)
 
         mcEngine = mcEngine.makeEngine()
@@ -1373,18 +1436,18 @@ class AsianOptionTest(unittest.TestCase):
         optType = Option.Call
         averageType = Average.Geometric
 
-        for strike in strikes:
-            for day in days:
+        for strike_index in range(len(strikes)):
+            for day_index in range(len(days)):
                 for k in range(2):
-                    futureFixings = int(floor(day / 30.0))
+                    futureFixings = int(floor(days[day_index] / 30.0))
                     fixingDates = DateVector(futureFixings)
-                    expiryDate = today + day * Days
+                    expiryDate = today + Period(days[day_index], Days)
 
                     for i in range(futureFixings - 1, -1, -1):
                         fixingDates[i] = expiryDate - i * 30
 
                     europeanExercise = EuropeanExercise(expiryDate)
-                    payoff = PlainVanillaPayoff(optType, strike)
+                    payoff = PlainVanillaPayoff(optType, strikes[strike_index])
 
                     runningAccumulator = 1.0
                     pastFixingsCount = 0
@@ -1404,5 +1467,7 @@ class AsianOptionTest(unittest.TestCase):
 
                     option.setPricingEngine(mcEngine)
                     mcPrice = option.NPV()
+
+                    tolerance = tol[strike_index][day_index][k]
 
                     self.assertFalse(abs(analyticPrice - mcPrice) > tolerance)
