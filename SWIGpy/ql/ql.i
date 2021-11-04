@@ -63,6 +63,7 @@
 %include ../ql/cashflows/floatingratecouponpricers/all.i
 %include ../ql/cashflows/inflationcouponpricers/all.i
 %include ../ql/cashflows/others/all.i
+%include ../ql/custom/all.i
 %include ../ql/currencies.i
 %include ../ql/date.i
 %include ../ql/daycounters.i

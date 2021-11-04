@@ -18,7 +18,7 @@ using QuantLib::DatedOISRateHelper;
 using QuantLib::FxSwapRateHelper;
 using QuantLib::OvernightIndexFutureRateHelper;
 using QuantLib::SofrFutureRateHelper;
-using QuantLib::CrossCurrencyBasisSwapRateHelper;
+/* using QuantLib::CrossCurrencyBasisSwapRateHelper; */
 %}
 
 %shared_ptr(DepositRateHelper)
@@ -352,7 +352,7 @@ class SofrFutureRateHelper : public OvernightIndexFutureRateHelper {
         RateAveraging::Type averagingMethod = RateAveraging::Compound);
 };
 
-%shared_ptr(CrossCurrencyBasisSwapRateHelper)
+/* %shared_ptr(CrossCurrencyBasisSwapRateHelper)
 class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
   public:
     CrossCurrencyBasisSwapRateHelper(
@@ -367,7 +367,7 @@ class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructu
         Handle<YieldTermStructure> collateralCurve,
         bool isFxBaseCurrencyCollateralCurrency,
         bool isBasisOnFxBaseCurrencyLeg);
-};
+}; */
 
 %template(BondHelperVector) std::vector<ext::shared_ptr<BondHelper>>;
 
@@ -388,10 +388,10 @@ class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructu
         const ext::shared_ptr<RateHelper> helper) {
         return ext::dynamic_pointer_cast<OISRateHelper>(helper);
     }
-    const ext::shared_ptr<CrossCurrencyBasisSwapRateHelper> as_crosscurrencybasisswapratehelper(
+    /* const ext::shared_ptr<CrossCurrencyBasisSwapRateHelper> as_crosscurrencybasisswapratehelper(
             const ext::shared_ptr<RateHelper> helper) {
         return ext::dynamic_pointer_cast<CrossCurrencyBasisSwapRateHelper>(helper);
-    }
+    } */
 %}
 
 #endif

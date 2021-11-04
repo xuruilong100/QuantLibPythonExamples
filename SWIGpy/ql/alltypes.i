@@ -258,7 +258,7 @@ using QuantLib::CraigSneydScheme;
 using QuantLib::CrankNicolson;
 using QuantLib::CrankNicolsonScheme;
 using QuantLib::CreditDefaultSwap;
-using QuantLib::CrossCurrencyBasisSwapRateHelper;
+/* using QuantLib::CrossCurrencyBasisSwapRateHelper; */
 using QuantLib::Cubic;
 using QuantLib::CubicBSplinesFitting;
 using QuantLib::CubicInterpolation;

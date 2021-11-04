@@ -23,6 +23,7 @@ class ZeroCouponInflationSwapHelper : public BootstrapHelper<ZeroInflationTermSt
         BusinessDayConvention bcd,
         DayCounter dayCounter,
         ext::shared_ptr<ZeroInflationIndex> zii,
+        CPI::InterpolationType observationInterpolation,
         Handle<YieldTermStructure> nominalTermStructure);
 };
 

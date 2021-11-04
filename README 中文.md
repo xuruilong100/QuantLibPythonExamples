@@ -26,7 +26,7 @@
 1. 生成 `.cpp` 文件：
 
 ```
-swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp SWIG/quantlib.i
+swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp quantlib.i
 ```
 
 2. 编译 `.cpp` 文件：
@@ -79,11 +79,11 @@ python3 setup.py install
 * [ ] barrieroption
 * [ ] basismodels
 * [ ] basketoption
-* [ ] batesmodel
+* [x] batesmodel
 * [ ] bermudanswaption
 * [ ] binaryoption
 * [ ] blackdeltacalculator
-* [ ] blackformula
+* [x] blackformula
 * [ ] bonds
 * [ ] brownianbridge
 * [ ] businessdayconventions
@@ -119,21 +119,21 @@ python3 setup.py install
 * [x] europeanoption
 * [ ] everestoption
 * [ ] exchangerate
-* [ ] extendedtrees
+* [x] extendedtrees
 * [ ] extensibleoptions
 * [ ] fastfouriertransform
-* [ ] fdcev
+* [x] fdcev
 * [ ] fdcir
-* [ ] fdheston
+* [x] fdheston
 * [ ] fdmlinearop
-* [ ] fdsabr
+* [x] fdsabr
 * [ ] fittedbonddiscountcurve
-* [ ] forwardoption
+* [x] forwardoption
 * [ ] forwardrateagreement
 * [ ] functions
 * [ ] garch
 * [ ] gaussianquadratures
-* [ ] gjrgarchmodel
+* [x] gjrgarchmodel
 * [ ] gsr
 * [x] hestonmodel
 * [x] hestonslvmodel
@@ -151,7 +151,7 @@ python3 setup.py install
 * [ ] integrals
 * [ ] interestrates
 * [ ] interpolations
-* [ ] jumpdiffusion
+* [x] jumpdiffusion
 * [ ] lazyobject
 * [ ] libormarketmodel
 * [ ] libormarketmodelprocess
@@ -167,7 +167,7 @@ python3 setup.py install
 * [ ] marketmodel_smm
 * [ ] markovfunctional
 * [ ] matrices
-* [ ] mclongstaffschwartzengine
+* [x] mclongstaffschwartzengine
 * [ ] mersennetwister
 * [ ] money
 * [ ] noarbsabr

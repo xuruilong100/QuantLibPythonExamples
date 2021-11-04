@@ -3524,6 +3524,12 @@ class Instrument(LazyObject):
 
     def fetchResults(self, arg2):
         return _QuantLib.Instrument_fetchResults(self, arg2)
+
+    def resultScalar(self, tag):
+        return _QuantLib.Instrument_resultScalar(self, tag)
+
+    def resultVector(self, tag):
+        return _QuantLib.Instrument_resultVector(self, tag)
     __swig_destroy__ = _QuantLib.delete_Instrument
 
 # Register Instrument in _QuantLib:
@@ -5886,8 +5892,8 @@ class ZeroCouponInflationSwapHelper(ZeroHelper):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, quote, lag, maturity, calendar, bcd, dayCounter, zii, nominalTermStructure):
-        _QuantLib.ZeroCouponInflationSwapHelper_swiginit(self, _QuantLib.new_ZeroCouponInflationSwapHelper(quote, lag, maturity, calendar, bcd, dayCounter, zii, nominalTermStructure))
+    def __init__(self, quote, lag, maturity, calendar, bcd, dayCounter, zii, observationInterpolation, nominalTermStructure):
+        _QuantLib.ZeroCouponInflationSwapHelper_swiginit(self, _QuantLib.new_ZeroCouponInflationSwapHelper(quote, lag, maturity, calendar, bcd, dayCounter, zii, observationInterpolation, nominalTermStructure))
     __swig_destroy__ = _QuantLib.delete_ZeroCouponInflationSwapHelper
 
 # Register ZeroCouponInflationSwapHelper in _QuantLib:
@@ -8971,6 +8977,166 @@ _QuantLib.IndexedCashFlow_swigregister(IndexedCashFlow)
 
 def as_indexed_cashflow(cf):
     return _QuantLib.as_indexed_cashflow(cf)
+class VolatilityTermStructure(TermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def businessDayConvention(self):
+        return _QuantLib.VolatilityTermStructure_businessDayConvention(self)
+
+    def optionDateFromTenor(self, arg2):
+        return _QuantLib.VolatilityTermStructure_optionDateFromTenor(self, arg2)
+
+    def minStrike(self):
+        return _QuantLib.VolatilityTermStructure_minStrike(self)
+
+    def maxStrike(self):
+        return _QuantLib.VolatilityTermStructure_maxStrike(self)
+    __swig_destroy__ = _QuantLib.delete_VolatilityTermStructure
+
+# Register VolatilityTermStructure in _QuantLib:
+_QuantLib.VolatilityTermStructure_swigregister(VolatilityTermStructure)
+
+class LocalVolTermStructure(VolatilityTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def localVol(self, *args):
+        return _QuantLib.LocalVolTermStructure_localVol(self, *args)
+    __swig_destroy__ = _QuantLib.delete_LocalVolTermStructure
+
+# Register LocalVolTermStructure in _QuantLib:
+_QuantLib.LocalVolTermStructure_swigregister(LocalVolTermStructure)
+
+class LocalVolTermStructureHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.LocalVolTermStructureHandle_swiginit(self, _QuantLib.new_LocalVolTermStructureHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.LocalVolTermStructureHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.LocalVolTermStructureHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.LocalVolTermStructureHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.LocalVolTermStructureHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.LocalVolTermStructureHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.LocalVolTermStructureHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.LocalVolTermStructureHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_LocalVolTermStructureHandle
+
+    def localVol(self, *args):
+        return _QuantLib.LocalVolTermStructureHandle_localVol(self, *args)
+
+    def businessDayConvention(self):
+        return _QuantLib.LocalVolTermStructureHandle_businessDayConvention(self)
+
+    def optionDateFromTenor(self, arg2):
+        return _QuantLib.LocalVolTermStructureHandle_optionDateFromTenor(self, arg2)
+
+    def minStrike(self):
+        return _QuantLib.LocalVolTermStructureHandle_minStrike(self)
+
+    def maxStrike(self):
+        return _QuantLib.LocalVolTermStructureHandle_maxStrike(self)
+
+    def dayCounter(self):
+        return _QuantLib.LocalVolTermStructureHandle_dayCounter(self)
+
+    def timeFromReference(self, date):
+        return _QuantLib.LocalVolTermStructureHandle_timeFromReference(self, date)
+
+    def maxDate(self):
+        return _QuantLib.LocalVolTermStructureHandle_maxDate(self)
+
+    def maxTime(self):
+        return _QuantLib.LocalVolTermStructureHandle_maxTime(self)
+
+    def referenceDate(self):
+        return _QuantLib.LocalVolTermStructureHandle_referenceDate(self)
+
+    def calendar(self):
+        return _QuantLib.LocalVolTermStructureHandle_calendar(self)
+
+    def settlementDays(self):
+        return _QuantLib.LocalVolTermStructureHandle_settlementDays(self)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.LocalVolTermStructureHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.LocalVolTermStructureHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.LocalVolTermStructureHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.LocalVolTermStructureHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.LocalVolTermStructureHandle_deepUpdate(self)
+
+    def notifyObservers(self):
+        return _QuantLib.LocalVolTermStructureHandle_notifyObservers(self)
+
+    def enableExtrapolation(self, b=True):
+        return _QuantLib.LocalVolTermStructureHandle_enableExtrapolation(self, b)
+
+    def disableExtrapolation(self, b=True):
+        return _QuantLib.LocalVolTermStructureHandle_disableExtrapolation(self, b)
+
+    def allowsExtrapolation(self):
+        return _QuantLib.LocalVolTermStructureHandle_allowsExtrapolation(self)
+
+# Register LocalVolTermStructureHandle in _QuantLib:
+_QuantLib.LocalVolTermStructureHandle_swigregister(LocalVolTermStructureHandle)
+
+class RelinkableLocalVolTermStructureHandle(LocalVolTermStructureHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableLocalVolTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableLocalVolTermStructureHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableLocalVolTermStructureHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableLocalVolTermStructureHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableLocalVolTermStructureHandle
+
+# Register RelinkableLocalVolTermStructureHandle in _QuantLib:
+_QuantLib.RelinkableLocalVolTermStructureHandle_swigregister(RelinkableLocalVolTermStructureHandle)
+
+class CustomicLocalVolatility(LocalVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CustomicLocalVolatility_swiginit(self, _QuantLib.new_CustomicLocalVolatility(*args))
+    __swig_destroy__ = _QuantLib.delete_CustomicLocalVolatility
+
+# Register CustomicLocalVolatility in _QuantLib:
+_QuantLib.CustomicLocalVolatility_swigregister(CustomicLocalVolatility)
+
 class Currency(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -25655,17 +25821,6 @@ class SofrFutureRateHelper(OvernightIndexFutureRateHelper):
 # Register SofrFutureRateHelper in _QuantLib:
 _QuantLib.SofrFutureRateHelper_swigregister(SofrFutureRateHelper)
 
-class CrossCurrencyBasisSwapRateHelper(RateHelper):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg):
-        _QuantLib.CrossCurrencyBasisSwapRateHelper_swiginit(self, _QuantLib.new_CrossCurrencyBasisSwapRateHelper(basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg))
-    __swig_destroy__ = _QuantLib.delete_CrossCurrencyBasisSwapRateHelper
-
-# Register CrossCurrencyBasisSwapRateHelper in _QuantLib:
-_QuantLib.CrossCurrencyBasisSwapRateHelper_swigregister(CrossCurrencyBasisSwapRateHelper)
-
 class BondHelperVector(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -25784,9 +25939,6 @@ def as_swapratehelper(helper):
 
 def as_oisratehelper(helper):
     return _QuantLib.as_oisratehelper(helper)
-
-def as_crosscurrencybasisswapratehelper(helper):
-    return _QuantLib.as_crosscurrencybasisswapratehelper(helper)
 class RiskNeutralDensityCalculator(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -28834,29 +28986,6 @@ _QuantLib.InflationTermStructure_swigregister(InflationTermStructure)
 
 def inflationBaseDate(referenceDate, observationLag, frequency, indexIsInterpolated):
     return _QuantLib.inflationBaseDate(referenceDate, observationLag, frequency, indexIsInterpolated)
-class VolatilityTermStructure(TermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def businessDayConvention(self):
-        return _QuantLib.VolatilityTermStructure_businessDayConvention(self)
-
-    def optionDateFromTenor(self, arg2):
-        return _QuantLib.VolatilityTermStructure_optionDateFromTenor(self, arg2)
-
-    def minStrike(self):
-        return _QuantLib.VolatilityTermStructure_minStrike(self)
-
-    def maxStrike(self):
-        return _QuantLib.VolatilityTermStructure_maxStrike(self)
-    __swig_destroy__ = _QuantLib.delete_VolatilityTermStructure
-
-# Register VolatilityTermStructure in _QuantLib:
-_QuantLib.VolatilityTermStructure_swigregister(VolatilityTermStructure)
-
 class YieldTermStructure(TermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -29849,132 +29978,6 @@ class RelinkableBlackAtmVolCurveHandle(BlackAtmVolCurveHandle):
 # Register RelinkableBlackAtmVolCurveHandle in _QuantLib:
 _QuantLib.RelinkableBlackAtmVolCurveHandle_swigregister(RelinkableBlackAtmVolCurveHandle)
 
-class LocalVolTermStructure(VolatilityTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def localVol(self, *args):
-        return _QuantLib.LocalVolTermStructure_localVol(self, *args)
-    __swig_destroy__ = _QuantLib.delete_LocalVolTermStructure
-
-# Register LocalVolTermStructure in _QuantLib:
-_QuantLib.LocalVolTermStructure_swigregister(LocalVolTermStructure)
-
-class LocalVolTermStructureHandle(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.LocalVolTermStructureHandle_swiginit(self, _QuantLib.new_LocalVolTermStructureHandle(*args))
-
-    def __deref__(self):
-        return _QuantLib.LocalVolTermStructureHandle___deref__(self)
-
-    def currentLink(self):
-        return _QuantLib.LocalVolTermStructureHandle_currentLink(self)
-
-    def __ref__(self):
-        return _QuantLib.LocalVolTermStructureHandle___ref__(self)
-
-    def empty(self):
-        return _QuantLib.LocalVolTermStructureHandle_empty(self)
-
-    def __nonzero__(self):
-        return _QuantLib.LocalVolTermStructureHandle___nonzero__(self)
-
-    def __bool__(self):
-        return _QuantLib.LocalVolTermStructureHandle___bool__(self)
-
-    def asObservable(self):
-        return _QuantLib.LocalVolTermStructureHandle_asObservable(self)
-    __swig_destroy__ = _QuantLib.delete_LocalVolTermStructureHandle
-
-    def localVol(self, *args):
-        return _QuantLib.LocalVolTermStructureHandle_localVol(self, *args)
-
-    def businessDayConvention(self):
-        return _QuantLib.LocalVolTermStructureHandle_businessDayConvention(self)
-
-    def optionDateFromTenor(self, arg2):
-        return _QuantLib.LocalVolTermStructureHandle_optionDateFromTenor(self, arg2)
-
-    def minStrike(self):
-        return _QuantLib.LocalVolTermStructureHandle_minStrike(self)
-
-    def maxStrike(self):
-        return _QuantLib.LocalVolTermStructureHandle_maxStrike(self)
-
-    def dayCounter(self):
-        return _QuantLib.LocalVolTermStructureHandle_dayCounter(self)
-
-    def timeFromReference(self, date):
-        return _QuantLib.LocalVolTermStructureHandle_timeFromReference(self, date)
-
-    def maxDate(self):
-        return _QuantLib.LocalVolTermStructureHandle_maxDate(self)
-
-    def maxTime(self):
-        return _QuantLib.LocalVolTermStructureHandle_maxTime(self)
-
-    def referenceDate(self):
-        return _QuantLib.LocalVolTermStructureHandle_referenceDate(self)
-
-    def calendar(self):
-        return _QuantLib.LocalVolTermStructureHandle_calendar(self)
-
-    def settlementDays(self):
-        return _QuantLib.LocalVolTermStructureHandle_settlementDays(self)
-
-    def registerWithObservables(self, arg2):
-        return _QuantLib.LocalVolTermStructureHandle_registerWithObservables(self, arg2)
-
-    def unregisterWith(self, arg2):
-        return _QuantLib.LocalVolTermStructureHandle_unregisterWith(self, arg2)
-
-    def unregisterWithAll(self):
-        return _QuantLib.LocalVolTermStructureHandle_unregisterWithAll(self)
-
-    def update(self):
-        return _QuantLib.LocalVolTermStructureHandle_update(self)
-
-    def deepUpdate(self):
-        return _QuantLib.LocalVolTermStructureHandle_deepUpdate(self)
-
-    def notifyObservers(self):
-        return _QuantLib.LocalVolTermStructureHandle_notifyObservers(self)
-
-    def enableExtrapolation(self, b=True):
-        return _QuantLib.LocalVolTermStructureHandle_enableExtrapolation(self, b)
-
-    def disableExtrapolation(self, b=True):
-        return _QuantLib.LocalVolTermStructureHandle_disableExtrapolation(self, b)
-
-    def allowsExtrapolation(self):
-        return _QuantLib.LocalVolTermStructureHandle_allowsExtrapolation(self)
-
-# Register LocalVolTermStructureHandle in _QuantLib:
-_QuantLib.LocalVolTermStructureHandle_swigregister(LocalVolTermStructureHandle)
-
-class RelinkableLocalVolTermStructureHandle(LocalVolTermStructureHandle):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.RelinkableLocalVolTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableLocalVolTermStructureHandle(*args))
-
-    def linkTo(self, arg2, registerAsObserver=True):
-        return _QuantLib.RelinkableLocalVolTermStructureHandle_linkTo(self, arg2, registerAsObserver)
-
-    def reset(self):
-        return _QuantLib.RelinkableLocalVolTermStructureHandle_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RelinkableLocalVolTermStructureHandle
-
-# Register RelinkableLocalVolTermStructureHandle in _QuantLib:
-_QuantLib.RelinkableLocalVolTermStructureHandle_swigregister(RelinkableLocalVolTermStructureHandle)
-
 class SwaptionVolatilityStructure(VolatilityTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -30550,17 +30553,6 @@ class LocalVolCurve(LocalVolTermStructure):
 
 # Register LocalVolCurve in _QuantLib:
 _QuantLib.LocalVolCurve_swigregister(LocalVolCurve)
-
-class CustomicLocalVolatility(LocalVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.CustomicLocalVolatility_swiginit(self, _QuantLib.new_CustomicLocalVolatility(*args))
-    __swig_destroy__ = _QuantLib.delete_CustomicLocalVolatility
-
-# Register CustomicLocalVolatility in _QuantLib:
-_QuantLib.CustomicLocalVolatility_swigregister(CustomicLocalVolatility)
 
 class ConstantSwaptionVolatility(SwaptionVolatilityStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

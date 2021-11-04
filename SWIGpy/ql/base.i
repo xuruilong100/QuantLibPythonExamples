@@ -122,6 +122,15 @@ class Instrument : public LazyObject {
         const ext::shared_ptr<PricingEngine>&);
     void setupArguments(PricingEngine::arguments*) const;
     void fetchResults(const PricingEngine::results*) const;
+
+    %extend {
+        Real resultScalar(const std::string& tag) const {
+            return self->result<Real>(tag);
+        }
+        std::vector<Real> resultVector(const std::string& tag) const {
+            return self->result<std::vector<Real>>(tag);
+        }
+    }
 };
 
 %template(InstrumentVector) std::vector<ext::shared_ptr<Instrument>>;

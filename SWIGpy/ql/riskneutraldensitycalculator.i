@@ -76,13 +76,14 @@ class LocalVolRNDCalculator : public RiskNeutralDensityCalculator {
             ext::shared_ptr<YieldTermStructure> rTS,
             ext::shared_ptr<YieldTermStructure> qTS,
             ext::shared_ptr<LocalVolTermStructure> localVol,
-            TimeGrid& timeGrid,
+            const TimeGrid& timeGrid,
             Size xGrid = 101,
             Real x0Density = 0.1,
             Real eps = 1e-6,
             Size maxIter = 10000,
             Time gaussianStepSize = -Null<Time>()) {
-                ext::shared_ptr<TimeGrid> ptr(&timeGrid);
+                ext::shared_ptr<TimeGrid> ptr(
+                    new TimeGrid(timeGrid.begin(), timeGrid.end()));
                 return new LocalVolRNDCalculator(
                     spot, rTS, qTS, localVol, ptr,
                     xGrid, x0Density, eps, maxIter,

@@ -462,19 +462,20 @@ class ZeroCouponInflationSwap : public Swap {
   public:
     enum Type { Receiver = -1, Payer = 1 };
     ZeroCouponInflationSwap(
-        ZeroCouponInflationSwap::Type type,
+        Type type,
         Real nominal,
-        const Date& start,
-        const Date& maturity,
-        const Calendar& calendar,
-        BusinessDayConvention convention,
-        const DayCounter& dayCounter,
+        const Date& startDate, // start date of contract (only)
+        const Date& maturity,  // this is pre-adjustment!
+        Calendar fixCalendar,
+        BusinessDayConvention fixConvention,
+        DayCounter dayCounter,
         Rate fixedRate,
-        const ext::shared_ptr<ZeroInflationIndex>& index,
-        const Period& lag,
+        const ext::shared_ptr<ZeroInflationIndex>& infIndex,
+        const Period& observationLag,
+        CPI::InterpolationType observationInterpolation,
         bool adjustInfObsDates = false,
         Calendar infCalendar = Calendar(),
-        BusinessDayConvention infConvention = Following);
+        BusinessDayConvention infConvention = BusinessDayConvention());
 
     ZeroCouponInflationSwap::Type type() const;
     Real nominal() const;
