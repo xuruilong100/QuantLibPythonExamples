@@ -26,12 +26,9 @@ class Interpolation2D : public Extrapolator {
     const Matrix& zData() const;
     bool isInRange(Real x, Real y) const;
     void update();
-    %extend {
-        Real __call__(
-          Real x, Real y, bool allowExtrapolation = false) {
-          return (*self)(x, y, allowExtrapolation);
-        }
-    }
+    Real operator()(
+        Real x, Real y,
+        bool allowExtrapolation = false) const;
 };
 
 #endif

@@ -49,6 +49,8 @@ using QuantLib::AnalyticH1HWEngine;
 using QuantLib::BatesDetJumpEngine;
 using QuantLib::BatesDoubleExpDetJumpEngine;
 using QuantLib::JumpDiffusionEngine;
+using QuantLib::MCHestonHullWhiteEngine;
+using QuantLib::MakeMCHestonHullWhiteEngine;
 %}
 
 %{
@@ -414,7 +416,7 @@ class MakeFdBlackScholesVanillaEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -491,7 +493,7 @@ class MakeFdHestonVanillaEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -592,7 +594,7 @@ class MakeMCEuropeanEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -646,7 +648,7 @@ class MakeMCAmericanEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -699,7 +701,7 @@ class MakeMCEuropeanHestonEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -743,7 +745,7 @@ class MakeMCEuropeanGJRGARCHEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -813,5 +815,52 @@ class JumpDiffusionEngine : public PricingEngine {
         Real relativeAccuracy_ = 1e-4,
         Size maxIterations = 100);
 };
+
+%shared_ptr(MCHestonHullWhiteEngine<PseudoRandom>)
+%shared_ptr(MCHestonHullWhiteEngine<LowDiscrepancy>)
+template <class RNG>
+class MCHestonHullWhiteEngine : public PricingEngine {
+  public:
+    MCHestonHullWhiteEngine(
+        const ext::shared_ptr<HybridHestonHullWhiteProcess>& process,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool antitheticVariate,
+        bool controlVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
+};
+
+%template(MCPRHestonHullWhiteEngine) MCHestonHullWhiteEngine<PseudoRandom>;
+%template(MCLDHestonHullWhiteEngine) MCHestonHullWhiteEngine<LowDiscrepancy>;
+
+%shared_ptr(MakeMCHestonHullWhiteEngine<PseudoRandom>)
+%shared_ptr(MakeMCHestonHullWhiteEngine<LowDiscrepancy>)
+template <class RNG>
+class MakeMCHestonHullWhiteEngine {
+  public:
+    explicit MakeMCHestonHullWhiteEngine(
+        ext::shared_ptr<HybridHestonHullWhiteProcess>);
+    // named parameters
+    MakeMCHestonHullWhiteEngine& withSteps(Size steps);
+    MakeMCHestonHullWhiteEngine& withStepsPerYear(Size steps);
+    MakeMCHestonHullWhiteEngine& withAntitheticVariate(bool b = true);
+    MakeMCHestonHullWhiteEngine& withControlVariate(bool b = true);
+    MakeMCHestonHullWhiteEngine& withSamples(Size samples);
+    MakeMCHestonHullWhiteEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCHestonHullWhiteEngine& withMaxSamples(Size samples);
+    MakeMCHestonHullWhiteEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(*self);
+        }
+    }
+};
+
+%template(MakeMCPRHestonHullWhiteEngine) MakeMCHestonHullWhiteEngine<PseudoRandom>;
+%template(MakeMCLDHestonHullWhiteEngine) MakeMCHestonHullWhiteEngine<LowDiscrepancy>;
 
 #endif

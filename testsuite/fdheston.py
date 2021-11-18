@@ -98,7 +98,7 @@ class FdHestonTest(unittest.TestCase):
                 return self.alpha * ((self.s0 - s) ** 2 + 25.0)
 
         parableLocalVolImpl = ParableLocalVolatilityImpl(100.0, alpha)
-        leverageFct = CustomicLocalVolatility(
+        leverageFct = CustomLocalVolatility(
             parableLocalVolImpl, today, NullCalendar(), Following, dc)
 
         slvMesher = FdmHestonLocalVolatilityVarianceMesher(

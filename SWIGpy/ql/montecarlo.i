@@ -26,9 +26,8 @@ using QuantLib::BrownianBridge;
 
 class Path {
     %rename(__len__) length;
-  private:
-    Path();
   public:
+    Path(TimeGrid timeGrid, Array values = Array());
     bool empty() const;
     Size length() const;
     Real at(Size i) const;
@@ -38,14 +37,17 @@ class Path {
     Real back() const;
     const TimeGrid& timeGrid() const;
     %extend {
-        Real __getitem__(Integer i) {
+        Real __getitem__(Size i) {
             return (*self)[i];
         }
     }
 };
 
 %template(SamplePath) Sample<Path>;
+//%template(PathVector) std::vector<Path>;
 
+%shared_ptr(PathGenerator<GaussianRandomSequenceGenerator>)
+%shared_ptr(PathGenerator<GaussianLowDiscrepancySequenceGenerator>)
 template <class GSG>
 class PathGenerator {
   public:
@@ -69,18 +71,20 @@ class PathGenerator {
 
 %template(GaussianPathGenerator) PathGenerator<GaussianRandomSequenceGenerator>;
 %template(GaussianSobolPathGenerator) PathGenerator<GaussianLowDiscrepancySequenceGenerator>;
-%template(InvCumulativeMersenneTwisterPathGenerator) PathGenerator<InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal>>;
 
 class MultiPath {
     %rename(__len__) pathSize;
-  private:
-    MultiPath();
   public:
+    MultiPath();
+    MultiPath(
+        Size nAsset,
+        const TimeGrid& timeGrid);
+    //MultiPath(std::vector<Path> multiPath);
     Size pathSize() const;
     Size assetNumber() const;
 	const Path& at(Size j) const;
     %extend {
-        const Path& __getitem__(Integer i) {
+        const Path& __getitem__(Size i) {
             return (*self)[i];
         }
     }
@@ -88,6 +92,9 @@ class MultiPath {
 
 %template(SampleMultiPath) Sample<MultiPath>;
 
+%shared_ptr(MultiPathGenerator<GaussianRandomSequenceGenerator>)
+%shared_ptr(MultiPathGenerator<GaussianLowDiscrepancySequenceGenerator>)
+%shared_ptr(MultiPathGenerator<SobolBrownianBridgeRsg>)
 template <class GSG>
 class MultiPathGenerator {
   public:
@@ -103,6 +110,7 @@ class MultiPathGenerator {
 
 %template(GaussianMultiPathGenerator) MultiPathGenerator<GaussianRandomSequenceGenerator>;
 %template(GaussianSobolMultiPathGenerator) MultiPathGenerator<GaussianLowDiscrepancySequenceGenerator>;
+%template(BrownianBridgeSobolMultiPathGenerator) MultiPathGenerator<SobolBrownianBridgeRsg>;
 
 class BrownianBridge {
   public:
@@ -122,7 +130,7 @@ class BrownianBridge {
         std::vector<Real> transform(
             const std::vector<Real>& input) {
             std::vector<Real> outp(input.size());
-            $self->transform(
+            self->transform(
                 input.begin(), input.end(), outp.begin());
             return outp;
         }

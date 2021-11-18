@@ -93,6 +93,7 @@ class GenericRiskStatistics : public S {
 };
 
 %template(RiskStatistics) GenericRiskStatistics<GaussianStatistics>;
+typedef GenericRiskStatistics<GaussianStatistics> RiskStatistics;
 typedef RiskStatistics Statistics;
 
 class IncrementalStatistics {

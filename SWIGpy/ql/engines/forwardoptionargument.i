@@ -85,7 +85,7 @@ class MakeMCForwardEuropeanBSEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -129,7 +129,7 @@ class MakeMCForwardEuropeanHestonEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };

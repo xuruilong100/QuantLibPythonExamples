@@ -31,12 +31,9 @@ class Interpolation : public Extrapolator {
     Real xMax() const;
     bool isInRange(Real x) const;
     void update();
-    %extend {
-        Real __call__(
-          Real x, bool allowExtrapolation = false) {
-          return (*self)(x, allowExtrapolation);
-        }
-    }
+    Real operator()(
+        Real x,
+        bool allowExtrapolation = false) const;
 };
 
 #endif

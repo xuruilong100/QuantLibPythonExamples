@@ -43,7 +43,7 @@ class HestonBlackVolSurface : public BlackVolTermStructure {
 };
 
 %shared_ptr(BlackConstantVol)
-class BlackConstantVol : public BlackVolTermStructure {
+class BlackConstantVol : public BlackVolatilityTermStructure {
   public:
     BlackConstantVol(
         const Date& referenceDate,

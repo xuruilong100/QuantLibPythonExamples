@@ -45,7 +45,7 @@ class MCEuropeanBasketEngine : public PricingEngine {
 %template(MCPREuropeanBasketEngine) MCEuropeanBasketEngine<PseudoRandom>;
 %template(MCLDEuropeanBasketEngine) MCEuropeanBasketEngine<LowDiscrepancy>;
 
-template <class RNG = PseudoRandom, class S = Statistics>
+template <class RNG>
 class MakeMCEuropeanBasketEngine {
   public:
     MakeMCEuropeanBasketEngine(ext::shared_ptr<StochasticProcessArray>);
@@ -61,7 +61,7 @@ class MakeMCEuropeanBasketEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -113,7 +113,7 @@ class MakeMCAmericanBasketEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -191,7 +191,7 @@ class MakeMCEverestEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -231,7 +231,7 @@ class MakeMCHimalayaEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -290,7 +290,7 @@ class MakeMCPagodaEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };

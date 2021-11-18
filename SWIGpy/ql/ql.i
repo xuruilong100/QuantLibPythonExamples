@@ -87,6 +87,7 @@
 %include ../ql/engines/yoyinflationcapfloor.i
 %include ../ql/exchangerates.i
 %include ../ql/exercise.i
+%include ../ql/exp/mcm.i
 %include ../ql/fdms/Fdm1dMesher.i
 %include ../ql/fdms/FdmBoundaryCondition.i
 %include ../ql/fdms/FdmInnerValueCalculator.i

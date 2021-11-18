@@ -16,15 +16,23 @@ using QuantLib::FdBlackScholesRebateEngine;
 using QuantLib::FdHestonBarrierEngine;
 using QuantLib::FdHestonRebateEngine;
 using QuantLib::BinomialBarrierEngine;
-using QuantLib::DiscretizedDermanKaniBarrierOption;
 using QuantLib::VannaVolgaBarrierEngine;
 using QuantLib::FdHestonDoubleBarrierEngine;
 using QuantLib::WulinYongDoubleBarrierEngine;
 using QuantLib::VannaVolgaDoubleBarrierEngine;
 using QuantLib::AnalyticDoubleBarrierBinaryEngine;
 using QuantLib::BinomialDoubleBarrierEngine;
-using QuantLib::DiscretizedDermanKaniDoubleBarrierOption;
 using QuantLib::MakeMCBarrierEngine;
+using QuantLib::PerturbativeBarrierOptionEngine;
+using QuantLib::MCDoubleBarrierEngine;
+using QuantLib::MakeMCDoubleBarrierEngine;
+%}
+
+%{
+using QuantLib::DiscretizedBarrierOption;
+using QuantLib::DiscretizedDoubleBarrierOption;
+using QuantLib::DiscretizedDermanKaniBarrierOption;
+using QuantLib::DiscretizedDermanKaniDoubleBarrierOption;
 %}
 
 %shared_ptr(AnalyticBarrierEngine)
@@ -79,7 +87,7 @@ class MakeMCBarrierEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -153,6 +161,13 @@ Il max_steps is 0 (default value), max_steps is calculated by capping it to
 If max_steps is specified, it would limit binomial steps to this value.
 "
 
+%shared_ptr(BinomialBarrierEngine<CoxRossRubinstein, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<JarrowRudd, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Trigeorgis, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Tian, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<LeisenReimer, DiscretizedBarrierOption>)
+%shared_ptr(BinomialBarrierEngine<Joshi4, DiscretizedBarrierOption>)
 %shared_ptr(BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>)
 %shared_ptr(BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>)
 %shared_ptr(BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>)
@@ -169,13 +184,20 @@ class BinomialBarrierEngine : public PricingEngine {
         Size max_steps = 0);
 };
 
-%template(BinomialCRRBarrierEngine) BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialJRBarrierEngine) BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialEQPBarrierEngine) BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialTrigeorgisBarrierEngine) BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialTianBarrierEngine) BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialLRBarrierEngine) BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialJ4BarrierEngine) BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialCRRBarrierEngine) BinomialBarrierEngine<CoxRossRubinstein, DiscretizedBarrierOption>;
+%template(BinomialJRBarrierEngine) BinomialBarrierEngine<JarrowRudd, DiscretizedBarrierOption>;
+%template(BinomialEQPBarrierEngine) BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedBarrierOption>;
+%template(BinomialTrigeorgisBarrierEngine) BinomialBarrierEngine<Trigeorgis, DiscretizedBarrierOption>;
+%template(BinomialTianBarrierEngine) BinomialBarrierEngine<Tian, DiscretizedBarrierOption>;
+%template(BinomialLRBarrierEngine) BinomialBarrierEngine<LeisenReimer, DiscretizedBarrierOption>;
+%template(BinomialJ4BarrierEngine) BinomialBarrierEngine<Joshi4, DiscretizedBarrierOption>;
+%template(BinomialCRRDKBarrierEngine) BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialJRDKBarrierEngine) BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialEQPDKBarrierEngine) BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialTrigeorgisDKBarrierEngine) BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialTianDKBarrierEngine) BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialLRDKBarrierEngine) BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialJ4DKBarrierEngine) BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>;
 
 %shared_ptr(VannaVolgaBarrierEngine)
 class VannaVolgaBarrierEngine : public PricingEngine {
@@ -248,7 +270,7 @@ class VannaVolgaDoubleBarrierEngine : public PricingEngine {
 };
 
 %template(VannaVolgaIKDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>;
-%template(VannaVolgaWODoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>;
+%template(VannaVolgaWYDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>;
 
 %shared_ptr(AnalyticDoubleBarrierBinaryEngine)
 class AnalyticDoubleBarrierBinaryEngine : public PricingEngine {
@@ -269,7 +291,13 @@ Type values:
     lr  or leisenreimer              Leisen-Reimer model
     j4  or joshi4:                   Joshi 4th (smoothed) model
 "
-
+%shared_ptr(BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Tian, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDoubleBarrierOption>)
+%shared_ptr(BinomialDoubleBarrierEngine<Joshi4, DiscretizedDoubleBarrierOption>)
 %shared_ptr(BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniDoubleBarrierOption>)
 %shared_ptr(BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDermanKaniDoubleBarrierOption>)
 %shared_ptr(BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniDoubleBarrierOption>)
@@ -285,12 +313,74 @@ class BinomialDoubleBarrierEngine : public PricingEngine {
         Size steps);
 };
 
-%template(BinomialCRRDoubleBarrierEngine) BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialJRDoubleBarrierEngine) BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialEQPDoubleBarrierEngine) BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialTrigeorgisDoubleBarrierEngine) BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialTianDoubleBarrierEngine) BinomialDoubleBarrierEngine<Tian, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialLRDoubleBarrierEngine) BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDermanKaniDoubleBarrierOption>;
-%template(BinomialJ4DoubleBarrierEngine) BinomialDoubleBarrierEngine<Joshi4, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialCRRDoubleBarrierEngine) BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDoubleBarrierOption>;
+%template(BinomialJRDoubleBarrierEngine) BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDoubleBarrierOption>;
+%template(BinomialEQPDoubleBarrierEngine) BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDoubleBarrierOption>;
+%template(BinomialTrigeorgisDoubleBarrierEngine) BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDoubleBarrierOption>;
+%template(BinomialTianDoubleBarrierEngine) BinomialDoubleBarrierEngine<Tian, DiscretizedDoubleBarrierOption>;
+%template(BinomialLRDoubleBarrierEngine) BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDoubleBarrierOption>;
+%template(BinomialJ4DoubleBarrierEngine) BinomialDoubleBarrierEngine<Joshi4, DiscretizedDoubleBarrierOption>;
+%template(BinomialCRRDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialJRDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<JarrowRudd, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialEQPDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialTrigeorgisDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<Trigeorgis, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialTianDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<Tian, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialLRDKDoubleBarrierEngine) BinomialDoubleBarrierEngine<LeisenReimer, DiscretizedDermanKaniDoubleBarrierOption>;
+%template(BinomialJ4DKDoubleBarrierEngine) BinomialDoubleBarrierEngine<Joshi4, DiscretizedDermanKaniDoubleBarrierOption>;
+
+%shared_ptr(PerturbativeBarrierOptionEngine)
+class PerturbativeBarrierOptionEngine : public PricingEngine {
+  public:
+    explicit PerturbativeBarrierOptionEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
+        Natural order = 1,
+        bool zeroGamma = false);
+};
+
+%shared_ptr(MCDoubleBarrierEngine<PseudoRandom>)
+%shared_ptr(MCDoubleBarrierEngine<LowDiscrepancy>)
+template <class RNG>
+class MCDoubleBarrierEngine : public PricingEngine {
+  public:
+    MCDoubleBarrierEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antithetic,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
+};
+
+%template(MCPRDoubleBarrierEngine) MCDoubleBarrierEngine<PseudoRandom>;
+%template(MCLDDoubleBarrierEngine) MCDoubleBarrierEngine<LowDiscrepancy>;
+
+%shared_ptr(MakeMCDoubleBarrierEngine<PseudoRandom>)
+%shared_ptr(MakeMCDoubleBarrierEngine<LowDiscrepancy>)
+template <class RNG>
+class MakeMCDoubleBarrierEngine {
+  public:
+    explicit MakeMCDoubleBarrierEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
+    // named parameters
+    MakeMCDoubleBarrierEngine& withSteps(Size steps);
+    MakeMCDoubleBarrierEngine& withStepsPerYear(Size steps);
+    MakeMCDoubleBarrierEngine& withBrownianBridge(bool b = true);
+    MakeMCDoubleBarrierEngine& withAntitheticVariate(bool b = true);
+    MakeMCDoubleBarrierEngine& withSamples(Size samples);
+    MakeMCDoubleBarrierEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCDoubleBarrierEngine& withMaxSamples(Size samples);
+    MakeMCDoubleBarrierEngine& withSeed(BigNatural seed);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(*self);
+        }
+    }
+};
+
+%template(MakeMCPRDoubleBarrierEngine) MakeMCDoubleBarrierEngine<PseudoRandom>;
+%template(MakeMCLDDoubleBarrierEngine) MakeMCDoubleBarrierEngine<LowDiscrepancy>;
 
 #endif

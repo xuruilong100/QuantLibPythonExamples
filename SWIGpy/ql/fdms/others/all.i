@@ -32,7 +32,7 @@ class FdmLinearOpIterator {
     void swap(FdmLinearOpIterator& iter);
     %extend {
         void increment() {
-            ++(*$self);
+            ++(*self);
         }
         bool notEqual(const FdmLinearOpIterator& iterator) {
             return (*self) != iterator;

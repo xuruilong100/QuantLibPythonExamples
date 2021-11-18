@@ -149,7 +149,7 @@ class SobolRsg {
     %extend {
         std::vector<unsigned int> nextInt32Sequence() {
             return to_vector<unsigned int>(
-                $self->nextInt32Sequence());
+                self->nextInt32Sequence());
         }
     }
 };

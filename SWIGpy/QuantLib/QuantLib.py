@@ -9126,16 +9126,358 @@ class RelinkableLocalVolTermStructureHandle(LocalVolTermStructureHandle):
 # Register RelinkableLocalVolTermStructureHandle in _QuantLib:
 _QuantLib.RelinkableLocalVolTermStructureHandle_swigregister(RelinkableLocalVolTermStructureHandle)
 
-class CustomicLocalVolatility(LocalVolTermStructure):
+class BlackVolTermStructure(VolatilityTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def blackVol(self, *args):
+        return _QuantLib.BlackVolTermStructure_blackVol(self, *args)
+
+    def blackVariance(self, *args):
+        return _QuantLib.BlackVolTermStructure_blackVariance(self, *args)
+
+    def blackForwardVol(self, *args):
+        return _QuantLib.BlackVolTermStructure_blackForwardVol(self, *args)
+
+    def blackForwardVariance(self, *args):
+        return _QuantLib.BlackVolTermStructure_blackForwardVariance(self, *args)
+    __swig_destroy__ = _QuantLib.delete_BlackVolTermStructure
+
+# Register BlackVolTermStructure in _QuantLib:
+_QuantLib.BlackVolTermStructure_swigregister(BlackVolTermStructure)
+
+class BlackVolTermStructureHandle(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, *args):
-        _QuantLib.CustomicLocalVolatility_swiginit(self, _QuantLib.new_CustomicLocalVolatility(*args))
-    __swig_destroy__ = _QuantLib.delete_CustomicLocalVolatility
+        _QuantLib.BlackVolTermStructureHandle_swiginit(self, _QuantLib.new_BlackVolTermStructureHandle(*args))
 
-# Register CustomicLocalVolatility in _QuantLib:
-_QuantLib.CustomicLocalVolatility_swigregister(CustomicLocalVolatility)
+    def __deref__(self):
+        return _QuantLib.BlackVolTermStructureHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.BlackVolTermStructureHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.BlackVolTermStructureHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.BlackVolTermStructureHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.BlackVolTermStructureHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.BlackVolTermStructureHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.BlackVolTermStructureHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_BlackVolTermStructureHandle
+
+    def blackVol(self, *args):
+        return _QuantLib.BlackVolTermStructureHandle_blackVol(self, *args)
+
+    def blackVariance(self, *args):
+        return _QuantLib.BlackVolTermStructureHandle_blackVariance(self, *args)
+
+    def blackForwardVol(self, *args):
+        return _QuantLib.BlackVolTermStructureHandle_blackForwardVol(self, *args)
+
+    def blackForwardVariance(self, *args):
+        return _QuantLib.BlackVolTermStructureHandle_blackForwardVariance(self, *args)
+
+    def businessDayConvention(self):
+        return _QuantLib.BlackVolTermStructureHandle_businessDayConvention(self)
+
+    def optionDateFromTenor(self, arg2):
+        return _QuantLib.BlackVolTermStructureHandle_optionDateFromTenor(self, arg2)
+
+    def minStrike(self):
+        return _QuantLib.BlackVolTermStructureHandle_minStrike(self)
+
+    def maxStrike(self):
+        return _QuantLib.BlackVolTermStructureHandle_maxStrike(self)
+
+    def dayCounter(self):
+        return _QuantLib.BlackVolTermStructureHandle_dayCounter(self)
+
+    def timeFromReference(self, date):
+        return _QuantLib.BlackVolTermStructureHandle_timeFromReference(self, date)
+
+    def maxDate(self):
+        return _QuantLib.BlackVolTermStructureHandle_maxDate(self)
+
+    def maxTime(self):
+        return _QuantLib.BlackVolTermStructureHandle_maxTime(self)
+
+    def referenceDate(self):
+        return _QuantLib.BlackVolTermStructureHandle_referenceDate(self)
+
+    def calendar(self):
+        return _QuantLib.BlackVolTermStructureHandle_calendar(self)
+
+    def settlementDays(self):
+        return _QuantLib.BlackVolTermStructureHandle_settlementDays(self)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.BlackVolTermStructureHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.BlackVolTermStructureHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.BlackVolTermStructureHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.BlackVolTermStructureHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.BlackVolTermStructureHandle_deepUpdate(self)
+
+    def notifyObservers(self):
+        return _QuantLib.BlackVolTermStructureHandle_notifyObservers(self)
+
+    def enableExtrapolation(self, b=True):
+        return _QuantLib.BlackVolTermStructureHandle_enableExtrapolation(self, b)
+
+    def disableExtrapolation(self, b=True):
+        return _QuantLib.BlackVolTermStructureHandle_disableExtrapolation(self, b)
+
+    def allowsExtrapolation(self):
+        return _QuantLib.BlackVolTermStructureHandle_allowsExtrapolation(self)
+
+# Register BlackVolTermStructureHandle in _QuantLib:
+_QuantLib.BlackVolTermStructureHandle_swigregister(BlackVolTermStructureHandle)
+
+class RelinkableBlackVolTermStructureHandle(BlackVolTermStructureHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableBlackVolTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableBlackVolTermStructureHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableBlackVolTermStructureHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableBlackVolTermStructureHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableBlackVolTermStructureHandle
+
+# Register RelinkableBlackVolTermStructureHandle in _QuantLib:
+_QuantLib.RelinkableBlackVolTermStructureHandle_swigregister(RelinkableBlackVolTermStructureHandle)
+
+class BlackVolatilityTermStructure(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _QuantLib.delete_BlackVolatilityTermStructure
+
+# Register BlackVolatilityTermStructure in _QuantLib:
+_QuantLib.BlackVolatilityTermStructure_swigregister(BlackVolatilityTermStructure)
+
+class BlackVarianceTermStructure(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _QuantLib.delete_BlackVarianceTermStructure
+
+# Register BlackVarianceTermStructure in _QuantLib:
+_QuantLib.BlackVarianceTermStructure_swigregister(BlackVarianceTermStructure)
+
+class HestonBlackVolSurface(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.HestonBlackVolSurface_swiginit(self, _QuantLib.new_HestonBlackVolSurface(*args))
+    __swig_destroy__ = _QuantLib.delete_HestonBlackVolSurface
+
+# Register HestonBlackVolSurface in _QuantLib:
+_QuantLib.HestonBlackVolSurface_swigregister(HestonBlackVolSurface)
+
+class BlackConstantVol(BlackVolatilityTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BlackConstantVol_swiginit(self, _QuantLib.new_BlackConstantVol(*args))
+    __swig_destroy__ = _QuantLib.delete_BlackConstantVol
+
+# Register BlackConstantVol in _QuantLib:
+_QuantLib.BlackConstantVol_swigregister(BlackConstantVol)
+
+class AndreasenHugeVolatilityAdapter(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, volInterpl, eps=1e-6):
+        _QuantLib.AndreasenHugeVolatilityAdapter_swiginit(self, _QuantLib.new_AndreasenHugeVolatilityAdapter(volInterpl, eps))
+    __swig_destroy__ = _QuantLib.delete_AndreasenHugeVolatilityAdapter
+
+# Register AndreasenHugeVolatilityAdapter in _QuantLib:
+_QuantLib.AndreasenHugeVolatilityAdapter_swigregister(AndreasenHugeVolatilityAdapter)
+
+class BlackVarianceCurve(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance=True):
+        _QuantLib.BlackVarianceCurve_swiginit(self, _QuantLib.new_BlackVarianceCurve(referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance))
+
+    def setInterpolationLinearFlat(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationLinearFlat(self, *args)
+
+    def setInterpolationBackwardFlat(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationBackwardFlat(self, *args)
+
+    def setInterpolationConvexMonotone(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationConvexMonotone(self, *args)
+
+    def setInterpolationCubic(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationCubic(self, *args)
+
+    def setInterpolationForwardFlat(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationForwardFlat(self, *args)
+
+    def setInterpolationLinear(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationLinear(self, *args)
+
+    def setInterpolationLogLinear(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationLogLinear(self, *args)
+
+    def setInterpolationDefaultLogCubic(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationDefaultLogCubic(self, *args)
+
+    def setInterpolationMonotonicLogCubic(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationMonotonicLogCubic(self, *args)
+
+    def setInterpolationKrugerLog(self, *args):
+        return _QuantLib.BlackVarianceCurve_setInterpolationKrugerLog(self, *args)
+    __swig_destroy__ = _QuantLib.delete_BlackVarianceCurve
+
+# Register BlackVarianceCurve in _QuantLib:
+_QuantLib.BlackVarianceCurve_swigregister(BlackVarianceCurve)
+
+class BlackVarianceSurface(BlackVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    ConstantExtrapolation = _QuantLib.BlackVarianceSurface_ConstantExtrapolation
+    InterpolatorDefaultExtrapolation = _QuantLib.BlackVarianceSurface_InterpolatorDefaultExtrapolation
+
+    def __init__(self, *args, **kwargs):
+        _QuantLib.BlackVarianceSurface_swiginit(self, _QuantLib.new_BlackVarianceSurface(*args, **kwargs))
+
+    def setInterpolationBicubic(self, *args):
+        return _QuantLib.BlackVarianceSurface_setInterpolationBicubic(self, *args)
+
+    def setInterpolationBackwardflatLinear(self, *args):
+        return _QuantLib.BlackVarianceSurface_setInterpolationBackwardflatLinear(self, *args)
+
+    def setInterpolationBilinear(self, *args):
+        return _QuantLib.BlackVarianceSurface_setInterpolationBilinear(self, *args)
+
+    def setInterpolationPolynomial(self, *args):
+        return _QuantLib.BlackVarianceSurface_setInterpolationPolynomial(self, *args)
+    __swig_destroy__ = _QuantLib.delete_BlackVarianceSurface
+
+# Register BlackVarianceSurface in _QuantLib:
+_QuantLib.BlackVarianceSurface_swigregister(BlackVarianceSurface)
+
+class ExtendedBlackVarianceCurve(BlackVarianceTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance=True):
+        _QuantLib.ExtendedBlackVarianceCurve_swiginit(self, _QuantLib.new_ExtendedBlackVarianceCurve(referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance))
+
+    def setInterpolationLinearFlat(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLinearFlat(self, *args)
+
+    def setInterpolationBackwardFlat(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationBackwardFlat(self, *args)
+
+    def setInterpolationConvexMonotone(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationConvexMonotone(self, *args)
+
+    def setInterpolationCubic(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationCubic(self, *args)
+
+    def setInterpolationForwardFlat(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationForwardFlat(self, *args)
+
+    def setInterpolationLinear(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLinear(self, *args)
+
+    def setInterpolationLogLinear(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLogLinear(self, *args)
+
+    def setInterpolationDefaultLogCubic(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationDefaultLogCubic(self, *args)
+
+    def setInterpolationMonotonicLogCubic(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationMonotonicLogCubic(self, *args)
+
+    def setInterpolationKrugerLog(self, *args):
+        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationKrugerLog(self, *args)
+    __swig_destroy__ = _QuantLib.delete_ExtendedBlackVarianceCurve
+
+# Register ExtendedBlackVarianceCurve in _QuantLib:
+_QuantLib.ExtendedBlackVarianceCurve_swigregister(ExtendedBlackVarianceCurve)
+
+class ExtendedBlackVarianceSurface(BlackVarianceTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    ConstantExtrapolation = _QuantLib.ExtendedBlackVarianceSurface_ConstantExtrapolation
+    InterpolatorDefaultExtrapolation = _QuantLib.ExtendedBlackVarianceSurface_InterpolatorDefaultExtrapolation
+
+    def __init__(self, *args):
+        _QuantLib.ExtendedBlackVarianceSurface_swiginit(self, _QuantLib.new_ExtendedBlackVarianceSurface(*args))
+
+    def setInterpolationBicubic(self, *args):
+        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBicubic(self, *args)
+
+    def setInterpolationBackwardflatLinear(self, *args):
+        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBackwardflatLinear(self, *args)
+
+    def setInterpolationBilinear(self, *args):
+        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBilinear(self, *args)
+
+    def setInterpolationPolynomial(self, *args):
+        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationPolynomial(self, *args)
+    __swig_destroy__ = _QuantLib.delete_ExtendedBlackVarianceSurface
+
+# Register ExtendedBlackVarianceSurface in _QuantLib:
+_QuantLib.ExtendedBlackVarianceSurface_swigregister(ExtendedBlackVarianceSurface)
+
+class CustomLocalVolatility(LocalVolTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CustomLocalVolatility_swiginit(self, _QuantLib.new_CustomLocalVolatility(*args))
+    __swig_destroy__ = _QuantLib.delete_CustomLocalVolatility
+
+# Register CustomLocalVolatility in _QuantLib:
+_QuantLib.CustomLocalVolatility_swigregister(CustomLocalVolatility)
+
+class CustomBlackVolatility(BlackVolatilityTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CustomBlackVolatility_swiginit(self, _QuantLib.new_CustomBlackVolatility(*args))
+    __swig_destroy__ = _QuantLib.delete_CustomBlackVolatility
+
+# Register CustomBlackVolatility in _QuantLib:
+_QuantLib.CustomBlackVolatility_swigregister(CustomBlackVolatility)
 
 class Currency(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -11555,6 +11897,384 @@ class BinomialJ4BarrierEngine(PricingEngine):
 # Register BinomialJ4BarrierEngine in _QuantLib:
 _QuantLib.BinomialJ4BarrierEngine_swigregister(BinomialJ4BarrierEngine)
 
+class BinomialCRRDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialCRRDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialCRRDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialCRRDKBarrierEngine
+
+# Register BinomialCRRDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialCRRDKBarrierEngine_swigregister(BinomialCRRDKBarrierEngine)
+
+class BinomialJRDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialJRDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialJRDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJRDKBarrierEngine
+
+# Register BinomialJRDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialJRDKBarrierEngine_swigregister(BinomialJRDKBarrierEngine)
+
+class BinomialEQPDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialEQPDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialEQPDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialEQPDKBarrierEngine
+
+# Register BinomialEQPDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialEQPDKBarrierEngine_swigregister(BinomialEQPDKBarrierEngine)
+
+class BinomialTrigeorgisDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialTrigeorgisDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTrigeorgisDKBarrierEngine
+
+# Register BinomialTrigeorgisDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialTrigeorgisDKBarrierEngine_swigregister(BinomialTrigeorgisDKBarrierEngine)
+
+class BinomialTianDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialTianDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialTianDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTianDKBarrierEngine
+
+# Register BinomialTianDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialTianDKBarrierEngine_swigregister(BinomialTianDKBarrierEngine)
+
+class BinomialLRDKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialLRDKBarrierEngine_swiginit(self, _QuantLib.new_BinomialLRDKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialLRDKBarrierEngine
+
+# Register BinomialLRDKBarrierEngine in _QuantLib:
+_QuantLib.BinomialLRDKBarrierEngine_swigregister(BinomialLRDKBarrierEngine)
+
+class BinomialJ4DKBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+    up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    Boyle-Lau adjustment is controlled by parameter max_steps.
+    If max_steps is equal to steps Boyle-Lau is disabled.
+    Il max_steps is 0 (default value), max_steps is calculated by capping it to
+    5*steps when Boyle-Lau would need more than 1000 steps.
+    If max_steps is specified, it would limit binomial steps to this value.
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps, max_steps=0):
+        r"""
+        Binomial Engine for barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Boyle-Lau adjustment for optimize steps and Derman-Kani optimization to speed
+        up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        Boyle-Lau adjustment is controlled by parameter max_steps.
+        If max_steps is equal to steps Boyle-Lau is disabled.
+        Il max_steps is 0 (default value), max_steps is calculated by capping it to
+        5*steps when Boyle-Lau would need more than 1000 steps.
+        If max_steps is specified, it would limit binomial steps to this value.
+
+        """
+        _QuantLib.BinomialJ4DKBarrierEngine_swiginit(self, _QuantLib.new_BinomialJ4DKBarrierEngine(process, steps, max_steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJ4DKBarrierEngine
+
+# Register BinomialJ4DKBarrierEngine in _QuantLib:
+_QuantLib.BinomialJ4DKBarrierEngine_swigregister(BinomialJ4DKBarrierEngine)
+
 class VannaVolgaBarrierEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -11638,7 +12358,7 @@ class VannaVolgaIKDoubleBarrierEngine(PricingEngine):
 # Register VannaVolgaIKDoubleBarrierEngine in _QuantLib:
 _QuantLib.VannaVolgaIKDoubleBarrierEngine_swigregister(VannaVolgaIKDoubleBarrierEngine)
 
-class VannaVolgaWODoubleBarrierEngine(PricingEngine):
+class VannaVolgaWYDoubleBarrierEngine(PricingEngine):
     r"""
 
     Vanna-Volga engine for double barrier options.
@@ -11662,11 +12382,11 @@ class VannaVolgaWODoubleBarrierEngine(PricingEngine):
             wo:              Wulin-Yong engine
 
         """
-        _QuantLib.VannaVolgaWODoubleBarrierEngine_swiginit(self, _QuantLib.new_VannaVolgaWODoubleBarrierEngine(atmVol, vol25Put, vol25Call, spotFX, domesticTS, foreignTS, adaptVanDelta, bsPriceWithSmile, series))
-    __swig_destroy__ = _QuantLib.delete_VannaVolgaWODoubleBarrierEngine
+        _QuantLib.VannaVolgaWYDoubleBarrierEngine_swiginit(self, _QuantLib.new_VannaVolgaWYDoubleBarrierEngine(atmVol, vol25Put, vol25Call, spotFX, domesticTS, foreignTS, adaptVanDelta, bsPriceWithSmile, series))
+    __swig_destroy__ = _QuantLib.delete_VannaVolgaWYDoubleBarrierEngine
 
-# Register VannaVolgaWODoubleBarrierEngine in _QuantLib:
-_QuantLib.VannaVolgaWODoubleBarrierEngine_swigregister(VannaVolgaWODoubleBarrierEngine)
+# Register VannaVolgaWYDoubleBarrierEngine in _QuantLib:
+_QuantLib.VannaVolgaWYDoubleBarrierEngine_swigregister(VannaVolgaWYDoubleBarrierEngine)
 
 class AnalyticDoubleBarrierBinaryEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -11958,6 +12678,395 @@ class BinomialJ4DoubleBarrierEngine(PricingEngine):
 
 # Register BinomialJ4DoubleBarrierEngine in _QuantLib:
 _QuantLib.BinomialJ4DoubleBarrierEngine_swigregister(BinomialJ4DoubleBarrierEngine)
+
+class BinomialCRRDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialCRRDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialCRRDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialCRRDKDoubleBarrierEngine
+
+# Register BinomialCRRDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialCRRDKDoubleBarrierEngine_swigregister(BinomialCRRDKDoubleBarrierEngine)
+
+class BinomialJRDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialJRDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialJRDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJRDKDoubleBarrierEngine
+
+# Register BinomialJRDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialJRDKDoubleBarrierEngine_swigregister(BinomialJRDKDoubleBarrierEngine)
+
+class BinomialEQPDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialEQPDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialEQPDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialEQPDKDoubleBarrierEngine
+
+# Register BinomialEQPDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialEQPDKDoubleBarrierEngine_swigregister(BinomialEQPDKDoubleBarrierEngine)
+
+class BinomialTrigeorgisDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialTrigeorgisDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTrigeorgisDKDoubleBarrierEngine
+
+# Register BinomialTrigeorgisDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialTrigeorgisDKDoubleBarrierEngine_swigregister(BinomialTrigeorgisDKDoubleBarrierEngine)
+
+class BinomialTianDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialTianDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialTianDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialTianDKDoubleBarrierEngine
+
+# Register BinomialTianDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialTianDKDoubleBarrierEngine_swigregister(BinomialTianDKDoubleBarrierEngine)
+
+class BinomialLRDKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialLRDKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialLRDKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialLRDKDoubleBarrierEngine
+
+# Register BinomialLRDKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialLRDKDoubleBarrierEngine_swigregister(BinomialLRDKDoubleBarrierEngine)
+
+class BinomialJ4DKDoubleBarrierEngine(PricingEngine):
+    r"""
+    Binomial Engine for double barrier options.
+    Features different binomial models, selected by the type parameters.
+    Uses Derman-Kani optimization to speed up convergence.
+    Type values:
+        crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+        jr  or jarrowrudd:               Jarrow-Rudd model
+        eqp or additiveeqpbinomialtree:  Additive EQP model
+        trigeorgis:                      Trigeorgis model
+        tian:                            Tian model
+        lr  or leisenreimer              Leisen-Reimer model
+        j4  or joshi4:                   Joshi 4th (smoothed) model
+
+    """
+
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, steps):
+        r"""
+        Binomial Engine for double barrier options.
+        Features different binomial models, selected by the type parameters.
+        Uses Derman-Kani optimization to speed up convergence.
+        Type values:
+            crr or coxrossrubinstein:        Cox-Ross-Rubinstein model
+            jr  or jarrowrudd:               Jarrow-Rudd model
+            eqp or additiveeqpbinomialtree:  Additive EQP model
+            trigeorgis:                      Trigeorgis model
+            tian:                            Tian model
+            lr  or leisenreimer              Leisen-Reimer model
+            j4  or joshi4:                   Joshi 4th (smoothed) model
+
+        """
+        _QuantLib.BinomialJ4DKDoubleBarrierEngine_swiginit(self, _QuantLib.new_BinomialJ4DKDoubleBarrierEngine(process, steps))
+    __swig_destroy__ = _QuantLib.delete_BinomialJ4DKDoubleBarrierEngine
+
+# Register BinomialJ4DKDoubleBarrierEngine in _QuantLib:
+_QuantLib.BinomialJ4DKDoubleBarrierEngine_swigregister(BinomialJ4DKDoubleBarrierEngine)
+
+class PerturbativeBarrierOptionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, order=1, zeroGamma=False):
+        _QuantLib.PerturbativeBarrierOptionEngine_swiginit(self, _QuantLib.new_PerturbativeBarrierOptionEngine(process, order, zeroGamma))
+    __swig_destroy__ = _QuantLib.delete_PerturbativeBarrierOptionEngine
+
+# Register PerturbativeBarrierOptionEngine in _QuantLib:
+_QuantLib.PerturbativeBarrierOptionEngine_swigregister(PerturbativeBarrierOptionEngine)
+
+class MCPRDoubleBarrierEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRDoubleBarrierEngine_swiginit(self, _QuantLib.new_MCPRDoubleBarrierEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRDoubleBarrierEngine
+
+# Register MCPRDoubleBarrierEngine in _QuantLib:
+_QuantLib.MCPRDoubleBarrierEngine_swigregister(MCPRDoubleBarrierEngine)
+
+class MCLDDoubleBarrierEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDDoubleBarrierEngine_swiginit(self, _QuantLib.new_MCLDDoubleBarrierEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDDoubleBarrierEngine
+
+# Register MCLDDoubleBarrierEngine in _QuantLib:
+_QuantLib.MCLDDoubleBarrierEngine_swigregister(MCLDDoubleBarrierEngine)
+
+class MakeMCPRDoubleBarrierEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRDoubleBarrierEngine_swiginit(self, _QuantLib.new_MakeMCPRDoubleBarrierEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRDoubleBarrierEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRDoubleBarrierEngine
+
+# Register MakeMCPRDoubleBarrierEngine in _QuantLib:
+_QuantLib.MakeMCPRDoubleBarrierEngine_swigregister(MakeMCPRDoubleBarrierEngine)
+
+class MakeMCLDDoubleBarrierEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDDoubleBarrierEngine_swiginit(self, _QuantLib.new_MakeMCLDDoubleBarrierEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDDoubleBarrierEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDDoubleBarrierEngine
+
+# Register MakeMCLDDoubleBarrierEngine in _QuantLib:
+_QuantLib.MakeMCLDDoubleBarrierEngine_swigregister(MakeMCLDDoubleBarrierEngine)
 
 class MCPREuropeanBasketEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -12807,6 +13916,20 @@ class FdOrnsteinUhlenbeckVanillaEngine(PricingEngine):
 # Register FdOrnsteinUhlenbeckVanillaEngine in _QuantLib:
 _QuantLib.FdOrnsteinUhlenbeckVanillaEngine_swigregister(FdOrnsteinUhlenbeckVanillaEngine)
 
+class FdHestonHullWhiteVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FdHestonHullWhiteVanillaEngine_swiginit(self, _QuantLib.new_FdHestonHullWhiteVanillaEngine(*args))
+
+    def enableMultipleStrikesCaching(self, strikes):
+        return _QuantLib.FdHestonHullWhiteVanillaEngine_enableMultipleStrikesCaching(self, strikes)
+    __swig_destroy__ = _QuantLib.delete_FdHestonHullWhiteVanillaEngine
+
+# Register FdHestonHullWhiteVanillaEngine in _QuantLib:
+_QuantLib.FdHestonHullWhiteVanillaEngine_swigregister(FdHestonHullWhiteVanillaEngine)
+
 class ForwardEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -13085,6 +14208,398 @@ class AnalyticContinuousPartialFixedLookbackEngine(PricingEngine):
 
 # Register AnalyticContinuousPartialFixedLookbackEngine in _QuantLib:
 _QuantLib.AnalyticContinuousPartialFixedLookbackEngine_swigregister(AnalyticContinuousPartialFixedLookbackEngine)
+
+class MCPRFixedLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRFixedLookbackEngine_swiginit(self, _QuantLib.new_MCPRFixedLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRFixedLookbackEngine
+
+# Register MCPRFixedLookbackEngine in _QuantLib:
+_QuantLib.MCPRFixedLookbackEngine_swigregister(MCPRFixedLookbackEngine)
+
+class MCPRFloatingLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRFloatingLookbackEngine_swiginit(self, _QuantLib.new_MCPRFloatingLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRFloatingLookbackEngine
+
+# Register MCPRFloatingLookbackEngine in _QuantLib:
+_QuantLib.MCPRFloatingLookbackEngine_swigregister(MCPRFloatingLookbackEngine)
+
+class MCPRPartialFixedLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRPartialFixedLookbackEngine_swiginit(self, _QuantLib.new_MCPRPartialFixedLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRPartialFixedLookbackEngine
+
+# Register MCPRPartialFixedLookbackEngine in _QuantLib:
+_QuantLib.MCPRPartialFixedLookbackEngine_swigregister(MCPRPartialFixedLookbackEngine)
+
+class MCPRPartialFloatingLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRPartialFloatingLookbackEngine_swiginit(self, _QuantLib.new_MCPRPartialFloatingLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRPartialFloatingLookbackEngine
+
+# Register MCPRPartialFloatingLookbackEngine in _QuantLib:
+_QuantLib.MCPRPartialFloatingLookbackEngine_swigregister(MCPRPartialFloatingLookbackEngine)
+
+class MCLDFixedLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDFixedLookbackEngine_swiginit(self, _QuantLib.new_MCLDFixedLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDFixedLookbackEngine
+
+# Register MCLDFixedLookbackEngine in _QuantLib:
+_QuantLib.MCLDFixedLookbackEngine_swigregister(MCLDFixedLookbackEngine)
+
+class MCLDFloatingLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDFloatingLookbackEngine_swiginit(self, _QuantLib.new_MCLDFloatingLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDFloatingLookbackEngine
+
+# Register MCLDFloatingLookbackEngine in _QuantLib:
+_QuantLib.MCLDFloatingLookbackEngine_swigregister(MCLDFloatingLookbackEngine)
+
+class MCLDPartialFixedLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDPartialFixedLookbackEngine_swiginit(self, _QuantLib.new_MCLDPartialFixedLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDPartialFixedLookbackEngine
+
+# Register MCLDPartialFixedLookbackEngine in _QuantLib:
+_QuantLib.MCLDPartialFixedLookbackEngine_swigregister(MCLDPartialFixedLookbackEngine)
+
+class MCLDPartialFloatingLookbackEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDPartialFloatingLookbackEngine_swiginit(self, _QuantLib.new_MCLDPartialFloatingLookbackEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antithetic, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDPartialFloatingLookbackEngine
+
+# Register MCLDPartialFloatingLookbackEngine in _QuantLib:
+_QuantLib.MCLDPartialFloatingLookbackEngine_swigregister(MCLDPartialFloatingLookbackEngine)
+
+class MakeMCPRFixedLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRFixedLookbackEngine_swiginit(self, _QuantLib.new_MakeMCPRFixedLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRFixedLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRFixedLookbackEngine
+
+# Register MakeMCPRFixedLookbackEngine in _QuantLib:
+_QuantLib.MakeMCPRFixedLookbackEngine_swigregister(MakeMCPRFixedLookbackEngine)
+
+class MakeMCPRFloatingLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRFloatingLookbackEngine_swiginit(self, _QuantLib.new_MakeMCPRFloatingLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRFloatingLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRFloatingLookbackEngine
+
+# Register MakeMCPRFloatingLookbackEngine in _QuantLib:
+_QuantLib.MakeMCPRFloatingLookbackEngine_swigregister(MakeMCPRFloatingLookbackEngine)
+
+class MakeMCPRPartialFixedLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRPartialFixedLookbackEngine_swiginit(self, _QuantLib.new_MakeMCPRPartialFixedLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRPartialFixedLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRPartialFixedLookbackEngine
+
+# Register MakeMCPRPartialFixedLookbackEngine in _QuantLib:
+_QuantLib.MakeMCPRPartialFixedLookbackEngine_swigregister(MakeMCPRPartialFixedLookbackEngine)
+
+class MakeMCPRPartialFloatingLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRPartialFloatingLookbackEngine_swiginit(self, _QuantLib.new_MakeMCPRPartialFloatingLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRPartialFloatingLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRPartialFloatingLookbackEngine
+
+# Register MakeMCPRPartialFloatingLookbackEngine in _QuantLib:
+_QuantLib.MakeMCPRPartialFloatingLookbackEngine_swigregister(MakeMCPRPartialFloatingLookbackEngine)
+
+class MakeMCLDFixedLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDFixedLookbackEngine_swiginit(self, _QuantLib.new_MakeMCLDFixedLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDFixedLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDFixedLookbackEngine
+
+# Register MakeMCLDFixedLookbackEngine in _QuantLib:
+_QuantLib.MakeMCLDFixedLookbackEngine_swigregister(MakeMCLDFixedLookbackEngine)
+
+class MakeMCLDFloatingLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDFloatingLookbackEngine_swiginit(self, _QuantLib.new_MakeMCLDFloatingLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDFloatingLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDFloatingLookbackEngine
+
+# Register MakeMCLDFloatingLookbackEngine in _QuantLib:
+_QuantLib.MakeMCLDFloatingLookbackEngine_swigregister(MakeMCLDFloatingLookbackEngine)
+
+class MakeMCLDPartialFixedLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDPartialFixedLookbackEngine_swiginit(self, _QuantLib.new_MakeMCLDPartialFixedLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDPartialFixedLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDPartialFixedLookbackEngine
+
+# Register MakeMCLDPartialFixedLookbackEngine in _QuantLib:
+_QuantLib.MakeMCLDPartialFixedLookbackEngine_swigregister(MakeMCLDPartialFixedLookbackEngine)
+
+class MakeMCLDPartialFloatingLookbackEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDPartialFloatingLookbackEngine_swiginit(self, _QuantLib.new_MakeMCLDPartialFloatingLookbackEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDPartialFloatingLookbackEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDPartialFloatingLookbackEngine
+
+# Register MakeMCLDPartialFloatingLookbackEngine in _QuantLib:
+_QuantLib.MakeMCLDPartialFloatingLookbackEngine_swigregister(MakeMCLDPartialFloatingLookbackEngine)
 
 class QuantoEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -14540,6 +16055,104 @@ class JumpDiffusionEngine(PricingEngine):
 # Register JumpDiffusionEngine in _QuantLib:
 _QuantLib.JumpDiffusionEngine_swigregister(JumpDiffusionEngine)
 
+class MCPRHestonHullWhiteEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, antitheticVariate, controlVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRHestonHullWhiteEngine_swiginit(self, _QuantLib.new_MCPRHestonHullWhiteEngine(process, timeSteps, timeStepsPerYear, antitheticVariate, controlVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRHestonHullWhiteEngine
+
+# Register MCPRHestonHullWhiteEngine in _QuantLib:
+_QuantLib.MCPRHestonHullWhiteEngine_swigregister(MCPRHestonHullWhiteEngine)
+
+class MCLDHestonHullWhiteEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, antitheticVariate, controlVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDHestonHullWhiteEngine_swiginit(self, _QuantLib.new_MCLDHestonHullWhiteEngine(process, timeSteps, timeStepsPerYear, antitheticVariate, controlVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDHestonHullWhiteEngine
+
+# Register MCLDHestonHullWhiteEngine in _QuantLib:
+_QuantLib.MCLDHestonHullWhiteEngine_swigregister(MCLDHestonHullWhiteEngine)
+
+class MakeMCPRHestonHullWhiteEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRHestonHullWhiteEngine_swiginit(self, _QuantLib.new_MakeMCPRHestonHullWhiteEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withStepsPerYear(self, steps)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withAntitheticVariate(self, b)
+
+    def withControlVariate(self, b=True):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withControlVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRHestonHullWhiteEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRHestonHullWhiteEngine
+
+# Register MakeMCPRHestonHullWhiteEngine in _QuantLib:
+_QuantLib.MakeMCPRHestonHullWhiteEngine_swigregister(MakeMCPRHestonHullWhiteEngine)
+
+class MakeMCLDHestonHullWhiteEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDHestonHullWhiteEngine_swiginit(self, _QuantLib.new_MakeMCLDHestonHullWhiteEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withStepsPerYear(self, steps)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withAntitheticVariate(self, b)
+
+    def withControlVariate(self, b=True):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withControlVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDHestonHullWhiteEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDHestonHullWhiteEngine
+
+# Register MakeMCLDHestonHullWhiteEngine in _QuantLib:
+_QuantLib.MakeMCLDHestonHullWhiteEngine_swigregister(MakeMCLDHestonHullWhiteEngine)
+
 class YoYInflationCapFloorEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -14770,6 +16383,349 @@ class SwingExercise(BermudanExercise):
 
 # Register SwingExercise in _QuantLib:
 _QuantLib.SwingExercise_swigregister(SwingExercise)
+
+
+def getCovariance(volatilities, correlations):
+    return _QuantLib.getCovariance(volatilities, correlations)
+class Path(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.Path_swiginit(self, _QuantLib.new_Path(*args))
+
+    def empty(self):
+        return _QuantLib.Path_empty(self)
+
+    def __len__(self):
+        return _QuantLib.Path___len__(self)
+
+    def at(self, i):
+        return _QuantLib.Path_at(self, i)
+
+    def value(self, i):
+        return _QuantLib.Path_value(self, i)
+
+    def time(self, i):
+        return _QuantLib.Path_time(self, i)
+
+    def front(self):
+        return _QuantLib.Path_front(self)
+
+    def back(self):
+        return _QuantLib.Path_back(self)
+
+    def timeGrid(self):
+        return _QuantLib.Path_timeGrid(self)
+
+    def __getitem__(self, i):
+        return _QuantLib.Path___getitem__(self, i)
+    __swig_destroy__ = _QuantLib.delete_Path
+
+# Register Path in _QuantLib:
+_QuantLib.Path_swigregister(Path)
+
+class SamplePath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def value(self):
+        return _QuantLib.SamplePath_value(self)
+
+    def weight(self):
+        return _QuantLib.SamplePath_weight(self)
+    __swig_destroy__ = _QuantLib.delete_SamplePath
+
+# Register SamplePath in _QuantLib:
+_QuantLib.SamplePath_swigregister(SamplePath)
+
+class GaussianPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GaussianPathGenerator_swiginit(self, _QuantLib.new_GaussianPathGenerator(*args))
+
+    def next(self):
+        return _QuantLib.GaussianPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianPathGenerator_antithetic(self)
+
+    def size(self):
+        return _QuantLib.GaussianPathGenerator_size(self)
+
+    def timeGrid(self):
+        return _QuantLib.GaussianPathGenerator_timeGrid(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianPathGenerator
+
+# Register GaussianPathGenerator in _QuantLib:
+_QuantLib.GaussianPathGenerator_swigregister(GaussianPathGenerator)
+
+class GaussianSobolPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GaussianSobolPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolPathGenerator(*args))
+
+    def next(self):
+        return _QuantLib.GaussianSobolPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianSobolPathGenerator_antithetic(self)
+
+    def size(self):
+        return _QuantLib.GaussianSobolPathGenerator_size(self)
+
+    def timeGrid(self):
+        return _QuantLib.GaussianSobolPathGenerator_timeGrid(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianSobolPathGenerator
+
+# Register GaussianSobolPathGenerator in _QuantLib:
+_QuantLib.GaussianSobolPathGenerator_swigregister(GaussianSobolPathGenerator)
+
+class MultiPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MultiPath_swiginit(self, _QuantLib.new_MultiPath(*args))
+
+    def __len__(self):
+        return _QuantLib.MultiPath___len__(self)
+
+    def assetNumber(self):
+        return _QuantLib.MultiPath_assetNumber(self)
+
+    def at(self, j):
+        return _QuantLib.MultiPath_at(self, j)
+
+    def __getitem__(self, i):
+        return _QuantLib.MultiPath___getitem__(self, i)
+    __swig_destroy__ = _QuantLib.delete_MultiPath
+
+# Register MultiPath in _QuantLib:
+_QuantLib.MultiPath_swigregister(MultiPath)
+
+class SampleMultiPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def value(self):
+        return _QuantLib.SampleMultiPath_value(self)
+
+    def weight(self):
+        return _QuantLib.SampleMultiPath_weight(self)
+    __swig_destroy__ = _QuantLib.delete_SampleMultiPath
+
+# Register SampleMultiPath in _QuantLib:
+_QuantLib.SampleMultiPath_swigregister(SampleMultiPath)
+
+class GaussianMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.GaussianMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.GaussianMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianMultiPathGenerator
+
+# Register GaussianMultiPathGenerator in _QuantLib:
+_QuantLib.GaussianMultiPathGenerator_swigregister(GaussianMultiPathGenerator)
+
+class GaussianSobolMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.GaussianSobolMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.GaussianSobolMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianSobolMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianSobolMultiPathGenerator
+
+# Register GaussianSobolMultiPathGenerator in _QuantLib:
+_QuantLib.GaussianSobolMultiPathGenerator_swigregister(GaussianSobolMultiPathGenerator)
+
+class BrownianBridgeSobolMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.BrownianBridgeSobolMultiPathGenerator_swiginit(self, _QuantLib.new_BrownianBridgeSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_BrownianBridgeSobolMultiPathGenerator
+
+# Register BrownianBridgeSobolMultiPathGenerator in _QuantLib:
+_QuantLib.BrownianBridgeSobolMultiPathGenerator_swigregister(BrownianBridgeSobolMultiPathGenerator)
+
+class BrownianBridge(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BrownianBridge_swiginit(self, _QuantLib.new_BrownianBridge(*args))
+
+    def size(self):
+        return _QuantLib.BrownianBridge_size(self)
+
+    def times(self):
+        return _QuantLib.BrownianBridge_times(self)
+
+    def bridgeIndex(self):
+        return _QuantLib.BrownianBridge_bridgeIndex(self)
+
+    def leftIndex(self):
+        return _QuantLib.BrownianBridge_leftIndex(self)
+
+    def rightIndex(self):
+        return _QuantLib.BrownianBridge_rightIndex(self)
+
+    def leftWeight(self):
+        return _QuantLib.BrownianBridge_leftWeight(self)
+
+    def rightWeight(self):
+        return _QuantLib.BrownianBridge_rightWeight(self)
+
+    def stdDeviation(self):
+        return _QuantLib.BrownianBridge_stdDeviation(self)
+
+    def transform(self, input):
+        return _QuantLib.BrownianBridge_transform(self, input)
+    __swig_destroy__ = _QuantLib.delete_BrownianBridge
+
+# Register BrownianBridge in _QuantLib:
+_QuantLib.BrownianBridge_swigregister(BrownianBridge)
+
+class SinglePathPricer(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def __call__(self, path):
+        return _QuantLib.SinglePathPricer___call__(self, path)
+    __swig_destroy__ = _QuantLib.delete_SinglePathPricer
+
+# Register SinglePathPricer in _QuantLib:
+_QuantLib.SinglePathPricer_swigregister(SinglePathPricer)
+
+class MultiPathPricer(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def __call__(self, path):
+        return _QuantLib.MultiPathPricer___call__(self, path)
+    __swig_destroy__ = _QuantLib.delete_MultiPathPricer
+
+# Register MultiPathPricer in _QuantLib:
+_QuantLib.MultiPathPricer_swigregister(MultiPathPricer)
+
+class CustomPathPricer(SinglePathPricer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, function):
+        _QuantLib.CustomPathPricer_swiginit(self, _QuantLib.new_CustomPathPricer(function))
+
+    def __call__(self, path):
+        return _QuantLib.CustomPathPricer___call__(self, path)
+    __swig_destroy__ = _QuantLib.delete_CustomPathPricer
+
+# Register CustomPathPricer in _QuantLib:
+_QuantLib.CustomPathPricer_swigregister(CustomPathPricer)
+
+class SingleVariatePRMonteCarloModel(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SingleVariatePRMonteCarloModel_swiginit(self, _QuantLib.new_SingleVariatePRMonteCarloModel(*args))
+
+    def addSamples(self, samples):
+        return _QuantLib.SingleVariatePRMonteCarloModel_addSamples(self, samples)
+
+    def sampleAccumulator(self):
+        return _QuantLib.SingleVariatePRMonteCarloModel_sampleAccumulator(self)
+    __swig_destroy__ = _QuantLib.delete_SingleVariatePRMonteCarloModel
+
+# Register SingleVariatePRMonteCarloModel in _QuantLib:
+_QuantLib.SingleVariatePRMonteCarloModel_swigregister(SingleVariatePRMonteCarloModel)
+
+class SingleVariateLDMonteCarloModel(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SingleVariateLDMonteCarloModel_swiginit(self, _QuantLib.new_SingleVariateLDMonteCarloModel(*args))
+
+    def addSamples(self, samples):
+        return _QuantLib.SingleVariateLDMonteCarloModel_addSamples(self, samples)
+
+    def sampleAccumulator(self):
+        return _QuantLib.SingleVariateLDMonteCarloModel_sampleAccumulator(self)
+    __swig_destroy__ = _QuantLib.delete_SingleVariateLDMonteCarloModel
+
+# Register SingleVariateLDMonteCarloModel in _QuantLib:
+_QuantLib.SingleVariateLDMonteCarloModel_swigregister(SingleVariateLDMonteCarloModel)
+
+class MultiVariatePRMonteCarloModel(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MultiVariatePRMonteCarloModel_swiginit(self, _QuantLib.new_MultiVariatePRMonteCarloModel(*args))
+
+    def addSamples(self, samples):
+        return _QuantLib.MultiVariatePRMonteCarloModel_addSamples(self, samples)
+
+    def sampleAccumulator(self):
+        return _QuantLib.MultiVariatePRMonteCarloModel_sampleAccumulator(self)
+    __swig_destroy__ = _QuantLib.delete_MultiVariatePRMonteCarloModel
+
+# Register MultiVariatePRMonteCarloModel in _QuantLib:
+_QuantLib.MultiVariatePRMonteCarloModel_swigregister(MultiVariatePRMonteCarloModel)
+
+class MultiVariateLDMonteCarloModel(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MultiVariateLDMonteCarloModel_swiginit(self, _QuantLib.new_MultiVariateLDMonteCarloModel(*args))
+
+    def addSamples(self, samples):
+        return _QuantLib.MultiVariateLDMonteCarloModel_addSamples(self, samples)
+
+    def sampleAccumulator(self):
+        return _QuantLib.MultiVariateLDMonteCarloModel_sampleAccumulator(self)
+    __swig_destroy__ = _QuantLib.delete_MultiVariateLDMonteCarloModel
+
+# Register MultiVariateLDMonteCarloModel in _QuantLib:
+_QuantLib.MultiVariateLDMonteCarloModel_swigregister(MultiVariateLDMonteCarloModel)
 
 class Fdm1dMesher(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -24009,245 +25965,6 @@ class MoneySettings(object):
 # Register MoneySettings in _QuantLib:
 _QuantLib.MoneySettings_swigregister(MoneySettings)
 
-
-def getCovariance(volatilities, correlations):
-    return _QuantLib.getCovariance(volatilities, correlations)
-class Path(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def empty(self):
-        return _QuantLib.Path_empty(self)
-
-    def __len__(self):
-        return _QuantLib.Path___len__(self)
-
-    def at(self, i):
-        return _QuantLib.Path_at(self, i)
-
-    def value(self, i):
-        return _QuantLib.Path_value(self, i)
-
-    def time(self, i):
-        return _QuantLib.Path_time(self, i)
-
-    def front(self):
-        return _QuantLib.Path_front(self)
-
-    def back(self):
-        return _QuantLib.Path_back(self)
-
-    def timeGrid(self):
-        return _QuantLib.Path_timeGrid(self)
-
-    def __getitem__(self, i):
-        return _QuantLib.Path___getitem__(self, i)
-    __swig_destroy__ = _QuantLib.delete_Path
-
-# Register Path in _QuantLib:
-_QuantLib.Path_swigregister(Path)
-
-class SamplePath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def value(self):
-        return _QuantLib.SamplePath_value(self)
-
-    def weight(self):
-        return _QuantLib.SamplePath_weight(self)
-    __swig_destroy__ = _QuantLib.delete_SamplePath
-
-# Register SamplePath in _QuantLib:
-_QuantLib.SamplePath_swigregister(SamplePath)
-
-class GaussianPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.GaussianPathGenerator_swiginit(self, _QuantLib.new_GaussianPathGenerator(*args))
-
-    def next(self):
-        return _QuantLib.GaussianPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianPathGenerator_antithetic(self)
-
-    def size(self):
-        return _QuantLib.GaussianPathGenerator_size(self)
-
-    def timeGrid(self):
-        return _QuantLib.GaussianPathGenerator_timeGrid(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianPathGenerator
-
-# Register GaussianPathGenerator in _QuantLib:
-_QuantLib.GaussianPathGenerator_swigregister(GaussianPathGenerator)
-
-class GaussianSobolPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.GaussianSobolPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolPathGenerator(*args))
-
-    def next(self):
-        return _QuantLib.GaussianSobolPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianSobolPathGenerator_antithetic(self)
-
-    def size(self):
-        return _QuantLib.GaussianSobolPathGenerator_size(self)
-
-    def timeGrid(self):
-        return _QuantLib.GaussianSobolPathGenerator_timeGrid(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianSobolPathGenerator
-
-# Register GaussianSobolPathGenerator in _QuantLib:
-_QuantLib.GaussianSobolPathGenerator_swigregister(GaussianSobolPathGenerator)
-
-class InvCumulativeMersenneTwisterPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.InvCumulativeMersenneTwisterPathGenerator_swiginit(self, _QuantLib.new_InvCumulativeMersenneTwisterPathGenerator(*args))
-
-    def next(self):
-        return _QuantLib.InvCumulativeMersenneTwisterPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.InvCumulativeMersenneTwisterPathGenerator_antithetic(self)
-
-    def size(self):
-        return _QuantLib.InvCumulativeMersenneTwisterPathGenerator_size(self)
-
-    def timeGrid(self):
-        return _QuantLib.InvCumulativeMersenneTwisterPathGenerator_timeGrid(self)
-    __swig_destroy__ = _QuantLib.delete_InvCumulativeMersenneTwisterPathGenerator
-
-# Register InvCumulativeMersenneTwisterPathGenerator in _QuantLib:
-_QuantLib.InvCumulativeMersenneTwisterPathGenerator_swigregister(InvCumulativeMersenneTwisterPathGenerator)
-
-class MultiPath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def __len__(self):
-        return _QuantLib.MultiPath___len__(self)
-
-    def assetNumber(self):
-        return _QuantLib.MultiPath_assetNumber(self)
-
-    def at(self, j):
-        return _QuantLib.MultiPath_at(self, j)
-
-    def __getitem__(self, i):
-        return _QuantLib.MultiPath___getitem__(self, i)
-    __swig_destroy__ = _QuantLib.delete_MultiPath
-
-# Register MultiPath in _QuantLib:
-_QuantLib.MultiPath_swigregister(MultiPath)
-
-class SampleMultiPath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def value(self):
-        return _QuantLib.SampleMultiPath_value(self)
-
-    def weight(self):
-        return _QuantLib.SampleMultiPath_weight(self)
-    __swig_destroy__ = _QuantLib.delete_SampleMultiPath
-
-# Register SampleMultiPath in _QuantLib:
-_QuantLib.SampleMultiPath_swigregister(SampleMultiPath)
-
-class GaussianMultiPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
-        _QuantLib.GaussianMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
-
-    def next(self):
-        return _QuantLib.GaussianMultiPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianMultiPathGenerator_antithetic(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianMultiPathGenerator
-
-# Register GaussianMultiPathGenerator in _QuantLib:
-_QuantLib.GaussianMultiPathGenerator_swigregister(GaussianMultiPathGenerator)
-
-class GaussianSobolMultiPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
-        _QuantLib.GaussianSobolMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
-
-    def next(self):
-        return _QuantLib.GaussianSobolMultiPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianSobolMultiPathGenerator_antithetic(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianSobolMultiPathGenerator
-
-# Register GaussianSobolMultiPathGenerator in _QuantLib:
-_QuantLib.GaussianSobolMultiPathGenerator_swigregister(GaussianSobolMultiPathGenerator)
-
-class BrownianBridge(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.BrownianBridge_swiginit(self, _QuantLib.new_BrownianBridge(*args))
-
-    def size(self):
-        return _QuantLib.BrownianBridge_size(self)
-
-    def times(self):
-        return _QuantLib.BrownianBridge_times(self)
-
-    def bridgeIndex(self):
-        return _QuantLib.BrownianBridge_bridgeIndex(self)
-
-    def leftIndex(self):
-        return _QuantLib.BrownianBridge_leftIndex(self)
-
-    def rightIndex(self):
-        return _QuantLib.BrownianBridge_rightIndex(self)
-
-    def leftWeight(self):
-        return _QuantLib.BrownianBridge_leftWeight(self)
-
-    def rightWeight(self):
-        return _QuantLib.BrownianBridge_rightWeight(self)
-
-    def stdDeviation(self):
-        return _QuantLib.BrownianBridge_stdDeviation(self)
-
-    def transform(self, input):
-        return _QuantLib.BrownianBridge_transform(self, input)
-    __swig_destroy__ = _QuantLib.delete_BrownianBridge
-
-# Register BrownianBridge in _QuantLib:
-_QuantLib.BrownianBridge_swigregister(BrownianBridge)
-
 class RungeKutta(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -29714,150 +31431,6 @@ class YoYInflationCurve(YoYInflationTermStructure):
 # Register YoYInflationCurve in _QuantLib:
 _QuantLib.YoYInflationCurve_swigregister(YoYInflationCurve)
 
-class BlackVolTermStructure(VolatilityTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def blackVol(self, *args):
-        return _QuantLib.BlackVolTermStructure_blackVol(self, *args)
-
-    def blackVariance(self, *args):
-        return _QuantLib.BlackVolTermStructure_blackVariance(self, *args)
-
-    def blackForwardVol(self, *args):
-        return _QuantLib.BlackVolTermStructure_blackForwardVol(self, *args)
-
-    def blackForwardVariance(self, *args):
-        return _QuantLib.BlackVolTermStructure_blackForwardVariance(self, *args)
-    __swig_destroy__ = _QuantLib.delete_BlackVolTermStructure
-
-# Register BlackVolTermStructure in _QuantLib:
-_QuantLib.BlackVolTermStructure_swigregister(BlackVolTermStructure)
-
-class BlackVolTermStructureHandle(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.BlackVolTermStructureHandle_swiginit(self, _QuantLib.new_BlackVolTermStructureHandle(*args))
-
-    def __deref__(self):
-        return _QuantLib.BlackVolTermStructureHandle___deref__(self)
-
-    def currentLink(self):
-        return _QuantLib.BlackVolTermStructureHandle_currentLink(self)
-
-    def __ref__(self):
-        return _QuantLib.BlackVolTermStructureHandle___ref__(self)
-
-    def empty(self):
-        return _QuantLib.BlackVolTermStructureHandle_empty(self)
-
-    def __nonzero__(self):
-        return _QuantLib.BlackVolTermStructureHandle___nonzero__(self)
-
-    def __bool__(self):
-        return _QuantLib.BlackVolTermStructureHandle___bool__(self)
-
-    def asObservable(self):
-        return _QuantLib.BlackVolTermStructureHandle_asObservable(self)
-    __swig_destroy__ = _QuantLib.delete_BlackVolTermStructureHandle
-
-    def blackVol(self, *args):
-        return _QuantLib.BlackVolTermStructureHandle_blackVol(self, *args)
-
-    def blackVariance(self, *args):
-        return _QuantLib.BlackVolTermStructureHandle_blackVariance(self, *args)
-
-    def blackForwardVol(self, *args):
-        return _QuantLib.BlackVolTermStructureHandle_blackForwardVol(self, *args)
-
-    def blackForwardVariance(self, *args):
-        return _QuantLib.BlackVolTermStructureHandle_blackForwardVariance(self, *args)
-
-    def businessDayConvention(self):
-        return _QuantLib.BlackVolTermStructureHandle_businessDayConvention(self)
-
-    def optionDateFromTenor(self, arg2):
-        return _QuantLib.BlackVolTermStructureHandle_optionDateFromTenor(self, arg2)
-
-    def minStrike(self):
-        return _QuantLib.BlackVolTermStructureHandle_minStrike(self)
-
-    def maxStrike(self):
-        return _QuantLib.BlackVolTermStructureHandle_maxStrike(self)
-
-    def dayCounter(self):
-        return _QuantLib.BlackVolTermStructureHandle_dayCounter(self)
-
-    def timeFromReference(self, date):
-        return _QuantLib.BlackVolTermStructureHandle_timeFromReference(self, date)
-
-    def maxDate(self):
-        return _QuantLib.BlackVolTermStructureHandle_maxDate(self)
-
-    def maxTime(self):
-        return _QuantLib.BlackVolTermStructureHandle_maxTime(self)
-
-    def referenceDate(self):
-        return _QuantLib.BlackVolTermStructureHandle_referenceDate(self)
-
-    def calendar(self):
-        return _QuantLib.BlackVolTermStructureHandle_calendar(self)
-
-    def settlementDays(self):
-        return _QuantLib.BlackVolTermStructureHandle_settlementDays(self)
-
-    def registerWithObservables(self, arg2):
-        return _QuantLib.BlackVolTermStructureHandle_registerWithObservables(self, arg2)
-
-    def unregisterWith(self, arg2):
-        return _QuantLib.BlackVolTermStructureHandle_unregisterWith(self, arg2)
-
-    def unregisterWithAll(self):
-        return _QuantLib.BlackVolTermStructureHandle_unregisterWithAll(self)
-
-    def update(self):
-        return _QuantLib.BlackVolTermStructureHandle_update(self)
-
-    def deepUpdate(self):
-        return _QuantLib.BlackVolTermStructureHandle_deepUpdate(self)
-
-    def notifyObservers(self):
-        return _QuantLib.BlackVolTermStructureHandle_notifyObservers(self)
-
-    def enableExtrapolation(self, b=True):
-        return _QuantLib.BlackVolTermStructureHandle_enableExtrapolation(self, b)
-
-    def disableExtrapolation(self, b=True):
-        return _QuantLib.BlackVolTermStructureHandle_disableExtrapolation(self, b)
-
-    def allowsExtrapolation(self):
-        return _QuantLib.BlackVolTermStructureHandle_allowsExtrapolation(self)
-
-# Register BlackVolTermStructureHandle in _QuantLib:
-_QuantLib.BlackVolTermStructureHandle_swigregister(BlackVolTermStructureHandle)
-
-class RelinkableBlackVolTermStructureHandle(BlackVolTermStructureHandle):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.RelinkableBlackVolTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableBlackVolTermStructureHandle(*args))
-
-    def linkTo(self, arg2, registerAsObserver=True):
-        return _QuantLib.RelinkableBlackVolTermStructureHandle_linkTo(self, arg2, registerAsObserver)
-
-    def reset(self):
-        return _QuantLib.RelinkableBlackVolTermStructureHandle_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RelinkableBlackVolTermStructureHandle
-
-# Register RelinkableBlackVolTermStructureHandle in _QuantLib:
-_QuantLib.RelinkableBlackVolTermStructureHandle_swigregister(RelinkableBlackVolTermStructureHandle)
-
 class BlackAtmVolCurve(VolatilityTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -30145,193 +31718,6 @@ class RelinkableSwaptionVolatilityStructureHandle(SwaptionVolatilityStructureHan
 
 # Register RelinkableSwaptionVolatilityStructureHandle in _QuantLib:
 _QuantLib.RelinkableSwaptionVolatilityStructureHandle_swigregister(RelinkableSwaptionVolatilityStructureHandle)
-
-class BlackVolatilityTermStructure(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-    __swig_destroy__ = _QuantLib.delete_BlackVolatilityTermStructure
-
-# Register BlackVolatilityTermStructure in _QuantLib:
-_QuantLib.BlackVolatilityTermStructure_swigregister(BlackVolatilityTermStructure)
-
-class BlackVarianceTermStructure(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-    __swig_destroy__ = _QuantLib.delete_BlackVarianceTermStructure
-
-# Register BlackVarianceTermStructure in _QuantLib:
-_QuantLib.BlackVarianceTermStructure_swigregister(BlackVarianceTermStructure)
-
-class HestonBlackVolSurface(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.HestonBlackVolSurface_swiginit(self, _QuantLib.new_HestonBlackVolSurface(*args))
-    __swig_destroy__ = _QuantLib.delete_HestonBlackVolSurface
-
-# Register HestonBlackVolSurface in _QuantLib:
-_QuantLib.HestonBlackVolSurface_swigregister(HestonBlackVolSurface)
-
-class BlackConstantVol(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.BlackConstantVol_swiginit(self, _QuantLib.new_BlackConstantVol(*args))
-    __swig_destroy__ = _QuantLib.delete_BlackConstantVol
-
-# Register BlackConstantVol in _QuantLib:
-_QuantLib.BlackConstantVol_swigregister(BlackConstantVol)
-
-class AndreasenHugeVolatilityAdapter(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, volInterpl, eps=1e-6):
-        _QuantLib.AndreasenHugeVolatilityAdapter_swiginit(self, _QuantLib.new_AndreasenHugeVolatilityAdapter(volInterpl, eps))
-    __swig_destroy__ = _QuantLib.delete_AndreasenHugeVolatilityAdapter
-
-# Register AndreasenHugeVolatilityAdapter in _QuantLib:
-_QuantLib.AndreasenHugeVolatilityAdapter_swigregister(AndreasenHugeVolatilityAdapter)
-
-class BlackVarianceCurve(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance=True):
-        _QuantLib.BlackVarianceCurve_swiginit(self, _QuantLib.new_BlackVarianceCurve(referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance))
-
-    def setInterpolationLinearFlat(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationLinearFlat(self, *args)
-
-    def setInterpolationBackwardFlat(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationBackwardFlat(self, *args)
-
-    def setInterpolationConvexMonotone(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationConvexMonotone(self, *args)
-
-    def setInterpolationCubic(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationCubic(self, *args)
-
-    def setInterpolationForwardFlat(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationForwardFlat(self, *args)
-
-    def setInterpolationLinear(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationLinear(self, *args)
-
-    def setInterpolationLogLinear(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationLogLinear(self, *args)
-
-    def setInterpolationDefaultLogCubic(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationDefaultLogCubic(self, *args)
-
-    def setInterpolationMonotonicLogCubic(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationMonotonicLogCubic(self, *args)
-
-    def setInterpolationKrugerLog(self, *args):
-        return _QuantLib.BlackVarianceCurve_setInterpolationKrugerLog(self, *args)
-    __swig_destroy__ = _QuantLib.delete_BlackVarianceCurve
-
-# Register BlackVarianceCurve in _QuantLib:
-_QuantLib.BlackVarianceCurve_swigregister(BlackVarianceCurve)
-
-class BlackVarianceSurface(BlackVolTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-    ConstantExtrapolation = _QuantLib.BlackVarianceSurface_ConstantExtrapolation
-    InterpolatorDefaultExtrapolation = _QuantLib.BlackVarianceSurface_InterpolatorDefaultExtrapolation
-
-    def __init__(self, *args, **kwargs):
-        _QuantLib.BlackVarianceSurface_swiginit(self, _QuantLib.new_BlackVarianceSurface(*args, **kwargs))
-
-    def setInterpolationBicubic(self, *args):
-        return _QuantLib.BlackVarianceSurface_setInterpolationBicubic(self, *args)
-
-    def setInterpolationBackwardflatLinear(self, *args):
-        return _QuantLib.BlackVarianceSurface_setInterpolationBackwardflatLinear(self, *args)
-
-    def setInterpolationBilinear(self, *args):
-        return _QuantLib.BlackVarianceSurface_setInterpolationBilinear(self, *args)
-
-    def setInterpolationPolynomial(self, *args):
-        return _QuantLib.BlackVarianceSurface_setInterpolationPolynomial(self, *args)
-    __swig_destroy__ = _QuantLib.delete_BlackVarianceSurface
-
-# Register BlackVarianceSurface in _QuantLib:
-_QuantLib.BlackVarianceSurface_swigregister(BlackVarianceSurface)
-
-class ExtendedBlackVarianceCurve(BlackVarianceTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance=True):
-        _QuantLib.ExtendedBlackVarianceCurve_swiginit(self, _QuantLib.new_ExtendedBlackVarianceCurve(referenceDate, dates, volatilities, dayCounter, forceMonotoneVariance))
-
-    def setInterpolationLinearFlat(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLinearFlat(self, *args)
-
-    def setInterpolationBackwardFlat(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationBackwardFlat(self, *args)
-
-    def setInterpolationConvexMonotone(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationConvexMonotone(self, *args)
-
-    def setInterpolationCubic(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationCubic(self, *args)
-
-    def setInterpolationForwardFlat(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationForwardFlat(self, *args)
-
-    def setInterpolationLinear(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLinear(self, *args)
-
-    def setInterpolationLogLinear(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationLogLinear(self, *args)
-
-    def setInterpolationDefaultLogCubic(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationDefaultLogCubic(self, *args)
-
-    def setInterpolationMonotonicLogCubic(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationMonotonicLogCubic(self, *args)
-
-    def setInterpolationKrugerLog(self, *args):
-        return _QuantLib.ExtendedBlackVarianceCurve_setInterpolationKrugerLog(self, *args)
-    __swig_destroy__ = _QuantLib.delete_ExtendedBlackVarianceCurve
-
-# Register ExtendedBlackVarianceCurve in _QuantLib:
-_QuantLib.ExtendedBlackVarianceCurve_swigregister(ExtendedBlackVarianceCurve)
-
-class ExtendedBlackVarianceSurface(BlackVarianceTermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-    ConstantExtrapolation = _QuantLib.ExtendedBlackVarianceSurface_ConstantExtrapolation
-    InterpolatorDefaultExtrapolation = _QuantLib.ExtendedBlackVarianceSurface_InterpolatorDefaultExtrapolation
-
-    def __init__(self, *args):
-        _QuantLib.ExtendedBlackVarianceSurface_swiginit(self, _QuantLib.new_ExtendedBlackVarianceSurface(*args))
-
-    def setInterpolationBicubic(self, *args):
-        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBicubic(self, *args)
-
-    def setInterpolationBackwardflatLinear(self, *args):
-        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBackwardflatLinear(self, *args)
-
-    def setInterpolationBilinear(self, *args):
-        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationBilinear(self, *args)
-
-    def setInterpolationPolynomial(self, *args):
-        return _QuantLib.ExtendedBlackVarianceSurface_setInterpolationPolynomial(self, *args)
-    __swig_destroy__ = _QuantLib.delete_ExtendedBlackVarianceSurface
-
-# Register ExtendedBlackVarianceSurface in _QuantLib:
-_QuantLib.ExtendedBlackVarianceSurface_swigregister(ExtendedBlackVarianceSurface)
 
 class AbcdAtmVolCurve(BlackAtmVolCurve, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

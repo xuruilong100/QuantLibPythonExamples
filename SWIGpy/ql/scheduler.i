@@ -117,7 +117,7 @@ class MakeSchedule {
 
     %extend{
         Schedule makeSchedule(){
-            return (Schedule)(* $self);
+            return (Schedule)(*self);
         }
     }
 };

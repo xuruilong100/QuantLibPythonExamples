@@ -137,7 +137,7 @@ class MakeMCDiscreteArithmeticAPEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -181,7 +181,7 @@ class MakeMCDiscreteArithmeticAPHestonEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -222,7 +222,7 @@ class MakeMCDiscreteArithmeticASEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -264,7 +264,7 @@ class MakeMCDiscreteGeometricAPEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };
@@ -307,7 +307,7 @@ class MakeMCDiscreteGeometricAPHestonEngine {
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
-            return (ext::shared_ptr<PricingEngine>)(* $self);
+            return (ext::shared_ptr<PricingEngine>)(*self);
         }
     }
 };

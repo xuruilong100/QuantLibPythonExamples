@@ -545,7 +545,7 @@ class MakeOIS {
 
     %extend{
         ext::shared_ptr<OvernightIndexedSwap> makeOIS(){
-            return (ext::shared_ptr<OvernightIndexedSwap>)(*$self);
+            return (ext::shared_ptr<OvernightIndexedSwap>)(*self);
         }
     }
 
@@ -649,7 +649,7 @@ class MakeVanillaSwap {
         const Period& forwardStart);
     %extend{
         ext::shared_ptr<VanillaSwap> makeVanillaSwap(){
-            return (ext::shared_ptr<VanillaSwap>)(* $self);
+            return (ext::shared_ptr<VanillaSwap>)(*self);
         }
     }
 
