@@ -12,7 +12,7 @@
 > Related blog (in Chinese): <https://www.cnblogs.com/xuruilong100/p/13281006.html>
 >
 > Environment:
-> * QuantLib: 1.23
+> * QuantLib: 1.24
 > * swig: 4.0.1
 > * clang: 10.0.0-4ubuntu1
 > * ubuntu: 20.04.2 LTS
@@ -76,13 +76,13 @@ python3 setup.py install
 * [x] asianoptions
 * [ ] assetswap
 * [ ] autocovariances
-* [ ] barrieroption
+* [x] barrieroption
 * [ ] basismodels
-* [ ] basketoption
+* [x] basketoption
 * [x] batesmodel
 * [ ] bermudanswaption
-* [ ] binaryoption
-* [ ] blackdeltacalculator
+* [x] binaryoption
+* [x] blackdeltacalculator
 * [x] blackformula
 * [ ] bonds
 * [ ] brownianbridge
@@ -95,13 +95,13 @@ python3 setup.py install
 * [ ] catbonds
 * [ ] cdo
 * [ ] cdsoption
-* [ ] chooseroption
-* [ ] cliquetoption
+* [x] chooseroption
+* [x] cliquetoption
 * [ ] cms
 * [ ] cmsspread
 * [ ] commodityunitofmeasure
 * [ ] compiledboostversion
-* [ ] compoundoption
+* [x] compoundoption
 * [ ] convertiblebonds
 * [ ] covariance
 * [ ] creditdefaultswap
@@ -114,13 +114,13 @@ python3 setup.py install
 * [ ] digitaloption
 * [ ] distributions
 * [ ] dividendoption
-* [ ] doublebarrieroption
-* [ ] doublebinaryoption
+* [x] doublebarrieroption
+* [x] doublebinaryoption
 * [x] europeanoption
-* [ ] everestoption
+* [x] everestoption
 * [ ] exchangerate
 * [x] extendedtrees
-* [ ] extensibleoptions
+* [x] extensibleoptions
 * [ ] fastfouriertransform
 * [x] fdcev
 * [ ] fdcir
@@ -137,8 +137,8 @@ python3 setup.py install
 * [ ] gsr
 * [x] hestonmodel
 * [x] hestonslvmodel
-* [ ] himalayaoption
-* [ ] hybridhestonhullwhiteprocess
+* [x] himalayaoption
+* [x] hybridhestonhullwhiteprocess
 * [ ] indexes
 * [ ] inflationcapflooredcoupon
 * [ ] inflationcapfloor
@@ -156,9 +156,9 @@ python3 setup.py install
 * [ ] libormarketmodel
 * [ ] libormarketmodelprocess
 * [ ] linearleastsquaresregression
-* [ ] lookbackoptions
+* [x] lookbackoptions
 * [ ] lowdiscrepancysequences
-* [ ] margrabeoption
+* [x] margrabeoption
 * [ ] marketmodel_cms
 * [ ] marketmodel
 * [ ] marketmodel_smmcapletalphacalibration
@@ -181,9 +181,9 @@ python3 setup.py install
 * [ ] optimizers
 * [ ] optionletstripper
 * [ ] overnightindexedswap
-* [ ] pagodaoption
+* [x] pagodaoption
 * [ ] paralleltestrunner
-* [ ] partialtimebarrieroption
+* [x] partialtimebarrieroption
 * [ ] pathgenerator
 * [ ] period
 * [ ] piecewiseyieldcurve
@@ -191,7 +191,7 @@ python3 setup.py install
 * [ ] quantooption
 * [ ] quotes
 * [ ] rangeaccrual
-* [ ] riskneutraldensitycalculator
+* [x] riskneutraldensitycalculator
 * [ ] riskstats
 * [ ] rngtraits
 * [ ] rounding
@@ -201,7 +201,7 @@ python3 setup.py install
 * [ ] sofrfutures
 * [ ] solvers
 * [ ] speedlevel
-* [ ] spreadoption
+* [x] spreadoption
 * [ ] squarerootclvmodel
 * [ ] stats
 * [ ] swapforwardmappings
@@ -217,8 +217,8 @@ python3 setup.py install
 * [ ] tqreigendecomposition
 * [ ] tracing
 * [ ] transformedgrid
-* [ ] twoassetbarrieroption
-* [ ] twoassetcorrelationoption
+* [x] twoassetbarrieroption
+* [x] twoassetcorrelationoption
 * [ ] ultimateforwardtermstructure
 * [ ] variancegamma
 * [ ] varianceoption
