@@ -96,10 +96,10 @@ class BlackFormulaTest(unittest.TestCase):
     def testRadoicicStefanicaLowerBound(self):
         TEST_MESSAGE("Testing Radoicic-Stefanica lower bound...")
 
-        # // testing lower bound plot figure 3.1 from
-        # // "Tighter Bounds for Implied Volatility",
-        # // J. Gatheral, I. Matic, R. Radoicic, D. Stefanica
-        # // https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2922742
+        # testing lower bound plot figure 3.1 from
+        # "Tighter Bounds for Implied Volatility",
+        # J. Gatheral, I. Matic, R. Radoicic, D. Stefanica
+        # https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2922742
 
         forward = 1.0
         k = 1.2
@@ -228,10 +228,10 @@ class BlackFormulaTest(unittest.TestCase):
                 optionType, strike, forward + bump, stdDev, discount, displacement)
             deltaApprox = (bumpedPremium - basePremium) / bump
 
-            # /*! Based on the Mean Value Theorem, the below inequality
-            #     should hold for any function that is monotonic in the
-            #     area of the bump.
-            #  */
+            # Based on the Mean Value Theorem, the below inequality
+            # should hold for any function that is monotonic in the
+            # area of the bump.
+
             success = (max(delta, bumpedDelta) + epsilon > deltaApprox) and \
                       (deltaApprox > min(delta, bumpedDelta) - epsilon)
 
@@ -261,10 +261,10 @@ class BlackFormulaTest(unittest.TestCase):
                 optionType, strike, forward + bump, stdDev, discount)
             deltaApprox = (bumpedPremium - basePremium) / bump
 
-            # /*! Based on the Mean Value Theorem, the below inequality
-            #     should hold for any function that is monotonic in the
-            #     area of the bump.
-            #  */
+            # Based on the Mean Value Theorem, the below inequality
+            # should hold for any function that is monotonic in the
+            # area of the bump.
+
             success = (max(delta, bumpedDelta) + epsilon > deltaApprox) and \
                       (deltaApprox > min(delta, bumpedDelta) - epsilon)
 

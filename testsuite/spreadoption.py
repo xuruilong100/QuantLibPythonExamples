@@ -31,7 +31,7 @@ class SpreadOptionTest(unittest.TestCase):
     def testKirkEngine(self):
         TEST_MESSAGE("Testing Kirk approximation for spread options...")
 
-        # /* The example data below are from "complete guide to option
+        # The example data below are from "complete guide to option
         # pricing formulas", Espen Gaarder Haug, p 60
 
         # Expected values of option theta were calculated using automatic
@@ -61,31 +61,31 @@ class SpreadOptionTest(unittest.TestCase):
         ]
 
         for i in cases:
-            # // First step: preparing the test values
-            # // Useful dates
+            # First step: preparing the test values
+            # Useful dates
             dc = Actual360()
             today = Date.todaysDate()
             exerciseDate = today + i.length
 
-            # // Futures values
+            # Futures values
             F1 = SimpleQuote(i.F1)
             F2 = SimpleQuote(i.F2)
 
-            # // Risk-free interest rate
+            # Risk-free interest rate
             riskFreeRate = i.r
             forwardRate = flatRate(today, riskFreeRate, dc)
 
-            # // Correlation
+            # Correlation
             rho = SimpleQuote(i.rho)
 
-            # // Volatilities
+            # Volatilities
             vol1 = i.sigma1
             vol2 = i.sigma2
             volTS1 = flatVol(today, vol1, dc)
             volTS2 = flatVol(today, vol2, dc)
 
-            # // Black-Scholes Processes
-            # // The BlackProcess is the relevant class for futures contracts
+            # Black-Scholes Processes
+            # The BlackProcess is the relevant class for futures contracts
             stochProcess1 = BlackProcess(
                 QuoteHandle(F1),
                 YieldTermStructureHandle(forwardRate),
@@ -96,11 +96,11 @@ class SpreadOptionTest(unittest.TestCase):
                 YieldTermStructureHandle(forwardRate),
                 BlackVolTermStructureHandle(volTS2))
 
-            # // Creating the pricing engine
+            # Creating the pricing engine
             engine = KirkSpreadOptionEngine(
                 stochProcess1, stochProcess2, QuoteHandle(rho))
 
-            # // Finally, create the option:
+            # Finally, create the option:
             typeOpt = Option.Call
             strike = i.X
             payoff = PlainVanillaPayoff(typeOpt, strike)
@@ -109,7 +109,7 @@ class SpreadOptionTest(unittest.TestCase):
             option = SpreadOption(payoff, exercise)
             option.setPricingEngine(engine)
 
-            # // And test the data
+            # And test the data
             value = option.NPV()
             theta = option.theta()
             tolerance = 1e-4

@@ -269,7 +269,8 @@ class ForwardOptionTest(unittest.TestCase):
             vol = SimpleQuote(sigma_bs)
             volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-            bsProcess = BlackScholesMertonProcess(QuoteHandle(spot), qTS, rTS, volTS)
+            bsProcess = BlackScholesMertonProcess(
+                QuoteHandle(spot), qTS, rTS, volTS)
 
             analyticEngine = ForwardEuropeanEngine(bsProcess)
 

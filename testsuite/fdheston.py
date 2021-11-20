@@ -160,9 +160,8 @@ class FdHestonTest(unittest.TestCase):
         backup = SavedSettings()
 
         values = [
-            # /* The data below are from
+            # The data below are from
             # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
-            # */
             #            barrierType, barrier, rebate,         type, strike,     s,    q,    r,    t,    v
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 90, 100.0, 0.04, 0.08, 0.50, 0.25),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 100, 100.0, 0.00, 0.08, 1.00, 0.30),

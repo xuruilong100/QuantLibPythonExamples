@@ -1125,6 +1125,17 @@ using QuantLib::MCDoubleBarrierEngine;
 using QuantLib::MakeMCDoubleBarrierEngine;
 using QuantLib::MCLookbackEngine;
 using QuantLib::MakeMCLookbackEngine;
+using QuantLib::AnalyticSimpleChooserEngine;
+using QuantLib::AnalyticComplexChooserEngine;
+using QuantLib::AnalyticCompoundOptionEngine;
+using QuantLib::AnalyticHolderExtensibleOptionEngine;
+using QuantLib::AnalyticWriterExtensibleOptionEngine;
+using QuantLib::AnalyticCliquetEngine;
+using QuantLib::AnalyticPerformanceEngine;
+using QuantLib::MCPerformanceEngine;
+using QuantLib::MakeMCPerformanceEngine;
+using QuantLib::AnalyticPartialTimeBarrierOptionEngine;
+using QuantLib::TwoAssetBarrierOption;
 %}
 
 %{
@@ -1152,23 +1163,6 @@ typedef IborCoupon::Settings IborCouponSettings;
 typedef double doubleOrNull;
 typedef int intOrNull;
 typedef std::vector<ext::shared_ptr<FdmBoundaryCondition>> FdmBoundaryConditionSet;
-%}
-
-//--------------------------
-
-%{
-using QuantLib::Path;
-using QuantLib::PathPricer;
-using QuantLib::SingleVariate;
-using QuantLib::MultiVariate;
-using QuantLib::MonteCarloModel;
-%}
-
-%{
-typedef MonteCarloModel<SingleVariate, PseudoRandom> SingleVariatePRMonteCarloModel;
-typedef MonteCarloModel<SingleVariate, LowDiscrepancy> SingleVariateLDMonteCarloModel;
-typedef MonteCarloModel<MultiVariate, PseudoRandom> MultiVariatePRMonteCarloModel;
-typedef MonteCarloModel<MultiVariate, LowDiscrepancy> MultiVariateLDMonteCarloModel;
 %}
 
 #endif

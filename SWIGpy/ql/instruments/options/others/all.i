@@ -12,6 +12,7 @@ using QuantLib::CdsOption;
 using QuantLib::FloatFloatSwaption;
 using QuantLib::NonstandardSwaption;
 using QuantLib::Swaption;
+using QuantLib::TwoAssetBarrierOption;
 %}
 
 %shared_ptr(CdsOption)
@@ -125,6 +126,14 @@ class NonstandardSwaption : public Option {
     }
 };
 
-
+%shared_ptr(TwoAssetBarrierOption)
+class TwoAssetBarrierOption : public Option {
+  public:
+    TwoAssetBarrierOption(
+        Barrier::Type barrierType,
+        Real barrier,
+        const ext::shared_ptr<StrikedTypePayoff>& payoff,
+        const ext::shared_ptr<Exercise>& exercise);
+};
 
 #endif

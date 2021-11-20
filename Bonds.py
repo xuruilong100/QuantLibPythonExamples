@@ -342,10 +342,10 @@ s15y = ql.SwapRateHelper(
 *********************
 '''
 
-# // Any DayCounter would be fine.
-# // ActualActual::ISDA ensures that 30 years is 30.0
+# Any DayCounter would be fine.
+# ActualActual::ISDA ensures that 30 years is 30.0
 #
-# // A depo-swap curve
+# A depo-swap curve
 
 depoSwapInstruments = ql.RateHelperVector()
 depoSwapInstruments.push_back(d1w)
@@ -365,8 +365,8 @@ depoSwapTermStructure = ql.PiecewiseLogLinearDiscount(
     depoSwapInstruments,
     termStructureDayCounter)
 
-# // Term structures that will be used for pricing:
-# // the one used for discounting cash flows
+# Term structures that will be used for pricing:
+# the one used for discounting cash flows
 discountingTermStructure = ql.RelinkableYieldTermStructureHandle()
 # the one used for forward rate forecasting
 forecastingTermStructure = ql.RelinkableYieldTermStructureHandle()
@@ -418,8 +418,8 @@ fixedRateBond = ql.FixedRateBond(
 
 fixedRateBond.setPricingEngine(bondEngine)
 
-# // Floating rate bond (3M USD Libor + 0.1%)
-# // Should and will be priced on another curve later...
+# Floating rate bond (3M USD Libor + 0.1%)
+# Should and will be priced on another curve later...
 
 liborTermStructure = ql.RelinkableYieldTermStructureHandle()
 libor3m = ql.USDLibor(ql.Period(3, ql.Months), liborTermStructure)
@@ -443,11 +443,11 @@ floatingRateBond = ql.FloatingRateBond(
     ql.Actual360(),
     ql.ModifiedFollowing,
     2,
-    ql.DoubleVector(1, 1.0),  # // Gearings
-    ql.DoubleVector(1, 0.001),  # // Spreads
-    ql.DoubleVector(),  # // Caps
-    ql.DoubleVector(),  # // Floors
-    True,  # // Fixing in arrears
+    ql.DoubleVector(1, 1.0),  # Gearings
+    ql.DoubleVector(1, 0.001),  # Spreads
+    ql.DoubleVector(),  # Caps
+    ql.DoubleVector(),  # Floors
+    True,  # Fixing in arrears
     100.0,
     ql.Date(21, ql.October, 2005))
 

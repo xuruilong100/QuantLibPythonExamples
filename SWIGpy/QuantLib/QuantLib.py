@@ -13068,6 +13068,28 @@ class MakeMCLDDoubleBarrierEngine(object):
 # Register MakeMCLDDoubleBarrierEngine in _QuantLib:
 _QuantLib.MakeMCLDDoubleBarrierEngine_swigregister(MakeMCLDDoubleBarrierEngine)
 
+class AnalyticPartialTimeBarrierOptionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticPartialTimeBarrierOptionEngine_swiginit(self, _QuantLib.new_AnalyticPartialTimeBarrierOptionEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticPartialTimeBarrierOptionEngine
+
+# Register AnalyticPartialTimeBarrierOptionEngine in _QuantLib:
+_QuantLib.AnalyticPartialTimeBarrierOptionEngine_swigregister(AnalyticPartialTimeBarrierOptionEngine)
+
+class AnalyticTwoAssetBarrierEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process1, process2, rho):
+        _QuantLib.AnalyticTwoAssetBarrierEngine_swiginit(self, _QuantLib.new_AnalyticTwoAssetBarrierEngine(process1, process2, rho))
+    __swig_destroy__ = _QuantLib.delete_AnalyticTwoAssetBarrierEngine
+
+# Register AnalyticTwoAssetBarrierEngine in _QuantLib:
+_QuantLib.AnalyticTwoAssetBarrierEngine_swigregister(AnalyticTwoAssetBarrierEngine)
+
 class MCPREuropeanBasketEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -13883,6 +13905,114 @@ class BlackCdsOptionEngine(PricingEngine):
 # Register BlackCdsOptionEngine in _QuantLib:
 _QuantLib.BlackCdsOptionEngine_swigregister(BlackCdsOptionEngine)
 
+class AnalyticCliquetEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticCliquetEngine_swiginit(self, _QuantLib.new_AnalyticCliquetEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticCliquetEngine
+
+# Register AnalyticCliquetEngine in _QuantLib:
+_QuantLib.AnalyticCliquetEngine_swigregister(AnalyticCliquetEngine)
+
+class AnalyticPerformanceEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticPerformanceEngine_swiginit(self, _QuantLib.new_AnalyticPerformanceEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticPerformanceEngine
+
+# Register AnalyticPerformanceEngine in _QuantLib:
+_QuantLib.AnalyticPerformanceEngine_swigregister(AnalyticPerformanceEngine)
+
+class MCPRPerformanceEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRPerformanceEngine_swiginit(self, _QuantLib.new_MCPRPerformanceEngine(process, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRPerformanceEngine
+
+# Register MCPRPerformanceEngine in _QuantLib:
+_QuantLib.MCPRPerformanceEngine_swigregister(MCPRPerformanceEngine)
+
+class MCLDPerformanceEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDPerformanceEngine_swiginit(self, _QuantLib.new_MCLDPerformanceEngine(process, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDPerformanceEngine
+
+# Register MCLDPerformanceEngine in _QuantLib:
+_QuantLib.MCLDPerformanceEngine_swigregister(MCLDPerformanceEngine)
+
+class MakeMCPRPerformanceEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRPerformanceEngine_swiginit(self, _QuantLib.new_MakeMCPRPerformanceEngine(arg2))
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRPerformanceEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRPerformanceEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRPerformanceEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRPerformanceEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRPerformanceEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRPerformanceEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRPerformanceEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRPerformanceEngine
+
+# Register MakeMCPRPerformanceEngine in _QuantLib:
+_QuantLib.MakeMCPRPerformanceEngine_swigregister(MakeMCPRPerformanceEngine)
+
+class MakeMCLDPerformanceEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDPerformanceEngine_swiginit(self, _QuantLib.new_MakeMCLDPerformanceEngine(arg2))
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDPerformanceEngine_withBrownianBridge(self, b)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDPerformanceEngine_withAntitheticVariate(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDPerformanceEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDPerformanceEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDPerformanceEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDPerformanceEngine_withSeed(self, seed)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDPerformanceEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDPerformanceEngine
+
+# Register MakeMCLDPerformanceEngine in _QuantLib:
+_QuantLib.MakeMCLDPerformanceEngine_swigregister(MakeMCLDPerformanceEngine)
+
 class AnalyticDividendEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -14600,6 +14730,61 @@ class MakeMCLDPartialFloatingLookbackEngine(object):
 
 # Register MakeMCLDPartialFloatingLookbackEngine in _QuantLib:
 _QuantLib.MakeMCLDPartialFloatingLookbackEngine_swigregister(MakeMCLDPartialFloatingLookbackEngine)
+
+class AnalyticSimpleChooserEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticSimpleChooserEngine_swiginit(self, _QuantLib.new_AnalyticSimpleChooserEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticSimpleChooserEngine
+
+# Register AnalyticSimpleChooserEngine in _QuantLib:
+_QuantLib.AnalyticSimpleChooserEngine_swigregister(AnalyticSimpleChooserEngine)
+
+class AnalyticComplexChooserEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticComplexChooserEngine_swiginit(self, _QuantLib.new_AnalyticComplexChooserEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticComplexChooserEngine
+
+# Register AnalyticComplexChooserEngine in _QuantLib:
+_QuantLib.AnalyticComplexChooserEngine_swigregister(AnalyticComplexChooserEngine)
+
+class AnalyticCompoundOptionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticCompoundOptionEngine_swiginit(self, _QuantLib.new_AnalyticCompoundOptionEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticCompoundOptionEngine
+
+# Register AnalyticCompoundOptionEngine in _QuantLib:
+_QuantLib.AnalyticCompoundOptionEngine_swigregister(AnalyticCompoundOptionEngine)
+
+class AnalyticHolderExtensibleOptionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticHolderExtensibleOptionEngine_swiginit(self, _QuantLib.new_AnalyticHolderExtensibleOptionEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticHolderExtensibleOptionEngine
+
+# Register AnalyticHolderExtensibleOptionEngine in _QuantLib:
+_QuantLib.AnalyticHolderExtensibleOptionEngine_swigregister(AnalyticHolderExtensibleOptionEngine)
+
+class AnalyticWriterExtensibleOptionEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.AnalyticWriterExtensibleOptionEngine_swiginit(self, _QuantLib.new_AnalyticWriterExtensibleOptionEngine(process))
+    __swig_destroy__ = _QuantLib.delete_AnalyticWriterExtensibleOptionEngine
+
+# Register AnalyticWriterExtensibleOptionEngine in _QuantLib:
+_QuantLib.AnalyticWriterExtensibleOptionEngine_swigregister(AnalyticWriterExtensibleOptionEngine)
 
 class QuantoEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -16383,349 +16568,6 @@ class SwingExercise(BermudanExercise):
 
 # Register SwingExercise in _QuantLib:
 _QuantLib.SwingExercise_swigregister(SwingExercise)
-
-
-def getCovariance(volatilities, correlations):
-    return _QuantLib.getCovariance(volatilities, correlations)
-class Path(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.Path_swiginit(self, _QuantLib.new_Path(*args))
-
-    def empty(self):
-        return _QuantLib.Path_empty(self)
-
-    def __len__(self):
-        return _QuantLib.Path___len__(self)
-
-    def at(self, i):
-        return _QuantLib.Path_at(self, i)
-
-    def value(self, i):
-        return _QuantLib.Path_value(self, i)
-
-    def time(self, i):
-        return _QuantLib.Path_time(self, i)
-
-    def front(self):
-        return _QuantLib.Path_front(self)
-
-    def back(self):
-        return _QuantLib.Path_back(self)
-
-    def timeGrid(self):
-        return _QuantLib.Path_timeGrid(self)
-
-    def __getitem__(self, i):
-        return _QuantLib.Path___getitem__(self, i)
-    __swig_destroy__ = _QuantLib.delete_Path
-
-# Register Path in _QuantLib:
-_QuantLib.Path_swigregister(Path)
-
-class SamplePath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def value(self):
-        return _QuantLib.SamplePath_value(self)
-
-    def weight(self):
-        return _QuantLib.SamplePath_weight(self)
-    __swig_destroy__ = _QuantLib.delete_SamplePath
-
-# Register SamplePath in _QuantLib:
-_QuantLib.SamplePath_swigregister(SamplePath)
-
-class GaussianPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.GaussianPathGenerator_swiginit(self, _QuantLib.new_GaussianPathGenerator(*args))
-
-    def next(self):
-        return _QuantLib.GaussianPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianPathGenerator_antithetic(self)
-
-    def size(self):
-        return _QuantLib.GaussianPathGenerator_size(self)
-
-    def timeGrid(self):
-        return _QuantLib.GaussianPathGenerator_timeGrid(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianPathGenerator
-
-# Register GaussianPathGenerator in _QuantLib:
-_QuantLib.GaussianPathGenerator_swigregister(GaussianPathGenerator)
-
-class GaussianSobolPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.GaussianSobolPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolPathGenerator(*args))
-
-    def next(self):
-        return _QuantLib.GaussianSobolPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianSobolPathGenerator_antithetic(self)
-
-    def size(self):
-        return _QuantLib.GaussianSobolPathGenerator_size(self)
-
-    def timeGrid(self):
-        return _QuantLib.GaussianSobolPathGenerator_timeGrid(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianSobolPathGenerator
-
-# Register GaussianSobolPathGenerator in _QuantLib:
-_QuantLib.GaussianSobolPathGenerator_swigregister(GaussianSobolPathGenerator)
-
-class MultiPath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.MultiPath_swiginit(self, _QuantLib.new_MultiPath(*args))
-
-    def __len__(self):
-        return _QuantLib.MultiPath___len__(self)
-
-    def assetNumber(self):
-        return _QuantLib.MultiPath_assetNumber(self)
-
-    def at(self, j):
-        return _QuantLib.MultiPath_at(self, j)
-
-    def __getitem__(self, i):
-        return _QuantLib.MultiPath___getitem__(self, i)
-    __swig_destroy__ = _QuantLib.delete_MultiPath
-
-# Register MultiPath in _QuantLib:
-_QuantLib.MultiPath_swigregister(MultiPath)
-
-class SampleMultiPath(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def value(self):
-        return _QuantLib.SampleMultiPath_value(self)
-
-    def weight(self):
-        return _QuantLib.SampleMultiPath_weight(self)
-    __swig_destroy__ = _QuantLib.delete_SampleMultiPath
-
-# Register SampleMultiPath in _QuantLib:
-_QuantLib.SampleMultiPath_swigregister(SampleMultiPath)
-
-class GaussianMultiPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
-        _QuantLib.GaussianMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
-
-    def next(self):
-        return _QuantLib.GaussianMultiPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianMultiPathGenerator_antithetic(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianMultiPathGenerator
-
-# Register GaussianMultiPathGenerator in _QuantLib:
-_QuantLib.GaussianMultiPathGenerator_swigregister(GaussianMultiPathGenerator)
-
-class GaussianSobolMultiPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
-        _QuantLib.GaussianSobolMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
-
-    def next(self):
-        return _QuantLib.GaussianSobolMultiPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.GaussianSobolMultiPathGenerator_antithetic(self)
-    __swig_destroy__ = _QuantLib.delete_GaussianSobolMultiPathGenerator
-
-# Register GaussianSobolMultiPathGenerator in _QuantLib:
-_QuantLib.GaussianSobolMultiPathGenerator_swigregister(GaussianSobolMultiPathGenerator)
-
-class BrownianBridgeSobolMultiPathGenerator(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
-        _QuantLib.BrownianBridgeSobolMultiPathGenerator_swiginit(self, _QuantLib.new_BrownianBridgeSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
-
-    def next(self):
-        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_next(self)
-
-    def antithetic(self):
-        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_antithetic(self)
-    __swig_destroy__ = _QuantLib.delete_BrownianBridgeSobolMultiPathGenerator
-
-# Register BrownianBridgeSobolMultiPathGenerator in _QuantLib:
-_QuantLib.BrownianBridgeSobolMultiPathGenerator_swigregister(BrownianBridgeSobolMultiPathGenerator)
-
-class BrownianBridge(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.BrownianBridge_swiginit(self, _QuantLib.new_BrownianBridge(*args))
-
-    def size(self):
-        return _QuantLib.BrownianBridge_size(self)
-
-    def times(self):
-        return _QuantLib.BrownianBridge_times(self)
-
-    def bridgeIndex(self):
-        return _QuantLib.BrownianBridge_bridgeIndex(self)
-
-    def leftIndex(self):
-        return _QuantLib.BrownianBridge_leftIndex(self)
-
-    def rightIndex(self):
-        return _QuantLib.BrownianBridge_rightIndex(self)
-
-    def leftWeight(self):
-        return _QuantLib.BrownianBridge_leftWeight(self)
-
-    def rightWeight(self):
-        return _QuantLib.BrownianBridge_rightWeight(self)
-
-    def stdDeviation(self):
-        return _QuantLib.BrownianBridge_stdDeviation(self)
-
-    def transform(self, input):
-        return _QuantLib.BrownianBridge_transform(self, input)
-    __swig_destroy__ = _QuantLib.delete_BrownianBridge
-
-# Register BrownianBridge in _QuantLib:
-_QuantLib.BrownianBridge_swigregister(BrownianBridge)
-
-class SinglePathPricer(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def __call__(self, path):
-        return _QuantLib.SinglePathPricer___call__(self, path)
-    __swig_destroy__ = _QuantLib.delete_SinglePathPricer
-
-# Register SinglePathPricer in _QuantLib:
-_QuantLib.SinglePathPricer_swigregister(SinglePathPricer)
-
-class MultiPathPricer(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def __call__(self, path):
-        return _QuantLib.MultiPathPricer___call__(self, path)
-    __swig_destroy__ = _QuantLib.delete_MultiPathPricer
-
-# Register MultiPathPricer in _QuantLib:
-_QuantLib.MultiPathPricer_swigregister(MultiPathPricer)
-
-class CustomPathPricer(SinglePathPricer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, function):
-        _QuantLib.CustomPathPricer_swiginit(self, _QuantLib.new_CustomPathPricer(function))
-
-    def __call__(self, path):
-        return _QuantLib.CustomPathPricer___call__(self, path)
-    __swig_destroy__ = _QuantLib.delete_CustomPathPricer
-
-# Register CustomPathPricer in _QuantLib:
-_QuantLib.CustomPathPricer_swigregister(CustomPathPricer)
-
-class SingleVariatePRMonteCarloModel(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.SingleVariatePRMonteCarloModel_swiginit(self, _QuantLib.new_SingleVariatePRMonteCarloModel(*args))
-
-    def addSamples(self, samples):
-        return _QuantLib.SingleVariatePRMonteCarloModel_addSamples(self, samples)
-
-    def sampleAccumulator(self):
-        return _QuantLib.SingleVariatePRMonteCarloModel_sampleAccumulator(self)
-    __swig_destroy__ = _QuantLib.delete_SingleVariatePRMonteCarloModel
-
-# Register SingleVariatePRMonteCarloModel in _QuantLib:
-_QuantLib.SingleVariatePRMonteCarloModel_swigregister(SingleVariatePRMonteCarloModel)
-
-class SingleVariateLDMonteCarloModel(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.SingleVariateLDMonteCarloModel_swiginit(self, _QuantLib.new_SingleVariateLDMonteCarloModel(*args))
-
-    def addSamples(self, samples):
-        return _QuantLib.SingleVariateLDMonteCarloModel_addSamples(self, samples)
-
-    def sampleAccumulator(self):
-        return _QuantLib.SingleVariateLDMonteCarloModel_sampleAccumulator(self)
-    __swig_destroy__ = _QuantLib.delete_SingleVariateLDMonteCarloModel
-
-# Register SingleVariateLDMonteCarloModel in _QuantLib:
-_QuantLib.SingleVariateLDMonteCarloModel_swigregister(SingleVariateLDMonteCarloModel)
-
-class MultiVariatePRMonteCarloModel(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.MultiVariatePRMonteCarloModel_swiginit(self, _QuantLib.new_MultiVariatePRMonteCarloModel(*args))
-
-    def addSamples(self, samples):
-        return _QuantLib.MultiVariatePRMonteCarloModel_addSamples(self, samples)
-
-    def sampleAccumulator(self):
-        return _QuantLib.MultiVariatePRMonteCarloModel_sampleAccumulator(self)
-    __swig_destroy__ = _QuantLib.delete_MultiVariatePRMonteCarloModel
-
-# Register MultiVariatePRMonteCarloModel in _QuantLib:
-_QuantLib.MultiVariatePRMonteCarloModel_swigregister(MultiVariatePRMonteCarloModel)
-
-class MultiVariateLDMonteCarloModel(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.MultiVariateLDMonteCarloModel_swiginit(self, _QuantLib.new_MultiVariateLDMonteCarloModel(*args))
-
-    def addSamples(self, samples):
-        return _QuantLib.MultiVariateLDMonteCarloModel_addSamples(self, samples)
-
-    def sampleAccumulator(self):
-        return _QuantLib.MultiVariateLDMonteCarloModel_sampleAccumulator(self)
-    __swig_destroy__ = _QuantLib.delete_MultiVariateLDMonteCarloModel
-
-# Register MultiVariateLDMonteCarloModel in _QuantLib:
-_QuantLib.MultiVariateLDMonteCarloModel_swigregister(MultiVariateLDMonteCarloModel)
 
 class Fdm1dMesher(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -22640,6 +22482,17 @@ class NonstandardSwaption(Option):
 # Register NonstandardSwaption in _QuantLib:
 _QuantLib.NonstandardSwaption_swigregister(NonstandardSwaption)
 
+class TwoAssetBarrierOption(Option):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, barrierType, barrier, payoff, exercise):
+        _QuantLib.TwoAssetBarrierOption_swiginit(self, _QuantLib.new_TwoAssetBarrierOption(barrierType, barrier, payoff, exercise))
+    __swig_destroy__ = _QuantLib.delete_TwoAssetBarrierOption
+
+# Register TwoAssetBarrierOption in _QuantLib:
+_QuantLib.TwoAssetBarrierOption_swigregister(TwoAssetBarrierOption)
+
 class Claim(Observer, Observable):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -25964,6 +25817,239 @@ class MoneySettings(object):
 
 # Register MoneySettings in _QuantLib:
 _QuantLib.MoneySettings_swigregister(MoneySettings)
+
+
+def getCovariance(volatilities, correlations):
+    return _QuantLib.getCovariance(volatilities, correlations)
+class Path(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.Path_swiginit(self, _QuantLib.new_Path(*args))
+
+    def empty(self):
+        return _QuantLib.Path_empty(self)
+
+    def __len__(self):
+        return _QuantLib.Path___len__(self)
+
+    def at(self, i):
+        return _QuantLib.Path_at(self, i)
+
+    def value(self, i):
+        return _QuantLib.Path_value(self, i)
+
+    def time(self, i):
+        return _QuantLib.Path_time(self, i)
+
+    def front(self):
+        return _QuantLib.Path_front(self)
+
+    def back(self):
+        return _QuantLib.Path_back(self)
+
+    def timeGrid(self):
+        return _QuantLib.Path_timeGrid(self)
+
+    def __getitem__(self, i):
+        return _QuantLib.Path___getitem__(self, i)
+    __swig_destroy__ = _QuantLib.delete_Path
+
+# Register Path in _QuantLib:
+_QuantLib.Path_swigregister(Path)
+
+class SamplePath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def value(self):
+        return _QuantLib.SamplePath_value(self)
+
+    def weight(self):
+        return _QuantLib.SamplePath_weight(self)
+    __swig_destroy__ = _QuantLib.delete_SamplePath
+
+# Register SamplePath in _QuantLib:
+_QuantLib.SamplePath_swigregister(SamplePath)
+
+class GaussianPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GaussianPathGenerator_swiginit(self, _QuantLib.new_GaussianPathGenerator(*args))
+
+    def next(self):
+        return _QuantLib.GaussianPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianPathGenerator_antithetic(self)
+
+    def size(self):
+        return _QuantLib.GaussianPathGenerator_size(self)
+
+    def timeGrid(self):
+        return _QuantLib.GaussianPathGenerator_timeGrid(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianPathGenerator
+
+# Register GaussianPathGenerator in _QuantLib:
+_QuantLib.GaussianPathGenerator_swigregister(GaussianPathGenerator)
+
+class GaussianSobolPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GaussianSobolPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolPathGenerator(*args))
+
+    def next(self):
+        return _QuantLib.GaussianSobolPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianSobolPathGenerator_antithetic(self)
+
+    def size(self):
+        return _QuantLib.GaussianSobolPathGenerator_size(self)
+
+    def timeGrid(self):
+        return _QuantLib.GaussianSobolPathGenerator_timeGrid(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianSobolPathGenerator
+
+# Register GaussianSobolPathGenerator in _QuantLib:
+_QuantLib.GaussianSobolPathGenerator_swigregister(GaussianSobolPathGenerator)
+
+class MultiPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MultiPath_swiginit(self, _QuantLib.new_MultiPath(*args))
+
+    def __len__(self):
+        return _QuantLib.MultiPath___len__(self)
+
+    def assetNumber(self):
+        return _QuantLib.MultiPath_assetNumber(self)
+
+    def at(self, j):
+        return _QuantLib.MultiPath_at(self, j)
+
+    def __getitem__(self, i):
+        return _QuantLib.MultiPath___getitem__(self, i)
+    __swig_destroy__ = _QuantLib.delete_MultiPath
+
+# Register MultiPath in _QuantLib:
+_QuantLib.MultiPath_swigregister(MultiPath)
+
+class SampleMultiPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def value(self):
+        return _QuantLib.SampleMultiPath_value(self)
+
+    def weight(self):
+        return _QuantLib.SampleMultiPath_weight(self)
+    __swig_destroy__ = _QuantLib.delete_SampleMultiPath
+
+# Register SampleMultiPath in _QuantLib:
+_QuantLib.SampleMultiPath_swigregister(SampleMultiPath)
+
+class GaussianMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.GaussianMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.GaussianMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianMultiPathGenerator
+
+# Register GaussianMultiPathGenerator in _QuantLib:
+_QuantLib.GaussianMultiPathGenerator_swigregister(GaussianMultiPathGenerator)
+
+class GaussianSobolMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.GaussianSobolMultiPathGenerator_swiginit(self, _QuantLib.new_GaussianSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.GaussianSobolMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.GaussianSobolMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_GaussianSobolMultiPathGenerator
+
+# Register GaussianSobolMultiPathGenerator in _QuantLib:
+_QuantLib.GaussianSobolMultiPathGenerator_swigregister(GaussianSobolMultiPathGenerator)
+
+class BrownianBridgeSobolMultiPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeGrid, generator, brownianBridge=False):
+        _QuantLib.BrownianBridgeSobolMultiPathGenerator_swiginit(self, _QuantLib.new_BrownianBridgeSobolMultiPathGenerator(arg2, timeGrid, generator, brownianBridge))
+
+    def next(self):
+        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.BrownianBridgeSobolMultiPathGenerator_antithetic(self)
+    __swig_destroy__ = _QuantLib.delete_BrownianBridgeSobolMultiPathGenerator
+
+# Register BrownianBridgeSobolMultiPathGenerator in _QuantLib:
+_QuantLib.BrownianBridgeSobolMultiPathGenerator_swigregister(BrownianBridgeSobolMultiPathGenerator)
+
+class BrownianBridge(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BrownianBridge_swiginit(self, _QuantLib.new_BrownianBridge(*args))
+
+    def size(self):
+        return _QuantLib.BrownianBridge_size(self)
+
+    def times(self):
+        return _QuantLib.BrownianBridge_times(self)
+
+    def bridgeIndex(self):
+        return _QuantLib.BrownianBridge_bridgeIndex(self)
+
+    def leftIndex(self):
+        return _QuantLib.BrownianBridge_leftIndex(self)
+
+    def rightIndex(self):
+        return _QuantLib.BrownianBridge_rightIndex(self)
+
+    def leftWeight(self):
+        return _QuantLib.BrownianBridge_leftWeight(self)
+
+    def rightWeight(self):
+        return _QuantLib.BrownianBridge_rightWeight(self)
+
+    def stdDeviation(self):
+        return _QuantLib.BrownianBridge_stdDeviation(self)
+
+    def transform(self, input):
+        return _QuantLib.BrownianBridge_transform(self, input)
+    __swig_destroy__ = _QuantLib.delete_BrownianBridge
+
+# Register BrownianBridge in _QuantLib:
+_QuantLib.BrownianBridge_swigregister(BrownianBridge)
 
 class RungeKutta(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

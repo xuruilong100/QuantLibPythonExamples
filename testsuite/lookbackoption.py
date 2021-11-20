@@ -38,12 +38,12 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous floating-strike lookback options...")
 
         values = [
-            # // data from "Option Pricing Formulas", Haug, 1998, pg.61-62
-            # // type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
+            # data from "Option Pricing Formulas", Haug, 1998, pg.61-62
+            # type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 0, 100, 120.0, 0.06, 0.10, 0.50, 0.30, 0, 0, 25.3533, 1.0e-4),
-            # // data from "Connecting discrete and continuous path-dependent options",
-            # // Broadie, Glasserman & Kou, 1999, pg.70-74
-            # // type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
+            # data from "Connecting discrete and continuous path-dependent options",
+            # Broadie, Glasserman & Kou, 1999, pg.70-74
+            # type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 0, 100, 100.0, 0.00, 0.05, 1.00, 0.30, 0, 0, 23.7884, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 100, 100.0, 0.00, 0.05, 0.20, 0.30, 0, 0, 10.7190, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 100, 110.0, 0.00, 0.05, 0.20, 0.30, 0, 0, 14.4597, 1.0e-4),
@@ -95,8 +95,8 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous fixed-strike lookback options...")
 
         values = [
-            # // data from "Option Pricing Formulas", Haug, 1998, pg.63-64
-            # //type,            strike, minmax,  s,     q,    r,    t,    v,    l, t1, result,  tol
+            # data from "Option Pricing Formulas", Haug, 1998, pg.63-64
+            #type,            strike, minmax,  s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.10, 0, 0, 13.2687, 1.0e-4),
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.20, 0, 0, 18.9263, 1.0e-4),
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 24.9857, 1.0e-4),
@@ -178,8 +178,8 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous partial floating-strike lookback options...")
 
         values = [
-            # // data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.146
-            # //type,         strike, minmax, s,    q,    r,    t,    v,    l,  t1,     result,   tol
+            # data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.146
+            #type,         strike, minmax, s,    q,    r,    t,    v,    l,  t1,     result,   tol
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.25, 8.6524, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.5, 9.2128, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.75, 9.5567, 1.0e-4),
@@ -263,8 +263,8 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous fixed-strike lookback options...")
 
         values = [
-            # // data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.148
-            # //type,         strike, minmax, s,    q,    r,    t,    v, l,   t1,  result,   tol
+            # data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.148
+            #type,         strike, minmax, s,    q,    r,    t,    v, l,   t1,  result,   tol
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.25, 20.2845, 1.0e-4),
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.5, 19.6239, 1.0e-4),
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.75, 18.6244, 1.0e-4),
@@ -384,9 +384,7 @@ class LookbackOptionTest(unittest.TestCase):
         for ty in types:
             payoff = PlainVanillaPayoff(ty, strike)
 
-            # /**
-            # * Partial Fixed
-            # * **/
+            # Partial Fixed
 
             lookbackStart = today + timeToDays(t1)
             partialFixedLookback = ContinuousPartialFixedLookbackOption(
@@ -412,9 +410,7 @@ class LookbackOptionTest(unittest.TestCase):
 
             self.assertFalse(diff > tolerance)
 
-            # /**
-            # * Fixed
-            # * **/
+            # Fixed
 
             minMax = 100
 
@@ -441,9 +437,7 @@ class LookbackOptionTest(unittest.TestCase):
 
             self.assertFalse(diff > tolerance)
 
-            # /**
-            # * Partial Floating
-            # * **/
+            # Partial Floating
 
             lmd = 1
             lookbackEnd = today + timeToDays(t1)
@@ -475,9 +469,7 @@ class LookbackOptionTest(unittest.TestCase):
 
             self.assertFalse(diff > tolerance)
 
-            # /**
-            # * Floating
-            # * **/
+            # Floating
 
             floating = ContinuousFloatingLookbackOption(
                 minMax,

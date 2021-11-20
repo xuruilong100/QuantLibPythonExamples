@@ -47,7 +47,7 @@ def printModelCalibration(basket,
     tab.float_format = '.6'
     print(tab)
 
-    if len(volatility) > len(basket):  # // only for markov model
+    if len(volatility) > len(basket):  # only for markov model
         print(volatility.back())
 
 
@@ -250,7 +250,7 @@ for i in range(len(fixedSchedule) - 1):
     nominalFixed.push_back(tmpNom)
     nominalFloating.push_back(tmpNom)
     nominalFloating.push_back(
-        tmpNom)  # // we use that the swap is 6m vs. 1y here
+        tmpNom)  # we use that the swap is 6m vs. 1y here
 
 strikes = ql.DoubleVector(len(nominalFixed), strike)
 
@@ -284,7 +284,7 @@ print("\nYou can also price exotic bond's features. If you have e.g. a"
       "\npaying the notional in case of exercise.")
 
 nominalFixed2 = ql.DoubleVector(len(nominalFixed), 1.0)
-nominalFloating2 = ql.DoubleVector(len(nominalFloating), 0.0)  # // null the second leg
+nominalFloating2 = ql.DoubleVector(len(nominalFloating), 0.0)  # null the second leg
 
 underlying3 = ql.NonstandardSwap(
     ql.VanillaSwap.Receiver,
@@ -292,7 +292,7 @@ underlying3 = ql.NonstandardSwap(
     fixedSchedule, strikes,
     ql.Thirty360(ql.Thirty360.BondBasis), floatingSchedule,
     euribor6m, 1.0, 0.0, ql.Actual360(),
-    False, True)  # // final capital exchange
+    False, True)  # final capital exchange
 
 exercise2 = ql.RebatedExercise(exercise, -1.0, 2, ql.TARGET())
 
@@ -305,7 +305,7 @@ oas = ql.RelinkableQuoteHandle(oas0)
 
 nonstandardSwaptionEngine2 = ql.Gaussian1dNonstandardSwaptionEngine(
     gsr, 64, 7.0, True, False, oas)
-# // change discounting to 6m
+# change discounting to 6m
 
 swaption3.setPricingEngine(nonstandardSwaptionEngine2)
 

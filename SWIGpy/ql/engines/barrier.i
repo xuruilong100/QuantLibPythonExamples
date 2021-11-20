@@ -26,6 +26,8 @@ using QuantLib::MakeMCBarrierEngine;
 using QuantLib::PerturbativeBarrierOptionEngine;
 using QuantLib::MCDoubleBarrierEngine;
 using QuantLib::MakeMCDoubleBarrierEngine;
+using QuantLib::AnalyticPartialTimeBarrierOptionEngine;
+using QuantLib::AnalyticTwoAssetBarrierEngine;
 %}
 
 %{
@@ -382,5 +384,21 @@ class MakeMCDoubleBarrierEngine {
 
 %template(MakeMCPRDoubleBarrierEngine) MakeMCDoubleBarrierEngine<PseudoRandom>;
 %template(MakeMCLDDoubleBarrierEngine) MakeMCDoubleBarrierEngine<LowDiscrepancy>;
+
+%shared_ptr(AnalyticPartialTimeBarrierOptionEngine)
+class AnalyticPartialTimeBarrierOptionEngine : public PricingEngine {
+  public:
+    explicit AnalyticPartialTimeBarrierOptionEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process);
+};
+
+%shared_ptr(AnalyticTwoAssetBarrierEngine)
+class AnalyticTwoAssetBarrierEngine : public PricingEngine {
+  public:
+    AnalyticTwoAssetBarrierEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process1,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process2,
+        Handle<Quote> rho);
+};
 
 #endif

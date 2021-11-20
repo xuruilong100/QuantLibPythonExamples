@@ -138,11 +138,10 @@ class GJRGARCHModelTest(unittest.TestCase):
                     self.assertFalse(abs(calculated - mcValues[k][i][j]) > 2.0 * tolerance)
 
     def testDAXCalibration(self):
-        # /* this example is taken from A. Sepp
+        # this example is taken from A. Sepp
         # Pricing European-Style Options under Jump Diffusion Processes
         # with Stochstic Volatility: Applications of Fourier Transform
         # http:#math.ut.ee/~spartak/papers/stochjumpvols.pdf
-        # */
 
         TEST_MESSAGE(
             "Testing GJR-GARCH model calibration using DAX volatility data...")

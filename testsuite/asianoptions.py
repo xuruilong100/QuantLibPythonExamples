@@ -1145,7 +1145,7 @@ class AsianOptionTest(unittest.TestCase):
 
         self.assertFalse(close(price1, price2))
 
-        # // analytic geometric average-price
+        # analytic geometric average-price
 
         runningProduct = 1.0
         pastFixings = 0
@@ -1173,7 +1173,7 @@ class AsianOptionTest(unittest.TestCase):
         price4 = option4.NPV()
 
         self.assertFalse(close(price3, price4))
-        # // MC geometric average-price
+        # MC geometric average-price
 
         engine = MakeMCLDDiscreteGeometricAPEngine(stochProcess)
         engine.withSamples(2047)

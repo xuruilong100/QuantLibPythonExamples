@@ -34,10 +34,9 @@ class DoubleBinaryOptionTest(unittest.TestCase):
         TEST_MESSAGE("Testing cash-or-nothing double barrier options against Haug's values...")
 
         values = [
-            # /* The data below are from
+            # The data below are from
             # "Option pricing formulas 2nd Ed.", E.G. Haug, McGraw-Hill 2007 pag. 181
             # Note: book uses cost of carry b, instead of dividend rate q
-            # */
             #    barrierType,          bar_lo, bar_hi,  cash,   spot,    q,    r,    t,  vol,   value, tol
             DoubleBinaryOptionData(DoubleBarrier.KnockOut, 80.00, 120.00, 10.00, 100.00, 0.02, 0.05, 0.25, 0.10, 9.8716, 1e-4),
             DoubleBinaryOptionData(DoubleBarrier.KnockOut, 80.00, 120.00, 10.00, 100.00, 0.02, 0.05, 0.25, 0.20, 8.9307, 1e-4),

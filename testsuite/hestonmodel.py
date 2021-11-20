@@ -268,7 +268,7 @@ class HestonModelTest(unittest.TestCase):
                 diff = options[i].calibrationError() * 100.0
                 sse += diff * diff
 
-            expected = 177.2  # //see article by A. Sepp.
+            expected = 177.2  #see article by A. Sepp.
 
             self.assertFalse(abs(sse - expected) > 1.0)
 

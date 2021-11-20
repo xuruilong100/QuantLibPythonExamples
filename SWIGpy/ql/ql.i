@@ -75,9 +75,11 @@
 %include ../ql/engines/bond.i
 %include ../ql/engines/capfloor.i
 %include ../ql/engines/cds.i
+%include ../ql/engines/cliquet.i
 %include ../ql/engines/dividend.i
 %include ../ql/engines/forwardoptionargument.i
 %include ../ql/engines/lookback.i
+%include ../ql/engines/others.i
 %include ../ql/engines/quanto.i
 %include ../ql/engines/spread.i
 %include ../ql/engines/swap.i
@@ -87,7 +89,6 @@
 %include ../ql/engines/yoyinflationcapfloor.i
 %include ../ql/exchangerates.i
 %include ../ql/exercise.i
-%include ../ql/exp/mcm.i
 %include ../ql/fdms/Fdm1dMesher.i
 %include ../ql/fdms/FdmBoundaryCondition.i
 %include ../ql/fdms/FdmInnerValueCalculator.i

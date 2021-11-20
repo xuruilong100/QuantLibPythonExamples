@@ -142,9 +142,8 @@ class BarrierOptionTest(unittest.TestCase):
         european = Exercise.European
         american = Exercise.American
         values = [
-            # /* The data below are from
+            # The data below are from
             # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
-            # */
             #     barrierType, barrier, rebate,         type, exercise, strk,     s,    q,    r,    t,    v,  result, tol
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, european, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 9.0246, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, european, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 6.7924, 1.0e-4),
