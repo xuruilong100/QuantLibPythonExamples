@@ -34819,5 +34819,325 @@ class GarmanKlassSigma6(object):
 # Register GarmanKlassSigma6 in _QuantLib:
 _QuantLib.GarmanKlassSigma6_swigregister(GarmanKlassSigma6)
 
+class ChinaFixingRepoCoupon(FloatingRateCoupon):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ChinaFixingRepoCoupon_swiginit(self, _QuantLib.new_ChinaFixingRepoCoupon(*args))
+
+    def fixingDates(self):
+        return _QuantLib.ChinaFixingRepoCoupon_fixingDates(self)
+
+    def dt(self):
+        return _QuantLib.ChinaFixingRepoCoupon_dt(self)
+
+    def indexFixings(self):
+        return _QuantLib.ChinaFixingRepoCoupon_indexFixings(self)
+
+    def valueDates(self):
+        return _QuantLib.ChinaFixingRepoCoupon_valueDates(self)
+    __swig_destroy__ = _QuantLib.delete_ChinaFixingRepoCoupon
+
+# Register ChinaFixingRepoCoupon in _QuantLib:
+_QuantLib.ChinaFixingRepoCoupon_swigregister(ChinaFixingRepoCoupon)
+
+class ChinaFixingRepoCouponPricer(FloatingRateCouponPricer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _QuantLib.delete_ChinaFixingRepoCouponPricer
+
+# Register ChinaFixingRepoCouponPricer in _QuantLib:
+_QuantLib.ChinaFixingRepoCouponPricer_swigregister(ChinaFixingRepoCouponPricer)
+
+class ChinaFixingRepo(IborIndex):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ChinaFixingRepo_swiginit(self, _QuantLib.new_ChinaFixingRepo(*args))
+    __swig_destroy__ = _QuantLib.delete_ChinaFixingRepo
+
+# Register ChinaFixingRepo in _QuantLib:
+_QuantLib.ChinaFixingRepo_swigregister(ChinaFixingRepo)
+
+class ChinaFixingRepoSwap(Swap):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ChinaFixingRepoSwap_swiginit(self, _QuantLib.new_ChinaFixingRepoSwap(*args))
+
+    def type(self):
+        return _QuantLib.ChinaFixingRepoSwap_type(self)
+
+    def nominal(self):
+        return _QuantLib.ChinaFixingRepoSwap_nominal(self)
+
+    def paymentFrequency(self):
+        return _QuantLib.ChinaFixingRepoSwap_paymentFrequency(self)
+
+    def schedule(self):
+        return _QuantLib.ChinaFixingRepoSwap_schedule(self)
+
+    def fixedRate(self):
+        return _QuantLib.ChinaFixingRepoSwap_fixedRate(self)
+
+    def dayCount(self):
+        return _QuantLib.ChinaFixingRepoSwap_dayCount(self)
+
+    def chinaFixingRepo(self):
+        return _QuantLib.ChinaFixingRepoSwap_chinaFixingRepo(self)
+
+    def gearing(self):
+        return _QuantLib.ChinaFixingRepoSwap_gearing(self)
+
+    def spread(self):
+        return _QuantLib.ChinaFixingRepoSwap_spread(self)
+
+    def paymentConvention(self):
+        return _QuantLib.ChinaFixingRepoSwap_paymentConvention(self)
+
+    def fixedLeg(self):
+        return _QuantLib.ChinaFixingRepoSwap_fixedLeg(self)
+
+    def floatingLeg(self):
+        return _QuantLib.ChinaFixingRepoSwap_floatingLeg(self)
+
+    def fixedLegBPS(self):
+        return _QuantLib.ChinaFixingRepoSwap_fixedLegBPS(self)
+
+    def fixedLegNPV(self):
+        return _QuantLib.ChinaFixingRepoSwap_fixedLegNPV(self)
+
+    def fairRate(self):
+        return _QuantLib.ChinaFixingRepoSwap_fairRate(self)
+
+    def floatingLegBPS(self):
+        return _QuantLib.ChinaFixingRepoSwap_floatingLegBPS(self)
+
+    def floatingLegNPV(self):
+        return _QuantLib.ChinaFixingRepoSwap_floatingLegNPV(self)
+
+    def fairSpread(self):
+        return _QuantLib.ChinaFixingRepoSwap_fairSpread(self)
+    __swig_destroy__ = _QuantLib.delete_ChinaFixingRepoSwap
+
+# Register ChinaFixingRepoSwap in _QuantLib:
+_QuantLib.ChinaFixingRepoSwap_swigregister(ChinaFixingRepoSwap)
+
+class MakeChinaFixingRepoSwap(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MakeChinaFixingRepoSwap_swiginit(self, _QuantLib.new_MakeChinaFixingRepoSwap(*args))
+
+    def makeChinaFixingRepoSwap(self):
+        return _QuantLib.MakeChinaFixingRepoSwap_makeChinaFixingRepoSwap(self)
+
+    def receiveFixed(self, flag=True):
+        return _QuantLib.MakeChinaFixingRepoSwap_receiveFixed(self, flag)
+
+    def withType(self, type):
+        return _QuantLib.MakeChinaFixingRepoSwap_withType(self, type)
+
+    def withNominal(self, n):
+        return _QuantLib.MakeChinaFixingRepoSwap_withNominal(self, n)
+
+    def withSettlementDays(self, settlementDays):
+        return _QuantLib.MakeChinaFixingRepoSwap_withSettlementDays(self, settlementDays)
+
+    def withEffectiveDate(self, arg2):
+        return _QuantLib.MakeChinaFixingRepoSwap_withEffectiveDate(self, arg2)
+
+    def withTerminationDate(self, arg2):
+        return _QuantLib.MakeChinaFixingRepoSwap_withTerminationDate(self, arg2)
+
+    def withRule(self, r):
+        return _QuantLib.MakeChinaFixingRepoSwap_withRule(self, r)
+
+    def withPaymentFrequency(self, f):
+        return _QuantLib.MakeChinaFixingRepoSwap_withPaymentFrequency(self, f)
+
+    def withPaymentAdjustment(self, convention):
+        return _QuantLib.MakeChinaFixingRepoSwap_withPaymentAdjustment(self, convention)
+
+    def withPaymentLag(self, lag):
+        return _QuantLib.MakeChinaFixingRepoSwap_withPaymentLag(self, lag)
+
+    def withPaymentCalendar(self, cal):
+        return _QuantLib.MakeChinaFixingRepoSwap_withPaymentCalendar(self, cal)
+
+    def withEndOfMonth(self, flag=True):
+        return _QuantLib.MakeChinaFixingRepoSwap_withEndOfMonth(self, flag)
+
+    def withFixedLegDayCount(self, dc):
+        return _QuantLib.MakeChinaFixingRepoSwap_withFixedLegDayCount(self, dc)
+
+    def withFloatingLegGearing(self, gearing):
+        return _QuantLib.MakeChinaFixingRepoSwap_withFloatingLegGearing(self, gearing)
+
+    def withFloatingLegSpread(self, sp):
+        return _QuantLib.MakeChinaFixingRepoSwap_withFloatingLegSpread(self, sp)
+
+    def withDiscountingTermStructure(self, discountingTermStructure):
+        return _QuantLib.MakeChinaFixingRepoSwap_withDiscountingTermStructure(self, discountingTermStructure)
+
+    def withPricingEngine(self, engine):
+        return _QuantLib.MakeChinaFixingRepoSwap_withPricingEngine(self, engine)
+    __swig_destroy__ = _QuantLib.delete_MakeChinaFixingRepoSwap
+
+# Register MakeChinaFixingRepoSwap in _QuantLib:
+_QuantLib.MakeChinaFixingRepoSwap_swigregister(MakeChinaFixingRepoSwap)
+
+class CubicSpline(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, knots):
+        _QuantLib.CubicSpline_swiginit(self, _QuantLib.new_CubicSpline(knots))
+
+    def __call__(self, i, x):
+        return _QuantLib.CubicSpline___call__(self, i, x)
+    __swig_destroy__ = _QuantLib.delete_CubicSpline
+
+# Register CubicSpline in _QuantLib:
+_QuantLib.CubicSpline_swigregister(CubicSpline)
+
+class QuadraticSpline(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, knots):
+        _QuantLib.QuadraticSpline_swiginit(self, _QuantLib.new_QuadraticSpline(knots))
+
+    def __call__(self, i, x):
+        return _QuantLib.QuadraticSpline___call__(self, i, x)
+    __swig_destroy__ = _QuantLib.delete_QuadraticSpline
+
+# Register QuadraticSpline in _QuantLib:
+_QuantLib.QuadraticSpline_swigregister(QuadraticSpline)
+
+class AdjustedSvenssonFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.AdjustedSvenssonFitting_swiginit(self, _QuantLib.new_AdjustedSvenssonFitting(*args))
+    __swig_destroy__ = _QuantLib.delete_AdjustedSvenssonFitting
+
+# Register AdjustedSvenssonFitting in _QuantLib:
+_QuantLib.AdjustedSvenssonFitting_swigregister(AdjustedSvenssonFitting)
+
+class BjorkChristensenFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BjorkChristensenFitting_swiginit(self, _QuantLib.new_BjorkChristensenFitting(*args))
+    __swig_destroy__ = _QuantLib.delete_BjorkChristensenFitting
+
+# Register BjorkChristensenFitting in _QuantLib:
+_QuantLib.BjorkChristensenFitting_swigregister(BjorkChristensenFitting)
+
+class BlissFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BlissFitting_swiginit(self, _QuantLib.new_BlissFitting(*args))
+    __swig_destroy__ = _QuantLib.delete_BlissFitting
+
+# Register BlissFitting in _QuantLib:
+_QuantLib.BlissFitting_swigregister(BlissFitting)
+
+class CubicSplinesFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CubicSplinesFitting_swiginit(self, _QuantLib.new_CubicSplinesFitting(*args))
+
+    def basisFunction(self, i, t):
+        return _QuantLib.CubicSplinesFitting_basisFunction(self, i, t)
+
+    @staticmethod
+    def autoKnots(maturities):
+        return _QuantLib.CubicSplinesFitting_autoKnots(maturities)
+    __swig_destroy__ = _QuantLib.delete_CubicSplinesFitting
+
+# Register CubicSplinesFitting in _QuantLib:
+_QuantLib.CubicSplinesFitting_swigregister(CubicSplinesFitting)
+
+def CubicSplinesFitting_autoKnots(maturities):
+    return _QuantLib.CubicSplinesFitting_autoKnots(maturities)
+
+class DieboldLiFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.DieboldLiFitting_swiginit(self, _QuantLib.new_DieboldLiFitting(*args))
+
+    def kappa(self):
+        return _QuantLib.DieboldLiFitting_kappa(self)
+    __swig_destroy__ = _QuantLib.delete_DieboldLiFitting
+
+# Register DieboldLiFitting in _QuantLib:
+_QuantLib.DieboldLiFitting_swigregister(DieboldLiFitting)
+
+class QuadraticSplinesFitting(FittingMethod):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.QuadraticSplinesFitting_swiginit(self, _QuantLib.new_QuadraticSplinesFitting(*args))
+
+    def basisFunction(self, i, t):
+        return _QuantLib.QuadraticSplinesFitting_basisFunction(self, i, t)
+
+    @staticmethod
+    def autoKnots(maturities):
+        return _QuantLib.QuadraticSplinesFitting_autoKnots(maturities)
+    __swig_destroy__ = _QuantLib.delete_QuadraticSplinesFitting
+
+# Register QuadraticSplinesFitting in _QuantLib:
+_QuantLib.QuadraticSplinesFitting_swigregister(QuadraticSplinesFitting)
+
+def QuadraticSplinesFitting_autoKnots(maturities):
+    return _QuantLib.QuadraticSplinesFitting_autoKnots(maturities)
+
+class ChinaFixingRepoSwapRateHelper(RateHelper):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ChinaFixingRepoSwapRateHelper_swiginit(self, _QuantLib.new_ChinaFixingRepoSwapRateHelper(*args))
+
+    def swap(self):
+        return _QuantLib.ChinaFixingRepoSwapRateHelper_swap(self)
+    __swig_destroy__ = _QuantLib.delete_ChinaFixingRepoSwapRateHelper
+
+# Register ChinaFixingRepoSwapRateHelper in _QuantLib:
+_QuantLib.ChinaFixingRepoSwapRateHelper_swigregister(ChinaFixingRepoSwapRateHelper)
+
+class Actual365_25(DayCounter):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Standard = _QuantLib.Actual365_25_Standard
+    Canadian = _QuantLib.Actual365_25_Canadian
+    NoLeap = _QuantLib.Actual365_25_NoLeap
+
+    def __init__(self, *args):
+        _QuantLib.Actual365_25_swiginit(self, _QuantLib.new_Actual365_25(*args))
+    __swig_destroy__ = _QuantLib.delete_Actual365_25
+
+# Register Actual365_25 in _QuantLib:
+_QuantLib.Actual365_25_swigregister(Actual365_25)
+
 
 

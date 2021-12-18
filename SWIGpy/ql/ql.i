@@ -1,6 +1,7 @@
 %{
 #include <utility>
 #include <ql/quantlib.hpp>
+#include <qlex/quantlibex.hpp>
 
 #if QL_HEX_VERSION < 0x01240000
     #error using an old version of QuantLib, please update
@@ -181,3 +182,10 @@
 %include ../ql/vectors.i
 %include ../ql/volatilities.i
 %include ../ql/volatilitymodels.i
+
+%include ../ql/qlex/cashflows/all.i
+%include ../ql/qlex/indexes/all.i
+%include ../ql/qlex/instruments/all.i
+%include ../ql/qlex/math/all.i
+%include ../ql/qlex/termstructures/yield/all.i
+%include ../ql/qlex/time/daycounters/all.i
