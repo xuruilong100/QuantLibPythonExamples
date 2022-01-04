@@ -5,9 +5,11 @@
 %include common.i
 %include date.i
 
-%template(SizeVector) std::vector<size_t>;
+//%template(SizeVector) std::vector<Size>;
 %template(IntVector) std::vector<int>;
 %template(UnsignedIntVector) std::vector<unsigned int>;
+%template(UnsignedLongVector) std::vector<unsigned long>;
+//%template(BigNaturalVector) std::vector<BigNatural>;
 %template(DoubleVector) std::vector<double>;
 %template(StrVector) std::vector<std::string>;
 %template(BoolVector) std::vector<bool>;
@@ -35,6 +37,11 @@ std::vector<T> to_vector(const std::vector<U>& v) {
     std::copy(v.begin(), v.end(), out.begin());
     return out;
 }
+%}
+
+%pythoncode %{
+    SizeVector = UnsignedLongVector
+    BigNaturalVector = UnsignedLongVector
 %}
 
 #endif

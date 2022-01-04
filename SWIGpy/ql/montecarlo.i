@@ -5,17 +5,6 @@
 %include ../ql/common.i
 %include ../ql/alltypes.i
 
-%inline %{
-Matrix getCovariance(
-    const Array& volatilities,
-    const Matrix& correlations) {
-    return QuantLib::getCovariance(
-        volatilities.begin(),
-        volatilities.end(),
-        correlations);
-}
-%}
-
 %{
 using QuantLib::Path;
 using QuantLib::PathGenerator;

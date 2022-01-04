@@ -13,6 +13,7 @@ using QuantLib::FaceValueAccrualClaim;
 using QuantLib::CompositeInstrument;
 using QuantLib::CreditDefaultSwap;
 using QuantLib::Stock;
+using QuantLib::cdsMaturity;
 %}
 
 %shared_ptr(Claim)
@@ -135,6 +136,10 @@ class CreditDefaultSwap : public Instrument {
         const DayCounter& dayCounter,
         PricingModel model = Midpoint) const;
 };
+
+
+Date cdsMaturity(
+    const Date& tradeDate, const Period& tenor, DateGeneration::Rule rule);
 
 %shared_ptr(Stock)
 class Stock : public Instrument {

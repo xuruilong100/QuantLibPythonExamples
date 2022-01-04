@@ -54,7 +54,14 @@ class Garch11 : public VolatilityCompositor {
     void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria);
     void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria, const Array& initialGuess);
     Real forecast(Real r, Real sigma2) const;
-    static time_series calculate(const time_series& quoteSeries, Real alpha, Real beta, Real omega);
+    /* static time_series calculate(const time_series& quoteSeries, Real alpha, Real beta, Real omega); */
+    %extend {
+        static time_series staticCalculate(
+            const time_series& quoteSeries, Real alpha, Real beta, Real omega) {
+                return Garch11::calculate(
+                    quoteSeries, alpha, beta, omega);
+            }
+    }
     %extend {
         void calibrate(const std::vector<Real> x) {
             self->calibrate(x.begin(), x.end());

@@ -10,8 +10,9 @@
 using QuantLib::BackwardflatLinearInterpolation;
 using QuantLib::BicubicSpline;
 using QuantLib::BilinearInterpolation;
-using QuantLib::FlatExtrapolator2D;
 using QuantLib::Polynomial2DSpline;
+using QuantLib::KernelInterpolation2D;
+using QuantLib::FlatExtrapolator2D;
 %}
 
 %shared_ptr(BackwardflatLinearInterpolation)
@@ -55,13 +56,6 @@ class BilinearInterpolation : public Interpolation2D {
     }
 };
 
-%shared_ptr(FlatExtrapolator2D)
-class FlatExtrapolator2D : public Interpolation2D {
-  public:
-    FlatExtrapolator2D(
-        const ext::shared_ptr<Interpolation2D>& decoratedInterpolation);
-};
-
 %shared_ptr(Polynomial2DSpline)
 class Polynomial2DSpline : public Interpolation2D {
   public:
@@ -72,6 +66,41 @@ class Polynomial2DSpline : public Interpolation2D {
                 x.begin(), x.end(), y.begin(), y.end(), z);
         }
     }
+};
+
+%shared_ptr(KernelInterpolation2D)
+class KernelInterpolation2D : public Interpolation2D{
+  public:
+    %extend {
+        KernelInterpolation2D(
+            const Array& x,
+            const Array& y,
+            const Matrix& z,
+            const GaussianKernel& kernel) {
+                return new KernelInterpolation2D(
+                    x.begin(), x.end(),
+                    y.begin(), y.end(),
+                    z, kernel);
+            }
+        KernelInterpolation2D(
+            const Array& x,
+            const Array& y,
+            const Matrix& z,
+            PyObject* kernel,
+            double epsilon = 1.0E-7) {
+                return new KernelInterpolation2D(
+                    x.begin(), x.end(),
+                    y.begin(), y.end(),
+                    z, UnaryFunction(kernel));
+            }
+    }
+};
+
+%shared_ptr(FlatExtrapolator2D)
+class FlatExtrapolator2D : public Interpolation2D {
+  public:
+    FlatExtrapolator2D(
+        const ext::shared_ptr<Interpolation2D>& decoratedInterpolation);
 };
 
 #endif

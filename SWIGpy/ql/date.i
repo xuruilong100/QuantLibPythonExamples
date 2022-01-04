@@ -28,6 +28,10 @@ typedef Integer Microsecond;
 %{
 using QuantLib::Period;
 using QuantLib::PeriodParser;
+using QuantLib::years;
+using QuantLib::months;
+using QuantLib::weeks;
+using QuantLib::days;
 %}
 
 class Period {
@@ -38,6 +42,7 @@ class Period {
     Integer length() const;
     TimeUnit units() const;
     Frequency frequency() const;
+    void normalize();
     %extend {
         Period(const std::string& str) {
             return new Period(PeriodParser::parse(str));
@@ -67,6 +72,9 @@ class Period {
         Period __rmul__(Integer n) {
             return *self * n;
         }
+        Period __truediv__(Integer n) {
+            return *self / n;
+        }
         bool __lt__(const Period& other) {
             return *self < other;
         }
@@ -94,27 +102,10 @@ class Period {
     %}
 };
 
-%typemap(in) boost::optional<Period> %{
-    if($input == Py_None)
-        $1 = boost::none;
-    else
-    {
-        Period *temp;
-        if (!SWIG_IsOK(SWIG_ConvertPtr($input,(void **) &temp, $descriptor(Period*),0)))
-            SWIG_exception_fail(SWIG_TypeError, "in method '$symname', expecting type Period");
-        $1 = (boost::optional<Period>) *temp;
-    }
-%}
-
-%typecheck (QL_TYPECHECK_PERIOD) boost::optional<Period> {
-    if($input == Py_None)
-        $1 = 1;
-    else {
-        Period *temp;
-        int res = SWIG_ConvertPtr($input,(void **) &temp, $descriptor(Period*),0);
-        $1 = SWIG_IsOK(res) ? 1 : 0;
-    }
-}
+Real years(const Period&);
+Real months(const Period&);
+Real weeks(const Period&);
+Real days(const Period&);
 
 %template(PeriodVector) std::vector<Period>;
 
@@ -322,6 +313,7 @@ Date.__sub__ = Date_new___sub__
 %}
 
 %template(DateVector) std::vector<Date>;
+%template(DateSet) std::set<Date>;
 
 Time daysBetween(const Date&, const Date&);
 

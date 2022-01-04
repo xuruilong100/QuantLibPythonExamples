@@ -211,8 +211,8 @@ class FloatFloatSwap : public Swap {
         Real spread2 = 0.0,
         Real cappedRate2 = Null<Real>(),
         Real flooredRate2 = Null<Real>(),
-        const boost::optional<BusinessDayConvention>& paymentConvention1 = boost::none,
-        const boost::optional<BusinessDayConvention>& paymentConvention2 = boost::none);
+        boost::optional<BusinessDayConvention> paymentConvention1 = boost::none,
+        boost::optional<BusinessDayConvention> paymentConvention2 = boost::none);
      FloatFloatSwap(
         Swap::Type type,
         const std::vector<Real>& nominal1,
@@ -233,8 +233,8 @@ class FloatFloatSwap : public Swap {
         const std::vector<Real>& spread2 = std::vector<Real>(),
         const std::vector<Real>& cappedRate2 = std::vector<Real>(),
         const std::vector<Real>& flooredRate2 = std::vector<Real>(),
-        const boost::optional<BusinessDayConvention>& paymentConvention1 = boost::none,
-        const boost::optional<BusinessDayConvention>& paymentConvention2 = boost::none);
+        boost::optional<BusinessDayConvention> paymentConvention1 = boost::none,
+        boost::optional<BusinessDayConvention> paymentConvention2 = boost::none);
 
     Swap::Type type() const;
     const std::vector<Real>& nominal1() const;

@@ -8,8 +8,6 @@
 %include ../ql/date.i
 %include ../ql/scheduler.i
 
-%define QL_TYPECHECK_BOOL       7210    %enddef
-
 %{
 // This is necessary to avoid compile failures on
 // GCC 4
@@ -55,6 +53,7 @@ using QuantLib::Preceding;
 using QuantLib::ModifiedPreceding;
 using QuantLib::Unadjusted;
 using QuantLib::HalfMonthModifiedFollowing;
+using QuantLib::Nearest;
 using QuantLib::JointCalendarRule;
 using QuantLib::JoinHolidays;
 using QuantLib::JoinBusinessDays;
@@ -127,26 +126,11 @@ using QuantLib::CompoundedThenSimple;
 %}
 %{
 using QuantLib::ASX;
+using QuantLib::ECB;
 using QuantLib::IMM;
 using QuantLib::DateGeneration;
 using QuantLib::Pillar;
 %}
-
-%typemap(in) boost::optional<bool> %{
-	if($input == Py_None)
-		$1 = boost::none;
-	else if ($input == Py_True)
-		$1 = true;
-	else
-		$1 = false;
-%}
-
-%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
-    if (PyBool_Check($input) || Py_None == $input)
-    	$1 = 1;
-    else
-    	$1 = 0;
-}
 
 %inline %{
     int NullSize() { return Null<Size>(); }
@@ -230,7 +214,7 @@ class Handle {
         bool __bool__() {
             return !self->empty();
         }
-        ext::shared_ptr<Observable> asObservable() {
+        ext::shared_ptr<Observable> asObservable() const {
             return ext::shared_ptr<Observable>(*self);
         }
     }
@@ -317,7 +301,6 @@ class Sample {
 
 bool close(Real x, Real y);
 bool close(Real x, Real y, Size n);
-
 bool close_enough(Real x, Real y);
 bool close_enough(Real x, Real y, Size n);
 
@@ -538,36 +521,19 @@ enum VolatilityType {
         $1 = 0;
 }
 
-%define QL_TYPECHECK_BUSINESSDAYCONVENTION       6210    %enddef
-
 enum BusinessDayConvention {
     Following,
     ModifiedFollowing,
     Preceding,
     ModifiedPreceding,
     Unadjusted,
-    HalfMonthModifiedFollowing
+    HalfMonthModifiedFollowing,
+    Nearest
 };
 
 enum JointCalendarRule {
     JoinHolidays, JoinBusinessDays
 };
-
-%typemap(in) boost::optional<BusinessDayConvention> %{
-	if($input == Py_None)
-		$1 = boost::none;
-    else if (PyInt_Check($input))
-        $1 = (BusinessDayConvention) PyInt_AsLong($input);
-	else
-		$1 = (BusinessDayConvention) PyLong_AsLong($input);
-%}
-
-%typecheck (QL_TYPECHECK_BUSINESSDAYCONVENTION) boost::optional<BusinessDayConvention> {
-    if (PyInt_Check($input) || PyLong_Check($input) || Py_None == $input)
-    	$1 = 1;
-    else
-    	$1 = 0;
-}
 
 enum Weekday {
     Sunday    = 1,
@@ -682,6 +648,29 @@ struct ASX {
         const std::string& asxCode,
         bool mainCycle = true,
         const Date& referenceDate = Date());
+};
+
+struct ECB {
+	static const std::set<Date>& knownDates();
+	static void addDate(const Date& d);
+	static void removeDate(const Date& d);
+	static Date date(Month m, Year y);
+	static Date date(
+		const std::string& ecbCode,
+		const Date& referenceDate = Date());
+	static std::string code(const Date& ecbDate);
+	static Date nextDate(const Date& d = Date());
+	static Date nextDate(
+		const std::string& ecbCode,
+		const Date& referenceDate = Date());
+	static std::vector<Date> nextDates(const Date& d = Date());
+	static std::vector<Date> nextDates(
+		const std::string& ecbCode,
+		const Date& referenceDate = Date());
+	static bool isECBdate(const Date& d);
+	static bool isECBcode(const std::string& in);
+	static std::string nextCode(const Date& d = Date());
+	static std::string nextCode(const std::string& ecbCode);
 };
 
 struct IMM {

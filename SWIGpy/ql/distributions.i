@@ -99,7 +99,7 @@ class GammaFunction {
 
 class InverseCumulativePoisson {
   public:
-    InverseCumulativePoisson(Real lambda);
+    InverseCumulativePoisson(Real lambda = 1.0);
     Real operator()(Real x) const;
 };
 

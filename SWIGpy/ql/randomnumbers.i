@@ -42,7 +42,10 @@ class KnuthUniformRng {
 class MersenneTwisterUniformRng {
   public:
     MersenneTwisterUniformRng(BigInteger seed = 0);
+    MersenneTwisterUniformRng(const std::vector<BigNatural>& seeds);
     Sample<Real> next() const;
+    Real nextReal() const;
+    unsigned long nextInt32() const;
 };
 
 class UniformRandomGenerator {
@@ -232,6 +235,10 @@ class InverseCumulativeRsg {
 %template(InvCumulativeMersenneTwisterGaussianRsg) InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal>;
 %template(InvCumulativeHaltonGaussianRsg) InverseCumulativeRsg<HaltonRsg,InverseCumulativeNormal>;
 %template(InvCumulativeSobolGaussianRsg) InverseCumulativeRsg<SobolRsg,InverseCumulativeNormal>;
+
+%template(InvCumulativeMersenneTwisterPoissonRsg) InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativePoisson>;
+%template(InvCumulativeHaltonPoissonRsg) InverseCumulativeRsg<HaltonRsg,InverseCumulativePoisson>;
+%template(InvCumulativeSobolPoissonRsg) InverseCumulativeRsg<SobolRsg,InverseCumulativePoisson>;
 
 class GaussianRandomSequenceGenerator {
   public:

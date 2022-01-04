@@ -60,6 +60,8 @@ class Calendar {
     %}
 };
 
+%template(CalendarVector) std::vector<Calendar>;
+
 namespace QuantLib {
 
 class Argentina : public Calendar {
@@ -262,11 +264,13 @@ class JointCalendar : public Calendar {
     JointCalendar(const Calendar&, const Calendar&,
                   const Calendar&, const Calendar&,
                   JointCalendarRule rule = QuantLib::JoinHolidays);
+    JointCalendar(const std::vector<Calendar>&,
+                  JointCalendarRule = JoinHolidays);
 };
 
 class BespokeCalendar : public Calendar {
   public:
-    BespokeCalendar(const std::string& name);
+    BespokeCalendar(const std::string& name = "");
     void addWeekend(Weekday);
 };
 }

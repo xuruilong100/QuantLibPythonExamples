@@ -11,6 +11,7 @@ using QuantLib::DPlus;
 using QuantLib::DPlusDMinus;
 using QuantLib::DMinus;
 using QuantLib::DZero;
+using QuantLib::BSMOperator;
 typedef QuantLib::BoundaryCondition<QuantLib::TridiagonalOperator> DefaultBoundaryCondition;
 using QuantLib::NeumannBC;
 using QuantLib::DirichletBC;
@@ -92,6 +93,13 @@ class DMinus : public TridiagonalOperator {
 class DZero : public TridiagonalOperator {
   public:
     DZero(Size gridPoints, Real h);
+};
+
+class BSMOperator : public TridiagonalOperator {
+  public:
+    BSMOperator();
+    BSMOperator(Size size, Real dx, Rate r, Rate q, Volatility sigma);
+    BSMOperator(const Array& grid, Rate r, Rate q, Volatility sigma);
 };
 
 %shared_ptr(DefaultBoundaryCondition)

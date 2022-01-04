@@ -35,6 +35,10 @@ class Settings {
         bool getEnforcesTodaysHistoricFixings() {
             return self->enforcesTodaysHistoricFixings();
         }
+
+        ext::shared_ptr<Observable> evaluationDateAsObservable() const {
+            return ext::shared_ptr<Observable>(self->evaluationDate());
+        }
     }
 
     %pythoncode %{
@@ -58,6 +62,7 @@ class SavedSettings {
 
 class SeedGenerator {
   public:
+    static SeedGenerator& instance();
     BigNatural get();
   private:
     SeedGenerator();

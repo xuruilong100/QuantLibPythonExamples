@@ -61,26 +61,16 @@ class ConvexMonotone {
     static const Size requiredPoints = 2;
     static const Size dataSizeAdjustment = 1;
 
-    explicit ConvexMonotone(Real quadraticity = 0.3,
-                            Real monotonicity = 0.7,
-                            bool forcePositive = true);
+    explicit ConvexMonotone(
+        Real quadraticity = 0.3,
+        Real monotonicity = 0.7,
+        bool forcePositive = true);
 
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
-        }
-        Interpolation localInterpolate(
-            const Array& x, const Array& y,
-            Size localisation,
-            Interpolation& prevInterpolation,
-            Size finalSize) const {
-                return self->localInterpolate(
-                    x.begin(), x.end(), y.begin(),
-                    localisation,
-                    prevInterpolation,
-                    finalSize);
         }
     }
 };
@@ -151,14 +141,13 @@ class LogLinear {
 class LogCubic {
   public:
     %rename(globalInterpolate) global;
-    LogCubic(CubicInterpolation::DerivativeApprox da,
-              bool monotonic = true,
-              CubicInterpolation::BoundaryCondition leftCondition
-                  = CubicInterpolation::SecondDerivative,
-              Real leftConditionValue = 0.0,
-              CubicInterpolation::BoundaryCondition rightCondition
-                  = CubicInterpolation::SecondDerivative,
-              Real rightConditionValue = 0.0);
+    LogCubic(
+        CubicInterpolation::DerivativeApprox da,
+        bool monotonic = true,
+        CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
+        Real leftConditionValue = 0.0,
+        CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
+        Real rightConditionValue = 0.0);
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {

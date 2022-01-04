@@ -46,6 +46,8 @@ using QuantLib::MixedLinearKrugerCubic;
 using QuantLib::MixedLinearMonotonicCubicNaturalSpline;
 using QuantLib::MixedLinearMonotonicParabolic;
 using QuantLib::MixedLinearParabolic;
+using QuantLib::KernelInterpolation;
+using QuantLib::ConvexMonotoneInterpolation;
 %}
 
 %shared_ptr(AbcdInterpolation)
@@ -669,11 +671,11 @@ class MixedLinearCubicNaturalSpline : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearCubicNaturalSpline(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearCubicNaturalSpline(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
         }
     }
 };
@@ -683,11 +685,11 @@ class MixedLinearFritschButlandCubic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearFritschButlandCubic(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearFritschButlandCubic(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
         }
     }
 };
@@ -697,11 +699,11 @@ class MixedLinearKrugerCubic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearKrugerCubic(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearKrugerCubic(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
         }
     }
 };
@@ -711,11 +713,11 @@ class MixedLinearMonotonicCubicNaturalSpline : public MixedLinearCubicInterpolat
   public:
     %extend {
         MixedLinearMonotonicCubicNaturalSpline(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearMonotonicCubicNaturalSpline(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
         }
     }
 };
@@ -725,11 +727,11 @@ class MixedLinearMonotonicParabolic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearMonotonicParabolic(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearMonotonicParabolic(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
         }
     }
 };
@@ -739,11 +741,36 @@ class MixedLinearParabolic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearParabolic(
-            const Array& x, const Array& y,
+            const Array& x, const Array& y, Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearParabolic(
                 x.begin(), x.end(), y.begin(),
-                behavior);
+                n, behavior);
+        }
+    }
+};
+
+%shared_ptr(KernelInterpolation)
+class KernelInterpolation : public Interpolation {
+  public:
+    %extend {
+        KernelInterpolation(
+            const Array& x,
+            const Array& y,
+            const GaussianKernel& kernel,
+            double epsilon = 1.0E-7) {
+                return new KernelInterpolation(
+                    x.begin(), x.end(), y.begin(),
+                    kernel, epsilon);
+            }
+        KernelInterpolation(
+            const Array& x,
+            const Array& y,
+            PyObject* kernel,
+            double epsilon = 1.0E-7) {
+                return new KernelInterpolation(
+                    x.begin(), x.end(), y.begin(),
+                    UnaryFunction(kernel), epsilon);
         }
     }
 };

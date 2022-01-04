@@ -130,11 +130,18 @@
 %include ../ql/interpolation.i
 %include ../ql/interpolation/Interpolation.i
 %include ../ql/interpolation/Interpolation2D.i
+%include ../ql/interpolation/SafeInterpolation.i
+%include ../ql/interpolation/SafeInterpolation2D.i
 %include ../ql/interpolation/interpolations/all.i
 %include ../ql/interpolation/interpolation2ds/all.i
+%include ../ql/interpolation/safeinterpolations/all.i
+%include ../ql/interpolation/safeinterpolation2ds/all.i
+%include ../ql/interpolation/safetraits/all.i
+%include ../ql/interpolation/safetrait2ds/all.i
 %include ../ql/interpolation/traits/all.i
 %include ../ql/interpolation/trait2ds/all.i
 %include ../ql/linearalgebra.i
+%include ../ql/math/all.i
 %include ../ql/money.i
 %include ../ql/montecarlo.i
 %include ../ql/ode.i
@@ -182,6 +189,7 @@
 %include ../ql/vectors.i
 %include ../ql/volatilities.i
 %include ../ql/volatilitymodels.i
+%include ../ql/unit/all.i
 
 %include ../ql/qlex/cashflows/all.i
 %include ../ql/qlex/indexes/all.i

@@ -33,7 +33,11 @@ using QuantLib::GaussChebyshevPolynomial;
 using QuantLib::GaussChebyshev2ndPolynomial;
 using QuantLib::GaussGegenbauerPolynomial;
 using QuantLib::GaussHyperbolicPolynomial;
+using QuantLib::MomentBasedGaussianPolynomial;
 using QuantLib::GaussNonCentralChiSquaredPolynomial;
+using QuantLib::GaussLaguerreTrigonometricBase;
+using QuantLib::GaussLaguerreCosinePolynomial;
+using QuantLib::GaussLaguerreSinePolynomial;
 %}
 
 %{
@@ -46,6 +50,7 @@ using QuantLib::GaussLegendreIntegration;
 using QuantLib::GaussChebyshev2ndIntegration;
 using QuantLib::GaussChebyshevIntegration;
 using QuantLib::GaussGegenbauerIntegration;
+using QuantLib::TabulatedGaussLegendre;
 %}
 
 %shared_ptr(Integrator)
@@ -187,6 +192,9 @@ class GaussJacobiPolynomial : public GaussianOrthogonalPolynomial {
     explicit GaussJacobiPolynomial(Real alpha, Real beta);
 };
 
+class GaussHyperbolicPolynomial : public GaussianOrthogonalPolynomial {
+};
+
 class GaussLegendrePolynomial : public GaussJacobiPolynomial {
   public:
     GaussLegendrePolynomial();
@@ -207,13 +215,46 @@ class GaussGegenbauerPolynomial : public GaussJacobiPolynomial {
     explicit GaussGegenbauerPolynomial(Real lambda);
 };
 
-class GaussHyperbolicPolynomial : public GaussianOrthogonalPolynomial {
+template <class mp_real>
+class MomentBasedGaussianPolynomial : public GaussianOrthogonalPolynomial {
+  private:
+    MomentBasedGaussianPolynomial();
+  public:
+    mp_real moment(Size i) const;
 };
 
-class GaussNonCentralChiSquaredPolynomial : public GaussianOrthogonalPolynomial {
+%template(MomentBasedRealGaussianPolynomial) MomentBasedGaussianPolynomial<Real>;
+typedef MomentBasedGaussianPolynomial<Real> MomentBasedRealGaussianPolynomial;
+
+class GaussNonCentralChiSquaredPolynomial : public MomentBasedGaussianPolynomial<Real> {
   public:
     GaussNonCentralChiSquaredPolynomial(Real nu, Real lambda);
 };
+
+template <class mp_real>
+class GaussLaguerreTrigonometricBase : public MomentBasedGaussianPolynomial<mp_real> {
+  private:
+    GaussLaguerreTrigonometricBase();
+};
+
+%template(GaussLaguerreTrigonometricBaseReal) GaussLaguerreTrigonometricBase<Real>;
+typedef GaussLaguerreTrigonometricBase<Real> GaussLaguerreTrigonometricBaseReal;
+
+template <class mp_real>
+class GaussLaguerreCosinePolynomial : public GaussLaguerreTrigonometricBase<mp_real> {
+  public:
+    GaussLaguerreCosinePolynomial(Real u);
+};
+
+%template(GaussLaguerreCosineRealPolynomial) GaussLaguerreCosinePolynomial<Real>;
+
+template <class mp_real>
+class GaussLaguerreSinePolynomial : public GaussLaguerreTrigonometricBase<mp_real> {
+  public:
+    GaussLaguerreSinePolynomial(Real u);
+};
+
+%template(GaussLaguerreSineRealPolynomial) GaussLaguerreSinePolynomial<Real>;
 
 class GaussianQuadrature {
   public:
@@ -270,6 +311,19 @@ class GaussChebyshev2ndIntegration : public GaussianQuadrature {
 class GaussGegenbauerIntegration : public GaussianQuadrature {
   public:
     GaussGegenbauerIntegration(Size n, Real lambda);
+};
+
+class TabulatedGaussLegendre {
+  public:
+    TabulatedGaussLegendre(Size n = 20);
+    %extend {
+        Real operator() (PyObject* f) const {
+            return (*self)(UnaryFunction(f));
+        }
+    }
+    
+    void order(Size);
+    Size order() const;
 };
 
 #endif

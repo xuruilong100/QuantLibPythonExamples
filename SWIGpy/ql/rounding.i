@@ -15,9 +15,24 @@ using QuantLib::UpRounding;
 %}
 
 class Rounding {
+    %rename(NoRound) None;
   public:
-    Rounding();
+    enum Type {
+        None,
+        Up,
+        Down,
+        Closest,
+        Floor,
+        Ceiling
+    };
+    Rounding() = default;
+    explicit Rounding(Integer precision,
+                      Type type = Closest,
+                      Integer digit = 5);
     Decimal operator()(Decimal value) const;
+    Integer precision() const;
+    Type type() const;
+    Integer roundingDigit() const;
 };
 
 class UpRounding : public Rounding {

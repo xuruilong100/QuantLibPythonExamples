@@ -469,10 +469,17 @@ class MatrixRow {
 class Matrix {
   public:
     Matrix();
-    Matrix(Size rows, Size columns, Real fill = 0.0);
+    Matrix(Size rows, Size columns);
+    Matrix(Size rows, Size columns, Real value);
     Matrix(const Matrix&);
+    Matrix(Matrix&&);
+    Array diagonal() const;
+    Real& operator()(Size i, Size j) const;
     Size rows() const;
     Size columns() const;
+    bool empty() const;
+    Size size1() const;
+    Size size2() const;
     %extend {
         std::string __str__() {
             std::ostringstream out;
@@ -514,7 +521,8 @@ class Matrix {
 
 struct SalvagingAlgorithm {
     %rename(NoAlgorithm) None;
-    enum Type { None, Spectral };
+    enum Type {
+        None, Spectral, Hypersphere, LowerDiagonal, Higham };
 };
 
 Matrix inverse(const Matrix& m);
