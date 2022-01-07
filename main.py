@@ -86,5 +86,5 @@ if __name__ == '__main__':
 '''
 Ran 499 tests in 584.066s
 
-OK (skipped=25)
+OK (skipped=20)
 '''

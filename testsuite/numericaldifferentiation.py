@@ -31,7 +31,7 @@ def vandermondeCoefficients(
 
 
 class NumericalDifferentiationTest(unittest.TestCase):
-    @unittest.skip('skip testTabulatedCentralScheme')
+
     def testTabulatedCentralScheme(self):
         TEST_MESSAGE("Testing numerical differentiation "
                      "using the central scheme...")
@@ -40,27 +40,31 @@ class NumericalDifferentiationTest(unittest.TestCase):
         central = NumericalDifferentiation.Central
 
         # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
+        nd = NumericalDifferentiation(f, 1, 1.0, 3, central)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 1.0, 3, central).weights(),
+            nd.weights(),
             [-0.5, 0.0, 0.5])
 
+        nd = NumericalDifferentiation(f, 1, 0.5, 3, central)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 0.5, 3, central).weights(),
+            nd.weights(),
             [-1.0, 0.0, 1.0])
 
+        nd = NumericalDifferentiation(f, 1, 0.25, 7, central)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 0.25, 7, central).weights(),
+            nd.weights(),
             [-4 / 60.0, 12 / 20.0, -12 / 4.0, 0.0, 12 / 4.0, -12 / 20.0, 4 / 60.0])
 
+        nd = NumericalDifferentiation(f, 4, pow(0.5, 0.25), 9, central)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 4, pow(0.5, 0.25), 9, central).weights(),
+            nd.weights(),
             [14 / 240.0, -4 / 5.0, 338 / 60.0, -244 / 15.0, 182 / 8.0, -244 / 15.0, 338 / 60.0, -4 / 5.0, 14 / 240.0])
 
+        nd = NumericalDifferentiation(f, 1, 0.5, 7, central)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 0.5, 7, central).offsets(),
+            nd.offsets(),
             [-1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5])
 
-    @unittest.skip('skip testTabulatedBackwardScheme')
     def testTabulatedBackwardScheme(self):
         TEST_MESSAGE("Testing numerical differentiation "
                      "using the backward scheme...")
@@ -69,23 +73,26 @@ class NumericalDifferentiationTest(unittest.TestCase):
         backward = NumericalDifferentiation.Backward
 
         # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
+        nd = NumericalDifferentiation(f, 1, 1.0, 2, backward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 1.0, 2, backward).weights(),
+            nd.weights(),
             [1.0, -1.0])
 
+        nd = NumericalDifferentiation(f, 2, 2.0, 4, backward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 2, 2.0, 4, backward).weights(),
+            nd.weights(),
             [2 / 4.0, -5 / 4.0, 4 / 4.0, -1.0 / 4.0])
 
+        nd = NumericalDifferentiation(f, 4, 1.0, 6, backward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 4, 1.0, 6, backward).weights(),
+            nd.weights(),
             [3.0, -14.0, 26.0, -24.0, 11.0, -2.0])
 
+        nd = NumericalDifferentiation(f, 2, 0.5, 4, backward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 2, 0.5, 4, backward).offsets(),
+            nd.offsets(),
             [0.0, -0.5, -1.0, -1.5])
 
-    @unittest.skip('skip testTabulatedForwardScheme')
     def testTabulatedForwardScheme(self):
         TEST_MESSAGE("Testing numerical differentiation "
                      "using the Forward scheme...")
@@ -94,23 +101,26 @@ class NumericalDifferentiationTest(unittest.TestCase):
         forward = NumericalDifferentiation.Forward
 
         # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
+        nd = NumericalDifferentiation(f, 1, 1.0, 2, forward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 1.0, 2, forward).weights(),
+            nd.weights(),
             [-1.0, 1.0])
 
+        nd = NumericalDifferentiation(f, 1, 0.5, 3, forward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 0.5, 3, forward).weights(),
+            nd.weights(),
             [-6 / 2.0, 4.0, -2 / 2.0])
 
+        nd = NumericalDifferentiation(f, 1, 0.5, 7, forward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, 0.5, 7, forward).weights(),
+            nd.weights(),
             [-98 / 20.0, 12.0, -30 / 2.0, 40 / 3.0, -30 / 4.0, 12 / 5.0, -2 / 6.0])
 
+        nd = NumericalDifferentiation(f, 2, 0.5, 4, forward)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 2, 0.5, 4, forward).offsets(),
+            nd.offsets(),
             [0.0, 0.5, 1.0, 1.5])
 
-    @unittest.skip('skip testIrregularSchemeFirstOrder')
     def testIrregularSchemeFirstOrder(self):
         TEST_MESSAGE("Testing numerical differentiation "
                      "of first order using an irregular scheme...")
@@ -128,11 +138,11 @@ class NumericalDifferentiationTest(unittest.TestCase):
         offsets[1] = 0.0
         offsets[2] = h2
 
+        nd = NumericalDifferentiation(f, 1, offsets)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 1, offsets).weights(),
+            nd.weights(),
             [alpha, beta, gamma])
 
-    @unittest.skip('skip testIrregularSchemeSecondOrder')
     def testIrregularSchemeSecondOrder(self):
         TEST_MESSAGE("Testing numerical differentiation "
                      "of second order using an irregular scheme...")
@@ -150,8 +160,9 @@ class NumericalDifferentiationTest(unittest.TestCase):
         offsets[1] = 0.0
         offsets[2] = h2
 
+        nd = NumericalDifferentiation(f, 2, offsets)
         self.checkTwoArraysAreTheSame(
-            NumericalDifferentiation(f, 2, offsets).weights(),
+            nd.weights(),
             [alpha, beta, gamma])
 
     def testDerivativesOfSineFunction(self):
