@@ -75,7 +75,7 @@ python3 setup.py install
 * [x] array
 * [x] asianoptions
 * [ ] assetswap
-* [ ] autocovariances
+* [x] autocovariances
 * [x] barrieroption
 * [ ] basismodels
 * [x] basketoption
@@ -86,8 +86,8 @@ python3 setup.py install
 * [x] blackformula
 * [ ] bonds
 * [ ] brownianbridge
-* [ ] businessdayconventions
-* [ ] calendars
+* [x] businessdayconventions
+* [x] calendars
 * [ ] callablebonds
 * [ ] capflooredcoupon
 * [ ] capfloor
@@ -99,29 +99,30 @@ python3 setup.py install
 * [x] cliquetoption
 * [ ] cms
 * [ ] cmsspread
-* [ ] commodityunitofmeasure
+* [x] commodityunitofmeasure
 * [ ] compiledboostversion
 * [x] compoundoption
 * [ ] convertiblebonds
-* [ ] covariance
+* [x] covariance
 * [ ] creditdefaultswap
-* [ ] creditriskplus
+* [x] creditriskplus
+* [x] currency
 * [ ] curvestates
-* [ ] dates
-* [ ] daycounters
+* [x] dates
+* [x] daycounters
 * [ ] defaultprobabilitycurves
 * [ ] digitalcoupon
 * [ ] digitaloption
-* [ ] distributions
+* [x] distributions
 * [ ] dividendoption
 * [x] doublebarrieroption
 * [x] doublebinaryoption
 * [x] europeanoption
 * [x] everestoption
-* [ ] exchangerate
+* [x] exchangerate
 * [x] extendedtrees
 * [x] extensibleoptions
-* [ ] fastfouriertransform
+* [x] fastfouriertransform
 * [x] fdcev
 * [ ] fdcir
 * [x] fdheston
@@ -130,16 +131,16 @@ python3 setup.py install
 * [ ] fittedbonddiscountcurve
 * [x] forwardoption
 * [ ] forwardrateagreement
-* [ ] functions
-* [ ] garch
-* [ ] gaussianquadratures
+* [x] functions
+* [x] garch
+* [x] gaussianquadratures
 * [x] gjrgarchmodel
 * [ ] gsr
 * [x] hestonmodel
 * [x] hestonslvmodel
 * [x] himalayaoption
 * [x] hybridhestonhullwhiteprocess
-* [ ] indexes
+* [x] indexes
 * [ ] inflationcapflooredcoupon
 * [ ] inflationcapfloor
 * [ ] inflationcpibond
@@ -147,17 +148,17 @@ python3 setup.py install
 * [ ] inflationcpiswap
 * [ ] inflation
 * [ ] inflationvolatility
-* [ ] instruments
-* [ ] integrals
-* [ ] interestrates
-* [ ] interpolations
+* [x] instruments
+* [x] integrals
+* [x] interestrates
+* [x] interpolations
 * [x] jumpdiffusion
-* [ ] lazyobject
+* [x] lazyobject
 * [ ] libormarketmodel
 * [ ] libormarketmodelprocess
 * [ ] linearleastsquaresregression
 * [x] lookbackoptions
-* [ ] lowdiscrepancysequences
+* [x] lowdiscrepancysequences
 * [x] margrabeoption
 * [ ] marketmodel_cms
 * [ ] marketmodel
@@ -166,15 +167,15 @@ python3 setup.py install
 * [ ] marketmodel_smmcaplethomocalibration
 * [ ] marketmodel_smm
 * [ ] markovfunctional
-* [ ] matrices
+* [x] matrices
 * [x] mclongstaffschwartzengine
-* [ ] mersennetwister
-* [ ] money
+* [x] mersennetwister
+* [x] money
 * [ ] noarbsabr
 * [ ] normalclvmodel
 * [ ] nthorderderivativeop
 * [ ] nthtodefault
-* [ ] numericaldifferentiation
+* [x] numericaldifferentiation
 * [ ] observable
 * [ ] ode
 * [ ] operators
@@ -184,26 +185,26 @@ python3 setup.py install
 * [x] pagodaoption
 * [ ] paralleltestrunner
 * [x] partialtimebarrieroption
-* [ ] pathgenerator
-* [ ] period
+* [x] pathgenerator
+* [x] period
 * [ ] piecewiseyieldcurve
 * [ ] piecewisezerospreadedtermstructure
 * [ ] quantooption
-* [ ] quotes
+* [x] quotes
 * [ ] rangeaccrual
 * [x] riskneutraldensitycalculator
-* [ ] riskstats
-* [ ] rngtraits
-* [ ] rounding
+* [x] riskstats
+* [x] rngtraits
+* [x] rounding
 * [ ] sampledcurve
-* [ ] schedule
+* [x] schedule
 * [ ] shortratemodels
 * [ ] sofrfutures
-* [ ] solvers
+* [x] solvers
 * [ ] speedlevel
 * [x] spreadoption
 * [ ] squarerootclvmodel
-* [ ] stats
+* [x] stats
 * [ ] swapforwardmappings
 * [ ] swap
 * [ ] swaption
@@ -211,12 +212,12 @@ python3 setup.py install
 * [ ] swaptionvolatilitymatrix
 * [ ] swaptionvolstructuresutilities
 * [ ] swingoption
-* [ ] termstructures
-* [ ] timegrid
-* [ ] timeseries
-* [ ] tqreigendecomposition
+* [x] termstructures
+* [x] timegrid
+* [x] timeseries
+* [x] tqreigendecomposition
 * [ ] tracing
-* [ ] transformedgrid
+* [x] transformedgrid
 * [x] twoassetbarrieroption
 * [x] twoassetcorrelationoption
 * [ ] ultimateforwardtermstructure
