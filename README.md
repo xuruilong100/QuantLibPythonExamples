@@ -6,8 +6,8 @@
 ## Introduction
 
 * Reconstructing SWIG interface files for building Python wrapper.
-* Reimplementing of QuantLib [examples](https://www.quantlib.org/reference/examples.html) by Python.
-* Reimplementing of QuantLib [test-suite](https://github.com/lballabio/QuantLib/tree/master/test-suite) by Python.
+* Reimplementing QuantLib [examples](https://www.quantlib.org/reference/examples.html) by Python.
+* Reimplementing QuantLib [test-suite](https://github.com/lballabio/QuantLib/tree/master/test-suite) by Python.
 
 > Related blog (in Chinese): <https://www.cnblogs.com/xuruilong100/p/13281006.html>
 >
@@ -85,7 +85,7 @@ python3 setup.py install
 * [x] blackdeltacalculator
 * [x] blackformula
 * [ ] bonds
-* [ ] brownianbridge
+* [x] brownianbridge
 * [x] businessdayconventions
 * [x] calendars
 * [ ] callablebonds
@@ -112,9 +112,9 @@ python3 setup.py install
 * [x] daycounters
 * [ ] defaultprobabilitycurves
 * [ ] digitalcoupon
-* [ ] digitaloption
+* [x] digitaloption
 * [x] distributions
-* [ ] dividendoption
+* [x] dividendoption
 * [x] doublebarrieroption
 * [x] doublebinaryoption
 * [x] europeanoption
@@ -189,7 +189,7 @@ python3 setup.py install
 * [x] period
 * [ ] piecewiseyieldcurve
 * [ ] piecewisezerospreadedtermstructure
-* [ ] quantooption
+* [x] quantooption
 * [x] quotes
 * [ ] rangeaccrual
 * [x] riskneutraldensitycalculator
@@ -211,7 +211,7 @@ python3 setup.py install
 * [ ] swaptionvolatilitycube
 * [ ] swaptionvolatilitymatrix
 * [ ] swaptionvolstructuresutilities
-* [ ] swingoption
+* [x] swingoption
 * [x] termstructures
 * [x] timegrid
 * [x] timeseries
@@ -222,8 +222,8 @@ python3 setup.py install
 * [x] twoassetcorrelationoption
 * [ ] ultimateforwardtermstructure
 * [ ] variancegamma
-* [ ] varianceoption
-* [ ] varianceswaps
+* [x] varianceoption
+* [x] varianceswaps
 * [ ] volatilitymodels
 * [ ] vpp
 * [ ] zabr
