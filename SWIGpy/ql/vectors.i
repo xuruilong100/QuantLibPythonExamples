@@ -40,8 +40,9 @@ std::vector<T> to_vector(const std::vector<U>& v) {
 %}
 
 %pythoncode %{
-    SizeVector = UnsignedLongVector
-    BigNaturalVector = UnsignedLongVector
+SizeVector = UnsignedLongVector
+BigNaturalVector = UnsignedLongVector
+Shape = DoublePairVector
 %}
 
 #endif

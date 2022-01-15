@@ -501,6 +501,10 @@ class Date(object):
     def __ne__(self, other):
         return _QuantLib.Date___ne__(self, other)
 
+    @staticmethod
+    def ticksPerSecond():
+        return _QuantLib.Date_ticksPerSecond()
+
     def to_date(self):
         return _datetime.date(
             self.year(), self.month(), self.dayOfMonth())
@@ -543,6 +547,9 @@ def Date_localDateTime():
 
 def Date_universalDateTime():
     return _QuantLib.Date_universalDateTime()
+
+def Date_ticksPerSecond():
+    return _QuantLib.Date_ticksPerSecond()
 
 class DateParser(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -2460,6 +2467,7 @@ _QuantLib.RelinkableQuoteHandleVectorVector_swigregister(RelinkableQuoteHandleVe
 
 SizeVector = UnsignedLongVector
 BigNaturalVector = UnsignedLongVector
+Shape = DoublePairVector
 
 class Schedule(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -15075,27 +15083,180 @@ class AnalyticWriterExtensibleOptionEngine(PricingEngine):
 # Register AnalyticWriterExtensibleOptionEngine in _QuantLib:
 _QuantLib.AnalyticWriterExtensibleOptionEngine_swigregister(AnalyticWriterExtensibleOptionEngine)
 
-class QuantoEuropeanEngine(PricingEngine):
+class IntegralHestonVarianceOptionEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, foreignRiskFreeRate, exchangeRateVolatility, correlation):
-        _QuantLib.QuantoEuropeanEngine_swiginit(self, _QuantLib.new_QuantoEuropeanEngine(process, foreignRiskFreeRate, exchangeRateVolatility, correlation))
-    __swig_destroy__ = _QuantLib.delete_QuantoEuropeanEngine
+    def __init__(self, arg2):
+        _QuantLib.IntegralHestonVarianceOptionEngine_swiginit(self, _QuantLib.new_IntegralHestonVarianceOptionEngine(arg2))
+    __swig_destroy__ = _QuantLib.delete_IntegralHestonVarianceOptionEngine
 
-# Register QuantoEuropeanEngine in _QuantLib:
-_QuantLib.QuantoEuropeanEngine_swigregister(QuantoEuropeanEngine)
+# Register IntegralHestonVarianceOptionEngine in _QuantLib:
+_QuantLib.IntegralHestonVarianceOptionEngine_swigregister(IntegralHestonVarianceOptionEngine)
 
-class QuantoForwardEuropeanEngine(PricingEngine):
+class ReplicatingVarianceSwapEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, foreignRiskFreeRate, exchangeRateVolatility, correlation):
-        _QuantLib.QuantoForwardEuropeanEngine_swiginit(self, _QuantLib.new_QuantoForwardEuropeanEngine(process, foreignRiskFreeRate, exchangeRateVolatility, correlation))
-    __swig_destroy__ = _QuantLib.delete_QuantoForwardEuropeanEngine
+    def __init__(self, *args):
+        _QuantLib.ReplicatingVarianceSwapEngine_swiginit(self, _QuantLib.new_ReplicatingVarianceSwapEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_ReplicatingVarianceSwapEngine
 
-# Register QuantoForwardEuropeanEngine in _QuantLib:
-_QuantLib.QuantoForwardEuropeanEngine_swigregister(QuantoForwardEuropeanEngine)
+# Register ReplicatingVarianceSwapEngine in _QuantLib:
+_QuantLib.ReplicatingVarianceSwapEngine_swigregister(ReplicatingVarianceSwapEngine)
+
+class MCPRVarianceSwapEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRVarianceSwapEngine_swiginit(self, _QuantLib.new_MCPRVarianceSwapEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRVarianceSwapEngine
+
+# Register MCPRVarianceSwapEngine in _QuantLib:
+_QuantLib.MCPRVarianceSwapEngine_swigregister(MCPRVarianceSwapEngine)
+
+class MCLDVarianceSwapEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDVarianceSwapEngine_swiginit(self, _QuantLib.new_MCLDVarianceSwapEngine(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDVarianceSwapEngine
+
+# Register MCLDVarianceSwapEngine in _QuantLib:
+_QuantLib.MCLDVarianceSwapEngine_swigregister(MCLDVarianceSwapEngine)
+
+class MakeMCPRVarianceSwapEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.MakeMCPRVarianceSwapEngine_swiginit(self, _QuantLib.new_MakeMCPRVarianceSwapEngine(process))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_withAntitheticVariate(self, b)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRVarianceSwapEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRVarianceSwapEngine
+
+# Register MakeMCPRVarianceSwapEngine in _QuantLib:
+_QuantLib.MakeMCPRVarianceSwapEngine_swigregister(MakeMCPRVarianceSwapEngine)
+
+class MakeMCLDVarianceSwapEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, process):
+        _QuantLib.MakeMCLDVarianceSwapEngine_swiginit(self, _QuantLib.new_MakeMCLDVarianceSwapEngine(process))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_withAntitheticVariate(self, b)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDVarianceSwapEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDVarianceSwapEngine
+
+# Register MakeMCLDVarianceSwapEngine in _QuantLib:
+_QuantLib.MakeMCLDVarianceSwapEngine_swigregister(MakeMCLDVarianceSwapEngine)
+
+class QuantoVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation):
+        _QuantLib.QuantoVanillaEngine_swiginit(self, _QuantLib.new_QuantoVanillaEngine(arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation))
+    __swig_destroy__ = _QuantLib.delete_QuantoVanillaEngine
+
+# Register QuantoVanillaEngine in _QuantLib:
+_QuantLib.QuantoVanillaEngine_swigregister(QuantoVanillaEngine)
+
+class QuantoForwardVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation):
+        _QuantLib.QuantoForwardVanillaEngine_swiginit(self, _QuantLib.new_QuantoForwardVanillaEngine(arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation))
+    __swig_destroy__ = _QuantLib.delete_QuantoForwardVanillaEngine
+
+# Register QuantoForwardVanillaEngine in _QuantLib:
+_QuantLib.QuantoForwardVanillaEngine_swigregister(QuantoForwardVanillaEngine)
+
+class QuantoForwardVanillaPerformanceEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation):
+        _QuantLib.QuantoForwardVanillaPerformanceEngine_swiginit(self, _QuantLib.new_QuantoForwardVanillaPerformanceEngine(arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation))
+    __swig_destroy__ = _QuantLib.delete_QuantoForwardVanillaPerformanceEngine
+
+# Register QuantoForwardVanillaPerformanceEngine in _QuantLib:
+_QuantLib.QuantoForwardVanillaPerformanceEngine_swigregister(QuantoForwardVanillaPerformanceEngine)
+
+class QuantoBarrierEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation):
+        _QuantLib.QuantoBarrierEngine_swiginit(self, _QuantLib.new_QuantoBarrierEngine(arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation))
+    __swig_destroy__ = _QuantLib.delete_QuantoBarrierEngine
+
+# Register QuantoBarrierEngine in _QuantLib:
+_QuantLib.QuantoBarrierEngine_swigregister(QuantoBarrierEngine)
+
+class QuantoDoubleBarrierEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation):
+        _QuantLib.QuantoDoubleBarrierEngine_swiginit(self, _QuantLib.new_QuantoDoubleBarrierEngine(arg2, foreignRiskFreeRate, exchangeRateVolatility, correlation))
+    __swig_destroy__ = _QuantLib.delete_QuantoDoubleBarrierEngine
+
+# Register QuantoDoubleBarrierEngine in _QuantLib:
+_QuantLib.QuantoDoubleBarrierEngine_swigregister(QuantoDoubleBarrierEngine)
 
 class KirkSpreadOptionEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -16626,6 +16787,115 @@ class MakeMCLDHestonHullWhiteEngine(object):
 
 # Register MakeMCLDHestonHullWhiteEngine in _QuantLib:
 _QuantLib.MakeMCLDHestonHullWhiteEngine_swigregister(MakeMCLDHestonHullWhiteEngine)
+
+class MCPRDigitalEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCPRDigitalEngine_swiginit(self, _QuantLib.new_MCPRDigitalEngine(arg2, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCPRDigitalEngine
+
+# Register MCPRDigitalEngine in _QuantLib:
+_QuantLib.MCPRDigitalEngine_swigregister(MCPRDigitalEngine)
+
+class MCLDDigitalEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed):
+        _QuantLib.MCLDDigitalEngine_swiginit(self, _QuantLib.new_MCLDDigitalEngine(arg2, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, requiredSamples, requiredTolerance, maxSamples, seed))
+    __swig_destroy__ = _QuantLib.delete_MCLDDigitalEngine
+
+# Register MCLDDigitalEngine in _QuantLib:
+_QuantLib.MCLDDigitalEngine_swigregister(MCLDDigitalEngine)
+
+class MakeMCPRDigitalEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCPRDigitalEngine_swiginit(self, _QuantLib.new_MakeMCPRDigitalEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCPRDigitalEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCPRDigitalEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCPRDigitalEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCPRDigitalEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCPRDigitalEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCPRDigitalEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCPRDigitalEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCPRDigitalEngine_withAntitheticVariate(self, b)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCPRDigitalEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCPRDigitalEngine
+
+# Register MakeMCPRDigitalEngine in _QuantLib:
+_QuantLib.MakeMCPRDigitalEngine_swigregister(MakeMCPRDigitalEngine)
+
+class MakeMCLDDigitalEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2):
+        _QuantLib.MakeMCLDDigitalEngine_swiginit(self, _QuantLib.new_MakeMCLDDigitalEngine(arg2))
+
+    def withSteps(self, steps):
+        return _QuantLib.MakeMCLDDigitalEngine_withSteps(self, steps)
+
+    def withStepsPerYear(self, steps):
+        return _QuantLib.MakeMCLDDigitalEngine_withStepsPerYear(self, steps)
+
+    def withBrownianBridge(self, b=True):
+        return _QuantLib.MakeMCLDDigitalEngine_withBrownianBridge(self, b)
+
+    def withSamples(self, samples):
+        return _QuantLib.MakeMCLDDigitalEngine_withSamples(self, samples)
+
+    def withAbsoluteTolerance(self, tolerance):
+        return _QuantLib.MakeMCLDDigitalEngine_withAbsoluteTolerance(self, tolerance)
+
+    def withMaxSamples(self, samples):
+        return _QuantLib.MakeMCLDDigitalEngine_withMaxSamples(self, samples)
+
+    def withSeed(self, seed):
+        return _QuantLib.MakeMCLDDigitalEngine_withSeed(self, seed)
+
+    def withAntitheticVariate(self, b=True):
+        return _QuantLib.MakeMCLDDigitalEngine_withAntitheticVariate(self, b)
+
+    def makeEngine(self):
+        return _QuantLib.MakeMCLDDigitalEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeMCLDDigitalEngine
+
+# Register MakeMCLDDigitalEngine in _QuantLib:
+_QuantLib.MakeMCLDDigitalEngine_swigregister(MakeMCLDDigitalEngine)
+
+class FdExtOUJumpVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FdExtOUJumpVanillaEngine_swiginit(self, _QuantLib.new_FdExtOUJumpVanillaEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_FdExtOUJumpVanillaEngine
+
+# Register FdExtOUJumpVanillaEngine in _QuantLib:
+_QuantLib.FdExtOUJumpVanillaEngine_swigregister(FdExtOUJumpVanillaEngine)
 
 class YoYInflationCapFloorEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -18322,6 +18592,17 @@ class FdmAffineHullWhiteModelSwapInnerValue(FdmInnerValueCalculator):
 
 # Register FdmAffineHullWhiteModelSwapInnerValue in _QuantLib:
 _QuantLib.FdmAffineHullWhiteModelSwapInnerValue_swigregister(FdmAffineHullWhiteModelSwapInnerValue)
+
+class FdmExtOUJumpModelInnerValue(FdmInnerValueCalculator):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FdmExtOUJumpModelInnerValue_swiginit(self, _QuantLib.new_FdmExtOUJumpModelInnerValue(*args))
+    __swig_destroy__ = _QuantLib.delete_FdmExtOUJumpModelInnerValue
+
+# Register FdmExtOUJumpModelInnerValue in _QuantLib:
+_QuantLib.FdmExtOUJumpModelInnerValue_swigregister(FdmExtOUJumpModelInnerValue)
 
 class Array(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -22662,6 +22943,15 @@ class QuantoForwardVanillaOption(ForwardVanillaOption):
 
     def __init__(self, moneyness, resetDate, payoff, exercise):
         _QuantLib.QuantoForwardVanillaOption_swiginit(self, _QuantLib.new_QuantoForwardVanillaOption(moneyness, resetDate, payoff, exercise))
+
+    def qvega(self):
+        return _QuantLib.QuantoForwardVanillaOption_qvega(self)
+
+    def qrho(self):
+        return _QuantLib.QuantoForwardVanillaOption_qrho(self)
+
+    def qlambda(self):
+        return _QuantLib.QuantoForwardVanillaOption_qlambda(self)
     __swig_destroy__ = _QuantLib.delete_QuantoForwardVanillaOption
 
 # Register QuantoForwardVanillaOption in _QuantLib:
@@ -22948,6 +23238,58 @@ class Stock(Instrument):
 
 # Register Stock in _QuantLib:
 _QuantLib.Stock_swigregister(Stock)
+
+class VarianceOption(Instrument):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, payoff, notional, startDate, maturityDate):
+        _QuantLib.VarianceOption_swiginit(self, _QuantLib.new_VarianceOption(payoff, notional, startDate, maturityDate))
+
+    def startDate(self):
+        return _QuantLib.VarianceOption_startDate(self)
+
+    def maturityDate(self):
+        return _QuantLib.VarianceOption_maturityDate(self)
+
+    def notional(self):
+        return _QuantLib.VarianceOption_notional(self)
+
+    def payoff(self):
+        return _QuantLib.VarianceOption_payoff(self)
+    __swig_destroy__ = _QuantLib.delete_VarianceOption
+
+# Register VarianceOption in _QuantLib:
+_QuantLib.VarianceOption_swigregister(VarianceOption)
+
+class VarianceSwap(Instrument):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, position, strike, notional, startDate, maturityDate):
+        _QuantLib.VarianceSwap_swiginit(self, _QuantLib.new_VarianceSwap(position, strike, notional, startDate, maturityDate))
+
+    def strike(self):
+        return _QuantLib.VarianceSwap_strike(self)
+
+    def position(self):
+        return _QuantLib.VarianceSwap_position(self)
+
+    def startDate(self):
+        return _QuantLib.VarianceSwap_startDate(self)
+
+    def maturityDate(self):
+        return _QuantLib.VarianceSwap_maturityDate(self)
+
+    def notional(self):
+        return _QuantLib.VarianceSwap_notional(self)
+
+    def variance(self):
+        return _QuantLib.VarianceSwap_variance(self)
+    __swig_destroy__ = _QuantLib.delete_VarianceSwap
+
+# Register VarianceSwap in _QuantLib:
+_QuantLib.VarianceSwap_swigregister(VarianceSwap)
 
 class ArithmeticAverageOIS(Swap):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -31561,6 +31903,33 @@ class DoublingConvergenceSteps(object):
 
 # Register DoublingConvergenceSteps in _QuantLib:
 _QuantLib.DoublingConvergenceSteps_swigregister(DoublingConvergenceSteps)
+
+class ConvergenceStatisticsTableItem(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ConvergenceStatisticsTableItem_swiginit(self, _QuantLib.new_ConvergenceStatisticsTableItem(*args))
+    first = property(_QuantLib.ConvergenceStatisticsTableItem_first_get, _QuantLib.ConvergenceStatisticsTableItem_first_set)
+    second = property(_QuantLib.ConvergenceStatisticsTableItem_second_get, _QuantLib.ConvergenceStatisticsTableItem_second_set)
+    def __len__(self):
+        return 2
+    def __repr__(self):
+        return str((self.first, self.second))
+    def __getitem__(self, index): 
+        if not (index % 2):
+            return self.first
+        else:
+            return self.second
+    def __setitem__(self, index, val):
+        if not (index % 2):
+            self.first = val
+        else:
+            self.second = val
+    __swig_destroy__ = _QuantLib.delete_ConvergenceStatisticsTableItem
+
+# Register ConvergenceStatisticsTableItem in _QuantLib:
+_QuantLib.ConvergenceStatisticsTableItem_swigregister(ConvergenceStatisticsTableItem)
 
 class ConvergenceStatisticsTable(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

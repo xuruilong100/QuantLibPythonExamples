@@ -17,6 +17,7 @@ using QuantLib::FdmShoutLogInnerValueCalculator;
 using QuantLib::FdmSpreadPayoffInnerValue;
 using QuantLib::FdmLogBasketInnerValue;
 using QuantLib::FdmZeroInnerValue;
+using QuantLib::FdmExtOUJumpModelInnerValue;
 %}
 
 %shared_ptr(EscrowedDividendAdjustment)
@@ -62,13 +63,20 @@ class FdmEscrowedLogInnerValueCalculator: public FdmInnerValueCalculator {
 %shared_ptr(FdmExpExtOUInnerValueCalculator)
 class FdmExpExtOUInnerValueCalculator : public FdmInnerValueCalculator {
   public:
-    typedef std::vector<std::pair<Time, Real>> Shape;
-
+    %extend {
     FdmExpExtOUInnerValueCalculator(
         ext::shared_ptr<Payoff> payoff,
         ext::shared_ptr<FdmMesher> mesher,
-        ext::shared_ptr<Shape> shape = ext::shared_ptr<Shape>(),
-        Size direction = 0);
+            const std::vector<std::pair<Time, Real>>& shape = std::vector<std::pair<Time, Real>>(),
+            Size direction = 0) {
+                typedef std::vector<std::pair<Time, Real>> Shape;
+                ext::shared_ptr<Shape> shape_;
+                if (!shape.empty())
+                    shape_.reset(new Shape(shape));
+                return new FdmExpExtOUInnerValueCalculator(
+                    payoff, mesher, shape_, direction);
+            }
+    }
 };
 
 %shared_ptr(FdmLogBasketInnerValue)
@@ -230,5 +238,24 @@ class FdmAffineModelSwapInnerValue : public FdmInnerValueCalculator {
 
 %template(FdmAffineG2ModelSwapInnerValue) FdmAffineModelSwapInnerValue<G2>;
 %template(FdmAffineHullWhiteModelSwapInnerValue) FdmAffineModelSwapInnerValue<HullWhite>;
+
+%shared_ptr(FdmExtOUJumpModelInnerValue)
+class FdmExtOUJumpModelInnerValue : public FdmInnerValueCalculator {
+  public:
+    typedef std::vector<std::pair<Time, Real>> Shape;
+    %extend {
+        FdmExtOUJumpModelInnerValue(
+            ext::shared_ptr<Payoff> payoff,
+            ext::shared_ptr<FdmMesher> mesher,
+            const std::vector<std::pair<Time, Real>> shape = std::vector<std::pair<Time, Real>>()) {
+                typedef std::vector<std::pair<Time, Real>> Shape;
+                ext::shared_ptr<Shape> shape_;
+                if (!shape.empty())
+                    shape_.reset(new Shape(shape));
+                return new FdmExtOUJumpModelInnerValue(
+                    payoff, mesher, shape_);
+            }
+    }
+};
 
 #endif

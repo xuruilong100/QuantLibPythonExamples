@@ -205,31 +205,47 @@ class Date {
         Day day() const {
             return self->dayOfMonth();
         }
-        Integer weekdayNumber() {
+        Integer weekdayNumber() const {
             return int(self->weekday());
         }
-        std::string __str__() {
+        std::string __str__() const {
             std::ostringstream out;
+        %#ifdef QL_HIGH_RESOLUTION_DATE
+            out << QuantLib::io::iso_datetime(*self);
+        %#else
             out << *self;
+        %#endif
             return out.str();
         }
-        std::string __repr__() {
+        std::string __repr__() const {
             std::ostringstream out;
-            out << *self;
+            if (*self == Date())
+                out << "Date()";
+            else
+        %#ifdef QL_HIGH_RESOLUTION_DATE
+                out << "Date(" << self->dayOfMonth() << ","
+                    << int(self->month()) << "," << self->year() << ","
+                    << self->hours() << "," << self->minutes() << ","
+                    << self->seconds() << "," << self->milliseconds() << ","
+                    << self->microseconds() << ")";
+        %#else
+                out << "Date(" << self->dayOfMonth() << ","
+                    << int(self->month()) << "," << self->year() << ")";
+        %#endif
             return out.str();
         }
-        std::string ISO() {
+        std::string ISO() const {
             std::ostringstream out;
             out << QuantLib::io::iso_date(*self);
             return out.str();
         }
-        BigInteger operator-(const Date& other) {
+        BigInteger operator-(const Date& other) const {
             return *self - other;
         }
-        bool __eq__(const Date& other) {
+        bool __eq__(const Date& other) const {
             return *self == other;
         }
-        int __cmp__(const Date& other) {
+        int __cmp__(const Date& other) const {
             if (*self < other)
                 return -1;
             else if (*self == other)
@@ -237,29 +253,33 @@ class Date {
             else
                 return 1;
         }
-        bool __nonzero__() {
+        bool __nonzero__() const {
             return (*self != Date());
         }
-        bool __bool__() {
+        bool __bool__() const {
             return (*self != Date());
         }
-        int __hash__() {
+        int __hash__() const {
             return self->serialNumber();
         }
-        bool __lt__(const Date& other) {
+        bool __lt__(const Date& other) const {
             return *self < other;
         }
-        bool __gt__(const Date& other) {
+        bool __gt__(const Date& other) const {
             return other < *self;
         }
-        bool __le__(const Date& other) {
+        bool __le__(const Date& other) const {
             return !(other < *self);
         }
-        bool __ge__(const Date& other) {
+        bool __ge__(const Date& other) const {
             return !(*self < other);
         }
-        bool __ne__(const Date& other) {
+        bool __ne__(const Date& other) const {
             return *self != other;
+        }
+        static BigNatural ticksPerSecond() {
+            BigNatural t = static_cast<BigNatural>(Date::ticksPerSecond());
+            return t;
         }
     }
     %pythoncode %{

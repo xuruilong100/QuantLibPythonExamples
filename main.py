@@ -9,7 +9,9 @@ from testsuite.barrieroption import BarrierOptionTest
 from testsuite.basketoption import BasketOptionTest
 from testsuite.batesmodel import BatesModelTest
 from testsuite.binaryoption import BinaryOptionTest
+from testsuite.blackdeltacalculator import BlackDeltaCalculatorTest
 from testsuite.blackformula import BlackFormulaTest
+from testsuite.brownianbridge import BrownianBridgeTest
 from testsuite.businessdayconventions import BusinessDayConventionTest
 from testsuite.calendars import CalendarTest
 from testsuite.chooseroption import ChooserOptionTest
@@ -21,7 +23,9 @@ from testsuite.creditriskplus import CreditRiskPlusTest
 from testsuite.currency import CurrencyTest
 from testsuite.dates import DateTest
 from testsuite.daycounters import DayCounterTest
+from testsuite.digitaloption import DigitalOptionTest
 from testsuite.distributions import DistributionTest
+from testsuite.dividendoption import DividendOptionTest
 from testsuite.doublebarrieroption import DoubleBarrierOptionTest
 from testsuite.doublebinaryoption import DoubleBinaryOptionTest
 from testsuite.europeanoption import EuropeanOptionTest
@@ -61,6 +65,7 @@ from testsuite.pagodaoption import PagodaOptionTest
 from testsuite.partialtimebarrieroption import PartialTimeBarrierOptionTest
 from testsuite.pathgenerator import PathGeneratorTest
 from testsuite.period import PeriodTest
+from testsuite.quantooption import QuantoOptionTest
 from testsuite.quotes import QuoteTest
 from testsuite.riskneutraldensitycalculator import RiskNeutralDensityCalculatorTest
 from testsuite.riskstats import RiskStatisticsTest
@@ -71,6 +76,7 @@ from testsuite.settings import SettingsTest
 from testsuite.solvers import Solver1DTest
 from testsuite.spreadoption import SpreadOptionTest
 from testsuite.stats import StatisticsTest
+from testsuite.swingoption import SwingOptionTest
 from testsuite.termstructures import TermStructureTest
 from testsuite.timegrid import TimeGridTest
 from testsuite.timeseries import TimeSeriesTest
@@ -78,13 +84,15 @@ from testsuite.tqreigendecomposition import TqrEigenDecompositionTest
 from testsuite.transformedgrid import TransformedGridTest
 from testsuite.twoassetbarrieroption import TwoAssetBarrierOptionTest
 from testsuite.twoassetcorrelationoption import TwoAssetCorrelationOptionTest
+from testsuite.varianceoption import VarianceOptionTest
+from testsuite.varianceswaps import VarianceSwapTest
 
 
 if __name__ == '__main__':
     unittest.main()
 
 '''
-Ran 499 tests in 584.066s
+Ran 546 tests in 610.466s
 
-OK (skipped=20)
+OK (skipped=23)
 '''

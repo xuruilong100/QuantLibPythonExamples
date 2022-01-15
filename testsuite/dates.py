@@ -213,7 +213,6 @@ class DateTest(unittest.TestCase):
         d = DateParser.parseFormatted(input_date, "%Y%m%d")
         self.assertFalse(d != Date(2, October, 2001))
 
-    @unittest.skip('skip testIntraday')
     def testIntraday(self):
         TEST_MESSAGE("Testing intraday information of dates...")
 
@@ -263,7 +262,7 @@ class DateTest(unittest.TestCase):
                 "failed to reproduce number of microseconds")
 
         # std.ostringstream s
-        s = Date(7, February, 2015, 1, 4, 2, 3, 4).ISO()
+        s = str(Date(7, February, 2015, 1, 4, 2, 3, 4))
 
         self.assertTrue(
             s == "2015-02-07T01:04:02,003004",

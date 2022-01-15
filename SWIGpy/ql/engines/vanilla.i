@@ -51,6 +51,9 @@ using QuantLib::BatesDoubleExpDetJumpEngine;
 using QuantLib::JumpDiffusionEngine;
 using QuantLib::MCHestonHullWhiteEngine;
 using QuantLib::MakeMCHestonHullWhiteEngine;
+using QuantLib::MCDigitalEngine;
+using QuantLib::MakeMCDigitalEngine;
+using QuantLib::FdExtOUJumpVanillaEngine;
 %}
 
 %{
@@ -862,5 +865,71 @@ class MakeMCHestonHullWhiteEngine {
 
 %template(MakeMCPRHestonHullWhiteEngine) MakeMCHestonHullWhiteEngine<PseudoRandom>;
 %template(MakeMCLDHestonHullWhiteEngine) MakeMCHestonHullWhiteEngine<LowDiscrepancy>;
+
+%shared_ptr(MCDigitalEngine<PseudoRandom>)
+%shared_ptr(MCDigitalEngine<LowDiscrepancy>)
+template<class RNG>
+class MCDigitalEngine : public PricingEngine {
+  public:
+    MCDigitalEngine(
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>&,
+        Size timeSteps,
+        Size timeStepsPerYear,
+        bool brownianBridge,
+        bool antitheticVariate,
+        Size requiredSamples,
+        Real requiredTolerance,
+        Size maxSamples,
+        BigNatural seed);
+};
+
+%template(MCPRDigitalEngine) MCDigitalEngine<PseudoRandom>;
+%template(MCLDDigitalEngine) MCDigitalEngine<LowDiscrepancy>;
+
+template <class RNG>
+class MakeMCDigitalEngine {
+  public:
+    MakeMCDigitalEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
+    // named parameters
+    MakeMCDigitalEngine& withSteps(Size steps);
+    MakeMCDigitalEngine& withStepsPerYear(Size steps);
+    MakeMCDigitalEngine& withBrownianBridge(bool b = true);
+    MakeMCDigitalEngine& withSamples(Size samples);
+    MakeMCDigitalEngine& withAbsoluteTolerance(Real tolerance);
+    MakeMCDigitalEngine& withMaxSamples(Size samples);
+    MakeMCDigitalEngine& withSeed(BigNatural seed);
+    MakeMCDigitalEngine& withAntitheticVariate(bool b = true);
+    // conversion to pricing engine
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return (ext::shared_ptr<PricingEngine>)(*self);
+        }
+    }
+};
+
+%template(MakeMCPRDigitalEngine) MakeMCDigitalEngine<PseudoRandom>;
+%template(MakeMCLDDigitalEngine) MakeMCDigitalEngine<LowDiscrepancy>;
+
+%shared_ptr(FdExtOUJumpVanillaEngine)
+class FdExtOUJumpVanillaEngine : public PricingEngine {
+  public:
+    %extend {
+        FdExtOUJumpVanillaEngine(
+            ext::shared_ptr<ExtOUWithJumpsProcess> p,
+            ext::shared_ptr<YieldTermStructure> rTS,
+            Size tGrid = 50,
+            Size xGrid = 200,
+            Size yGrid = 50,
+            const std::vector<std::pair<Time, Real>>& shape = std::vector<std::pair<Time, Real>>(),
+            const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer()) {
+                typedef std::vector<std::pair<Time, Real>> Shape;
+                ext::shared_ptr<Shape> shape_;
+                if (!shape.empty())
+                    shape_.reset(new Shape(shape));
+                return new FdExtOUJumpVanillaEngine(
+                    p, rTS, tGrid, xGrid, yGrid, shape_, schemeDesc);
+            }
+    }
+};
 
 #endif

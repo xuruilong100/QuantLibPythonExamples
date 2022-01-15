@@ -271,6 +271,7 @@ class DoublingConvergenceSteps {
     Size nextSamples(Size current);
 };
 
+%template(ConvergenceStatisticsTableItem) std::pair<Size, Real>;
 %template(ConvergenceStatisticsTable) std::vector<std::pair<Size, Real>>;
 
 template <class T, class U = DoublingConvergenceSteps>

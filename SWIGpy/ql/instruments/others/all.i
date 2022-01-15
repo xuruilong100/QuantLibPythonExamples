@@ -14,6 +14,8 @@ using QuantLib::CompositeInstrument;
 using QuantLib::CreditDefaultSwap;
 using QuantLib::Stock;
 using QuantLib::cdsMaturity;
+using QuantLib::VarianceOption;
+using QuantLib::VarianceSwap;
 %}
 
 %shared_ptr(Claim)
@@ -145,6 +147,37 @@ Date cdsMaturity(
 class Stock : public Instrument {
   public:
     Stock(Handle<Quote> quote);
+};
+
+%shared_ptr(VarianceOption)
+class VarianceOption : public Instrument {
+  public:
+    VarianceOption(
+        ext::shared_ptr<Payoff> payoff,
+        Real notional,
+        const Date& startDate,
+        const Date& maturityDate);
+    Date startDate() const;
+    Date maturityDate() const;
+    Real notional() const;
+    ext::shared_ptr<Payoff> payoff() const;
+};
+
+%shared_ptr(VarianceSwap)
+class VarianceSwap : public Instrument {
+  public:
+    VarianceSwap(
+        Position::Type position,
+        Real strike,
+        Real notional,
+        const Date& startDate,
+        const Date& maturityDate);
+    Real strike() const;
+    Position::Type position() const;
+    Date startDate() const;
+    Date maturityDate() const;
+    Real notional() const;
+    Real variance() const;
 };
 
 #endif

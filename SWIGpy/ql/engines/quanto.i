@@ -8,28 +8,27 @@
 
 %{
 using QuantLib::QuantoEngine;
-typedef QuantoEngine<VanillaOption,AnalyticEuropeanEngine> QuantoEuropeanEngine;
-typedef QuantoEngine<ForwardVanillaOption,AnalyticEuropeanEngine> QuantoForwardEuropeanEngine;
 %}
 
-%shared_ptr(QuantoEuropeanEngine)
-class QuantoEuropeanEngine : public PricingEngine {
+%shared_ptr(QuantoEngine<VanillaOption, AnalyticEuropeanEngine>)
+%shared_ptr(QuantoEngine<ForwardVanillaOption, ForwardVanillaEngine<AnalyticEuropeanEngine>>)
+%shared_ptr(QuantoEngine<ForwardVanillaOption, ForwardPerformanceVanillaEngine<AnalyticEuropeanEngine>>)
+%shared_ptr(QuantoEngine<BarrierOption, AnalyticBarrierEngine>)
+%shared_ptr(QuantoEngine<DoubleBarrierOption, AnalyticDoubleBarrierEngine>)
+template <class Instr, class Engine>
+class QuantoEngine : public PricingEngine {
   public:
-    QuantoEuropeanEngine(
-        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
+    QuantoEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess>,
         Handle<YieldTermStructure> foreignRiskFreeRate,
         Handle<BlackVolTermStructure> exchangeRateVolatility,
         Handle<Quote> correlation);
 };
 
-%shared_ptr(QuantoForwardEuropeanEngine)
-class QuantoForwardEuropeanEngine : public PricingEngine {
-  public:
-    QuantoForwardEuropeanEngine(
-        ext::shared_ptr<GeneralizedBlackScholesProcess> process,
-        Handle<YieldTermStructure> foreignRiskFreeRate,
-        Handle<BlackVolTermStructure> exchangeRateVolatility,
-        Handle<Quote> correlation);
-};
+%template(QuantoVanillaEngine) QuantoEngine<VanillaOption, AnalyticEuropeanEngine>;
+%template(QuantoForwardVanillaEngine) QuantoEngine<ForwardVanillaOption, ForwardVanillaEngine<AnalyticEuropeanEngine>>;
+%template(QuantoForwardVanillaPerformanceEngine) QuantoEngine<ForwardVanillaOption, ForwardPerformanceVanillaEngine<AnalyticEuropeanEngine>>;
+%template(QuantoBarrierEngine) QuantoEngine<BarrierOption, AnalyticBarrierEngine>;
+%template(QuantoDoubleBarrierEngine) QuantoEngine<DoubleBarrierOption, AnalyticDoubleBarrierEngine>;
 
 #endif

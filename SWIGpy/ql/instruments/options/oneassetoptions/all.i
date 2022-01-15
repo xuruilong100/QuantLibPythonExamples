@@ -368,6 +368,9 @@ class QuantoForwardVanillaOption : public ForwardVanillaOption {
         Date resetDate,
         const ext::shared_ptr<StrikedTypePayoff>& payoff,
         const ext::shared_ptr<Exercise>& exercise);
+    Real qvega();
+    Real qrho();
+    Real qlambda();
 };
 
 #endif

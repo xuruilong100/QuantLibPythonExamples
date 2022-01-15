@@ -368,6 +368,11 @@ class UnaryFunction {
     UnaryFunction(const UnaryFunction& f) : function_(f.function_) {
         Py_XINCREF(function_);
     }
+    UnaryFunction(UnaryFunction&& f) {
+        PyObject* temp = function_;
+        function_ = f.function_;
+        f.function_ = temp;
+    }
     UnaryFunction& operator=(const UnaryFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {
             Py_XDECREF(function_);
@@ -427,6 +432,11 @@ class BinaryFunction {
         : function_(f.function_) {
         Py_XINCREF(function_);
     }
+    BinaryFunction(BinaryFunction&& f) {
+        PyObject* temp = function_;
+        function_ = f.function_;
+        f.function_ = temp;
+    }
     BinaryFunction& operator=(const BinaryFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {
             Py_XDECREF(function_);
@@ -460,6 +470,11 @@ class PyCostFunction : public CostFunction {
     PyCostFunction(const PyCostFunction& f)
         : function_(f.function_) {
         Py_XINCREF(function_);
+    }
+    PyCostFunction(PyCostFunction&& f) {
+        PyObject* temp = function_;
+        function_ = f.function_;
+        f.function_ = temp;
     }
     PyCostFunction& operator=(const PyCostFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {

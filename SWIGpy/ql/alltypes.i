@@ -1217,6 +1217,15 @@ using QuantLib::BoundedGrid;
 using QuantLib::BoundedLogGrid;
 using QuantLib::TransformedGrid;
 using QuantLib::LogGrid;
+using QuantLib::MCDigitalEngine;
+using QuantLib::MakeMCDigitalEngine;
+using QuantLib::VarianceOption;
+using QuantLib::IntegralHestonVarianceOptionEngine;
+using QuantLib::VarianceSwap;
+using QuantLib::ReplicatingVarianceSwapEngine;
+using QuantLib::MCVarianceSwapEngine;
+using QuantLib::MakeMCVarianceSwapEngine;
+using QuantLib::FdmExtOUJumpModelInnerValue;
 %}
 
 %{
@@ -1233,8 +1242,6 @@ typedef QuantLib::PseudoRandom::rng_type GaussianRandomGenerator;
 typedef QuantLib::PseudoRandom::rsg_type GaussianRandomSequenceGenerator;
 typedef QuantLib::PseudoRandom::urng_type UniformRandomGenerator;
 typedef QuantLib::PseudoRandom::ursg_type UniformRandomSequenceGenerator;
-typedef QuantLib::QuantoEngine<ForwardVanillaOption,AnalyticEuropeanEngine> QuantoForwardEuropeanEngine;
-typedef QuantLib::QuantoEngine<VanillaOption,AnalyticEuropeanEngine> QuantoEuropeanEngine;
 typedef QuantLib::StepCondition<Array> FdmStepCondition;
 typedef QuantLib::StochasticProcess1D::discretization discretization1D;
 typedef QuantLib::StochasticProcess::discretization discretization;
