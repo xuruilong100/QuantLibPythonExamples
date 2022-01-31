@@ -3,7 +3,7 @@
 #include <ql/quantlib.hpp>
 #include <qlex/quantlibex.hpp>
 
-#if QL_HEX_VERSION < 0x01240000
+#if QL_HEX_VERSION < 0x01250000
     #error using an old version of QuantLib, please update
 #endif
 
@@ -16,20 +16,6 @@
 #include <boost/config/auto_link.hpp>
 #undef BOOST_LIB_NAME
 #endif
-#endif
-
-#if defined(_MSC_VER)         // Microsoft Visual C++ 6.0
-// disable Swig-dependent warnings
-
-// 'identifier1' has C-linkage specified,
-// but returns UDT 'identifier2' which is incompatible with C
-#pragma warning(disable: 4190)
-
-// 'int' : forcing value to bool 'true' or 'false' (performance warning)
-#pragma warning(disable: 4800)
-
-// debug info too long etc etc
-#pragma warning(disable: 4786)
 #endif
 %}
 

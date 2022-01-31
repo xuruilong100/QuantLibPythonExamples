@@ -12614,16 +12614,16 @@ class FdHestonDoubleBarrierEngine(PricingEngine):
 # Register FdHestonDoubleBarrierEngine in _QuantLib:
 _QuantLib.FdHestonDoubleBarrierEngine_swigregister(FdHestonDoubleBarrierEngine)
 
-class WulinYongDoubleBarrierEngine(PricingEngine):
+class SuoWangDoubleBarrierEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, process, series=5):
-        _QuantLib.WulinYongDoubleBarrierEngine_swiginit(self, _QuantLib.new_WulinYongDoubleBarrierEngine(process, series))
-    __swig_destroy__ = _QuantLib.delete_WulinYongDoubleBarrierEngine
+        _QuantLib.SuoWangDoubleBarrierEngine_swiginit(self, _QuantLib.new_SuoWangDoubleBarrierEngine(process, series))
+    __swig_destroy__ = _QuantLib.delete_SuoWangDoubleBarrierEngine
 
-# Register WulinYongDoubleBarrierEngine in _QuantLib:
-_QuantLib.WulinYongDoubleBarrierEngine_swigregister(WulinYongDoubleBarrierEngine)
+# Register SuoWangDoubleBarrierEngine in _QuantLib:
+_QuantLib.SuoWangDoubleBarrierEngine_swigregister(SuoWangDoubleBarrierEngine)
 
 class VannaVolgaIKDoubleBarrierEngine(PricingEngine):
     r"""
@@ -13977,8 +13977,8 @@ class BinomialCRRConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialCRRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialCRRConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialCRRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialCRRConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialCRRConvertibleEngine
 
 # Register BinomialCRRConvertibleEngine in _QuantLib:
@@ -13988,8 +13988,8 @@ class BinomialJRConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialJRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialJRConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialJRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialJRConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialJRConvertibleEngine
 
 # Register BinomialJRConvertibleEngine in _QuantLib:
@@ -13999,8 +13999,8 @@ class BinomialEQPConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialEQPConvertibleEngine_swiginit(self, _QuantLib.new_BinomialEQPConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialEQPConvertibleEngine_swiginit(self, _QuantLib.new_BinomialEQPConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialEQPConvertibleEngine
 
 # Register BinomialEQPConvertibleEngine in _QuantLib:
@@ -14010,8 +14010,8 @@ class BinomialTrigeorgisConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialTrigeorgisConvertibleEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialTrigeorgisConvertibleEngine_swiginit(self, _QuantLib.new_BinomialTrigeorgisConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialTrigeorgisConvertibleEngine
 
 # Register BinomialTrigeorgisConvertibleEngine in _QuantLib:
@@ -14021,8 +14021,8 @@ class BinomialTianConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialTianConvertibleEngine_swiginit(self, _QuantLib.new_BinomialTianConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialTianConvertibleEngine_swiginit(self, _QuantLib.new_BinomialTianConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialTianConvertibleEngine
 
 # Register BinomialTianConvertibleEngine in _QuantLib:
@@ -14032,8 +14032,8 @@ class BinomialLRConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialLRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialLRConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialLRConvertibleEngine_swiginit(self, _QuantLib.new_BinomialLRConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialLRConvertibleEngine
 
 # Register BinomialLRConvertibleEngine in _QuantLib:
@@ -14043,8 +14043,8 @@ class BinomialJ4ConvertibleEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, process, steps):
-        _QuantLib.BinomialJ4ConvertibleEngine_swiginit(self, _QuantLib.new_BinomialJ4ConvertibleEngine(process, steps))
+    def __init__(self, *args):
+        _QuantLib.BinomialJ4ConvertibleEngine_swiginit(self, _QuantLib.new_BinomialJ4ConvertibleEngine(*args))
     __swig_destroy__ = _QuantLib.delete_BinomialJ4ConvertibleEngine
 
 # Register BinomialJ4ConvertibleEngine in _QuantLib:
@@ -22256,14 +22256,8 @@ class ConvertibleBond(Bond):
     def conversionRatio(self):
         return _QuantLib.ConvertibleBond_conversionRatio(self)
 
-    def dividends(self):
-        return _QuantLib.ConvertibleBond_dividends(self)
-
     def callability(self):
         return _QuantLib.ConvertibleBond_callability(self)
-
-    def creditSpread(self):
-        return _QuantLib.ConvertibleBond_creditSpread(self)
     __swig_destroy__ = _QuantLib.delete_ConvertibleBond
 
 # Register ConvertibleBond in _QuantLib:
@@ -22295,8 +22289,8 @@ class ConvertibleZeroCouponBond(ConvertibleBond):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, exercise, conversionRatio, dividends, callability, creditSpread, issueDate, settlementDays, dayCounter, schedule, redemption=100.0):
-        _QuantLib.ConvertibleZeroCouponBond_swiginit(self, _QuantLib.new_ConvertibleZeroCouponBond(exercise, conversionRatio, dividends, callability, creditSpread, issueDate, settlementDays, dayCounter, schedule, redemption))
+    def __init__(self, exercise, conversionRatio, callability, issueDate, settlementDays, dayCounter, schedule, redemption=100):
+        _QuantLib.ConvertibleZeroCouponBond_swiginit(self, _QuantLib.new_ConvertibleZeroCouponBond(exercise, conversionRatio, callability, issueDate, settlementDays, dayCounter, schedule, redemption))
     __swig_destroy__ = _QuantLib.delete_ConvertibleZeroCouponBond
 
 # Register ConvertibleZeroCouponBond in _QuantLib:
@@ -22362,23 +22356,6 @@ class FixedRateBondForward(Forward):
 
 # Register FixedRateBondForward in _QuantLib:
 _QuantLib.FixedRateBondForward_swigregister(FixedRateBondForward)
-
-class ForwardRateAgreement(Forward):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.ForwardRateAgreement_swiginit(self, _QuantLib.new_ForwardRateAgreement(*args))
-
-    def fixingDate(self):
-        return _QuantLib.ForwardRateAgreement_fixingDate(self)
-
-    def forwardRate(self):
-        return _QuantLib.ForwardRateAgreement_forwardRate(self)
-    __swig_destroy__ = _QuantLib.delete_ForwardRateAgreement
-
-# Register ForwardRateAgreement in _QuantLib:
-_QuantLib.ForwardRateAgreement_swigregister(ForwardRateAgreement)
 
 class MultiAssetOption(Option):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -23224,6 +23201,38 @@ class CreditDefaultSwap(Instrument):
 
 # Register CreditDefaultSwap in _QuantLib:
 _QuantLib.CreditDefaultSwap_swigregister(CreditDefaultSwap)
+
+class ForwardRateAgreement(Instrument):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.ForwardRateAgreement_swiginit(self, _QuantLib.new_ForwardRateAgreement(*args))
+
+    def amount(self):
+        return _QuantLib.ForwardRateAgreement_amount(self)
+
+    def calendar(self):
+        return _QuantLib.ForwardRateAgreement_calendar(self)
+
+    def businessDayConvention(self):
+        return _QuantLib.ForwardRateAgreement_businessDayConvention(self)
+
+    def dayCounter(self):
+        return _QuantLib.ForwardRateAgreement_dayCounter(self)
+
+    def discountCurve(self):
+        return _QuantLib.ForwardRateAgreement_discountCurve(self)
+
+    def fixingDate(self):
+        return _QuantLib.ForwardRateAgreement_fixingDate(self)
+
+    def forwardRate(self):
+        return _QuantLib.ForwardRateAgreement_forwardRate(self)
+    __swig_destroy__ = _QuantLib.delete_ForwardRateAgreement
+
+# Register ForwardRateAgreement in _QuantLib:
+_QuantLib.ForwardRateAgreement_swigregister(ForwardRateAgreement)
 
 
 def cdsMaturity(tradeDate, tenor, rule):

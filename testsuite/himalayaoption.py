@@ -71,7 +71,7 @@ class HimalayaOptionTest(unittest.TestCase):
         option.setPricingEngine(mcEngine)
 
         value = option.NPV()
-        storedValue = 6.60370398
+        storedValue = 5.93632056
         tolerance = 1.0e-8
 
         self.assertFalse(abs(value - storedValue) > tolerance)

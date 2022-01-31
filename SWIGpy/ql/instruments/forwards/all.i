@@ -8,7 +8,6 @@
 
 %{
 using QuantLib::FixedRateBondForward;
-using QuantLib::ForwardRateAgreement;
 %}
 
 %shared_ptr(FixedRateBondForward)
@@ -28,23 +27,6 @@ class FixedRateBondForward : public Forward {
         const Handle<YieldTermStructure>& incomeDiscountCurve = Handle<YieldTermStructure>());
     Real forwardPrice();
     Real cleanForwardPrice();
-};
-
-%shared_ptr(ForwardRateAgreement)
-class ForwardRateAgreement : public Forward {
-  public:
-    ForwardRateAgreement(
-        const Date& valueDate,
-        const Date& maturityDate,
-        Position::Type type,
-        Rate strikeForwardRate,
-        Real notionalAmount,
-        const ext::shared_ptr<IborIndex>& index,
-        const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
-        bool useIndexedCoupon = true);
-
-    Date fixingDate() const;
-    InterestRate forwardRate() const;
 };
 
 #endif

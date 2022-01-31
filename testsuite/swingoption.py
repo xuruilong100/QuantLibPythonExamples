@@ -107,7 +107,7 @@ class SwingOptionTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        settlementDate = Date.todaysDate()
+        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
         dayCounter = ActualActual(ActualActual.ISDA)
         maturityDate = settlementDate + Period(12, Months)
@@ -166,7 +166,7 @@ class SwingOptionTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        settlementDate = Date.todaysDate()
+        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
         dayCounter = ActualActual(ActualActual.ISDA)
         maturityDate = settlementDate + Period(12, Months)

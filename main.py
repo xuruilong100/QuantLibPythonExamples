@@ -38,7 +38,7 @@ from testsuite.fdcev import FdCevTest
 from testsuite.fdheston import FdHestonTest
 from testsuite.fdsabr import FdSabrTest
 from testsuite.forwardoption import ForwardOptionTest
-from testsuite.functions import FunctionsTest
+from testsuite.functions import FunctionsTest # warnings
 from testsuite.garch import GARCHTest
 from testsuite.gaussianquadratures import GaussianQuadraturesTest
 from testsuite.gjrgarchmodel import GJRGARCHModelTest
@@ -94,5 +94,5 @@ if __name__ == '__main__':
 '''
 Ran 546 tests in 610.466s
 
-OK (skipped=23)
+OK (skipped=25)
 '''

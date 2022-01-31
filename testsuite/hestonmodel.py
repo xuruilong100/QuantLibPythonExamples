@@ -277,7 +277,7 @@ class HestonModelTest(unittest.TestCase):
             "Testing analytic Heston engine against Black formula...")
 
         backup = SavedSettings()
-        settlementDate = Date.todaysDate()
+        settlementDate = Date(16, Sep, 2015) # Date.todaysDate() Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
         dayCounter = ActualActual(ActualActual.ISDA)
         exerciseDate = settlementDate + Period(6, Months)

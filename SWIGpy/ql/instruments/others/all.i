@@ -12,6 +12,7 @@ using QuantLib::FaceValueClaim;
 using QuantLib::FaceValueAccrualClaim;
 using QuantLib::CompositeInstrument;
 using QuantLib::CreditDefaultSwap;
+using QuantLib::ForwardRateAgreement;
 using QuantLib::Stock;
 using QuantLib::cdsMaturity;
 using QuantLib::VarianceOption;
@@ -139,6 +140,34 @@ class CreditDefaultSwap : public Instrument {
         PricingModel model = Midpoint) const;
 };
 
+%shared_ptr(ForwardRateAgreement)
+class ForwardRateAgreement : public Instrument {
+  public:
+    ForwardRateAgreement(
+        const Date& valueDate,
+        const Date& maturityDate,
+        Position::Type type,
+        Rate strikeForwardRate,
+        Real notionalAmount,
+        const ext::shared_ptr<IborIndex>& index,
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
+        bool useIndexedCoupon = true);
+    ForwardRateAgreement(
+        const Date& valueDate,
+        Position::Type type,
+        Rate strikeForwardRate,
+        Real notionalAmount,
+        const ext::shared_ptr<IborIndex>& index,
+        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>());
+
+    Real amount() const;
+    const Calendar& calendar() const;
+    BusinessDayConvention businessDayConvention() const;
+    const DayCounter& dayCounter() const;
+    Handle<YieldTermStructure> discountCurve() const;
+    Date fixingDate() const;
+    InterestRate forwardRate() const;
+};
 
 Date cdsMaturity(
     const Date& tradeDate, const Period& tenor, DateGeneration::Rule rule);

@@ -83,7 +83,7 @@ class DividendOptionTest(unittest.TestCase):
     @unittest.skip("Doesn't quite work.  Need to deal with date conventions")
     def testEuropeanKnownValue(self):
         TEST_MESSAGE(
-            "Testing dividend European option values with known value...")
+            "Testing dividend European option against known value...")
 
         # Reference pg. 253 - Hull - Options, Futures, and Other Derivatives 5th ed
         # Exercise 12.8
@@ -105,10 +105,10 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        exDate = today + Period(6, Months)
+        exDate = today + Period(180, Days)
         exercise = EuropeanExercise(exDate)
 
-        dividendDates = [today + Period(2, Months), today + Period(5, Months)]
+        dividendDates = [today + Period(3 * 30, Days), today + Period(5 * 30, Days)]
         dividends = [0.50, 0.50]
 
         payoff = PlainVanillaPayoff(Option.Call, 40.0)

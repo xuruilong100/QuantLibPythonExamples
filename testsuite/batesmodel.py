@@ -52,7 +52,7 @@ class BatesModelTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        settlementDate = Date.todaysDate()
+        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
 
         dayCounter = ActualActual(ActualActual.ISDA)
@@ -135,7 +135,7 @@ class BatesModelTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        settlementDate = Date.todaysDate()
+        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
         Settings.instance().evaluationDate = settlementDate
 
         dayCounter = ActualActual(ActualActual.ISDA)

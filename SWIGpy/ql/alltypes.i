@@ -1044,7 +1044,7 @@ using QuantLib::Weekday;
 using QuantLib::Weekly;
 using QuantLib::Weeks;
 using QuantLib::WriterExtensibleOption;
-using QuantLib::WulinYongDoubleBarrierEngine;
+using QuantLib::SuoWangDoubleBarrierEngine;
 using QuantLib::Year;
 using QuantLib::YearOnYearInflationSwap;
 using QuantLib::YearOnYearInflationSwapHelper;

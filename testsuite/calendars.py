@@ -1413,9 +1413,28 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(5, October, 2021))
         expectedHol.push_back(Date(6, October, 2021))
         expectedHol.push_back(Date(7, October, 2021))
+        # China Shanghai Securities Exchange holiday list in the year 2021
+        expectedHol.push_back(Date(3, Jan, 2022))
+        expectedHol.push_back(Date(31, Jan, 2022))
+        expectedHol.push_back(Date(1, Feb, 2022))
+        expectedHol.push_back(Date(2, Feb, 2022))
+        expectedHol.push_back(Date(3, Feb, 2022))
+        expectedHol.push_back(Date(4, Feb, 2022))
+        expectedHol.push_back(Date(4, April, 2022))
+        expectedHol.push_back(Date(5, April, 2022))
+        expectedHol.push_back(Date(2, May, 2022))
+        expectedHol.push_back(Date(3, May, 2022))
+        expectedHol.push_back(Date(4, May, 2022))
+        expectedHol.push_back(Date(3, June, 2022))
+        expectedHol.push_back(Date(12, September, 2022))
+        expectedHol.push_back(Date(3, October, 2022))
+        expectedHol.push_back(Date(4, October, 2022))
+        expectedHol.push_back(Date(5, October, 2022))
+        expectedHol.push_back(Date(6, October, 2022))
+        expectedHol.push_back(Date(7, October, 2022))
 
         c = China(China.SSE)
-        hol = c.holidayList(Date(1, January, 2014), Date(31, December, 2021))
+        hol = c.holidayList(Date(1, January, 2014), Date(31, December, 2022))
 
         for i in range(min(len(hol), len(expectedHol))):
             self.assertFalse(hol[i] != expectedHol[i])
@@ -1573,7 +1592,7 @@ class CalendarTest(unittest.TestCase):
         cvh = JointCalendar(calendar_vect, JoinHolidays)
 
         # test one year, starting today
-        firstDate = Date.todaysDate()
+        firstDate = Date(16, Sep, 2015) # Date.todaysDate()
         endDate = firstDate + Period(1, Years)
 
         d = firstDate

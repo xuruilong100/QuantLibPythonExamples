@@ -219,7 +219,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             self.assertFalse(error > value.tol)
 
             # Wulin Suo/Yong Wang engine
-            engine = WulinYongDoubleBarrierEngine(stochProcess)
+            engine = SuoWangDoubleBarrierEngine(stochProcess)
             opt.setPricingEngine(engine)
 
             calculated = opt.NPV()

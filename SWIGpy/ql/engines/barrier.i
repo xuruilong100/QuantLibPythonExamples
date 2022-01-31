@@ -18,7 +18,7 @@ using QuantLib::FdHestonRebateEngine;
 using QuantLib::BinomialBarrierEngine;
 using QuantLib::VannaVolgaBarrierEngine;
 using QuantLib::FdHestonDoubleBarrierEngine;
-using QuantLib::WulinYongDoubleBarrierEngine;
+using QuantLib::SuoWangDoubleBarrierEngine;
 using QuantLib::VannaVolgaDoubleBarrierEngine;
 using QuantLib::AnalyticDoubleBarrierBinaryEngine;
 using QuantLib::BinomialDoubleBarrierEngine;
@@ -238,10 +238,10 @@ class FdHestonDoubleBarrierEngine : public PricingEngine {
         Real mixingFactor = 1.0);
 };
 
-%shared_ptr(WulinYongDoubleBarrierEngine)
-class WulinYongDoubleBarrierEngine : public PricingEngine {
+%shared_ptr(SuoWangDoubleBarrierEngine)
+class SuoWangDoubleBarrierEngine : public PricingEngine {
   public:
-    WulinYongDoubleBarrierEngine(
+    SuoWangDoubleBarrierEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
         int series = 5);
 };
@@ -255,7 +255,7 @@ Type values:
 "
 
 %shared_ptr(VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>)
-%shared_ptr(VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>)
+%shared_ptr(VannaVolgaDoubleBarrierEngine<SuoWangDoubleBarrierEngine>)
 template <class E>
 class VannaVolgaDoubleBarrierEngine : public PricingEngine {
   public:
@@ -272,7 +272,7 @@ class VannaVolgaDoubleBarrierEngine : public PricingEngine {
 };
 
 %template(VannaVolgaIKDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>;
-%template(VannaVolgaWYDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<WulinYongDoubleBarrierEngine>;
+%template(VannaVolgaWYDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<SuoWangDoubleBarrierEngine>;
 
 %shared_ptr(AnalyticDoubleBarrierBinaryEngine)
 class AnalyticDoubleBarrierBinaryEngine : public PricingEngine {
