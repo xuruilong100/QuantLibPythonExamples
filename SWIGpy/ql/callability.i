@@ -33,5 +33,6 @@ class SoftCallability : public Callability {
 };
 
 %template(CallabilitySchedule) std::vector<ext::shared_ptr<Callability>>;
+typedef std::vector<ext::shared_ptr<Callability>> CallabilitySchedule;
 
 #endif

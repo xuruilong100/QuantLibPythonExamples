@@ -44,6 +44,7 @@
 %include ../ql/cashflows/CashFlows.i
 %include ../ql/cashflows/Coupon.i
 %include ../ql/cashflows/Dividend.i
+%include ../ql/cashflows/IborLegCashFlows.i
 %include ../ql/cashflows/Leg.i
 %include ../ql/cashflows/coupons/all.i
 %include ../ql/cashflows/dividends/all.i
@@ -55,12 +56,14 @@
 %include ../ql/date.i
 %include ../ql/daycounters.i
 %include ../ql/defaultprobabilityhelpers/all.i
+%include ../ql/detail.i
 %include ../ql/distributions.i
 %include ../ql/engines/asian.i
 %include ../ql/engines/barrier.i
 %include ../ql/engines/basket.i
 %include ../ql/engines/bond.i
 %include ../ql/engines/capfloor.i
+%include ../ql/engines/catbond.i
 %include ../ql/engines/cds.i
 %include ../ql/engines/cliquet.i
 %include ../ql/engines/dividend.i

@@ -4,6 +4,7 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 %include ../ql/termstructures/YieldTermStructure.i
 
 %{
@@ -30,7 +31,6 @@ using QuantLib::InterpolatedDiscountCurve;
 using QuantLib::FittedBondDiscountCurve;
 using QuantLib::InterpolatedZeroCurve;
 using QuantLib::InterpolatedForwardCurve;
-typedef PiecewiseYieldCurve<SimpleZeroYield, Linear, QuantLib::GlobalBootstrap> GlobalLinearSimpleZeroCurve;
 %}
 
 %shared_ptr(ImpliedTermStructure)
@@ -62,6 +62,8 @@ class ForwardSpreadedTermStructure : public YieldTermStructure {
 
 %shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>)
 %shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>)
+%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<ForwardFlat>)
+%shared_ptr(InterpolatedPiecewiseZeroSpreadedTermStructure<Cubic>)
 template <class Interpolator>
 class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure {
   public:
@@ -77,6 +79,8 @@ class InterpolatedPiecewiseZeroSpreadedTermStructure : public YieldTermStructure
 
 %template(SpreadedLinearZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>;
 %template(SpreadedBackwardFlatZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>;
+%template(SpreadedForwardFlatZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<ForwardFlat>;
+%template(SpreadedCubicZeroInterpolatedTermStructure) InterpolatedPiecewiseZeroSpreadedTermStructure<Cubic>;
 
 %shared_ptr(FlatForward)
 class FlatForward : public YieldTermStructure {
@@ -147,24 +151,19 @@ typedef PiecewiseYieldCurve<Traits, Interpolator> Name;
 %}
 
 %shared_ptr(Name)
-class Name : public YieldTermStructure {
+class Name : public YieldTermStructure, public LazyObject {
   public:
     %extend {
         Name(
             const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
             const DayCounter& dayCounter,
-            const std::vector<Handle<Quote>>& jumps=std::vector<Handle<Quote>>(),
-            const std::vector<Date>& jumpDates=std::vector<Date>(),
-            const Interpolator& i=Interpolator(),
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
-                    referenceDate,
-                    instruments,
-                    dayCounter,
-                    jumps,
-                    jumpDates,
-                    i,
+                    referenceDate, instruments, dayCounter, jumps, jumpDates, i,
                     Name::bootstrap_type(
                         b.accuracy, b.minValue, b.maxValue,
                         b.maxAttempts, b.maxFactor, b.minFactor,
@@ -177,24 +176,7 @@ class Name : public YieldTermStructure {
             const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
-                    referenceDate,
-                    instruments,
-                    dayCounter,
-                    i,
-                    Name::bootstrap_type(
-                        b.accuracy, b.minValue, b.maxValue,
-                        b.maxAttempts, b.maxFactor, b.minFactor,
-                        b.dontThrow, b.dontThrowSteps));
-            }
-     	Name(
-            const Date& referenceDate,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const IterativeBootstrap& b) {
-                return new Name(
-                    referenceDate,
-                    instruments,
-                    dayCounter,
+                    referenceDate, instruments, dayCounter, i,
                     Name::bootstrap_type(
                         b.accuracy, b.minValue, b.maxValue,
                         b.maxAttempts, b.maxFactor, b.minFactor,
@@ -205,18 +187,12 @@ class Name : public YieldTermStructure {
             const Calendar& calendar,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
             const DayCounter& dayCounter,
-            const std::vector<Handle<Quote>>& jumps=std::vector<Handle<Quote>>(),
-            const std::vector<Date>& jumpDates=std::vector<Date>(),
-            const Interpolator& i=Interpolator(),
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
-                    settlementDays,
-                    calendar,
-                    instruments,
-                    dayCounter,
-                    jumps,
-                    jumpDates,
-                    i,
+                    settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, i,
                     Name::bootstrap_type(
                         b.accuracy, b.minValue, b.maxValue,
                         b.maxAttempts, b.maxFactor, b.minFactor,
@@ -230,27 +206,7 @@ class Name : public YieldTermStructure {
             const Interpolator& i,
             const IterativeBootstrap& b = IterativeBootstrap()) {
                 return new Name(
-                    settlementDays,
-                    calendar,
-                    instruments,
-                    dayCounter,
-                    i,
-                    Name::bootstrap_type(
-                        b.accuracy, b.minValue, b.maxValue,
-                        b.maxAttempts, b.maxFactor, b.minFactor,
-                        b.dontThrow, b.dontThrowSteps));
-            }
-     	Name(
-            Natural settlementDays,
-            const Calendar& calendar,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const IterativeBootstrap& b) {
-                return new Name(
-                    settlementDays,
-                    calendar,
-                    instruments,
-                    dayCounter,
+                    settlementDays, calendar, instruments, dayCounter, i,
                     Name::bootstrap_type(
                         b.accuracy, b.minValue, b.maxValue,
                         b.maxAttempts, b.maxFactor, b.minFactor,
@@ -273,9 +229,9 @@ export_piecewise_curve(PiecewiseCubicForward,               ForwardRate,    Cubi
 export_piecewise_curve(PiecewiseForwardFlatForward,         ForwardRate,    ForwardFlat);
 export_piecewise_curve(PiecewiseLinearForward,              ForwardRate,    Linear);
 export_piecewise_curve(PiecewiseLogLinearForward,           ForwardRate,    LogLinear);
-//export_piecewise_curve(PiecewiseLogCubicForward,            ForwardRate,    LogCubic);
-//export_piecewise_curve(PiecewiseLogMixedLinearCubicForward, ForwardRate,    LogMixedLinearCubic);
-//export_piecewise_curve(PiecewiseMixedLinearCubicForward,    ForwardRate,    MixedLinearCubic);
+export_piecewise_curve(PiecewiseLogCubicForward,            ForwardRate,    LogCubic);
+export_piecewise_curve(PiecewiseLogMixedLinearCubicForward, ForwardRate,    LogMixedLinearCubic);
+export_piecewise_curve(PiecewiseMixedLinearCubicForward,    ForwardRate,    MixedLinearCubic);
 export_piecewise_curve(PiecewiseDefaultLogCubicForward,     ForwardRate,    DefaultLogCubic);
 export_piecewise_curve(PiecewiseMonotonicLogCubicForward,   ForwardRate,    MonotonicLogCubic);
 export_piecewise_curve(PiecewiseKrugerLogForward,           ForwardRate,    KrugerLog);
@@ -288,9 +244,9 @@ export_piecewise_curve(PiecewiseCubicDiscount,               Discount,    Cubic)
 export_piecewise_curve(PiecewiseForwardFlatDiscount,         Discount,    ForwardFlat);
 export_piecewise_curve(PiecewiseLinearDiscount,              Discount,    Linear);
 export_piecewise_curve(PiecewiseLogLinearDiscount,           Discount,    LogLinear);
-//export_piecewise_curve(PiecewiseLogCubicDiscount,            Discount,    LogCubic);
-//export_piecewise_curve(PiecewiseLogMixedLinearCubicDiscount, Discount,    LogMixedLinearCubic);
-//export_piecewise_curve(PiecewiseMixedLinearCubicDiscount,    Discount,    MixedLinearCubic);
+export_piecewise_curve(PiecewiseLogCubicDiscount,            Discount,    LogCubic);
+export_piecewise_curve(PiecewiseLogMixedLinearCubicDiscount, Discount,    LogMixedLinearCubic);
+export_piecewise_curve(PiecewiseMixedLinearCubicDiscount,    Discount,    MixedLinearCubic);
 export_piecewise_curve(PiecewiseDefaultLogCubicDiscount,     Discount,    DefaultLogCubic);
 export_piecewise_curve(PiecewiseMonotonicLogCubicDiscount,   Discount,    MonotonicLogCubic);
 export_piecewise_curve(PiecewiseKrugerLogDiscount,           Discount,    KrugerLog);
@@ -303,12 +259,27 @@ export_piecewise_curve(PiecewiseCubicZeroYield,               ZeroYield,    Cubi
 export_piecewise_curve(PiecewiseForwardFlatZeroYield,         ZeroYield,    ForwardFlat);
 export_piecewise_curve(PiecewiseLinearZeroYield,              ZeroYield,    Linear);
 export_piecewise_curve(PiecewiseLogLinearZeroYield,           ZeroYield,    LogLinear);
-//export_piecewise_curve(PiecewiseLogCubicZeroYield,            ZeroYield,    LogCubic);
-//export_piecewise_curve(PiecewiseLogMixedLinearCubicZeroYield, ZeroYield,    LogMixedLinearCubic);
-//export_piecewise_curve(PiecewiseMixedLinearCubicZeroYield,    ZeroYield,    MixedLinearCubic);
+export_piecewise_curve(PiecewiseLogCubicZeroYield,            ZeroYield,    LogCubic);
+export_piecewise_curve(PiecewiseLogMixedLinearCubicZeroYield, ZeroYield,    LogMixedLinearCubic);
+export_piecewise_curve(PiecewiseMixedLinearCubicZeroYield,    ZeroYield,    MixedLinearCubic);
 export_piecewise_curve(PiecewiseDefaultLogCubicZeroYield,     ZeroYield,    DefaultLogCubic);
 export_piecewise_curve(PiecewiseMonotonicLogCubicZeroYield,   ZeroYield,    MonotonicLogCubic);
 export_piecewise_curve(PiecewiseKrugerLogZeroYield,           ZeroYield,    KrugerLog);
+
+// SimpleZeroYield
+export_piecewise_curve(PiecewiseLinearFlatSimpleZeroYield,          SimpleZeroYield,    LinearFlat);
+export_piecewise_curve(PiecewiseBackwardFlatSimpleZeroYield,        SimpleZeroYield,    BackwardFlat);
+export_piecewise_curve(PiecewiseConvexMonotoneSimpleZeroYield,      SimpleZeroYield,    ConvexMonotone);
+export_piecewise_curve(PiecewiseCubicSimpleZeroYield,               SimpleZeroYield,    Cubic);
+export_piecewise_curve(PiecewiseForwardFlatSimpleZeroYield,         SimpleZeroYield,    ForwardFlat);
+export_piecewise_curve(PiecewiseLinearSimpleZeroYield,              SimpleZeroYield,    Linear);
+export_piecewise_curve(PiecewiseLogLinearSimpleZeroYield,           SimpleZeroYield,    LogLinear);
+export_piecewise_curve(PiecewiseLogCubicSimpleZeroYield,            SimpleZeroYield,    LogCubic);
+export_piecewise_curve(PiecewiseLogMixedLinearCubicSimpleZeroYield, SimpleZeroYield,    LogMixedLinearCubic);
+export_piecewise_curve(PiecewiseMixedLinearCubicSimpleZeroYield,    SimpleZeroYield,    MixedLinearCubic);
+export_piecewise_curve(PiecewiseDefaultLogCubicSimpleZeroYield,     SimpleZeroYield,    DefaultLogCubic);
+export_piecewise_curve(PiecewiseMonotonicLogCubicSimpleZeroYield,   SimpleZeroYield,    MonotonicLogCubic);
+export_piecewise_curve(PiecewiseKrugerLogSimpleZeroYield,           SimpleZeroYield,    KrugerLog);
 
 %{
 class AdditionalErrors {
@@ -334,6 +305,7 @@ class AdditionalErrors {
 };
 
 class AdditionalDates {
+  private:
     std::vector<Date> additionalDates_;
 
   public:
@@ -345,37 +317,309 @@ class AdditionalDates {
 };
 %}
 
-%shared_ptr(GlobalLinearSimpleZeroCurve)
-class GlobalLinearSimpleZeroCurve : public YieldTermStructure {
+%define export_piecewise_curve_global(Name,Traits,Interpolator)
+%{
+typedef PiecewiseYieldCurve<Traits, Interpolator, QuantLib::GlobalBootstrap> Name;
+%}
+
+%shared_ptr(Name)
+class Name : public YieldTermStructure, public LazyObject {
   public:
     %extend {
-        GlobalLinearSimpleZeroCurve(
+        Name(
+            const Date& referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
+            const GlobalBootstrap& b = GlobalBootstrap()) {
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        referenceDate, instruments, dayCounter, jumps, jumpDates, i,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        referenceDate, instruments, dayCounter, jumps, jumpDates, i,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
+            }
+     	Name(
+            const Date& referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
+            const GlobalBootstrap& b = GlobalBootstrap()) {
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        referenceDate, instruments, dayCounter, i,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        referenceDate, instruments, dayCounter, i,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
+            }
+     	/* Name(
             const Date& referenceDate,
             const std::vector<ext::shared_ptr<RateHelper>>& instruments,
             const DayCounter& dayCounter,
             const GlobalBootstrap& b) {
-            if (b.additionalHelpers.empty()) {
-                return new GlobalLinearSimpleZeroCurve(
-                    referenceDate, instruments,
-                    dayCounter, Linear(),
-                    GlobalLinearSimpleZeroCurve::bootstrap_type(
-                        b.accuracy));
-            } else {
-                return new GlobalLinearSimpleZeroCurve(
-                    referenceDate, instruments, dayCounter, Linear(),
-                    GlobalLinearSimpleZeroCurve::bootstrap_type(
-                        b.additionalHelpers,
-                        AdditionalDates(b.additionalDates),
-                        AdditionalErrors(b.additionalHelpers),
-                        b.accuracy));
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        referenceDate, instruments, dayCounter,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        referenceDate, instruments, dayCounter,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
+            } */
+     	Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
+            const GlobalBootstrap& b = GlobalBootstrap()) {
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, i,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, i,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
             }
-        }
+     	Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
+            const GlobalBootstrap& b = GlobalBootstrap()) {
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter, i,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter, i,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
+            }
+     	/* Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const GlobalBootstrap& b) {
+                if (b.additionalHelpers.empty()) {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter,
+                        Name::bootstrap_type(b.accuracy));
+                } else {
+                    return new Name(
+                        settlementDays, calendar, instruments, dayCounter,
+                        Name::bootstrap_type(
+                            b.additionalHelpers,
+                            AdditionalDates(b.additionalDates),
+                            AdditionalErrors(b.additionalHelpers),
+                            b.accuracy));
+                }
+            } */
     }
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
-
+    const std::vector<Real>& data() const;
     std::vector<std::pair<Date, Real>> nodes() const;
 };
+
+%enddef
+
+// ForwardRate
+export_piecewise_curve_global(GlobalPiecewiseLinearFlatForward,          ForwardRate,    LinearFlat);
+export_piecewise_curve_global(GlobalPiecewiseBackwardFlatForward,        ForwardRate,    BackwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseConvexMonotoneForward,      ForwardRate,    ConvexMonotone);
+export_piecewise_curve_global(GlobalPiecewiseCubicForward,               ForwardRate,    Cubic);
+export_piecewise_curve_global(GlobalPiecewiseForwardFlatForward,         ForwardRate,    ForwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseLinearForward,              ForwardRate,    Linear);
+export_piecewise_curve_global(GlobalPiecewiseLogLinearForward,           ForwardRate,    LogLinear);
+export_piecewise_curve_global(GlobalPiecewiseLogCubicForward,            ForwardRate,    LogCubic);
+export_piecewise_curve_global(GlobalPiecewiseLogMixedLinearCubicForward, ForwardRate,    LogMixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseMixedLinearCubicForward,    ForwardRate,    MixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseDefaultLogCubicForward,     ForwardRate,    DefaultLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseMonotonicLogCubicForward,   ForwardRate,    MonotonicLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseKrugerLogForward,           ForwardRate,    KrugerLog);
+
+// Discount
+export_piecewise_curve_global(GlobalPiecewiseLinearFlatDiscount,          Discount,    LinearFlat);
+export_piecewise_curve_global(GlobalPiecewiseBackwardFlatDiscount,        Discount,    BackwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseConvexMonotoneDiscount,      Discount,    ConvexMonotone);
+export_piecewise_curve_global(GlobalPiecewiseCubicDiscount,               Discount,    Cubic);
+export_piecewise_curve_global(GlobalPiecewiseForwardFlatDiscount,         Discount,    ForwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseLinearDiscount,              Discount,    Linear);
+export_piecewise_curve_global(GlobalPiecewiseLogLinearDiscount,           Discount,    LogLinear);
+export_piecewise_curve_global(GlobalPiecewiseLogCubicDiscount,            Discount,    LogCubic);
+export_piecewise_curve_global(GlobalPiecewiseLogMixedLinearCubicDiscount, Discount,    LogMixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseMixedLinearCubicDiscount,    Discount,    MixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseDefaultLogCubicDiscount,     Discount,    DefaultLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseMonotonicLogCubicDiscount,   Discount,    MonotonicLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseKrugerLogDiscount,           Discount,    KrugerLog);
+
+// ZeroYield
+export_piecewise_curve_global(GlobalPiecewiseLinearFlatZeroYield,          ZeroYield,    LinearFlat);
+export_piecewise_curve_global(GlobalPiecewiseBackwardFlatZeroYield,        ZeroYield,    BackwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseConvexMonotoneZeroYield,      ZeroYield,    ConvexMonotone);
+export_piecewise_curve_global(GlobalPiecewiseCubicZeroYield,               ZeroYield,    Cubic);
+export_piecewise_curve_global(GlobalPiecewiseForwardFlatZeroYield,         ZeroYield,    ForwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseLinearZeroYield,              ZeroYield,    Linear);
+export_piecewise_curve_global(GlobalPiecewiseLogLinearZeroYield,           ZeroYield,    LogLinear);
+export_piecewise_curve_global(GlobalPiecewiseLogCubicZeroYield,            ZeroYield,    LogCubic);
+export_piecewise_curve_global(GlobalPiecewiseLogMixedLinearCubicZeroYield, ZeroYield,    LogMixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseMixedLinearCubicZeroYield,    ZeroYield,    MixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseDefaultLogCubicZeroYield,     ZeroYield,    DefaultLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseMonotonicLogCubicZeroYield,   ZeroYield,    MonotonicLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseKrugerLogZeroYield,           ZeroYield,    KrugerLog);
+
+// SimpleZeroYield
+export_piecewise_curve_global(GlobalPiecewiseLinearFlatSimpleZeroYield,          SimpleZeroYield,    LinearFlat);
+export_piecewise_curve_global(GlobalPiecewiseBackwardFlatSimpleZeroYield,        SimpleZeroYield,    BackwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseConvexMonotoneSimpleZeroYield,      SimpleZeroYield,    ConvexMonotone);
+export_piecewise_curve_global(GlobalPiecewiseCubicSimpleZeroYield,               SimpleZeroYield,    Cubic);
+export_piecewise_curve_global(GlobalPiecewiseForwardFlatSimpleZeroYield,         SimpleZeroYield,    ForwardFlat);
+export_piecewise_curve_global(GlobalPiecewiseLinearSimpleZeroYield,              SimpleZeroYield,    Linear);
+export_piecewise_curve_global(GlobalPiecewiseLogLinearSimpleZeroYield,           SimpleZeroYield,    LogLinear);
+export_piecewise_curve_global(GlobalPiecewiseLogCubicSimpleZeroYield,            SimpleZeroYield,    LogCubic);
+export_piecewise_curve_global(GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield, SimpleZeroYield,    LogMixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseMixedLinearCubicSimpleZeroYield,    SimpleZeroYield,    MixedLinearCubic);
+export_piecewise_curve_global(GlobalPiecewiseDefaultLogCubicSimpleZeroYield,     SimpleZeroYield,    DefaultLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseMonotonicLogCubicSimpleZeroYield,   SimpleZeroYield,    MonotonicLogCubic);
+export_piecewise_curve_global(GlobalPiecewiseKrugerLogSimpleZeroYield,           SimpleZeroYield,    KrugerLog);
+
+%define export_piecewise_curve_local(Name,Traits,Interpolator)
+%{
+typedef PiecewiseYieldCurve<Traits, Interpolator, QuantLib::LocalBootstrap> Name;
+%}
+
+%shared_ptr(Name)
+class Name : public YieldTermStructure, public LazyObject {
+  public:
+    %extend {
+        Name(
+            const Date& referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
+            const LocalBootstrap& b = LocalBootstrap()) {
+                return new Name(
+                    referenceDate, instruments, dayCounter, jumps, jumpDates, i,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            }
+     	Name(
+            const Date& referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
+            const LocalBootstrap& b = LocalBootstrap()) {
+                return new Name(
+                    referenceDate, instruments, dayCounter, i,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            }
+     	/* Name(
+            const Date& referenceDate,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const LocalBootstrap& b) {
+                return new Name(
+                    referenceDate, instruments, dayCounter,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            } */
+     	Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const std::vector<Handle<Quote>>& jumps,
+            const std::vector<Date>& jumpDates,
+            const Interpolator& i,
+            const LocalBootstrap& b = LocalBootstrap()) {
+                return new Name(
+                    settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, i,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            }
+     	Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const Interpolator& i,
+            const LocalBootstrap& b = LocalBootstrap()) {
+                return new Name(
+                    settlementDays, calendar, instruments, dayCounter, i,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            }
+     	/* Name(
+            Natural settlementDays,
+            const Calendar& calendar,
+            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
+            const DayCounter& dayCounter,
+            const LocalBootstrap& b) {
+                return new Name(
+                    settlementDays, calendar, instruments, dayCounter,
+                    Name::bootstrap_type(
+                        b.localisation, b.forcePositive, b.accuracy));
+            } */
+    }
+    const std::vector<Date>& dates() const;
+    const std::vector<Time>& times() const;
+    const std::vector<Real>& data() const;
+    std::vector<std::pair<Date, Real>> nodes() const;
+};
+
+%enddef
+
+// ForwardRate
+export_piecewise_curve_local(LocalPiecewiseConvexMonotoneForward,      ForwardRate,    ConvexMonotone);
+
+// Discount
+export_piecewise_curve_local(LocalPiecewiseConvexMonotoneDiscount,      Discount,    ConvexMonotone);
+
+// ZeroYield
+export_piecewise_curve_local(LocalPiecewiseConvexMonotoneZeroYield,      ZeroYield,    ConvexMonotone);
+
+// SimpleZeroYield
+export_piecewise_curve_local(LocalPiecewiseConvexMonotoneSimpleZeroYield,      SimpleZeroYield,    ConvexMonotone);
 
 %shared_ptr(InterpolatedDiscountCurve<LogLinear>)
 %shared_ptr(InterpolatedDiscountCurve<MonotonicLogCubic>)

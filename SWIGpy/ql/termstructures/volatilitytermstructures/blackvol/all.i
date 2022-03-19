@@ -14,6 +14,7 @@ using QuantLib::HestonBlackVolSurface;
 
 %{
 using QuantLib::BlackConstantVol;
+using QuantLib::SABRVolTermStructure;
 using QuantLib::AndreasenHugeVolatilityAdapter;
 using QuantLib::BlackVarianceCurve;
 using QuantLib::BlackVarianceSurface;
@@ -65,6 +66,20 @@ class BlackConstantVol : public BlackVolatilityTermStructure {
         const Calendar& calendar,
         const Handle<Quote>& volatility,
         const DayCounter& dayCounter);
+};
+
+%shared_ptr(SABRVolTermStructure)
+class SABRVolTermStructure : public BlackVolatilityTermStructure {
+  public:
+    SABRVolTermStructure(
+        Real alpha,
+        Real beta,
+        Real gamma,
+        Real rho,
+        Real s0,
+        Real r,
+        const Date& referenceDate,
+        const DayCounter& dc);
 };
 
 %shared_ptr(AndreasenHugeVolatilityAdapter)

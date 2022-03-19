@@ -1,6 +1,24 @@
 #ifndef ql_engines_vanilla_i
 #define ql_engines_vanilla_i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
@@ -623,7 +641,7 @@ class MCAmericanEngine : public PricingEngine {
         Size polynomOrder,
         LsmBasisSystem::PolynomType polynomType,
         Size nCalibrationSamples=Null<Size>(),
-        const boost::optional<bool>& antitheticVariateCalibration=boost::none,
+        boost::optional<bool> antitheticVariateCalibration=boost::none,
         BigNatural seedCalibration=Null<Size>());
 };
 

@@ -9,6 +9,11 @@
 
 %{
 using QuantLib::RateAveraging;
+using QuantLib::Replication;
+using QuantLib::DigitalReplication;
+%}
+
+%{
 using QuantLib::FixedRateCoupon;
 using QuantLib::FloatingRateCoupon;
 using QuantLib::InflationCoupon;
@@ -23,15 +28,27 @@ using QuantLib::CappedFlooredYoYInflationCoupon;
 using QuantLib::CappedFlooredIborCoupon;
 using QuantLib::CappedFlooredCmsCoupon;
 using QuantLib::CappedFlooredCmsSpreadCoupon;
+using QuantLib::DigitalCoupon;
 using QuantLib::SubPeriodsCoupon;
 typedef IborCoupon::Settings IborCouponSettings;
 %}
 
 struct RateAveraging {
-    enum Type {
-        Simple,
-        Compound
-    };
+    enum Type { Simple, Compound };
+};
+
+struct Replication {
+    enum Type { Sub, Central, Super };
+};
+
+%shared_ptr(DigitalReplication)
+class DigitalReplication {
+public:
+    DigitalReplication(
+        Replication::Type t = Replication::Central,
+        Real gap = 1e-4);
+    Replication::Type replicationType() const;
+    Real gap() const;
 };
 
 %shared_ptr(FixedRateCoupon)
@@ -68,9 +85,21 @@ class FixedRateCoupon : public Coupon {
 
 %shared_ptr(FloatingRateCoupon)
 class FloatingRateCoupon : public Coupon, public Observer {
-  private:
-    FloatingRateCoupon();
   public:
+    FloatingRateCoupon(
+        const Date& paymentDate,
+        Real nominal,
+        const Date& startDate,
+        const Date& endDate,
+        Natural fixingDays,
+        const ext::shared_ptr<InterestRateIndex>& index,
+        Real gearing = 1.0,
+        Spread spread = 0.0,
+        const Date& refPeriodStart = Date(),
+        const Date& refPeriodEnd = Date(),
+        DayCounter dayCounter = DayCounter(),
+        bool isInArrears = false,
+        const Date& exCouponDate = Date());
     Real price(const Handle<YieldTermStructure>& discountingCurve) const;
     const ext::shared_ptr<InterestRateIndex>& index() const;
     Natural fixingDays() const;
@@ -159,6 +188,7 @@ class IborCouponSettings {
   private:
     IborCouponSettings();
   public:
+    static IborCouponSettings& instance();
     void createAtParCoupons();
     void createIndexedCoupons();
     bool usingAtParCoupons() const;
@@ -350,6 +380,36 @@ class CappedFlooredCmsSpreadCoupon: public CappedFlooredCoupon {
         const DayCounter& dayCounter = DayCounter(),
         bool isInArrears = false,
         const Date& exCouponDate = Date());
+};
+
+%shared_ptr(DigitalCoupon)
+class DigitalCoupon : public FloatingRateCoupon {
+  public:
+    DigitalCoupon(const ext::shared_ptr<FloatingRateCoupon>& underlying,
+                  Rate callStrike = Null<Rate>(),
+                  Position::Type callPosition = Position::Long,
+                  bool isCallITMIncluded = false,
+                  Rate callDigitalPayoff = Null<Rate>(),
+                  Rate putStrike = Null<Rate>(),
+                  Position::Type putPosition = Position::Long,
+                  bool isPutITMIncluded = false,
+                  Rate putDigitalPayoff = Null<Rate>(),
+                  const ext::shared_ptr<DigitalReplication>& replication =
+                    ext::shared_ptr<DigitalReplication>(),
+                  bool nakedOption = false);
+
+    Rate callStrike() const;
+    Rate putStrike() const;
+    Rate callDigitalPayoff() const;
+    Rate putDigitalPayoff() const;
+    bool hasPut() const;
+    bool hasCall() const;
+    bool hasCollar() const;
+    bool isLongPut() const;
+    bool isLongCall() const;
+    ext::shared_ptr<FloatingRateCoupon> underlying() const;
+    Rate callOptionRate() const;
+    Rate putOptionRate() const;
 };
 
 %shared_ptr(SubPeriodsCoupon)

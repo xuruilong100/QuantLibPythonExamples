@@ -2606,6 +2606,9 @@ class MakeSchedule(object):
 _QuantLib.MakeSchedule_swigregister(MakeSchedule)
 
 
+def NullNatural():
+    return _QuantLib.NullNatural()
+
 def NullSize():
     return _QuantLib.NullSize()
 
@@ -2620,6 +2623,9 @@ def NullDate():
 
 def NullArray():
     return _QuantLib.NullArray()
+
+def NullBool():
+    return _QuantLib.NullBool()
 class SampleNumber(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -2677,6 +2683,38 @@ def enableTracing():
 
 def disableTracing():
     return _QuantLib.disableTracing()
+class CostFunction(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def value(self, x):
+        return _QuantLib.CostFunction_value(self, x)
+
+    def values(self, x):
+        return _QuantLib.CostFunction_values(self, x)
+
+    def gradient(self, grad, x):
+        return _QuantLib.CostFunction_gradient(self, grad, x)
+
+    def valueAndGradient(self, grad, x):
+        return _QuantLib.CostFunction_valueAndGradient(self, grad, x)
+
+    def jacobian(self, jac, x):
+        return _QuantLib.CostFunction_jacobian(self, jac, x)
+
+    def valuesAndJacobian(self, jac, x):
+        return _QuantLib.CostFunction_valuesAndJacobian(self, jac, x)
+
+    def finiteDifferenceEpsilon(self):
+        return _QuantLib.CostFunction_finiteDifferenceEpsilon(self)
+    __swig_destroy__ = _QuantLib.delete_CostFunction
+
+# Register CostFunction in _QuantLib:
+_QuantLib.CostFunction_swigregister(CostFunction)
+
 class LsmBasisSystem(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -3095,10 +3133,10 @@ _QuantLib.Pillar_swigregister(Pillar)
 
 class Constraint(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.Constraint_swiginit(self, _QuantLib.new_Constraint())
 
     def empty(self):
         return _QuantLib.Constraint_empty(self)
@@ -3173,6 +3211,17 @@ class NonhomogeneousBoundaryConstraint(Constraint):
 
 # Register NonhomogeneousBoundaryConstraint in _QuantLib:
 _QuantLib.NonhomogeneousBoundaryConstraint_swigregister(NonhomogeneousBoundaryConstraint)
+
+class FellerConstraint(Constraint):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.FellerConstraint_swiginit(self, _QuantLib.new_FellerConstraint())
+    __swig_destroy__ = _QuantLib.delete_FellerConstraint
+
+# Register FellerConstraint in _QuantLib:
+_QuantLib.FellerConstraint_swigregister(FellerConstraint)
 
 class EndCriteria(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -3282,6 +3331,9 @@ class OptimizationMethod(object):
     def __init__(self, *args, **kwargs):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+
+    def minimize(self, P, endCriteria):
+        return _QuantLib.OptimizationMethod_minimize(self, P, endCriteria)
     __swig_destroy__ = _QuantLib.delete_OptimizationMethod
 
 # Register OptimizationMethod in _QuantLib:
@@ -3569,6 +3621,62 @@ class Optimizer(object):
 
 # Register Optimizer in _QuantLib:
 _QuantLib.Optimizer_swigregister(Optimizer)
+
+class Problem(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.Problem_swiginit(self, _QuantLib.new_Problem(*args))
+
+    def reset(self):
+        return _QuantLib.Problem_reset(self)
+
+    def value(self, x):
+        return _QuantLib.Problem_value(self, x)
+
+    def values(self, x):
+        return _QuantLib.Problem_values(self, x)
+
+    def gradient(self, grad_f, x):
+        return _QuantLib.Problem_gradient(self, grad_f, x)
+
+    def valueAndGradient(self, grad_f, x):
+        return _QuantLib.Problem_valueAndGradient(self, grad_f, x)
+
+    def constraint(self):
+        return _QuantLib.Problem_constraint(self)
+
+    def costFunction(self):
+        return _QuantLib.Problem_costFunction(self)
+
+    def setCurrentValue(self, currentValue):
+        return _QuantLib.Problem_setCurrentValue(self, currentValue)
+
+    def currentValue(self):
+        return _QuantLib.Problem_currentValue(self)
+
+    def setFunctionValue(self, functionValue):
+        return _QuantLib.Problem_setFunctionValue(self, functionValue)
+
+    def functionValue(self):
+        return _QuantLib.Problem_functionValue(self)
+
+    def setGradientNormValue(self, squaredNorm):
+        return _QuantLib.Problem_setGradientNormValue(self, squaredNorm)
+
+    def gradientNormValue(self):
+        return _QuantLib.Problem_gradientNormValue(self)
+
+    def functionEvaluation(self):
+        return _QuantLib.Problem_functionEvaluation(self)
+
+    def gradientEvaluation(self):
+        return _QuantLib.Problem_gradientEvaluation(self)
+    __swig_destroy__ = _QuantLib.delete_Problem
+
+# Register Problem in _QuantLib:
+_QuantLib.Problem_swigregister(Problem)
 
 class Observable(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -5743,6 +5851,58 @@ class InflationCouponPricer(Observer, Observable):
 # Register InflationCouponPricer in _QuantLib:
 _QuantLib.InflationCouponPricer_swigregister(InflationCouponPricer)
 
+class NormalCLVModel(LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.NormalCLVModel_swiginit(self, _QuantLib.new_NormalCLVModel(*args))
+
+    def cdf(self, d, x):
+        return _QuantLib.NormalCLVModel_cdf(self, d, x)
+
+    def invCDF(self, d, q):
+        return _QuantLib.NormalCLVModel_invCDF(self, d, q)
+
+    def collocationPointsX(self, d):
+        return _QuantLib.NormalCLVModel_collocationPointsX(self, d)
+
+    def collocationPointsY(self, d):
+        return _QuantLib.NormalCLVModel_collocationPointsY(self, d)
+
+    def g(self, t, x):
+        return _QuantLib.NormalCLVModel_g(self, t, x)
+    __swig_destroy__ = _QuantLib.delete_NormalCLVModel
+
+# Register NormalCLVModel in _QuantLib:
+_QuantLib.NormalCLVModel_swigregister(NormalCLVModel)
+
+class SquareRootCLVModel(LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SquareRootCLVModel_swiginit(self, _QuantLib.new_SquareRootCLVModel(*args))
+
+    def cdf(self, d, x):
+        return _QuantLib.SquareRootCLVModel_cdf(self, d, x)
+
+    def invCDF(self, d, q):
+        return _QuantLib.SquareRootCLVModel_invCDF(self, d, q)
+
+    def collocationPointsX(self, d):
+        return _QuantLib.SquareRootCLVModel_collocationPointsX(self, d)
+
+    def collocationPointsY(self, d):
+        return _QuantLib.SquareRootCLVModel_collocationPointsY(self, d)
+
+    def g(self, t, x):
+        return _QuantLib.SquareRootCLVModel_g(self, t, x)
+    __swig_destroy__ = _QuantLib.delete_SquareRootCLVModel
+
+# Register SquareRootCLVModel in _QuantLib:
+_QuantLib.SquareRootCLVModel_swigregister(SquareRootCLVModel)
+
 class IterativeBootstrap(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -5764,6 +5924,17 @@ class GlobalBootstrap(object):
 
 # Register GlobalBootstrap in _QuantLib:
 _QuantLib.GlobalBootstrap_swigregister(GlobalBootstrap)
+
+class LocalBootstrap(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args, **kwargs):
+        _QuantLib.LocalBootstrap_swiginit(self, _QuantLib.new_LocalBootstrap(*args, **kwargs))
+    __swig_destroy__ = _QuantLib.delete_LocalBootstrap
+
+# Register LocalBootstrap in _QuantLib:
+_QuantLib.LocalBootstrap_swigregister(LocalBootstrap)
 
 
 def blackFormula(*args):
@@ -5816,6 +5987,240 @@ def bachelierBlackFormulaStdDevDerivative(*args):
 
 def bachelierBlackFormulaAssetItmProbability(*args):
     return _QuantLib.bachelierBlackFormulaAssetItmProbability(*args)
+class BondPrice(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Dirty = _QuantLib.BondPrice_Dirty
+    Clean = _QuantLib.BondPrice_Clean
+
+    def __init__(self, amount, type):
+        _QuantLib.BondPrice_swiginit(self, _QuantLib.new_BondPrice(amount, type))
+
+    def amount(self):
+        return _QuantLib.BondPrice_amount(self)
+
+    def type(self):
+        return _QuantLib.BondPrice_type(self)
+    __swig_destroy__ = _QuantLib.delete_BondPrice
+
+# Register BondPrice in _QuantLib:
+_QuantLib.BondPrice_swigregister(BondPrice)
+
+class Bond(Instrument):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.Bond_swiginit(self, _QuantLib.new_Bond(*args))
+
+    def settlementDays(self):
+        return _QuantLib.Bond_settlementDays(self)
+
+    def calendar(self):
+        return _QuantLib.Bond_calendar(self)
+
+    def notionals(self):
+        return _QuantLib.Bond_notionals(self)
+
+    def notional(self, *args):
+        return _QuantLib.Bond_notional(self, *args)
+
+    def cashflows(self):
+        return _QuantLib.Bond_cashflows(self)
+
+    def redemptions(self):
+        return _QuantLib.Bond_redemptions(self)
+
+    def redemption(self):
+        return _QuantLib.Bond_redemption(self)
+
+    def startDate(self):
+        return _QuantLib.Bond_startDate(self)
+
+    def maturityDate(self):
+        return _QuantLib.Bond_maturityDate(self)
+
+    def issueDate(self):
+        return _QuantLib.Bond_issueDate(self)
+
+    def isTradable(self, *args):
+        return _QuantLib.Bond_isTradable(self, *args)
+
+    def settlementDate(self, *args):
+        return _QuantLib.Bond_settlementDate(self, *args)
+
+    def cleanPrice(self, *args):
+        return _QuantLib.Bond_cleanPrice(self, *args)
+
+    def dirtyPrice(self, *args):
+        return _QuantLib.Bond_dirtyPrice(self, *args)
+
+    def settlementValue(self, *args):
+        return _QuantLib.Bond_settlementValue(self, *args)
+
+    def bondYield(self, *args):
+        return _QuantLib.Bond_bondYield(self, *args)
+
+    def accruedAmount(self, *args):
+        return _QuantLib.Bond_accruedAmount(self, *args)
+
+    def nextCouponRate(self, *args):
+        return _QuantLib.Bond_nextCouponRate(self, *args)
+
+    def previousCouponRate(self, *args):
+        return _QuantLib.Bond_previousCouponRate(self, *args)
+
+    def nextCashFlowDate(self, *args):
+        return _QuantLib.Bond_nextCashFlowDate(self, *args)
+
+    def previousCashFlowDate(self, *args):
+        return _QuantLib.Bond_previousCashFlowDate(self, *args)
+    __swig_destroy__ = _QuantLib.delete_Bond
+
+# Register Bond in _QuantLib:
+_QuantLib.Bond_swigregister(Bond)
+
+
+def cleanPriceFromZSpread(*args):
+    return _QuantLib.cleanPriceFromZSpread(*args)
+class YieldTermStructure(TermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def discount(self, *args):
+        return _QuantLib.YieldTermStructure_discount(self, *args)
+
+    def zeroRate(self, *args):
+        return _QuantLib.YieldTermStructure_zeroRate(self, *args)
+
+    def forwardRate(self, *args):
+        return _QuantLib.YieldTermStructure_forwardRate(self, *args)
+
+    def jumpDates(self):
+        return _QuantLib.YieldTermStructure_jumpDates(self)
+
+    def jumpTimes(self):
+        return _QuantLib.YieldTermStructure_jumpTimes(self)
+    __swig_destroy__ = _QuantLib.delete_YieldTermStructure
+
+# Register YieldTermStructure in _QuantLib:
+_QuantLib.YieldTermStructure_swigregister(YieldTermStructure)
+
+class YieldTermStructureHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.YieldTermStructureHandle_swiginit(self, _QuantLib.new_YieldTermStructureHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.YieldTermStructureHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.YieldTermStructureHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.YieldTermStructureHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.YieldTermStructureHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.YieldTermStructureHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.YieldTermStructureHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.YieldTermStructureHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_YieldTermStructureHandle
+
+    def discount(self, *args):
+        return _QuantLib.YieldTermStructureHandle_discount(self, *args)
+
+    def zeroRate(self, *args):
+        return _QuantLib.YieldTermStructureHandle_zeroRate(self, *args)
+
+    def forwardRate(self, *args):
+        return _QuantLib.YieldTermStructureHandle_forwardRate(self, *args)
+
+    def jumpDates(self):
+        return _QuantLib.YieldTermStructureHandle_jumpDates(self)
+
+    def jumpTimes(self):
+        return _QuantLib.YieldTermStructureHandle_jumpTimes(self)
+
+    def dayCounter(self):
+        return _QuantLib.YieldTermStructureHandle_dayCounter(self)
+
+    def timeFromReference(self, date):
+        return _QuantLib.YieldTermStructureHandle_timeFromReference(self, date)
+
+    def maxDate(self):
+        return _QuantLib.YieldTermStructureHandle_maxDate(self)
+
+    def maxTime(self):
+        return _QuantLib.YieldTermStructureHandle_maxTime(self)
+
+    def referenceDate(self):
+        return _QuantLib.YieldTermStructureHandle_referenceDate(self)
+
+    def calendar(self):
+        return _QuantLib.YieldTermStructureHandle_calendar(self)
+
+    def settlementDays(self):
+        return _QuantLib.YieldTermStructureHandle_settlementDays(self)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.YieldTermStructureHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.YieldTermStructureHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.YieldTermStructureHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.YieldTermStructureHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.YieldTermStructureHandle_deepUpdate(self)
+
+    def notifyObservers(self):
+        return _QuantLib.YieldTermStructureHandle_notifyObservers(self)
+
+    def enableExtrapolation(self, b=True):
+        return _QuantLib.YieldTermStructureHandle_enableExtrapolation(self, b)
+
+    def disableExtrapolation(self, b=True):
+        return _QuantLib.YieldTermStructureHandle_disableExtrapolation(self, b)
+
+    def allowsExtrapolation(self):
+        return _QuantLib.YieldTermStructureHandle_allowsExtrapolation(self)
+
+# Register YieldTermStructureHandle in _QuantLib:
+_QuantLib.YieldTermStructureHandle_swigregister(YieldTermStructureHandle)
+
+class RelinkableYieldTermStructureHandle(YieldTermStructureHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableYieldTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableYieldTermStructureHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableYieldTermStructureHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableYieldTermStructureHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableYieldTermStructureHandle
+
+# Register RelinkableYieldTermStructureHandle in _QuantLib:
+_QuantLib.RelinkableYieldTermStructureHandle_swigregister(RelinkableYieldTermStructureHandle)
+
 class BondFunctions(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -6263,10 +6668,10 @@ _QuantLib.CEVCalculator_swigregister(CEVCalculator)
 
 class Calendar(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.Calendar_swiginit(self, _QuantLib.new_Calendar())
 
     def empty(self):
         return _QuantLib.Calendar_empty(self)
@@ -8257,30 +8662,380 @@ class Dividend(CashFlow):
 # Register Dividend in _QuantLib:
 _QuantLib.Dividend_swigregister(Dividend)
 
+class IborLegCashFlows(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
 
-def FixedRateLeg(*args, **kwargs):
-    return _QuantLib.FixedRateLeg(*args, **kwargs)
+    def __init__(self, *args):
+        _QuantLib.IborLegCashFlows_swiginit(self, _QuantLib.new_IborLegCashFlows(*args))
 
-def IborLeg(*args, **kwargs):
-    return _QuantLib.IborLeg(*args, **kwargs)
+    def floatLeg(self):
+        return _QuantLib.IborLegCashFlows_floatLeg(self)
 
-def OvernightLeg(*args, **kwargs):
-    return _QuantLib.OvernightLeg(*args, **kwargs)
+    def floatTimes(self):
+        return _QuantLib.IborLegCashFlows_floatTimes(self)
 
-def CmsLeg(*args, **kwargs):
-    return _QuantLib.CmsLeg(*args, **kwargs)
+    def floatWeights(self):
+        return _QuantLib.IborLegCashFlows_floatWeights(self)
+    __swig_destroy__ = _QuantLib.delete_IborLegCashFlows
 
-def CmsZeroLeg(*args, **kwargs):
-    return _QuantLib.CmsZeroLeg(*args, **kwargs)
+# Register IborLegCashFlows in _QuantLib:
+_QuantLib.IborLegCashFlows_swigregister(IborLegCashFlows)
 
-def CmsSpreadLeg(*args, **kwargs):
-    return _QuantLib.CmsSpreadLeg(*args, **kwargs)
+class SwapCashFlows(IborLegCashFlows):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
 
-def yoyInflationLeg(*args, **kwargs):
-    return _QuantLib.yoyInflationLeg(*args, **kwargs)
+    def __init__(self, *args):
+        _QuantLib.SwapCashFlows_swiginit(self, _QuantLib.new_SwapCashFlows(*args))
 
-def SubPeriodsLeg(*args, **kwargs):
-    return _QuantLib.SubPeriodsLeg(*args, **kwargs)
+    def fixedLeg(self):
+        return _QuantLib.SwapCashFlows_fixedLeg(self)
+
+    def fixedTimes(self):
+        return _QuantLib.SwapCashFlows_fixedTimes(self)
+
+    def fixedWeights(self):
+        return _QuantLib.SwapCashFlows_fixedWeights(self)
+
+    def annuityWeights(self):
+        return _QuantLib.SwapCashFlows_annuityWeights(self)
+    __swig_destroy__ = _QuantLib.delete_SwapCashFlows
+
+# Register SwapCashFlows in _QuantLib:
+_QuantLib.SwapCashFlows_swigregister(SwapCashFlows)
+
+class SwaptionCashFlows(SwapCashFlows):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SwaptionCashFlows_swiginit(self, _QuantLib.new_SwaptionCashFlows(*args))
+
+    def swaption(self):
+        return _QuantLib.SwaptionCashFlows_swaption(self)
+
+    def exerciseTimes(self):
+        return _QuantLib.SwaptionCashFlows_exerciseTimes(self)
+    __swig_destroy__ = _QuantLib.delete_SwaptionCashFlows
+
+# Register SwaptionCashFlows in _QuantLib:
+_QuantLib.SwaptionCashFlows_swigregister(SwaptionCashFlows)
+
+class FixedRateLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule):
+        _QuantLib.FixedRateLeg_swiginit(self, _QuantLib.new_FixedRateLeg(schedule))
+
+    def withNotionals(self, *args):
+        return _QuantLib.FixedRateLeg_withNotionals(self, *args)
+
+    def withCouponRates(self, *args):
+        return _QuantLib.FixedRateLeg_withCouponRates(self, *args)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.FixedRateLeg_withPaymentAdjustment(self, arg2)
+
+    def withFirstPeriodDayCounter(self, arg2):
+        return _QuantLib.FixedRateLeg_withFirstPeriodDayCounter(self, arg2)
+
+    def withLastPeriodDayCounter(self, arg2):
+        return _QuantLib.FixedRateLeg_withLastPeriodDayCounter(self, arg2)
+
+    def withPaymentCalendar(self, arg2):
+        return _QuantLib.FixedRateLeg_withPaymentCalendar(self, arg2)
+
+    def withPaymentLag(self, lag):
+        return _QuantLib.FixedRateLeg_withPaymentLag(self, lag)
+
+    def withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth=False):
+        return _QuantLib.FixedRateLeg_withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth)
+
+    def makeLeg(self):
+        return _QuantLib.FixedRateLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_FixedRateLeg
+
+# Register FixedRateLeg in _QuantLib:
+_QuantLib.FixedRateLeg_swigregister(FixedRateLeg)
+
+class IborLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, index):
+        _QuantLib.IborLeg_swiginit(self, _QuantLib.new_IborLeg(schedule, index))
+
+    def withNotionals(self, *args):
+        return _QuantLib.IborLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.IborLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.IborLeg_withPaymentAdjustment(self, arg2)
+
+    def withPaymentLag(self, lag):
+        return _QuantLib.IborLeg_withPaymentLag(self, lag)
+
+    def withPaymentCalendar(self, arg2):
+        return _QuantLib.IborLeg_withPaymentCalendar(self, arg2)
+
+    def withFixingDays(self, *args):
+        return _QuantLib.IborLeg_withFixingDays(self, *args)
+
+    def withGearings(self, *args):
+        return _QuantLib.IborLeg_withGearings(self, *args)
+
+    def withSpreads(self, *args):
+        return _QuantLib.IborLeg_withSpreads(self, *args)
+
+    def withCaps(self, *args):
+        return _QuantLib.IborLeg_withCaps(self, *args)
+
+    def withFloors(self, *args):
+        return _QuantLib.IborLeg_withFloors(self, *args)
+
+    def inArrears(self, flag=True):
+        return _QuantLib.IborLeg_inArrears(self, flag)
+
+    def withZeroPayments(self, flag=True):
+        return _QuantLib.IborLeg_withZeroPayments(self, flag)
+
+    def withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth=False):
+        return _QuantLib.IborLeg_withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth)
+
+    def withIndexedCoupons(self, b=True):
+        return _QuantLib.IborLeg_withIndexedCoupons(self, b)
+
+    def withAtParCoupons(self, b=True):
+        return _QuantLib.IborLeg_withAtParCoupons(self, b)
+
+    def makeLeg(self):
+        return _QuantLib.IborLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_IborLeg
+
+# Register IborLeg in _QuantLib:
+_QuantLib.IborLeg_swigregister(IborLeg)
+
+class OvernightLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, overnightIndex):
+        _QuantLib.OvernightLeg_swiginit(self, _QuantLib.new_OvernightLeg(schedule, overnightIndex))
+
+    def withNotionals(self, *args):
+        return _QuantLib.OvernightLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.OvernightLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.OvernightLeg_withPaymentAdjustment(self, arg2)
+
+    def withPaymentCalendar(self, arg2):
+        return _QuantLib.OvernightLeg_withPaymentCalendar(self, arg2)
+
+    def withPaymentLag(self, lag):
+        return _QuantLib.OvernightLeg_withPaymentLag(self, lag)
+
+    def withGearings(self, *args):
+        return _QuantLib.OvernightLeg_withGearings(self, *args)
+
+    def withSpreads(self, *args):
+        return _QuantLib.OvernightLeg_withSpreads(self, *args)
+
+    def withTelescopicValueDates(self, telescopicValueDates):
+        return _QuantLib.OvernightLeg_withTelescopicValueDates(self, telescopicValueDates)
+
+    def withAveragingMethod(self, averagingMethod):
+        return _QuantLib.OvernightLeg_withAveragingMethod(self, averagingMethod)
+
+    def makeLeg(self):
+        return _QuantLib.OvernightLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_OvernightLeg
+
+# Register OvernightLeg in _QuantLib:
+_QuantLib.OvernightLeg_swigregister(OvernightLeg)
+
+class CmsLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, swapIndex):
+        _QuantLib.CmsLeg_swiginit(self, _QuantLib.new_CmsLeg(schedule, swapIndex))
+
+    def withNotionals(self, *args):
+        return _QuantLib.CmsLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.CmsLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.CmsLeg_withPaymentAdjustment(self, arg2)
+
+    def withFixingDays(self, *args):
+        return _QuantLib.CmsLeg_withFixingDays(self, *args)
+
+    def withGearings(self, *args):
+        return _QuantLib.CmsLeg_withGearings(self, *args)
+
+    def withSpreads(self, *args):
+        return _QuantLib.CmsLeg_withSpreads(self, *args)
+
+    def withCaps(self, *args):
+        return _QuantLib.CmsLeg_withCaps(self, *args)
+
+    def withFloors(self, *args):
+        return _QuantLib.CmsLeg_withFloors(self, *args)
+
+    def inArrears(self, flag=True):
+        return _QuantLib.CmsLeg_inArrears(self, flag)
+
+    def withZeroPayments(self, flag=True):
+        return _QuantLib.CmsLeg_withZeroPayments(self, flag)
+
+    def withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth):
+        return _QuantLib.CmsLeg_withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth)
+
+    def makeLeg(self):
+        return _QuantLib.CmsLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_CmsLeg
+
+# Register CmsLeg in _QuantLib:
+_QuantLib.CmsLeg_swigregister(CmsLeg)
+
+class CmsSpreadLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, swapSpreadIndex):
+        _QuantLib.CmsSpreadLeg_swiginit(self, _QuantLib.new_CmsSpreadLeg(schedule, swapSpreadIndex))
+
+    def withNotionals(self, *args):
+        return _QuantLib.CmsSpreadLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.CmsSpreadLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.CmsSpreadLeg_withPaymentAdjustment(self, arg2)
+
+    def withFixingDays(self, *args):
+        return _QuantLib.CmsSpreadLeg_withFixingDays(self, *args)
+
+    def withGearings(self, *args):
+        return _QuantLib.CmsSpreadLeg_withGearings(self, *args)
+
+    def withSpreads(self, *args):
+        return _QuantLib.CmsSpreadLeg_withSpreads(self, *args)
+
+    def withCaps(self, *args):
+        return _QuantLib.CmsSpreadLeg_withCaps(self, *args)
+
+    def withFloors(self, *args):
+        return _QuantLib.CmsSpreadLeg_withFloors(self, *args)
+
+    def inArrears(self, flag=True):
+        return _QuantLib.CmsSpreadLeg_inArrears(self, flag)
+
+    def withZeroPayments(self, flag=True):
+        return _QuantLib.CmsSpreadLeg_withZeroPayments(self, flag)
+
+    def makeLeg(self):
+        return _QuantLib.CmsSpreadLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_CmsSpreadLeg
+
+# Register CmsSpreadLeg in _QuantLib:
+_QuantLib.CmsSpreadLeg_swigregister(CmsSpreadLeg)
+
+class yoyInflationLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, cal, index, observationLag):
+        _QuantLib.yoyInflationLeg_swiginit(self, _QuantLib.new_yoyInflationLeg(schedule, cal, index, observationLag))
+
+    def withNotionals(self, *args):
+        return _QuantLib.yoyInflationLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.yoyInflationLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.yoyInflationLeg_withPaymentAdjustment(self, arg2)
+
+    def withFixingDays(self, *args):
+        return _QuantLib.yoyInflationLeg_withFixingDays(self, *args)
+
+    def withGearings(self, *args):
+        return _QuantLib.yoyInflationLeg_withGearings(self, *args)
+
+    def withSpreads(self, *args):
+        return _QuantLib.yoyInflationLeg_withSpreads(self, *args)
+
+    def withCaps(self, *args):
+        return _QuantLib.yoyInflationLeg_withCaps(self, *args)
+
+    def withFloors(self, *args):
+        return _QuantLib.yoyInflationLeg_withFloors(self, *args)
+
+    def makeLeg(self):
+        return _QuantLib.yoyInflationLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_yoyInflationLeg
+
+# Register yoyInflationLeg in _QuantLib:
+_QuantLib.yoyInflationLeg_swigregister(yoyInflationLeg)
+
+class SubPeriodsLeg(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, schedule, index):
+        _QuantLib.SubPeriodsLeg_swiginit(self, _QuantLib.new_SubPeriodsLeg(schedule, index))
+
+    def withNotionals(self, *args):
+        return _QuantLib.SubPeriodsLeg_withNotionals(self, *args)
+
+    def withPaymentDayCounter(self, arg2):
+        return _QuantLib.SubPeriodsLeg_withPaymentDayCounter(self, arg2)
+
+    def withPaymentAdjustment(self, arg2):
+        return _QuantLib.SubPeriodsLeg_withPaymentAdjustment(self, arg2)
+
+    def withPaymentCalendar(self, arg2):
+        return _QuantLib.SubPeriodsLeg_withPaymentCalendar(self, arg2)
+
+    def withPaymentLag(self, lag):
+        return _QuantLib.SubPeriodsLeg_withPaymentLag(self, lag)
+
+    def withFixingDays(self, *args):
+        return _QuantLib.SubPeriodsLeg_withFixingDays(self, *args)
+
+    def withGearings(self, *args):
+        return _QuantLib.SubPeriodsLeg_withGearings(self, *args)
+
+    def withCouponSpreads(self, *args):
+        return _QuantLib.SubPeriodsLeg_withCouponSpreads(self, *args)
+
+    def withRateSpreads(self, *args):
+        return _QuantLib.SubPeriodsLeg_withRateSpreads(self, *args)
+
+    def withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth=False):
+        return _QuantLib.SubPeriodsLeg_withExCouponPeriod(self, arg2, arg3, arg4, endOfMonth)
+
+    def withAveragingMethod(self, averagingMethod):
+        return _QuantLib.SubPeriodsLeg_withAveragingMethod(self, averagingMethod)
+
+    def makeLeg(self):
+        return _QuantLib.SubPeriodsLeg_makeLeg(self)
+    __swig_destroy__ = _QuantLib.delete_SubPeriodsLeg
+
+# Register SubPeriodsLeg in _QuantLib:
+_QuantLib.SubPeriodsLeg_swigregister(SubPeriodsLeg)
+
 class RateAveraging(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -8293,6 +9048,37 @@ class RateAveraging(object):
 
 # Register RateAveraging in _QuantLib:
 _QuantLib.RateAveraging_swigregister(RateAveraging)
+
+class Replication(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Sub = _QuantLib.Replication_Sub
+    Central = _QuantLib.Replication_Central
+    Super = _QuantLib.Replication_Super
+
+    def __init__(self):
+        _QuantLib.Replication_swiginit(self, _QuantLib.new_Replication())
+    __swig_destroy__ = _QuantLib.delete_Replication
+
+# Register Replication in _QuantLib:
+_QuantLib.Replication_swigregister(Replication)
+
+class DigitalReplication(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.DigitalReplication_swiginit(self, _QuantLib.new_DigitalReplication(*args))
+
+    def replicationType(self):
+        return _QuantLib.DigitalReplication_replicationType(self)
+
+    def gap(self):
+        return _QuantLib.DigitalReplication_gap(self)
+    __swig_destroy__ = _QuantLib.delete_DigitalReplication
+
+# Register DigitalReplication in _QuantLib:
+_QuantLib.DigitalReplication_swigregister(DigitalReplication)
 
 class FixedRateCoupon(Coupon):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -8313,10 +9099,10 @@ def as_fixed_rate_coupon(cf):
     return _QuantLib.as_fixed_rate_coupon(cf)
 class FloatingRateCoupon(Coupon, Observer):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FloatingRateCoupon_swiginit(self, _QuantLib.new_FloatingRateCoupon(*args))
 
     def price(self, discountingCurve):
         return _QuantLib.FloatingRateCoupon_price(self, discountingCurve)
@@ -8446,6 +9232,10 @@ class IborCouponSettings(object):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
 
+    @staticmethod
+    def instance():
+        return _QuantLib.IborCouponSettings_instance()
+
     def createAtParCoupons(self):
         return _QuantLib.IborCouponSettings_createAtParCoupons(self)
 
@@ -8458,6 +9248,9 @@ class IborCouponSettings(object):
 
 # Register IborCouponSettings in _QuantLib:
 _QuantLib.IborCouponSettings_swigregister(IborCouponSettings)
+
+def IborCouponSettings_instance():
+    return _QuantLib.IborCouponSettings_instance()
 
 class CappedFlooredCoupon(FloatingRateCoupon):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -8641,6 +9434,53 @@ class CappedFlooredCmsSpreadCoupon(CappedFlooredCoupon):
 
 # Register CappedFlooredCmsSpreadCoupon in _QuantLib:
 _QuantLib.CappedFlooredCmsSpreadCoupon_swigregister(CappedFlooredCmsSpreadCoupon)
+
+class DigitalCoupon(FloatingRateCoupon):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.DigitalCoupon_swiginit(self, _QuantLib.new_DigitalCoupon(*args))
+
+    def callStrike(self):
+        return _QuantLib.DigitalCoupon_callStrike(self)
+
+    def putStrike(self):
+        return _QuantLib.DigitalCoupon_putStrike(self)
+
+    def callDigitalPayoff(self):
+        return _QuantLib.DigitalCoupon_callDigitalPayoff(self)
+
+    def putDigitalPayoff(self):
+        return _QuantLib.DigitalCoupon_putDigitalPayoff(self)
+
+    def hasPut(self):
+        return _QuantLib.DigitalCoupon_hasPut(self)
+
+    def hasCall(self):
+        return _QuantLib.DigitalCoupon_hasCall(self)
+
+    def hasCollar(self):
+        return _QuantLib.DigitalCoupon_hasCollar(self)
+
+    def isLongPut(self):
+        return _QuantLib.DigitalCoupon_isLongPut(self)
+
+    def isLongCall(self):
+        return _QuantLib.DigitalCoupon_isLongCall(self)
+
+    def underlying(self):
+        return _QuantLib.DigitalCoupon_underlying(self)
+
+    def callOptionRate(self):
+        return _QuantLib.DigitalCoupon_callOptionRate(self)
+
+    def putOptionRate(self):
+        return _QuantLib.DigitalCoupon_putOptionRate(self)
+    __swig_destroy__ = _QuantLib.delete_DigitalCoupon
+
+# Register DigitalCoupon in _QuantLib:
+_QuantLib.DigitalCoupon_swigregister(DigitalCoupon)
 
 class SubPeriodsCoupon(FloatingRateCoupon):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -9611,6 +10451,17 @@ class BlackConstantVol(BlackVolatilityTermStructure):
 # Register BlackConstantVol in _QuantLib:
 _QuantLib.BlackConstantVol_swigregister(BlackConstantVol)
 
+class SABRVolTermStructure(BlackVolatilityTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, alpha, beta, gamma, rho, s0, r, referenceDate, dc):
+        _QuantLib.SABRVolTermStructure_swiginit(self, _QuantLib.new_SABRVolTermStructure(alpha, beta, gamma, rho, s0, r, referenceDate, dc))
+    __swig_destroy__ = _QuantLib.delete_SABRVolTermStructure
+
+# Register SABRVolTermStructure in _QuantLib:
+_QuantLib.SABRVolTermStructure_swigregister(SABRVolTermStructure)
+
 class AndreasenHugeVolatilityAdapter(BlackVolTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -9754,6 +10605,209 @@ class ExtendedBlackVarianceSurface(BlackVarianceTermStructure):
 # Register ExtendedBlackVarianceSurface in _QuantLib:
 _QuantLib.ExtendedBlackVarianceSurface_swigregister(ExtendedBlackVarianceSurface)
 
+class Payoff(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def name(self):
+        return _QuantLib.Payoff_name(self)
+
+    def description(self):
+        return _QuantLib.Payoff_description(self)
+
+    def __call__(self, price):
+        return _QuantLib.Payoff___call__(self, price)
+    __swig_destroy__ = _QuantLib.delete_Payoff
+
+# Register Payoff in _QuantLib:
+_QuantLib.Payoff_swigregister(Payoff)
+
+class TypePayoff(Payoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def optionType(self):
+        return _QuantLib.TypePayoff_optionType(self)
+    __swig_destroy__ = _QuantLib.delete_TypePayoff
+
+# Register TypePayoff in _QuantLib:
+_QuantLib.TypePayoff_swigregister(TypePayoff)
+
+class BasketPayoff(Payoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def __call__(self, a):
+        return _QuantLib.BasketPayoff___call__(self, a)
+
+    def accumulate(self, a):
+        return _QuantLib.BasketPayoff_accumulate(self, a)
+
+    def basePayoff(self):
+        return _QuantLib.BasketPayoff_basePayoff(self)
+    __swig_destroy__ = _QuantLib.delete_BasketPayoff
+
+# Register BasketPayoff in _QuantLib:
+_QuantLib.BasketPayoff_swigregister(BasketPayoff)
+
+class MinBasketPayoff(BasketPayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, p):
+        _QuantLib.MinBasketPayoff_swiginit(self, _QuantLib.new_MinBasketPayoff(p))
+    __swig_destroy__ = _QuantLib.delete_MinBasketPayoff
+
+# Register MinBasketPayoff in _QuantLib:
+_QuantLib.MinBasketPayoff_swigregister(MinBasketPayoff)
+
+class MaxBasketPayoff(BasketPayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, p):
+        _QuantLib.MaxBasketPayoff_swiginit(self, _QuantLib.new_MaxBasketPayoff(p))
+    __swig_destroy__ = _QuantLib.delete_MaxBasketPayoff
+
+# Register MaxBasketPayoff in _QuantLib:
+_QuantLib.MaxBasketPayoff_swigregister(MaxBasketPayoff)
+
+class AverageBasketPayoff(BasketPayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.AverageBasketPayoff_swiginit(self, _QuantLib.new_AverageBasketPayoff(*args))
+    __swig_destroy__ = _QuantLib.delete_AverageBasketPayoff
+
+# Register AverageBasketPayoff in _QuantLib:
+_QuantLib.AverageBasketPayoff_swigregister(AverageBasketPayoff)
+
+class SpreadBasketPayoff(BasketPayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, p):
+        _QuantLib.SpreadBasketPayoff_swiginit(self, _QuantLib.new_SpreadBasketPayoff(p))
+    __swig_destroy__ = _QuantLib.delete_SpreadBasketPayoff
+
+# Register SpreadBasketPayoff in _QuantLib:
+_QuantLib.SpreadBasketPayoff_swigregister(SpreadBasketPayoff)
+
+class FloatingTypePayoff(TypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type):
+        _QuantLib.FloatingTypePayoff_swiginit(self, _QuantLib.new_FloatingTypePayoff(type))
+    __swig_destroy__ = _QuantLib.delete_FloatingTypePayoff
+
+# Register FloatingTypePayoff in _QuantLib:
+_QuantLib.FloatingTypePayoff_swigregister(FloatingTypePayoff)
+
+class StrikedTypePayoff(TypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def strike(self):
+        return _QuantLib.StrikedTypePayoff_strike(self)
+    __swig_destroy__ = _QuantLib.delete_StrikedTypePayoff
+
+# Register StrikedTypePayoff in _QuantLib:
+_QuantLib.StrikedTypePayoff_swigregister(StrikedTypePayoff)
+
+class PlainVanillaPayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike):
+        _QuantLib.PlainVanillaPayoff_swiginit(self, _QuantLib.new_PlainVanillaPayoff(type, strike))
+    __swig_destroy__ = _QuantLib.delete_PlainVanillaPayoff
+
+# Register PlainVanillaPayoff in _QuantLib:
+_QuantLib.PlainVanillaPayoff_swigregister(PlainVanillaPayoff)
+
+
+def as_plain_vanilla_payoff(payoff):
+    return _QuantLib.as_plain_vanilla_payoff(payoff)
+class PercentageStrikePayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, moneyness):
+        _QuantLib.PercentageStrikePayoff_swiginit(self, _QuantLib.new_PercentageStrikePayoff(type, moneyness))
+    __swig_destroy__ = _QuantLib.delete_PercentageStrikePayoff
+
+# Register PercentageStrikePayoff in _QuantLib:
+_QuantLib.PercentageStrikePayoff_swigregister(PercentageStrikePayoff)
+
+class CashOrNothingPayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike, payoff):
+        _QuantLib.CashOrNothingPayoff_swiginit(self, _QuantLib.new_CashOrNothingPayoff(type, strike, payoff))
+    __swig_destroy__ = _QuantLib.delete_CashOrNothingPayoff
+
+# Register CashOrNothingPayoff in _QuantLib:
+_QuantLib.CashOrNothingPayoff_swigregister(CashOrNothingPayoff)
+
+class AssetOrNothingPayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike):
+        _QuantLib.AssetOrNothingPayoff_swiginit(self, _QuantLib.new_AssetOrNothingPayoff(type, strike))
+    __swig_destroy__ = _QuantLib.delete_AssetOrNothingPayoff
+
+# Register AssetOrNothingPayoff in _QuantLib:
+_QuantLib.AssetOrNothingPayoff_swigregister(AssetOrNothingPayoff)
+
+class SuperSharePayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike, increment):
+        _QuantLib.SuperSharePayoff_swiginit(self, _QuantLib.new_SuperSharePayoff(type, strike, increment))
+    __swig_destroy__ = _QuantLib.delete_SuperSharePayoff
+
+# Register SuperSharePayoff in _QuantLib:
+_QuantLib.SuperSharePayoff_swigregister(SuperSharePayoff)
+
+class GapPayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike, strikePayoff):
+        _QuantLib.GapPayoff_swiginit(self, _QuantLib.new_GapPayoff(type, strike, strikePayoff))
+    __swig_destroy__ = _QuantLib.delete_GapPayoff
+
+# Register GapPayoff in _QuantLib:
+_QuantLib.GapPayoff_swigregister(GapPayoff)
+
+class VanillaForwardPayoff(StrikedTypePayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, type, strike):
+        _QuantLib.VanillaForwardPayoff_swiginit(self, _QuantLib.new_VanillaForwardPayoff(type, strike))
+    __swig_destroy__ = _QuantLib.delete_VanillaForwardPayoff
+
+# Register VanillaForwardPayoff in _QuantLib:
+_QuantLib.VanillaForwardPayoff_swigregister(VanillaForwardPayoff)
+
 class CustomLocalVolatility(LocalVolTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -9775,6 +10829,39 @@ class CustomBlackVolatility(BlackVolatilityTermStructure):
 
 # Register CustomBlackVolatility in _QuantLib:
 _QuantLib.CustomBlackVolatility_swigregister(CustomBlackVolatility)
+
+class CustomCLVModelPayoff(PlainVanillaPayoff):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, payoff, type, strike):
+        _QuantLib.CustomCLVModelPayoff_swiginit(self, _QuantLib.new_CustomCLVModelPayoff(payoff, type, strike))
+    __swig_destroy__ = _QuantLib.delete_CustomCLVModelPayoff
+
+# Register CustomCLVModelPayoff in _QuantLib:
+_QuantLib.CustomCLVModelPayoff_swigregister(CustomCLVModelPayoff)
+
+class CustomCostFunction(CostFunction):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, function):
+        _QuantLib.CustomCostFunction_swiginit(self, _QuantLib.new_CustomCostFunction(function))
+    __swig_destroy__ = _QuantLib.delete_CustomCostFunction
+
+# Register CustomCostFunction in _QuantLib:
+_QuantLib.CustomCostFunction_swigregister(CustomCostFunction)
+
+class CustomConstraint(Constraint):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, impl):
+        _QuantLib.CustomConstraint_swiginit(self, _QuantLib.new_CustomConstraint(impl))
+    __swig_destroy__ = _QuantLib.delete_CustomConstraint
+
+# Register CustomConstraint in _QuantLib:
+_QuantLib.CustomConstraint_swigregister(CustomConstraint)
 
 class Currency(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -10801,6 +11888,340 @@ class UpfrontCdsHelper(CdsHelper):
 
 # Register UpfrontCdsHelper in _QuantLib:
 _QuantLib.UpfrontCdsHelper_swigregister(UpfrontCdsHelper)
+
+SecDom = _QuantLib.SecDom
+SnrFor = _QuantLib.SnrFor
+SubLT2 = _QuantLib.SubLT2
+JrSubT2 = _QuantLib.JrSubT2
+PrefT1 = _QuantLib.PrefT1
+NoSeniority = _QuantLib.NoSeniority
+SeniorSec = _QuantLib.SeniorSec
+SeniorUnSec = _QuantLib.SeniorUnSec
+SubTier1 = _QuantLib.SubTier1
+SubUpperTier2 = _QuantLib.SubUpperTier2
+SubLoweTier2 = _QuantLib.SubLoweTier2
+class CompositeBFQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, h1, h2, function):
+        _QuantLib.CompositeBFQuote_swiginit(self, _QuantLib.new_CompositeBFQuote(h1, h2, function))
+
+    def value1(self):
+        return _QuantLib.CompositeBFQuote_value1(self)
+
+    def value2(self):
+        return _QuantLib.CompositeBFQuote_value2(self)
+    __swig_destroy__ = _QuantLib.delete_CompositeBFQuote
+
+# Register CompositeBFQuote in _QuantLib:
+_QuantLib.CompositeBFQuote_swigregister(CompositeBFQuote)
+
+class DeltaVolQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    Spot = _QuantLib.DeltaVolQuote_Spot
+    Fwd = _QuantLib.DeltaVolQuote_Fwd
+    PaSpot = _QuantLib.DeltaVolQuote_PaSpot
+    PaFwd = _QuantLib.DeltaVolQuote_PaFwd
+    AtmNull = _QuantLib.DeltaVolQuote_AtmNull
+    AtmSpot = _QuantLib.DeltaVolQuote_AtmSpot
+    AtmFwd = _QuantLib.DeltaVolQuote_AtmFwd
+    AtmDeltaNeutral = _QuantLib.DeltaVolQuote_AtmDeltaNeutral
+    AtmVegaMax = _QuantLib.DeltaVolQuote_AtmVegaMax
+    AtmGammaMax = _QuantLib.DeltaVolQuote_AtmGammaMax
+    AtmPutCall50 = _QuantLib.DeltaVolQuote_AtmPutCall50
+
+    def __init__(self, *args):
+        _QuantLib.DeltaVolQuote_swiginit(self, _QuantLib.new_DeltaVolQuote(*args))
+
+    def delta(self):
+        return _QuantLib.DeltaVolQuote_delta(self)
+
+    def maturity(self):
+        return _QuantLib.DeltaVolQuote_maturity(self)
+
+    def atmType(self):
+        return _QuantLib.DeltaVolQuote_atmType(self)
+
+    def deltaType(self):
+        return _QuantLib.DeltaVolQuote_deltaType(self)
+    __swig_destroy__ = _QuantLib.delete_DeltaVolQuote
+
+# Register DeltaVolQuote in _QuantLib:
+_QuantLib.DeltaVolQuote_swigregister(DeltaVolQuote)
+
+class DeltaVolQuoteHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.DeltaVolQuoteHandle_swiginit(self, _QuantLib.new_DeltaVolQuoteHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.DeltaVolQuoteHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.DeltaVolQuoteHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.DeltaVolQuoteHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.DeltaVolQuoteHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.DeltaVolQuoteHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.DeltaVolQuoteHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.DeltaVolQuoteHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_DeltaVolQuoteHandle
+
+    def delta(self):
+        return _QuantLib.DeltaVolQuoteHandle_delta(self)
+
+    def maturity(self):
+        return _QuantLib.DeltaVolQuoteHandle_maturity(self)
+
+    def atmType(self):
+        return _QuantLib.DeltaVolQuoteHandle_atmType(self)
+
+    def deltaType(self):
+        return _QuantLib.DeltaVolQuoteHandle_deltaType(self)
+
+    def value(self):
+        return _QuantLib.DeltaVolQuoteHandle_value(self)
+
+    def isValid(self):
+        return _QuantLib.DeltaVolQuoteHandle_isValid(self)
+
+    def notifyObservers(self):
+        return _QuantLib.DeltaVolQuoteHandle_notifyObservers(self)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.DeltaVolQuoteHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.DeltaVolQuoteHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.DeltaVolQuoteHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.DeltaVolQuoteHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.DeltaVolQuoteHandle_deepUpdate(self)
+
+# Register DeltaVolQuoteHandle in _QuantLib:
+_QuantLib.DeltaVolQuoteHandle_swigregister(DeltaVolQuoteHandle)
+
+class RelinkableDeltaVolQuoteHandle(DeltaVolQuoteHandle):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.RelinkableDeltaVolQuoteHandle_swiginit(self, _QuantLib.new_RelinkableDeltaVolQuoteHandle(*args))
+
+    def linkTo(self, arg2, registerAsObserver=True):
+        return _QuantLib.RelinkableDeltaVolQuoteHandle_linkTo(self, arg2, registerAsObserver)
+
+    def reset(self):
+        return _QuantLib.RelinkableDeltaVolQuoteHandle_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RelinkableDeltaVolQuoteHandle
+
+# Register RelinkableDeltaVolQuoteHandle in _QuantLib:
+_QuantLib.RelinkableDeltaVolQuoteHandle_swigregister(RelinkableDeltaVolQuoteHandle)
+
+class DerivedUFQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, h, function):
+        _QuantLib.DerivedUFQuote_swiginit(self, _QuantLib.new_DerivedUFQuote(h, function))
+    __swig_destroy__ = _QuantLib.delete_DerivedUFQuote
+
+# Register DerivedUFQuote in _QuantLib:
+_QuantLib.DerivedUFQuote_swigregister(DerivedUFQuote)
+
+class EurodollarFuturesImpliedStdDevQuote(Quote, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, forward, callPrice, putPrice, strike, guess=.15, accuracy=1.0e-6, maxIter=100):
+        _QuantLib.EurodollarFuturesImpliedStdDevQuote_swiginit(self, _QuantLib.new_EurodollarFuturesImpliedStdDevQuote(forward, callPrice, putPrice, strike, guess, accuracy, maxIter))
+    __swig_destroy__ = _QuantLib.delete_EurodollarFuturesImpliedStdDevQuote
+
+# Register EurodollarFuturesImpliedStdDevQuote in _QuantLib:
+_QuantLib.EurodollarFuturesImpliedStdDevQuote_swigregister(EurodollarFuturesImpliedStdDevQuote)
+
+class ForwardSwapQuote(Quote, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, swapIndex, spread, fwdStart):
+        _QuantLib.ForwardSwapQuote_swiginit(self, _QuantLib.new_ForwardSwapQuote(swapIndex, spread, fwdStart))
+
+    def valueDate(self):
+        return _QuantLib.ForwardSwapQuote_valueDate(self)
+
+    def startDate(self):
+        return _QuantLib.ForwardSwapQuote_startDate(self)
+
+    def fixingDate(self):
+        return _QuantLib.ForwardSwapQuote_fixingDate(self)
+    __swig_destroy__ = _QuantLib.delete_ForwardSwapQuote
+
+# Register ForwardSwapQuote in _QuantLib:
+_QuantLib.ForwardSwapQuote_swigregister(ForwardSwapQuote)
+
+class ForwardValueQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, index, fixingDate):
+        _QuantLib.ForwardValueQuote_swiginit(self, _QuantLib.new_ForwardValueQuote(index, fixingDate))
+    __swig_destroy__ = _QuantLib.delete_ForwardValueQuote
+
+# Register ForwardValueQuote in _QuantLib:
+_QuantLib.ForwardValueQuote_swigregister(ForwardValueQuote)
+
+class FuturesConvAdjustmentQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FuturesConvAdjustmentQuote_swiginit(self, _QuantLib.new_FuturesConvAdjustmentQuote(*args))
+
+    def futuresValue(self):
+        return _QuantLib.FuturesConvAdjustmentQuote_futuresValue(self)
+
+    def volatility(self):
+        return _QuantLib.FuturesConvAdjustmentQuote_volatility(self)
+
+    def meanReversion(self):
+        return _QuantLib.FuturesConvAdjustmentQuote_meanReversion(self)
+
+    def immDate(self):
+        return _QuantLib.FuturesConvAdjustmentQuote_immDate(self)
+    __swig_destroy__ = _QuantLib.delete_FuturesConvAdjustmentQuote
+
+# Register FuturesConvAdjustmentQuote in _QuantLib:
+_QuantLib.FuturesConvAdjustmentQuote_swigregister(FuturesConvAdjustmentQuote)
+
+class ImpliedStdDevQuote(Quote, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, optionType, forward, price, strike, guess, accuracy=1.0e-6, maxIter=100):
+        _QuantLib.ImpliedStdDevQuote_swiginit(self, _QuantLib.new_ImpliedStdDevQuote(optionType, forward, price, strike, guess, accuracy, maxIter))
+    __swig_destroy__ = _QuantLib.delete_ImpliedStdDevQuote
+
+# Register ImpliedStdDevQuote in _QuantLib:
+_QuantLib.ImpliedStdDevQuote_swigregister(ImpliedStdDevQuote)
+
+class LastFixingQuote(Quote, Observer):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, index):
+        _QuantLib.LastFixingQuote_swiginit(self, _QuantLib.new_LastFixingQuote(index))
+
+    def index(self):
+        return _QuantLib.LastFixingQuote_index(self)
+
+    def referenceDate(self):
+        return _QuantLib.LastFixingQuote_referenceDate(self)
+    __swig_destroy__ = _QuantLib.delete_LastFixingQuote
+
+# Register LastFixingQuote in _QuantLib:
+_QuantLib.LastFixingQuote_swigregister(LastFixingQuote)
+
+class RecoveryRateQuote(Quote):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    @staticmethod
+    def conventionalRecovery(sen):
+        return _QuantLib.RecoveryRateQuote_conventionalRecovery(sen)
+
+    def __init__(self, *args):
+        _QuantLib.RecoveryRateQuote_swiginit(self, _QuantLib.new_RecoveryRateQuote(*args))
+
+    def seniority(self):
+        return _QuantLib.RecoveryRateQuote_seniority(self)
+
+    def setValue(self, *args):
+        return _QuantLib.RecoveryRateQuote_setValue(self, *args)
+
+    def reset(self):
+        return _QuantLib.RecoveryRateQuote_reset(self)
+    __swig_destroy__ = _QuantLib.delete_RecoveryRateQuote
+
+# Register RecoveryRateQuote in _QuantLib:
+_QuantLib.RecoveryRateQuote_swigregister(RecoveryRateQuote)
+
+def RecoveryRateQuote_conventionalRecovery(sen):
+    return _QuantLib.RecoveryRateQuote_conventionalRecovery(sen)
+
+class SimpleQuote(Quote):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SimpleQuote_swiginit(self, _QuantLib.new_SimpleQuote(*args))
+
+    def setValue(self, *args):
+        return _QuantLib.SimpleQuote_setValue(self, *args)
+    __swig_destroy__ = _QuantLib.delete_SimpleQuote
+
+# Register SimpleQuote in _QuantLib:
+_QuantLib.SimpleQuote_swigregister(SimpleQuote)
+
+
+def as_simple_quote(q):
+    return _QuantLib.as_simple_quote(q)
+class D0Interpolator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, forward, expiryTime, alpha, beta, nu, rho):
+        _QuantLib.D0Interpolator_swiginit(self, _QuantLib.new_D0Interpolator(forward, expiryTime, alpha, beta, nu, rho))
+
+    def __call__(self):
+        return _QuantLib.D0Interpolator___call__(self)
+    __swig_destroy__ = _QuantLib.delete_D0Interpolator
+
+# Register D0Interpolator in _QuantLib:
+_QuantLib.D0Interpolator_swigregister(D0Interpolator)
+
+class ImpliedVolatilityHelper(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    @staticmethod
+    def calculate(instrument, engine, volQuote, targetValue, accuracy, maxEvaluations, minVol, maxVol):
+        return _QuantLib.ImpliedVolatilityHelper_calculate(instrument, engine, volQuote, targetValue, accuracy, maxEvaluations, minVol, maxVol)
+
+    @staticmethod
+    def clone(arg1, arg2):
+        return _QuantLib.ImpliedVolatilityHelper_clone(arg1, arg2)
+
+    def __init__(self):
+        _QuantLib.ImpliedVolatilityHelper_swiginit(self, _QuantLib.new_ImpliedVolatilityHelper())
+    __swig_destroy__ = _QuantLib.delete_ImpliedVolatilityHelper
+
+# Register ImpliedVolatilityHelper in _QuantLib:
+_QuantLib.ImpliedVolatilityHelper_swigregister(ImpliedVolatilityHelper)
+
+def ImpliedVolatilityHelper_calculate(instrument, engine, volQuote, targetValue, accuracy, maxEvaluations, minVol, maxVol):
+    return _QuantLib.ImpliedVolatilityHelper_calculate(instrument, engine, volQuote, targetValue, accuracy, maxEvaluations, minVol, maxVol)
+
+def ImpliedVolatilityHelper_clone(arg1, arg2):
+    return _QuantLib.ImpliedVolatilityHelper_clone(arg1, arg2)
 
 class BinomialDistribution(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -12655,7 +14076,7 @@ class VannaVolgaIKDoubleBarrierEngine(PricingEngine):
 # Register VannaVolgaIKDoubleBarrierEngine in _QuantLib:
 _QuantLib.VannaVolgaIKDoubleBarrierEngine_swigregister(VannaVolgaIKDoubleBarrierEngine)
 
-class VannaVolgaWYDoubleBarrierEngine(PricingEngine):
+class VannaVolgaSWDoubleBarrierEngine(PricingEngine):
     r"""
 
     Vanna-Volga engine for double barrier options.
@@ -12679,11 +14100,11 @@ class VannaVolgaWYDoubleBarrierEngine(PricingEngine):
             wo:              Wulin-Yong engine
 
         """
-        _QuantLib.VannaVolgaWYDoubleBarrierEngine_swiginit(self, _QuantLib.new_VannaVolgaWYDoubleBarrierEngine(atmVol, vol25Put, vol25Call, spotFX, domesticTS, foreignTS, adaptVanDelta, bsPriceWithSmile, series))
-    __swig_destroy__ = _QuantLib.delete_VannaVolgaWYDoubleBarrierEngine
+        _QuantLib.VannaVolgaSWDoubleBarrierEngine_swiginit(self, _QuantLib.new_VannaVolgaSWDoubleBarrierEngine(atmVol, vol25Put, vol25Call, spotFX, domesticTS, foreignTS, adaptVanDelta, bsPriceWithSmile, series))
+    __swig_destroy__ = _QuantLib.delete_VannaVolgaSWDoubleBarrierEngine
 
-# Register VannaVolgaWYDoubleBarrierEngine in _QuantLib:
-_QuantLib.VannaVolgaWYDoubleBarrierEngine_swigregister(VannaVolgaWYDoubleBarrierEngine)
+# Register VannaVolgaSWDoubleBarrierEngine in _QuantLib:
+_QuantLib.VannaVolgaSWDoubleBarrierEngine_swigregister(VannaVolgaSWDoubleBarrierEngine)
 
 class AnalyticDoubleBarrierBinaryEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -13962,6 +15383,17 @@ class TreeCallableFixedRateBondEngine(PricingEngine):
 # Register TreeCallableFixedRateBondEngine in _QuantLib:
 _QuantLib.TreeCallableFixedRateBondEngine_swigregister(TreeCallableFixedRateBondEngine)
 
+class TreeCallableZeroCouponBondEngine(TreeCallableFixedRateBondEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.TreeCallableZeroCouponBondEngine_swiginit(self, _QuantLib.new_TreeCallableZeroCouponBondEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_TreeCallableZeroCouponBondEngine
+
+# Register TreeCallableZeroCouponBondEngine in _QuantLib:
+_QuantLib.TreeCallableZeroCouponBondEngine_swigregister(TreeCallableZeroCouponBondEngine)
+
 class BlackCallableFixedRateBondEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -14139,6 +15571,206 @@ class Gaussian1dCapFloorEngine(PricingEngine):
 
 # Register Gaussian1dCapFloorEngine in _QuantLib:
 _QuantLib.Gaussian1dCapFloorEngine_swigregister(Gaussian1dCapFloorEngine)
+
+class PathPair(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PathPair_swiginit(self, _QuantLib.new_PathPair(*args))
+    first = property(_QuantLib.PathPair_first_get, _QuantLib.PathPair_first_set)
+    second = property(_QuantLib.PathPair_second_get, _QuantLib.PathPair_second_set)
+    def __len__(self):
+        return 2
+    def __repr__(self):
+        return str((self.first, self.second))
+    def __getitem__(self, index): 
+        if not (index % 2):
+            return self.first
+        else:
+            return self.second
+    def __setitem__(self, index, val):
+        if not (index % 2):
+            self.first = val
+        else:
+            self.second = val
+    __swig_destroy__ = _QuantLib.delete_PathPair
+
+# Register PathPair in _QuantLib:
+_QuantLib.PathPair_swigregister(PathPair)
+
+class CatSimulation(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def nextPath(self):
+        return _QuantLib.CatSimulation_nextPath(self)
+    __swig_destroy__ = _QuantLib.delete_CatSimulation
+
+# Register CatSimulation in _QuantLib:
+_QuantLib.CatSimulation_swigregister(CatSimulation)
+
+class EventSetSimulation(CatSimulation):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, events, eventsStart, eventsEnd, start, end):
+        _QuantLib.EventSetSimulation_swiginit(self, _QuantLib.new_EventSetSimulation(events, eventsStart, eventsEnd, start, end))
+    __swig_destroy__ = _QuantLib.delete_EventSetSimulation
+
+# Register EventSetSimulation in _QuantLib:
+_QuantLib.EventSetSimulation_swigregister(EventSetSimulation)
+
+class BetaRiskSimulation(CatSimulation):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, start, end, maxLoss, _lambda, alpha, beta):
+        _QuantLib.BetaRiskSimulation_swiginit(self, _QuantLib.new_BetaRiskSimulation(start, end, maxLoss, _lambda, alpha, beta))
+
+    def generateBeta(self):
+        return _QuantLib.BetaRiskSimulation_generateBeta(self)
+    __swig_destroy__ = _QuantLib.delete_BetaRiskSimulation
+
+# Register BetaRiskSimulation in _QuantLib:
+_QuantLib.BetaRiskSimulation_swigregister(BetaRiskSimulation)
+
+class CatRisk(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def newSimulation(self, start, end):
+        return _QuantLib.CatRisk_newSimulation(self, start, end)
+    __swig_destroy__ = _QuantLib.delete_CatRisk
+
+# Register CatRisk in _QuantLib:
+_QuantLib.CatRisk_swigregister(CatRisk)
+
+class EventSet(CatRisk):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, events, eventsStart, eventsEnd):
+        _QuantLib.EventSet_swiginit(self, _QuantLib.new_EventSet(events, eventsStart, eventsEnd))
+    __swig_destroy__ = _QuantLib.delete_EventSet
+
+# Register EventSet in _QuantLib:
+_QuantLib.EventSet_swigregister(EventSet)
+
+class BetaRisk(CatRisk):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, maxLoss, years, mean, stdDev):
+        _QuantLib.BetaRisk_swiginit(self, _QuantLib.new_BetaRisk(maxLoss, years, mean, stdDev))
+    __swig_destroy__ = _QuantLib.delete_BetaRisk
+
+# Register BetaRisk in _QuantLib:
+_QuantLib.BetaRisk_swigregister(BetaRisk)
+
+class EventPaymentOffset(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def paymentDate(self, eventDate):
+        return _QuantLib.EventPaymentOffset_paymentDate(self, eventDate)
+    __swig_destroy__ = _QuantLib.delete_EventPaymentOffset
+
+# Register EventPaymentOffset in _QuantLib:
+_QuantLib.EventPaymentOffset_swigregister(EventPaymentOffset)
+
+class NoOffset(EventPaymentOffset):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.NoOffset_swiginit(self, _QuantLib.new_NoOffset())
+    __swig_destroy__ = _QuantLib.delete_NoOffset
+
+# Register NoOffset in _QuantLib:
+_QuantLib.NoOffset_swigregister(NoOffset)
+
+class NotionalPath(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.NotionalPath_swiginit(self, _QuantLib.new_NotionalPath())
+
+    def notionalRate(self, date):
+        return _QuantLib.NotionalPath_notionalRate(self, date)
+
+    def reset(self):
+        return _QuantLib.NotionalPath_reset(self)
+
+    def addReduction(self, date, newRate):
+        return _QuantLib.NotionalPath_addReduction(self, date, newRate)
+
+    def loss(self):
+        return _QuantLib.NotionalPath_loss(self)
+    __swig_destroy__ = _QuantLib.delete_NotionalPath
+
+# Register NotionalPath in _QuantLib:
+_QuantLib.NotionalPath_swigregister(NotionalPath)
+
+class NotionalRisk(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+
+    def updatePath(self, events, path):
+        return _QuantLib.NotionalRisk_updatePath(self, events, path)
+    __swig_destroy__ = _QuantLib.delete_NotionalRisk
+
+# Register NotionalRisk in _QuantLib:
+_QuantLib.NotionalRisk_swigregister(NotionalRisk)
+
+class DigitalNotionalRisk(NotionalRisk):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, paymentOffset, threshold):
+        _QuantLib.DigitalNotionalRisk_swiginit(self, _QuantLib.new_DigitalNotionalRisk(paymentOffset, threshold))
+    __swig_destroy__ = _QuantLib.delete_DigitalNotionalRisk
+
+# Register DigitalNotionalRisk in _QuantLib:
+_QuantLib.DigitalNotionalRisk_swigregister(DigitalNotionalRisk)
+
+class ProportionalNotionalRisk(NotionalRisk):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, paymentOffset, attachement, exhaustion):
+        _QuantLib.ProportionalNotionalRisk_swiginit(self, _QuantLib.new_ProportionalNotionalRisk(paymentOffset, attachement, exhaustion))
+    __swig_destroy__ = _QuantLib.delete_ProportionalNotionalRisk
+
+# Register ProportionalNotionalRisk in _QuantLib:
+_QuantLib.ProportionalNotionalRisk_swigregister(ProportionalNotionalRisk)
+
+class MonteCarloCatBondEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MonteCarloCatBondEngine_swiginit(self, _QuantLib.new_MonteCarloCatBondEngine(*args))
+
+    def discountCurve(self):
+        return _QuantLib.MonteCarloCatBondEngine_discountCurve(self)
+    __swig_destroy__ = _QuantLib.delete_MonteCarloCatBondEngine
+
+# Register MonteCarloCatBondEngine in _QuantLib:
+_QuantLib.MonteCarloCatBondEngine_swigregister(MonteCarloCatBondEngine)
 
 class MidPointCdsEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -14356,6 +15988,52 @@ class FdHestonHullWhiteVanillaEngine(PricingEngine):
 
 # Register FdHestonHullWhiteVanillaEngine in _QuantLib:
 _QuantLib.FdHestonHullWhiteVanillaEngine_swigregister(FdHestonHullWhiteVanillaEngine)
+
+class FdCIRVanillaEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, cirProcess, bsProcess, tGrid, xGrid, vGrid, dampingSteps, rho, schemeDesc, quantoHelper):
+        _QuantLib.FdCIRVanillaEngine_swiginit(self, _QuantLib.new_FdCIRVanillaEngine(cirProcess, bsProcess, tGrid, xGrid, vGrid, dampingSteps, rho, schemeDesc, quantoHelper))
+
+    def getSolverDesc(self, equityScaleFactor):
+        return _QuantLib.FdCIRVanillaEngine_getSolverDesc(self, equityScaleFactor)
+    __swig_destroy__ = _QuantLib.delete_FdCIRVanillaEngine
+
+# Register FdCIRVanillaEngine in _QuantLib:
+_QuantLib.FdCIRVanillaEngine_swigregister(FdCIRVanillaEngine)
+
+class MakeFdCIRVanillaEngine(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, cirProcess, bsProcess, rho):
+        _QuantLib.MakeFdCIRVanillaEngine_swiginit(self, _QuantLib.new_MakeFdCIRVanillaEngine(cirProcess, bsProcess, rho))
+
+    def withQuantoHelper(self, quantoHelper):
+        return _QuantLib.MakeFdCIRVanillaEngine_withQuantoHelper(self, quantoHelper)
+
+    def withTGrid(self, tGrid):
+        return _QuantLib.MakeFdCIRVanillaEngine_withTGrid(self, tGrid)
+
+    def withXGrid(self, xGrid):
+        return _QuantLib.MakeFdCIRVanillaEngine_withXGrid(self, xGrid)
+
+    def withRGrid(self, rGrid):
+        return _QuantLib.MakeFdCIRVanillaEngine_withRGrid(self, rGrid)
+
+    def withDampingSteps(self, dampingSteps):
+        return _QuantLib.MakeFdCIRVanillaEngine_withDampingSteps(self, dampingSteps)
+
+    def withFdmSchemeDesc(self, schemeDesc):
+        return _QuantLib.MakeFdCIRVanillaEngine_withFdmSchemeDesc(self, schemeDesc)
+
+    def makeEngine(self):
+        return _QuantLib.MakeFdCIRVanillaEngine_makeEngine(self)
+    __swig_destroy__ = _QuantLib.delete_MakeFdCIRVanillaEngine
+
+# Register MakeFdCIRVanillaEngine in _QuantLib:
+_QuantLib.MakeFdCIRVanillaEngine_swigregister(MakeFdCIRVanillaEngine)
 
 class ForwardEuropeanEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -15282,6 +16960,17 @@ class DiscountingSwapEngine(PricingEngine):
 
 # Register DiscountingSwapEngine in _QuantLib:
 _QuantLib.DiscountingSwapEngine_swigregister(DiscountingSwapEngine)
+
+class TreeVanillaSwapEngine(PricingEngine):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.TreeVanillaSwapEngine_swiginit(self, _QuantLib.new_TreeVanillaSwapEngine(*args))
+    __swig_destroy__ = _QuantLib.delete_TreeVanillaSwapEngine
+
+# Register TreeVanillaSwapEngine in _QuantLib:
+_QuantLib.TreeVanillaSwapEngine_swigregister(TreeVanillaSwapEngine)
 
 class BlackSwaptionEngine(PricingEngine):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -19993,6 +21682,12 @@ class SwapIndex(InterestRateIndex):
     def discountingTermStructure(self):
         return _QuantLib.SwapIndex_discountingTermStructure(self)
 
+    def exogenousDiscount(self):
+        return _QuantLib.SwapIndex_exogenousDiscount(self)
+
+    def underlyingSwap(self, fixingDate):
+        return _QuantLib.SwapIndex_underlyingSwap(self, fixingDate)
+
     def clone(self, *args):
         return _QuantLib.SwapIndex_clone(self, *args)
     __swig_destroy__ = _QuantLib.delete_SwapIndex
@@ -21757,102 +23452,6 @@ class InterpolatedYoYInflationOptionletStripper(YoYOptionletStripper):
 # Register InterpolatedYoYInflationOptionletStripper in _QuantLib:
 _QuantLib.InterpolatedYoYInflationOptionletStripper_swigregister(InterpolatedYoYInflationOptionletStripper)
 
-class BondPrice(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-    Dirty = _QuantLib.BondPrice_Dirty
-    Clean = _QuantLib.BondPrice_Clean
-
-    def __init__(self, amount, type):
-        _QuantLib.BondPrice_swiginit(self, _QuantLib.new_BondPrice(amount, type))
-
-    def amount(self):
-        return _QuantLib.BondPrice_amount(self)
-
-    def type(self):
-        return _QuantLib.BondPrice_type(self)
-    __swig_destroy__ = _QuantLib.delete_BondPrice
-
-# Register BondPrice in _QuantLib:
-_QuantLib.BondPrice_swigregister(BondPrice)
-
-class Bond(Instrument):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.Bond_swiginit(self, _QuantLib.new_Bond(*args))
-
-    def settlementDays(self):
-        return _QuantLib.Bond_settlementDays(self)
-
-    def calendar(self):
-        return _QuantLib.Bond_calendar(self)
-
-    def notionals(self):
-        return _QuantLib.Bond_notionals(self)
-
-    def notional(self, *args):
-        return _QuantLib.Bond_notional(self, *args)
-
-    def cashflows(self):
-        return _QuantLib.Bond_cashflows(self)
-
-    def redemptions(self):
-        return _QuantLib.Bond_redemptions(self)
-
-    def redemption(self):
-        return _QuantLib.Bond_redemption(self)
-
-    def startDate(self):
-        return _QuantLib.Bond_startDate(self)
-
-    def maturityDate(self):
-        return _QuantLib.Bond_maturityDate(self)
-
-    def issueDate(self):
-        return _QuantLib.Bond_issueDate(self)
-
-    def isTradable(self, *args):
-        return _QuantLib.Bond_isTradable(self, *args)
-
-    def settlementDate(self, *args):
-        return _QuantLib.Bond_settlementDate(self, *args)
-
-    def cleanPrice(self, *args):
-        return _QuantLib.Bond_cleanPrice(self, *args)
-
-    def dirtyPrice(self, *args):
-        return _QuantLib.Bond_dirtyPrice(self, *args)
-
-    def settlementValue(self, *args):
-        return _QuantLib.Bond_settlementValue(self, *args)
-
-    def bondYield(self, *args):
-        return _QuantLib.Bond_bondYield(self, *args)
-
-    def accruedAmount(self, *args):
-        return _QuantLib.Bond_accruedAmount(self, *args)
-
-    def nextCouponRate(self, *args):
-        return _QuantLib.Bond_nextCouponRate(self, *args)
-
-    def previousCouponRate(self, *args):
-        return _QuantLib.Bond_previousCouponRate(self, *args)
-
-    def nextCashFlowDate(self, *args):
-        return _QuantLib.Bond_nextCashFlowDate(self, *args)
-
-    def previousCashFlowDate(self, *args):
-        return _QuantLib.Bond_previousCashFlowDate(self, *args)
-    __swig_destroy__ = _QuantLib.delete_Bond
-
-# Register Bond in _QuantLib:
-_QuantLib.Bond_swigregister(Bond)
-
-
-def cleanPriceFromZSpread(*args):
-    return _QuantLib.cleanPriceFromZSpread(*args)
 class CapFloor(Instrument):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -21917,6 +23516,59 @@ class CapFloor(Instrument):
 
 # Register CapFloor in _QuantLib:
 _QuantLib.CapFloor_swigregister(CapFloor)
+
+class MakeCapFloor(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MakeCapFloor_swiginit(self, _QuantLib.new_MakeCapFloor(*args))
+
+    def makeCapFloor(self):
+        return _QuantLib.MakeCapFloor_makeCapFloor(self)
+
+    def withNominal(self, n):
+        return _QuantLib.MakeCapFloor_withNominal(self, n)
+
+    def withEffectiveDate(self, effectiveDate, firstCapletExcluded):
+        return _QuantLib.MakeCapFloor_withEffectiveDate(self, effectiveDate, firstCapletExcluded)
+
+    def withTenor(self, t):
+        return _QuantLib.MakeCapFloor_withTenor(self, t)
+
+    def withCalendar(self, cal):
+        return _QuantLib.MakeCapFloor_withCalendar(self, cal)
+
+    def withConvention(self, bdc):
+        return _QuantLib.MakeCapFloor_withConvention(self, bdc)
+
+    def withTerminationDateConvention(self, bdc):
+        return _QuantLib.MakeCapFloor_withTerminationDateConvention(self, bdc)
+
+    def withRule(self, r):
+        return _QuantLib.MakeCapFloor_withRule(self, r)
+
+    def withEndOfMonth(self, flag=True):
+        return _QuantLib.MakeCapFloor_withEndOfMonth(self, flag)
+
+    def withFirstDate(self, d):
+        return _QuantLib.MakeCapFloor_withFirstDate(self, d)
+
+    def withNextToLastDate(self, d):
+        return _QuantLib.MakeCapFloor_withNextToLastDate(self, d)
+
+    def withDayCount(self, dc):
+        return _QuantLib.MakeCapFloor_withDayCount(self, dc)
+
+    def asOptionlet(self, b=True):
+        return _QuantLib.MakeCapFloor_asOptionlet(self, b)
+
+    def withPricingEngine(self, engine):
+        return _QuantLib.MakeCapFloor_withPricingEngine(self, engine)
+    __swig_destroy__ = _QuantLib.delete_MakeCapFloor
+
+# Register MakeCapFloor in _QuantLib:
+_QuantLib.MakeCapFloor_swigregister(MakeCapFloor)
 
 class Forward(Instrument):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -22121,6 +23773,26 @@ class AmortizingFloatingRateBond(Bond):
 # Register AmortizingFloatingRateBond in _QuantLib:
 _QuantLib.AmortizingFloatingRateBond_swigregister(AmortizingFloatingRateBond)
 
+class CatBond(Bond):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, settlementDays, calendar, issueDate, notionalRisk):
+        _QuantLib.CatBond_swiginit(self, _QuantLib.new_CatBond(settlementDays, calendar, issueDate, notionalRisk))
+
+    def lossProbability(self):
+        return _QuantLib.CatBond_lossProbability(self)
+
+    def expectedLoss(self):
+        return _QuantLib.CatBond_expectedLoss(self)
+
+    def exhaustionProbability(self):
+        return _QuantLib.CatBond_exhaustionProbability(self)
+    __swig_destroy__ = _QuantLib.delete_CatBond
+
+# Register CatBond in _QuantLib:
+_QuantLib.CatBond_swigregister(CatBond)
+
 class CPIBond(Bond):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -22306,6 +23978,17 @@ class ZeroCouponBond(Bond):
 
 # Register ZeroCouponBond in _QuantLib:
 _QuantLib.ZeroCouponBond_swigregister(ZeroCouponBond)
+
+class FloatingCatBond(CatBond):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.FloatingCatBond_swiginit(self, _QuantLib.new_FloatingCatBond(*args))
+    __swig_destroy__ = _QuantLib.delete_FloatingCatBond
+
+# Register FloatingCatBond in _QuantLib:
+_QuantLib.FloatingCatBond_swigregister(FloatingCatBond)
 
 class Cap(CapFloor):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -23024,6 +24707,41 @@ class Swaption(Option):
 # Register Swaption in _QuantLib:
 _QuantLib.Swaption_swigregister(Swaption)
 
+class MakeSwaption(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MakeSwaption_swiginit(self, _QuantLib.new_MakeSwaption(*args))
+
+    def makeSwaption(self):
+        return _QuantLib.MakeSwaption_makeSwaption(self)
+
+    def withNominal(self, n):
+        return _QuantLib.MakeSwaption_withNominal(self, n)
+
+    def withSettlementType(self, delivery):
+        return _QuantLib.MakeSwaption_withSettlementType(self, delivery)
+
+    def withSettlementMethod(self, settlementMethod):
+        return _QuantLib.MakeSwaption_withSettlementMethod(self, settlementMethod)
+
+    def withOptionConvention(self, bdc):
+        return _QuantLib.MakeSwaption_withOptionConvention(self, bdc)
+
+    def withExerciseDate(self, arg2):
+        return _QuantLib.MakeSwaption_withExerciseDate(self, arg2)
+
+    def withUnderlyingType(self, type):
+        return _QuantLib.MakeSwaption_withUnderlyingType(self, type)
+
+    def withPricingEngine(self, engine):
+        return _QuantLib.MakeSwaption_withPricingEngine(self, engine)
+    __swig_destroy__ = _QuantLib.delete_MakeSwaption
+
+# Register MakeSwaption in _QuantLib:
+_QuantLib.MakeSwaption_swigregister(MakeSwaption)
+
 class NonstandardSwaption(Option):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -23237,6 +24955,47 @@ _QuantLib.ForwardRateAgreement_swigregister(ForwardRateAgreement)
 
 def cdsMaturity(tradeDate, tenor, rule):
     return _QuantLib.cdsMaturity(tradeDate, tenor, rule)
+class MakeCreditDefaultSwap(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.MakeCreditDefaultSwap_swiginit(self, _QuantLib.new_MakeCreditDefaultSwap(*args))
+
+    def withUpfrontRate(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withUpfrontRate(self, arg2)
+
+    def withSide(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withSide(self, arg2)
+
+    def withNominal(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withNominal(self, arg2)
+
+    def withCouponTenor(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withCouponTenor(self, arg2)
+
+    def withDayCounter(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withDayCounter(self, arg2)
+
+    def withLastPeriodDayCounter(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withLastPeriodDayCounter(self, arg2)
+
+    def withDateGenerationRule(self, rule):
+        return _QuantLib.MakeCreditDefaultSwap_withDateGenerationRule(self, rule)
+
+    def withCashSettlementDays(self, cashSettlementDays):
+        return _QuantLib.MakeCreditDefaultSwap_withCashSettlementDays(self, cashSettlementDays)
+
+    def withPricingEngine(self, arg2):
+        return _QuantLib.MakeCreditDefaultSwap_withPricingEngine(self, arg2)
+
+    def makeCDS(self):
+        return _QuantLib.MakeCreditDefaultSwap_makeCDS(self)
+    __swig_destroy__ = _QuantLib.delete_MakeCreditDefaultSwap
+
+# Register MakeCreditDefaultSwap in _QuantLib:
+_QuantLib.MakeCreditDefaultSwap_swigregister(MakeCreditDefaultSwap)
+
 class Stock(Instrument):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -24101,80 +25860,12 @@ class MakeOIS(object):
 # Register MakeOIS in _QuantLib:
 _QuantLib.MakeOIS_swigregister(MakeOIS)
 
-
-def MakeOIS(
-        swapTenor,
-        overnightIndex,
-        fixedRate=None,
-        fwdStart=Period(0, Days),
-        receiveFixed=True,
-        swapType=OvernightIndexedSwap.Payer,
-        nominal=1.0,
-        settlementDays=2,
-        effectiveDate=None,
-        terminationDate=None,
-        dateGenerationRule=DateGeneration.Backward,
-        paymentFrequency=Annual,
-        paymentAdjustmentConvention=Following,
-        paymentLag=0,
-        paymentCalendar=None,
-        endOfMonth=True,
-        fixedLegDayCount=None,
-        overnightLegSpread=0.0,
-        discountingTermStructure=None,
-        telescopicValueDates=False,
-        pricingEngine=None,
-        averagingMethod=None):
-    mv = MakeOIS(
-        swapTenor, overnightIndex, fixedRate, fwdStart)
-
-    if not receiveFixed:
-        mv.receiveFixed(receiveFixed)
-    if swapType != OvernightIndexedSwap.Payer:
-        mv.withType(swapType)
-    if nominal != 1.0:
-        mv.withNominal(nominal)
-    if settlementDays != 2:
-        mv.withSettlementDays(settlementDays)
-    if effectiveDate is not None:
-        mv.withEffectiveDate(effectiveDate)
-    if terminationDate is not None:
-        mv.withTerminationDate(terminationDate)
-    if dateGenerationRule != DateGeneration.Backward:
-        mv.withRule(dateGenerationRule)
-    if paymentFrequency != Annual:
-        mv.withPaymentFrequency(paymentFrequency)
-    if paymentAdjustmentConvention != Following:
-        mv.withPaymentAdjustment(paymentAdjustmentConvention)
-    if paymentLag != 0:
-        mv.withPaymentLag(paymentLag)
-    if paymentCalendar is not None:
-        mv.withPaymentCalendar(paymentCalendar)
-    if not endOfMonth:
-        mv.withEndOfMonth(endOfMonth)
-    if fixedLegDayCount is not None:
-        mv.withFixedLegDayCount(fixedLegDayCount)
-    else:
-        mv.withFixedLegDayCount(overnightIndex.dayCounter())
-    if overnightLegSpread != 0.0:
-        mv.withOvernightLegSpread(overnightLegSpread)
-    if discountingTermStructure is not None:
-        mv.withDiscountingTermStructure(discountingTermStructure)
-    if telescopicValueDates:
-        mv.withTelescopicValueDates(telescopicValueDates)
-    if averagingMethod is not None:
-        mv.withAveragingMethod(averagingMethod)
-    if pricingEngine is not None:
-        mv.withPricingEngine(pricingEngine)
-
-    return mv.makeOIS()
-
 class MakeVanillaSwap(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, swapTenor, index, fixedRate, forwardStart):
-        _QuantLib.MakeVanillaSwap_swiginit(self, _QuantLib.new_MakeVanillaSwap(swapTenor, index, fixedRate, forwardStart))
+    def __init__(self, *args):
+        _QuantLib.MakeVanillaSwap_swiginit(self, _QuantLib.new_MakeVanillaSwap(*args))
 
     def makeVanillaSwap(self):
         return _QuantLib.MakeVanillaSwap_makeVanillaSwap(self)
@@ -24267,77 +25958,91 @@ class MakeVanillaSwap(object):
 # Register MakeVanillaSwap in _QuantLib:
 _QuantLib.MakeVanillaSwap_swigregister(MakeVanillaSwap)
 
+class MakeCms(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
 
-def MakeVanillaSwap(
-        swapTenor, iborIndex, fixedRate, forwardStart,
-        receiveFixed=None, swapType=None, Nominal=None, settlementDays=None,
-        effectiveDate=None, terminationDate=None, dateGenerationRule=None,
-        fixedLegTenor=None, fixedLegCalendar=None, fixedLegConvention=None,
-        fixedLegDayCount=None, floatingLegTenor=None, floatingLegCalendar=None,
-        floatingLegConvention=None, floatingLegDayCount=None, floatingLegSpread=None,
-        discountingTermStructure=None, pricingEngine=None,
-        fixedLegTerminationDateConvention=None,  fixedLegDateGenRule=None,
-        fixedLegEndOfMonth=None, fixedLegFirstDate=None, fixedLegNextToLastDate=None,
-        floatingLegTerminationDateConvention=None,  floatingLegDateGenRule=None,
-        floatingLegEndOfMonth=None, floatingLegFirstDate=None, floatingLegNextToLastDate=None):
-    mv = MakeVanillaSwap(swapTenor, iborIndex, fixedRate, forwardStart)
-    if receiveFixed is not None:
-        mv.receiveFixed(receiveFixed)
-    if swapType is not None:
-        mv.withType(swapType)
-    if Nominal is not None:
-        mv.withNominal(Nominal)
-    if settlementDays is not None:
-        mv.withSettlementDays(settlementDays)
-    if effectiveDate is not None:
-        mv.withEffectiveDate(effectiveDate)
-    if terminationDate is not None:
-        mv.withTerminationDate(terminationDate)
-    if dateGenerationRule is not None:
-        mv.withRule(dateGenerationRule)
-    if fixedLegTenor is not None:
-        mv.withFixedLegTenor(fixedLegTenor)
-    if fixedLegCalendar is not None:
-        mv.withFixedLegCalendar(fixedLegCalendar)
-    if fixedLegConvention is not None:
-        mv.withFixedLegConvention(fixedLegConvention)
-    if fixedLegDayCount is not None:
-        mv.withFixedLegDayCount(fixedLegDayCount)
-    if floatingLegTenor is not None:
-        mv.withFloatingLegTenor(floatingLegTenor)
-    if floatingLegCalendar is not None:
-        mv.withFloatingLegCalendar(floatingLegCalendar)
-    if floatingLegConvention is not None:
-        mv.withFloatingLegConvention(floatingLegConvention)
-    if floatingLegDayCount is not None:
-        mv.withFloatingLegDayCount(floatingLegDayCount)
-    if floatingLegSpread is not None:
-        mv.withFloatingLegSpread(floatingLegSpread)
-    if discountingTermStructure is not None:
-        mv.withDiscountingTermStructure(discountingTermStructure)
-    if pricingEngine is not None:
-        mv.withPricingEngine(pricingEngine)
-    if fixedLegTerminationDateConvention is not None:
-        mv.withFixedLegTerminationDateConvention(fixedLegTerminationDateConvention)
-    if fixedLegDateGenRule is not None:
-        mv.withFixedLegRule(fixedLegDateGenRule)
-    if fixedLegEndOfMonth is not None:
-        mv.withFixedLegEndOfMonth(fixedLegEndOfMonth)
-    if fixedLegFirstDate is not None:
-        mv.withFixedLegFirstDate(fixedLegFirstDate)
-    if fixedLegNextToLastDate is not None:
-        mv.withFixedLegNextToLastDate(fixedLegNextToLastDate)
-    if floatingLegTerminationDateConvention is not None:
-        mv.withFloatingLegTerminationDateConvention(floatingLegTerminationDateConvention)
-    if floatingLegDateGenRule is not None:
-        mv.withFloatingLegRule(floatingLegDateGenRule)
-    if floatingLegEndOfMonth is not None:
-        mv.withFloatingLegEndOfMonth(floatingLegEndOfMonth)
-    if floatingLegFirstDate is not None:
-        mv.withFloatingLegFirstDate(floatingLegFirstDate)
-    if floatingLegNextToLastDate is not None:
-        mv.withFloatingLegNextToLastDate(floatingLegNextToLastDate)
-    return mv.makeVanillaSwap()
+    def __init__(self, *args):
+        _QuantLib.MakeCms_swiginit(self, _QuantLib.new_MakeCms(*args))
+
+    def makeCms(self):
+        return _QuantLib.MakeCms_makeCms(self)
+
+    def receiveCms(self, flag=True):
+        return _QuantLib.MakeCms_receiveCms(self, flag)
+
+    def withNominal(self, n):
+        return _QuantLib.MakeCms_withNominal(self, n)
+
+    def withEffectiveDate(self, arg2):
+        return _QuantLib.MakeCms_withEffectiveDate(self, arg2)
+
+    def withCmsLegTenor(self, t):
+        return _QuantLib.MakeCms_withCmsLegTenor(self, t)
+
+    def withCmsLegCalendar(self, cal):
+        return _QuantLib.MakeCms_withCmsLegCalendar(self, cal)
+
+    def withCmsLegConvention(self, bdc):
+        return _QuantLib.MakeCms_withCmsLegConvention(self, bdc)
+
+    def withCmsLegTerminationDateConvention(self, arg2):
+        return _QuantLib.MakeCms_withCmsLegTerminationDateConvention(self, arg2)
+
+    def withCmsLegRule(self, r):
+        return _QuantLib.MakeCms_withCmsLegRule(self, r)
+
+    def withCmsLegEndOfMonth(self, flag=True):
+        return _QuantLib.MakeCms_withCmsLegEndOfMonth(self, flag)
+
+    def withCmsLegFirstDate(self, d):
+        return _QuantLib.MakeCms_withCmsLegFirstDate(self, d)
+
+    def withCmsLegNextToLastDate(self, d):
+        return _QuantLib.MakeCms_withCmsLegNextToLastDate(self, d)
+
+    def withCmsLegDayCount(self, dc):
+        return _QuantLib.MakeCms_withCmsLegDayCount(self, dc)
+
+    def withFloatingLegTenor(self, t):
+        return _QuantLib.MakeCms_withFloatingLegTenor(self, t)
+
+    def withFloatingLegCalendar(self, cal):
+        return _QuantLib.MakeCms_withFloatingLegCalendar(self, cal)
+
+    def withFloatingLegConvention(self, bdc):
+        return _QuantLib.MakeCms_withFloatingLegConvention(self, bdc)
+
+    def withFloatingLegTerminationDateConvention(self, bdc):
+        return _QuantLib.MakeCms_withFloatingLegTerminationDateConvention(self, bdc)
+
+    def withFloatingLegRule(self, r):
+        return _QuantLib.MakeCms_withFloatingLegRule(self, r)
+
+    def withFloatingLegEndOfMonth(self, flag=True):
+        return _QuantLib.MakeCms_withFloatingLegEndOfMonth(self, flag)
+
+    def withFloatingLegFirstDate(self, d):
+        return _QuantLib.MakeCms_withFloatingLegFirstDate(self, d)
+
+    def withFloatingLegNextToLastDate(self, d):
+        return _QuantLib.MakeCms_withFloatingLegNextToLastDate(self, d)
+
+    def withFloatingLegDayCount(self, dc):
+        return _QuantLib.MakeCms_withFloatingLegDayCount(self, dc)
+
+    def withAtmSpread(self, flag=True):
+        return _QuantLib.MakeCms_withAtmSpread(self, flag)
+
+    def withDiscountingTermStructure(self, discountingTermStructure):
+        return _QuantLib.MakeCms_withDiscountingTermStructure(self, discountingTermStructure)
+
+    def withCmsCouponPricer(self, couponPricer):
+        return _QuantLib.MakeCms_withCmsCouponPricer(self, couponPricer)
+    __swig_destroy__ = _QuantLib.delete_MakeCms
+
+# Register MakeCms in _QuantLib:
+_QuantLib.MakeCms_swigregister(MakeCms)
 
 class YoYInflationCap(YoYInflationCapFloor):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -26593,8 +28298,12 @@ class SafeLinearFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeLinearFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeLinearFlat_globalInterpolate
-    requiredPoints = _QuantLib.SafeLinearFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeLinearFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeLinearFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.SafeLinearFlat_swiginit(self, _QuantLib.new_SafeLinearFlat())
@@ -26609,8 +28318,12 @@ class SafeBackwardFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeBackwardFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeBackwardFlat_globalInterpolate
-    requiredPoints = _QuantLib.SafeBackwardFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeBackwardFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeBackwardFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.SafeBackwardFlat_swiginit(self, _QuantLib.new_SafeBackwardFlat())
@@ -26622,15 +28335,21 @@ _QuantLib.SafeBackwardFlat_swigregister(SafeBackwardFlat)
 class SafeConvexMonotone(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    globalInterpolate = _QuantLib.SafeConvexMonotone_globalInterpolate
-    requiredPoints = _QuantLib.SafeConvexMonotone_requiredPoints
-    dataSizeAdjustment = _QuantLib.SafeConvexMonotone_dataSizeAdjustment
 
     def __init__(self, quadraticity=0.3, monotonicity=0.7, forcePositive=True):
         _QuantLib.SafeConvexMonotone_swiginit(self, _QuantLib.new_SafeConvexMonotone(quadraticity, monotonicity, forcePositive))
 
     def interpolate(self, x, y):
         return _QuantLib.SafeConvexMonotone_interpolate(self, x, y)
+
+    def isGlobal(self):
+        return _QuantLib.SafeConvexMonotone_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeConvexMonotone_requiredPoints(self)
+
+    def dataSizeAdjustment(self):
+        return _QuantLib.SafeConvexMonotone_dataSizeAdjustment(self)
     __swig_destroy__ = _QuantLib.delete_SafeConvexMonotone
 
 # Register SafeConvexMonotone in _QuantLib:
@@ -26645,8 +28364,12 @@ class SafeCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeCubic_globalInterpolate
-    requiredPoints = _QuantLib.SafeCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_SafeCubic
 
 # Register SafeCubic in _QuantLib:
@@ -26658,8 +28381,12 @@ class SafeForwardFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeForwardFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeForwardFlat_globalInterpolate
-    requiredPoints = _QuantLib.SafeForwardFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeForwardFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeForwardFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.SafeForwardFlat_swiginit(self, _QuantLib.new_SafeForwardFlat())
@@ -26674,8 +28401,12 @@ class SafeLinear(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeLinear_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeLinear_globalInterpolate
-    requiredPoints = _QuantLib.SafeLinear_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeLinear_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeLinear_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.SafeLinear_swiginit(self, _QuantLib.new_SafeLinear())
@@ -26690,8 +28421,12 @@ class SafeLogLinear(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeLogLinear_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeLogLinear_globalInterpolate
-    requiredPoints = _QuantLib.SafeLogLinear_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeLogLinear_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeLogLinear_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.SafeLogLinear_swiginit(self, _QuantLib.new_SafeLogLinear())
@@ -26709,8 +28444,12 @@ class SafeLogCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeLogCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeLogCubic_globalInterpolate
-    requiredPoints = _QuantLib.SafeLogCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeLogCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeLogCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_SafeLogCubic
 
 # Register SafeLogCubic in _QuantLib:
@@ -26725,8 +28464,12 @@ class SafeLogMixedLinearCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeLogMixedLinearCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeLogMixedLinearCubic_globalInterpolate
-    requiredPoints = _QuantLib.SafeLogMixedLinearCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeLogMixedLinearCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeLogMixedLinearCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_SafeLogMixedLinearCubic
 
 # Register SafeLogMixedLinearCubic in _QuantLib:
@@ -26741,8 +28484,12 @@ class SafeMixedLinearCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeMixedLinearCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeMixedLinearCubic_globalInterpolate
-    requiredPoints = _QuantLib.SafeMixedLinearCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.SafeMixedLinearCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.SafeMixedLinearCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_SafeMixedLinearCubic
 
 # Register SafeMixedLinearCubic in _QuantLib:
@@ -26790,7 +28537,9 @@ class SafeSABR(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeSABR_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeSABR_globalInterpolate
+
+    def isGlobal(self):
+        return _QuantLib.SafeSABR_isGlobal(self)
     __swig_destroy__ = _QuantLib.delete_SafeSABR
 
 # Register SafeSABR in _QuantLib:
@@ -26805,7 +28554,9 @@ class SafeAbcd(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SafeAbcd_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SafeAbcd_globalInterpolate
+
+    def isGlobal(self):
+        return _QuantLib.SafeAbcd_isGlobal(self)
     __swig_destroy__ = _QuantLib.delete_SafeAbcd
 
 # Register SafeAbcd in _QuantLib:
@@ -26906,8 +28657,12 @@ class LinearFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.LinearFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.LinearFlat_globalInterpolate
-    requiredPoints = _QuantLib.LinearFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.LinearFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.LinearFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.LinearFlat_swiginit(self, _QuantLib.new_LinearFlat())
@@ -26922,8 +28677,12 @@ class BackwardFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.BackwardFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.BackwardFlat_globalInterpolate
-    requiredPoints = _QuantLib.BackwardFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.BackwardFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.BackwardFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.BackwardFlat_swiginit(self, _QuantLib.new_BackwardFlat())
@@ -26935,15 +28694,21 @@ _QuantLib.BackwardFlat_swigregister(BackwardFlat)
 class ConvexMonotone(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
-    globalInterpolate = _QuantLib.ConvexMonotone_globalInterpolate
-    requiredPoints = _QuantLib.ConvexMonotone_requiredPoints
-    dataSizeAdjustment = _QuantLib.ConvexMonotone_dataSizeAdjustment
 
     def __init__(self, quadraticity=0.3, monotonicity=0.7, forcePositive=True):
         _QuantLib.ConvexMonotone_swiginit(self, _QuantLib.new_ConvexMonotone(quadraticity, monotonicity, forcePositive))
 
     def interpolate(self, x, y):
         return _QuantLib.ConvexMonotone_interpolate(self, x, y)
+
+    def isGlobal(self):
+        return _QuantLib.ConvexMonotone_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.ConvexMonotone_requiredPoints(self)
+
+    def dataSizeAdjustment(self):
+        return _QuantLib.ConvexMonotone_dataSizeAdjustment(self)
     __swig_destroy__ = _QuantLib.delete_ConvexMonotone
 
 # Register ConvexMonotone in _QuantLib:
@@ -26958,8 +28723,12 @@ class Cubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.Cubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.Cubic_globalInterpolate
-    requiredPoints = _QuantLib.Cubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.Cubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.Cubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_Cubic
 
 # Register Cubic in _QuantLib:
@@ -26971,8 +28740,12 @@ class ForwardFlat(object):
 
     def interpolate(self, x, y):
         return _QuantLib.ForwardFlat_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.ForwardFlat_globalInterpolate
-    requiredPoints = _QuantLib.ForwardFlat_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.ForwardFlat_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.ForwardFlat_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.ForwardFlat_swiginit(self, _QuantLib.new_ForwardFlat())
@@ -26987,8 +28760,12 @@ class Linear(object):
 
     def interpolate(self, x, y):
         return _QuantLib.Linear_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.Linear_globalInterpolate
-    requiredPoints = _QuantLib.Linear_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.Linear_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.Linear_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.Linear_swiginit(self, _QuantLib.new_Linear())
@@ -27003,8 +28780,12 @@ class LogLinear(object):
 
     def interpolate(self, x, y):
         return _QuantLib.LogLinear_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.LogLinear_globalInterpolate
-    requiredPoints = _QuantLib.LogLinear_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.LogLinear_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.LogLinear_requiredPoints(self)
 
     def __init__(self):
         _QuantLib.LogLinear_swiginit(self, _QuantLib.new_LogLinear())
@@ -27022,8 +28803,12 @@ class LogCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.LogCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.LogCubic_globalInterpolate
-    requiredPoints = _QuantLib.LogCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.LogCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.LogCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_LogCubic
 
 # Register LogCubic in _QuantLib:
@@ -27038,8 +28823,12 @@ class LogMixedLinearCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.LogMixedLinearCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.LogMixedLinearCubic_globalInterpolate
-    requiredPoints = _QuantLib.LogMixedLinearCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.LogMixedLinearCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.LogMixedLinearCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_LogMixedLinearCubic
 
 # Register LogMixedLinearCubic in _QuantLib:
@@ -27054,8 +28843,12 @@ class MixedLinearCubic(object):
 
     def interpolate(self, x, y):
         return _QuantLib.MixedLinearCubic_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.MixedLinearCubic_globalInterpolate
-    requiredPoints = _QuantLib.MixedLinearCubic_requiredPoints
+
+    def isGlobal(self):
+        return _QuantLib.MixedLinearCubic_isGlobal(self)
+
+    def requiredPoints(self):
+        return _QuantLib.MixedLinearCubic_requiredPoints(self)
     __swig_destroy__ = _QuantLib.delete_MixedLinearCubic
 
 # Register MixedLinearCubic in _QuantLib:
@@ -27103,7 +28896,9 @@ class SABR(object):
 
     def interpolate(self, x, y):
         return _QuantLib.SABR_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.SABR_globalInterpolate
+
+    def isGlobal(self):
+        return _QuantLib.SABR_isGlobal(self)
     __swig_destroy__ = _QuantLib.delete_SABR
 
 # Register SABR in _QuantLib:
@@ -27118,7 +28913,9 @@ class Abcd(object):
 
     def interpolate(self, x, y):
         return _QuantLib.Abcd_interpolate(self, x, y)
-    globalInterpolate = _QuantLib.Abcd_globalInterpolate
+
+    def isGlobal(self):
+        return _QuantLib.Abcd_isGlobal(self)
     __swig_destroy__ = _QuantLib.delete_Abcd
 
 # Register Abcd in _QuantLib:
@@ -28174,6 +29971,29 @@ class GaussianSobolPathGenerator(object):
 # Register GaussianSobolPathGenerator in _QuantLib:
 _QuantLib.GaussianSobolPathGenerator_swigregister(GaussianSobolPathGenerator)
 
+class BrownianBridgeSobolPathGenerator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.BrownianBridgeSobolPathGenerator_swiginit(self, _QuantLib.new_BrownianBridgeSobolPathGenerator(*args))
+
+    def next(self):
+        return _QuantLib.BrownianBridgeSobolPathGenerator_next(self)
+
+    def antithetic(self):
+        return _QuantLib.BrownianBridgeSobolPathGenerator_antithetic(self)
+
+    def size(self):
+        return _QuantLib.BrownianBridgeSobolPathGenerator_size(self)
+
+    def timeGrid(self):
+        return _QuantLib.BrownianBridgeSobolPathGenerator_timeGrid(self)
+    __swig_destroy__ = _QuantLib.delete_BrownianBridgeSobolPathGenerator
+
+# Register BrownianBridgeSobolPathGenerator in _QuantLib:
+_QuantLib.BrownianBridgeSobolPathGenerator_swigregister(BrownianBridgeSobolPathGenerator)
+
 class MultiPath(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -28554,504 +30374,6 @@ class PiecewiseConstantParameter(Parameter):
 # Register PiecewiseConstantParameter in _QuantLib:
 _QuantLib.PiecewiseConstantParameter_swigregister(PiecewiseConstantParameter)
 
-class Payoff(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def name(self):
-        return _QuantLib.Payoff_name(self)
-
-    def description(self):
-        return _QuantLib.Payoff_description(self)
-
-    def __call__(self, price):
-        return _QuantLib.Payoff___call__(self, price)
-    __swig_destroy__ = _QuantLib.delete_Payoff
-
-# Register Payoff in _QuantLib:
-_QuantLib.Payoff_swigregister(Payoff)
-
-class TypePayoff(Payoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def optionType(self):
-        return _QuantLib.TypePayoff_optionType(self)
-    __swig_destroy__ = _QuantLib.delete_TypePayoff
-
-# Register TypePayoff in _QuantLib:
-_QuantLib.TypePayoff_swigregister(TypePayoff)
-
-class BasketPayoff(Payoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def __call__(self, a):
-        return _QuantLib.BasketPayoff___call__(self, a)
-
-    def accumulate(self, a):
-        return _QuantLib.BasketPayoff_accumulate(self, a)
-
-    def basePayoff(self):
-        return _QuantLib.BasketPayoff_basePayoff(self)
-    __swig_destroy__ = _QuantLib.delete_BasketPayoff
-
-# Register BasketPayoff in _QuantLib:
-_QuantLib.BasketPayoff_swigregister(BasketPayoff)
-
-class MinBasketPayoff(BasketPayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, p):
-        _QuantLib.MinBasketPayoff_swiginit(self, _QuantLib.new_MinBasketPayoff(p))
-    __swig_destroy__ = _QuantLib.delete_MinBasketPayoff
-
-# Register MinBasketPayoff in _QuantLib:
-_QuantLib.MinBasketPayoff_swigregister(MinBasketPayoff)
-
-class MaxBasketPayoff(BasketPayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, p):
-        _QuantLib.MaxBasketPayoff_swiginit(self, _QuantLib.new_MaxBasketPayoff(p))
-    __swig_destroy__ = _QuantLib.delete_MaxBasketPayoff
-
-# Register MaxBasketPayoff in _QuantLib:
-_QuantLib.MaxBasketPayoff_swigregister(MaxBasketPayoff)
-
-class AverageBasketPayoff(BasketPayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.AverageBasketPayoff_swiginit(self, _QuantLib.new_AverageBasketPayoff(*args))
-    __swig_destroy__ = _QuantLib.delete_AverageBasketPayoff
-
-# Register AverageBasketPayoff in _QuantLib:
-_QuantLib.AverageBasketPayoff_swigregister(AverageBasketPayoff)
-
-class SpreadBasketPayoff(BasketPayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, p):
-        _QuantLib.SpreadBasketPayoff_swiginit(self, _QuantLib.new_SpreadBasketPayoff(p))
-    __swig_destroy__ = _QuantLib.delete_SpreadBasketPayoff
-
-# Register SpreadBasketPayoff in _QuantLib:
-_QuantLib.SpreadBasketPayoff_swigregister(SpreadBasketPayoff)
-
-class FloatingTypePayoff(TypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type):
-        _QuantLib.FloatingTypePayoff_swiginit(self, _QuantLib.new_FloatingTypePayoff(type))
-    __swig_destroy__ = _QuantLib.delete_FloatingTypePayoff
-
-# Register FloatingTypePayoff in _QuantLib:
-_QuantLib.FloatingTypePayoff_swigregister(FloatingTypePayoff)
-
-class StrikedTypePayoff(TypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def strike(self):
-        return _QuantLib.StrikedTypePayoff_strike(self)
-    __swig_destroy__ = _QuantLib.delete_StrikedTypePayoff
-
-# Register StrikedTypePayoff in _QuantLib:
-_QuantLib.StrikedTypePayoff_swigregister(StrikedTypePayoff)
-
-class PlainVanillaPayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike):
-        _QuantLib.PlainVanillaPayoff_swiginit(self, _QuantLib.new_PlainVanillaPayoff(type, strike))
-    __swig_destroy__ = _QuantLib.delete_PlainVanillaPayoff
-
-# Register PlainVanillaPayoff in _QuantLib:
-_QuantLib.PlainVanillaPayoff_swigregister(PlainVanillaPayoff)
-
-
-def as_plain_vanilla_payoff(payoff):
-    return _QuantLib.as_plain_vanilla_payoff(payoff)
-class PercentageStrikePayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, moneyness):
-        _QuantLib.PercentageStrikePayoff_swiginit(self, _QuantLib.new_PercentageStrikePayoff(type, moneyness))
-    __swig_destroy__ = _QuantLib.delete_PercentageStrikePayoff
-
-# Register PercentageStrikePayoff in _QuantLib:
-_QuantLib.PercentageStrikePayoff_swigregister(PercentageStrikePayoff)
-
-class CashOrNothingPayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike, payoff):
-        _QuantLib.CashOrNothingPayoff_swiginit(self, _QuantLib.new_CashOrNothingPayoff(type, strike, payoff))
-    __swig_destroy__ = _QuantLib.delete_CashOrNothingPayoff
-
-# Register CashOrNothingPayoff in _QuantLib:
-_QuantLib.CashOrNothingPayoff_swigregister(CashOrNothingPayoff)
-
-class AssetOrNothingPayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike):
-        _QuantLib.AssetOrNothingPayoff_swiginit(self, _QuantLib.new_AssetOrNothingPayoff(type, strike))
-    __swig_destroy__ = _QuantLib.delete_AssetOrNothingPayoff
-
-# Register AssetOrNothingPayoff in _QuantLib:
-_QuantLib.AssetOrNothingPayoff_swigregister(AssetOrNothingPayoff)
-
-class SuperSharePayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike, increment):
-        _QuantLib.SuperSharePayoff_swiginit(self, _QuantLib.new_SuperSharePayoff(type, strike, increment))
-    __swig_destroy__ = _QuantLib.delete_SuperSharePayoff
-
-# Register SuperSharePayoff in _QuantLib:
-_QuantLib.SuperSharePayoff_swigregister(SuperSharePayoff)
-
-class GapPayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike, strikePayoff):
-        _QuantLib.GapPayoff_swiginit(self, _QuantLib.new_GapPayoff(type, strike, strikePayoff))
-    __swig_destroy__ = _QuantLib.delete_GapPayoff
-
-# Register GapPayoff in _QuantLib:
-_QuantLib.GapPayoff_swigregister(GapPayoff)
-
-class VanillaForwardPayoff(StrikedTypePayoff):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, type, strike):
-        _QuantLib.VanillaForwardPayoff_swiginit(self, _QuantLib.new_VanillaForwardPayoff(type, strike))
-    __swig_destroy__ = _QuantLib.delete_VanillaForwardPayoff
-
-# Register VanillaForwardPayoff in _QuantLib:
-_QuantLib.VanillaForwardPayoff_swigregister(VanillaForwardPayoff)
-
-SecDom = _QuantLib.SecDom
-SnrFor = _QuantLib.SnrFor
-SubLT2 = _QuantLib.SubLT2
-JrSubT2 = _QuantLib.JrSubT2
-PrefT1 = _QuantLib.PrefT1
-NoSeniority = _QuantLib.NoSeniority
-SeniorSec = _QuantLib.SeniorSec
-SeniorUnSec = _QuantLib.SeniorUnSec
-SubTier1 = _QuantLib.SubTier1
-SubUpperTier2 = _QuantLib.SubUpperTier2
-SubLoweTier2 = _QuantLib.SubLoweTier2
-class CompositeBFQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, h1, h2, function):
-        _QuantLib.CompositeBFQuote_swiginit(self, _QuantLib.new_CompositeBFQuote(h1, h2, function))
-
-    def value1(self):
-        return _QuantLib.CompositeBFQuote_value1(self)
-
-    def value2(self):
-        return _QuantLib.CompositeBFQuote_value2(self)
-    __swig_destroy__ = _QuantLib.delete_CompositeBFQuote
-
-# Register CompositeBFQuote in _QuantLib:
-_QuantLib.CompositeBFQuote_swigregister(CompositeBFQuote)
-
-class DeltaVolQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-    Spot = _QuantLib.DeltaVolQuote_Spot
-    Fwd = _QuantLib.DeltaVolQuote_Fwd
-    PaSpot = _QuantLib.DeltaVolQuote_PaSpot
-    PaFwd = _QuantLib.DeltaVolQuote_PaFwd
-    AtmNull = _QuantLib.DeltaVolQuote_AtmNull
-    AtmSpot = _QuantLib.DeltaVolQuote_AtmSpot
-    AtmFwd = _QuantLib.DeltaVolQuote_AtmFwd
-    AtmDeltaNeutral = _QuantLib.DeltaVolQuote_AtmDeltaNeutral
-    AtmVegaMax = _QuantLib.DeltaVolQuote_AtmVegaMax
-    AtmGammaMax = _QuantLib.DeltaVolQuote_AtmGammaMax
-    AtmPutCall50 = _QuantLib.DeltaVolQuote_AtmPutCall50
-
-    def __init__(self, *args):
-        _QuantLib.DeltaVolQuote_swiginit(self, _QuantLib.new_DeltaVolQuote(*args))
-
-    def delta(self):
-        return _QuantLib.DeltaVolQuote_delta(self)
-
-    def maturity(self):
-        return _QuantLib.DeltaVolQuote_maturity(self)
-
-    def atmType(self):
-        return _QuantLib.DeltaVolQuote_atmType(self)
-
-    def deltaType(self):
-        return _QuantLib.DeltaVolQuote_deltaType(self)
-    __swig_destroy__ = _QuantLib.delete_DeltaVolQuote
-
-# Register DeltaVolQuote in _QuantLib:
-_QuantLib.DeltaVolQuote_swigregister(DeltaVolQuote)
-
-class DeltaVolQuoteHandle(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.DeltaVolQuoteHandle_swiginit(self, _QuantLib.new_DeltaVolQuoteHandle(*args))
-
-    def __deref__(self):
-        return _QuantLib.DeltaVolQuoteHandle___deref__(self)
-
-    def currentLink(self):
-        return _QuantLib.DeltaVolQuoteHandle_currentLink(self)
-
-    def __ref__(self):
-        return _QuantLib.DeltaVolQuoteHandle___ref__(self)
-
-    def empty(self):
-        return _QuantLib.DeltaVolQuoteHandle_empty(self)
-
-    def __nonzero__(self):
-        return _QuantLib.DeltaVolQuoteHandle___nonzero__(self)
-
-    def __bool__(self):
-        return _QuantLib.DeltaVolQuoteHandle___bool__(self)
-
-    def asObservable(self):
-        return _QuantLib.DeltaVolQuoteHandle_asObservable(self)
-    __swig_destroy__ = _QuantLib.delete_DeltaVolQuoteHandle
-
-    def delta(self):
-        return _QuantLib.DeltaVolQuoteHandle_delta(self)
-
-    def maturity(self):
-        return _QuantLib.DeltaVolQuoteHandle_maturity(self)
-
-    def atmType(self):
-        return _QuantLib.DeltaVolQuoteHandle_atmType(self)
-
-    def deltaType(self):
-        return _QuantLib.DeltaVolQuoteHandle_deltaType(self)
-
-    def value(self):
-        return _QuantLib.DeltaVolQuoteHandle_value(self)
-
-    def isValid(self):
-        return _QuantLib.DeltaVolQuoteHandle_isValid(self)
-
-    def notifyObservers(self):
-        return _QuantLib.DeltaVolQuoteHandle_notifyObservers(self)
-
-    def registerWithObservables(self, arg2):
-        return _QuantLib.DeltaVolQuoteHandle_registerWithObservables(self, arg2)
-
-    def unregisterWith(self, arg2):
-        return _QuantLib.DeltaVolQuoteHandle_unregisterWith(self, arg2)
-
-    def unregisterWithAll(self):
-        return _QuantLib.DeltaVolQuoteHandle_unregisterWithAll(self)
-
-    def update(self):
-        return _QuantLib.DeltaVolQuoteHandle_update(self)
-
-    def deepUpdate(self):
-        return _QuantLib.DeltaVolQuoteHandle_deepUpdate(self)
-
-# Register DeltaVolQuoteHandle in _QuantLib:
-_QuantLib.DeltaVolQuoteHandle_swigregister(DeltaVolQuoteHandle)
-
-class RelinkableDeltaVolQuoteHandle(DeltaVolQuoteHandle):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.RelinkableDeltaVolQuoteHandle_swiginit(self, _QuantLib.new_RelinkableDeltaVolQuoteHandle(*args))
-
-    def linkTo(self, arg2, registerAsObserver=True):
-        return _QuantLib.RelinkableDeltaVolQuoteHandle_linkTo(self, arg2, registerAsObserver)
-
-    def reset(self):
-        return _QuantLib.RelinkableDeltaVolQuoteHandle_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RelinkableDeltaVolQuoteHandle
-
-# Register RelinkableDeltaVolQuoteHandle in _QuantLib:
-_QuantLib.RelinkableDeltaVolQuoteHandle_swigregister(RelinkableDeltaVolQuoteHandle)
-
-class DerivedUFQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, h, function):
-        _QuantLib.DerivedUFQuote_swiginit(self, _QuantLib.new_DerivedUFQuote(h, function))
-    __swig_destroy__ = _QuantLib.delete_DerivedUFQuote
-
-# Register DerivedUFQuote in _QuantLib:
-_QuantLib.DerivedUFQuote_swigregister(DerivedUFQuote)
-
-class EurodollarFuturesImpliedStdDevQuote(Quote, LazyObject):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, forward, callPrice, putPrice, strike, guess=.15, accuracy=1.0e-6, maxIter=100):
-        _QuantLib.EurodollarFuturesImpliedStdDevQuote_swiginit(self, _QuantLib.new_EurodollarFuturesImpliedStdDevQuote(forward, callPrice, putPrice, strike, guess, accuracy, maxIter))
-    __swig_destroy__ = _QuantLib.delete_EurodollarFuturesImpliedStdDevQuote
-
-# Register EurodollarFuturesImpliedStdDevQuote in _QuantLib:
-_QuantLib.EurodollarFuturesImpliedStdDevQuote_swigregister(EurodollarFuturesImpliedStdDevQuote)
-
-class ForwardSwapQuote(Quote, LazyObject):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, swapIndex, spread, fwdStart):
-        _QuantLib.ForwardSwapQuote_swiginit(self, _QuantLib.new_ForwardSwapQuote(swapIndex, spread, fwdStart))
-
-    def valueDate(self):
-        return _QuantLib.ForwardSwapQuote_valueDate(self)
-
-    def startDate(self):
-        return _QuantLib.ForwardSwapQuote_startDate(self)
-
-    def fixingDate(self):
-        return _QuantLib.ForwardSwapQuote_fixingDate(self)
-    __swig_destroy__ = _QuantLib.delete_ForwardSwapQuote
-
-# Register ForwardSwapQuote in _QuantLib:
-_QuantLib.ForwardSwapQuote_swigregister(ForwardSwapQuote)
-
-class ForwardValueQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, index, fixingDate):
-        _QuantLib.ForwardValueQuote_swiginit(self, _QuantLib.new_ForwardValueQuote(index, fixingDate))
-    __swig_destroy__ = _QuantLib.delete_ForwardValueQuote
-
-# Register ForwardValueQuote in _QuantLib:
-_QuantLib.ForwardValueQuote_swigregister(ForwardValueQuote)
-
-class FuturesConvAdjustmentQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.FuturesConvAdjustmentQuote_swiginit(self, _QuantLib.new_FuturesConvAdjustmentQuote(*args))
-
-    def futuresValue(self):
-        return _QuantLib.FuturesConvAdjustmentQuote_futuresValue(self)
-
-    def volatility(self):
-        return _QuantLib.FuturesConvAdjustmentQuote_volatility(self)
-
-    def meanReversion(self):
-        return _QuantLib.FuturesConvAdjustmentQuote_meanReversion(self)
-
-    def immDate(self):
-        return _QuantLib.FuturesConvAdjustmentQuote_immDate(self)
-    __swig_destroy__ = _QuantLib.delete_FuturesConvAdjustmentQuote
-
-# Register FuturesConvAdjustmentQuote in _QuantLib:
-_QuantLib.FuturesConvAdjustmentQuote_swigregister(FuturesConvAdjustmentQuote)
-
-class ImpliedStdDevQuote(Quote, LazyObject):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, optionType, forward, price, strike, guess, accuracy=1.0e-6, maxIter=100):
-        _QuantLib.ImpliedStdDevQuote_swiginit(self, _QuantLib.new_ImpliedStdDevQuote(optionType, forward, price, strike, guess, accuracy, maxIter))
-    __swig_destroy__ = _QuantLib.delete_ImpliedStdDevQuote
-
-# Register ImpliedStdDevQuote in _QuantLib:
-_QuantLib.ImpliedStdDevQuote_swigregister(ImpliedStdDevQuote)
-
-class LastFixingQuote(Quote, Observer):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, index):
-        _QuantLib.LastFixingQuote_swiginit(self, _QuantLib.new_LastFixingQuote(index))
-
-    def index(self):
-        return _QuantLib.LastFixingQuote_index(self)
-
-    def referenceDate(self):
-        return _QuantLib.LastFixingQuote_referenceDate(self)
-    __swig_destroy__ = _QuantLib.delete_LastFixingQuote
-
-# Register LastFixingQuote in _QuantLib:
-_QuantLib.LastFixingQuote_swigregister(LastFixingQuote)
-
-class RecoveryRateQuote(Quote):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    @staticmethod
-    def conventionalRecovery(sen):
-        return _QuantLib.RecoveryRateQuote_conventionalRecovery(sen)
-
-    def __init__(self, *args):
-        _QuantLib.RecoveryRateQuote_swiginit(self, _QuantLib.new_RecoveryRateQuote(*args))
-
-    def seniority(self):
-        return _QuantLib.RecoveryRateQuote_seniority(self)
-
-    def setValue(self, *args):
-        return _QuantLib.RecoveryRateQuote_setValue(self, *args)
-
-    def reset(self):
-        return _QuantLib.RecoveryRateQuote_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RecoveryRateQuote
-
-# Register RecoveryRateQuote in _QuantLib:
-_QuantLib.RecoveryRateQuote_swigregister(RecoveryRateQuote)
-
-def RecoveryRateQuote_conventionalRecovery(sen):
-    return _QuantLib.RecoveryRateQuote_conventionalRecovery(sen)
-
-class SimpleQuote(Quote):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.SimpleQuote_swiginit(self, _QuantLib.new_SimpleQuote(*args))
-
-    def setValue(self, *args):
-        return _QuantLib.SimpleQuote_setValue(self, *args)
-    __swig_destroy__ = _QuantLib.delete_SimpleQuote
-
-# Register SimpleQuote in _QuantLib:
-_QuantLib.SimpleQuote_swigregister(SimpleQuote)
-
-
-def as_simple_quote(q):
-    return _QuantLib.as_simple_quote(q)
 class LecuyerUniformRng(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -29778,6 +31100,17 @@ class GaussianLowDiscrepancySequenceGenerator(object):
 # Register GaussianLowDiscrepancySequenceGenerator in _QuantLib:
 _QuantLib.GaussianLowDiscrepancySequenceGenerator_swigregister(GaussianLowDiscrepancySequenceGenerator)
 
+class BMASwapRateHelper(RateHelper):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, liborFraction, tenor, settlementDays, calendar, bmaPeriod, bmaConvention, bmaDayCount, bmaIndex, index):
+        _QuantLib.BMASwapRateHelper_swiginit(self, _QuantLib.new_BMASwapRateHelper(liborFraction, tenor, settlementDays, calendar, bmaPeriod, bmaConvention, bmaDayCount, bmaIndex, index))
+    __swig_destroy__ = _QuantLib.delete_BMASwapRateHelper
+
+# Register BMASwapRateHelper in _QuantLib:
+_QuantLib.BMASwapRateHelper_swigregister(BMASwapRateHelper)
+
 class DepositRateHelper(RateHelper):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -30071,6 +31404,28 @@ def as_swapratehelper(helper):
 
 def as_oisratehelper(helper):
     return _QuantLib.as_oisratehelper(helper)
+class ConstNotionalCrossCurrencyBasisSwapRateHelper(RateHelper):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg):
+        _QuantLib.ConstNotionalCrossCurrencyBasisSwapRateHelper_swiginit(self, _QuantLib.new_ConstNotionalCrossCurrencyBasisSwapRateHelper(basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg))
+    __swig_destroy__ = _QuantLib.delete_ConstNotionalCrossCurrencyBasisSwapRateHelper
+
+# Register ConstNotionalCrossCurrencyBasisSwapRateHelper in _QuantLib:
+_QuantLib.ConstNotionalCrossCurrencyBasisSwapRateHelper_swigregister(ConstNotionalCrossCurrencyBasisSwapRateHelper)
+
+class MtMCrossCurrencyBasisSwapRateHelper(RateHelper):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg, isFxBaseCurrencyLegResettable):
+        _QuantLib.MtMCrossCurrencyBasisSwapRateHelper_swiginit(self, _QuantLib.new_MtMCrossCurrencyBasisSwapRateHelper(basis, tenor, fixingDays, calendar, convention, endOfMonth, baseCurrencyIndex, quoteCurrencyIndex, collateralCurve, isFxBaseCurrencyCollateralCurrency, isBasisOnFxBaseCurrencyLeg, isFxBaseCurrencyLegResettable))
+    __swig_destroy__ = _QuantLib.delete_MtMCrossCurrencyBasisSwapRateHelper
+
+# Register MtMCrossCurrencyBasisSwapRateHelper in _QuantLib:
+_QuantLib.MtMCrossCurrencyBasisSwapRateHelper_swigregister(MtMCrossCurrencyBasisSwapRateHelper)
+
 class RiskNeutralDensityCalculator(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
@@ -30317,6 +31672,9 @@ class SampledCurve(object):
     def scaleGrid(self, s):
         return _QuantLib.SampledCurve_scaleGrid(self, s)
 
+    def setValue(self, i, v):
+        return _QuantLib.SampledCurve_setValue(self, i, v)
+
     def sample(self, func):
         return _QuantLib.SampledCurve_sample(self, func)
 
@@ -30350,11 +31708,17 @@ class Settings(object):
     def setEvaluationDate(self, d):
         return _QuantLib.Settings_setEvaluationDate(self, d)
 
-    def includeReferenceDateEvents(self, b):
-        return _QuantLib.Settings_includeReferenceDateEvents(self, b)
+    def setIncludeReferenceDateEvents(self, b):
+        return _QuantLib.Settings_setIncludeReferenceDateEvents(self, b)
 
-    def includeTodaysCashFlows(self, b):
-        return _QuantLib.Settings_includeTodaysCashFlows(self, b)
+    def getIncludeReferenceDateEvents(self):
+        return _QuantLib.Settings_getIncludeReferenceDateEvents(self)
+
+    def setIncludeTodaysCashFlows(self, b):
+        return _QuantLib.Settings_setIncludeTodaysCashFlows(self, b)
+
+    def getIncludeTodaysCashFlows(self):
+        return _QuantLib.Settings_getIncludeTodaysCashFlows(self)
 
     def setEnforcesTodaysHistoricFixings(self, b):
         return _QuantLib.Settings_setEnforcesTodaysHistoricFixings(self, b)
@@ -30368,11 +31732,11 @@ class Settings(object):
     evaluationDate = property(
         getEvaluationDate, setEvaluationDate, None)
     includeReferenceDateCashFlows = property(
-        None, includeReferenceDateEvents, None)
+        getIncludeReferenceDateEvents, setIncludeReferenceDateEvents, None)
     includeReferenceDateEvents = property(
-        None, includeReferenceDateEvents, None)
+        getIncludeReferenceDateEvents, setIncludeReferenceDateEvents, None)
     includeTodaysCashFlows = property(
-        None, includeTodaysCashFlows, None)
+        getIncludeTodaysCashFlows, setIncludeTodaysCashFlows, None)
     enforcesTodaysHistoricFixings = property(
         getEnforcesTodaysHistoricFixings, setEnforcesTodaysHistoricFixings, None)
 
@@ -30857,6 +32221,9 @@ class SabrSmileSection(SmileSection):
 # Register SabrSmileSection in _QuantLib:
 _QuantLib.SabrSmileSection_swigregister(SabrSmileSection)
 
+
+def as_sabr_smile_section(cf):
+    return _QuantLib.as_sabr_smile_section(cf)
 class SabrInterpolatedSmileSection(SmileSection, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -33535,144 +34902,6 @@ _QuantLib.InflationTermStructure_swigregister(InflationTermStructure)
 
 def inflationBaseDate(referenceDate, observationLag, frequency, indexIsInterpolated):
     return _QuantLib.inflationBaseDate(referenceDate, observationLag, frequency, indexIsInterpolated)
-class YieldTermStructure(TermStructure):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-
-    def __init__(self, *args, **kwargs):
-        raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-
-    def discount(self, *args):
-        return _QuantLib.YieldTermStructure_discount(self, *args)
-
-    def zeroRate(self, *args):
-        return _QuantLib.YieldTermStructure_zeroRate(self, *args)
-
-    def forwardRate(self, *args):
-        return _QuantLib.YieldTermStructure_forwardRate(self, *args)
-
-    def jumpDates(self):
-        return _QuantLib.YieldTermStructure_jumpDates(self)
-
-    def jumpTimes(self):
-        return _QuantLib.YieldTermStructure_jumpTimes(self)
-    __swig_destroy__ = _QuantLib.delete_YieldTermStructure
-
-# Register YieldTermStructure in _QuantLib:
-_QuantLib.YieldTermStructure_swigregister(YieldTermStructure)
-
-class YieldTermStructureHandle(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.YieldTermStructureHandle_swiginit(self, _QuantLib.new_YieldTermStructureHandle(*args))
-
-    def __deref__(self):
-        return _QuantLib.YieldTermStructureHandle___deref__(self)
-
-    def currentLink(self):
-        return _QuantLib.YieldTermStructureHandle_currentLink(self)
-
-    def __ref__(self):
-        return _QuantLib.YieldTermStructureHandle___ref__(self)
-
-    def empty(self):
-        return _QuantLib.YieldTermStructureHandle_empty(self)
-
-    def __nonzero__(self):
-        return _QuantLib.YieldTermStructureHandle___nonzero__(self)
-
-    def __bool__(self):
-        return _QuantLib.YieldTermStructureHandle___bool__(self)
-
-    def asObservable(self):
-        return _QuantLib.YieldTermStructureHandle_asObservable(self)
-    __swig_destroy__ = _QuantLib.delete_YieldTermStructureHandle
-
-    def discount(self, *args):
-        return _QuantLib.YieldTermStructureHandle_discount(self, *args)
-
-    def zeroRate(self, *args):
-        return _QuantLib.YieldTermStructureHandle_zeroRate(self, *args)
-
-    def forwardRate(self, *args):
-        return _QuantLib.YieldTermStructureHandle_forwardRate(self, *args)
-
-    def jumpDates(self):
-        return _QuantLib.YieldTermStructureHandle_jumpDates(self)
-
-    def jumpTimes(self):
-        return _QuantLib.YieldTermStructureHandle_jumpTimes(self)
-
-    def dayCounter(self):
-        return _QuantLib.YieldTermStructureHandle_dayCounter(self)
-
-    def timeFromReference(self, date):
-        return _QuantLib.YieldTermStructureHandle_timeFromReference(self, date)
-
-    def maxDate(self):
-        return _QuantLib.YieldTermStructureHandle_maxDate(self)
-
-    def maxTime(self):
-        return _QuantLib.YieldTermStructureHandle_maxTime(self)
-
-    def referenceDate(self):
-        return _QuantLib.YieldTermStructureHandle_referenceDate(self)
-
-    def calendar(self):
-        return _QuantLib.YieldTermStructureHandle_calendar(self)
-
-    def settlementDays(self):
-        return _QuantLib.YieldTermStructureHandle_settlementDays(self)
-
-    def registerWithObservables(self, arg2):
-        return _QuantLib.YieldTermStructureHandle_registerWithObservables(self, arg2)
-
-    def unregisterWith(self, arg2):
-        return _QuantLib.YieldTermStructureHandle_unregisterWith(self, arg2)
-
-    def unregisterWithAll(self):
-        return _QuantLib.YieldTermStructureHandle_unregisterWithAll(self)
-
-    def update(self):
-        return _QuantLib.YieldTermStructureHandle_update(self)
-
-    def deepUpdate(self):
-        return _QuantLib.YieldTermStructureHandle_deepUpdate(self)
-
-    def notifyObservers(self):
-        return _QuantLib.YieldTermStructureHandle_notifyObservers(self)
-
-    def enableExtrapolation(self, b=True):
-        return _QuantLib.YieldTermStructureHandle_enableExtrapolation(self, b)
-
-    def disableExtrapolation(self, b=True):
-        return _QuantLib.YieldTermStructureHandle_disableExtrapolation(self, b)
-
-    def allowsExtrapolation(self):
-        return _QuantLib.YieldTermStructureHandle_allowsExtrapolation(self)
-
-# Register YieldTermStructureHandle in _QuantLib:
-_QuantLib.YieldTermStructureHandle_swigregister(YieldTermStructureHandle)
-
-class RelinkableYieldTermStructureHandle(YieldTermStructureHandle):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        _QuantLib.RelinkableYieldTermStructureHandle_swiginit(self, _QuantLib.new_RelinkableYieldTermStructureHandle(*args))
-
-    def linkTo(self, arg2, registerAsObserver=True):
-        return _QuantLib.RelinkableYieldTermStructureHandle_linkTo(self, arg2, registerAsObserver)
-
-    def reset(self):
-        return _QuantLib.RelinkableYieldTermStructureHandle_reset(self)
-    __swig_destroy__ = _QuantLib.delete_RelinkableYieldTermStructureHandle
-
-# Register RelinkableYieldTermStructureHandle in _QuantLib:
-_QuantLib.RelinkableYieldTermStructureHandle_swigregister(RelinkableYieldTermStructureHandle)
-
 class HazardRate(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -33694,6 +34923,17 @@ class DefaultDensity(object):
 
 # Register DefaultDensity in _QuantLib:
 _QuantLib.DefaultDensity_swigregister(DefaultDensity)
+
+class SurvivalProbability(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _QuantLib.SurvivalProbability_swiginit(self, _QuantLib.new_SurvivalProbability())
+    __swig_destroy__ = _QuantLib.delete_SurvivalProbability
+
+# Register SurvivalProbability in _QuantLib:
+_QuantLib.SurvivalProbability_swigregister(SurvivalProbability)
 
 class FlatHazardRate(DefaultProbabilityTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -33784,28 +35024,902 @@ class SurvivalProbabilityCurve(DefaultProbabilityTermStructure):
 # Register SurvivalProbabilityCurve in _QuantLib:
 _QuantLib.SurvivalProbabilityCurve_swigregister(SurvivalProbabilityCurve)
 
-class PiecewiseFlatHazardRate(DefaultProbabilityTermStructure):
+class PiecewiseLinearFlatHazard(DefaultProbabilityTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, *args):
-        _QuantLib.PiecewiseFlatHazardRate_swiginit(self, _QuantLib.new_PiecewiseFlatHazardRate(*args))
+        _QuantLib.PiecewiseLinearFlatHazard_swiginit(self, _QuantLib.new_PiecewiseLinearFlatHazard(*args))
 
     def times(self):
-        return _QuantLib.PiecewiseFlatHazardRate_times(self)
+        return _QuantLib.PiecewiseLinearFlatHazard_times(self)
 
     def dates(self):
-        return _QuantLib.PiecewiseFlatHazardRate_dates(self)
+        return _QuantLib.PiecewiseLinearFlatHazard_dates(self)
 
     def data(self):
-        return _QuantLib.PiecewiseFlatHazardRate_data(self)
+        return _QuantLib.PiecewiseLinearFlatHazard_data(self)
 
     def nodes(self):
-        return _QuantLib.PiecewiseFlatHazardRate_nodes(self)
-    __swig_destroy__ = _QuantLib.delete_PiecewiseFlatHazardRate
+        return _QuantLib.PiecewiseLinearFlatHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearFlatHazard
 
-# Register PiecewiseFlatHazardRate in _QuantLib:
-_QuantLib.PiecewiseFlatHazardRate_swigregister(PiecewiseFlatHazardRate)
+# Register PiecewiseLinearFlatHazard in _QuantLib:
+_QuantLib.PiecewiseLinearFlatHazard_swigregister(PiecewiseLinearFlatHazard)
+
+class PiecewiseBackwardFlatHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseBackwardFlatHazard_swiginit(self, _QuantLib.new_PiecewiseBackwardFlatHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseBackwardFlatHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseBackwardFlatHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseBackwardFlatHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseBackwardFlatHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseBackwardFlatHazard
+
+# Register PiecewiseBackwardFlatHazard in _QuantLib:
+_QuantLib.PiecewiseBackwardFlatHazard_swigregister(PiecewiseBackwardFlatHazard)
+
+class PiecewiseConvexMonotoneHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseConvexMonotoneHazard_swiginit(self, _QuantLib.new_PiecewiseConvexMonotoneHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseConvexMonotoneHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseConvexMonotoneHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseConvexMonotoneHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseConvexMonotoneHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseConvexMonotoneHazard
+
+# Register PiecewiseConvexMonotoneHazard in _QuantLib:
+_QuantLib.PiecewiseConvexMonotoneHazard_swigregister(PiecewiseConvexMonotoneHazard)
+
+class PiecewiseCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseCubicHazard_swiginit(self, _QuantLib.new_PiecewiseCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseCubicHazard
+
+# Register PiecewiseCubicHazard in _QuantLib:
+_QuantLib.PiecewiseCubicHazard_swigregister(PiecewiseCubicHazard)
+
+class PiecewiseForwardFlatHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseForwardFlatHazard_swiginit(self, _QuantLib.new_PiecewiseForwardFlatHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseForwardFlatHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseForwardFlatHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseForwardFlatHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseForwardFlatHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseForwardFlatHazard
+
+# Register PiecewiseForwardFlatHazard in _QuantLib:
+_QuantLib.PiecewiseForwardFlatHazard_swigregister(PiecewiseForwardFlatHazard)
+
+class PiecewiseLinearHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearHazard_swiginit(self, _QuantLib.new_PiecewiseLinearHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearHazard
+
+# Register PiecewiseLinearHazard in _QuantLib:
+_QuantLib.PiecewiseLinearHazard_swigregister(PiecewiseLinearHazard)
+
+class PiecewiseLogLinearHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogLinearHazard_swiginit(self, _QuantLib.new_PiecewiseLogLinearHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogLinearHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogLinearHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogLinearHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogLinearHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogLinearHazard
+
+# Register PiecewiseLogLinearHazard in _QuantLib:
+_QuantLib.PiecewiseLogLinearHazard_swigregister(PiecewiseLogLinearHazard)
+
+class PiecewiseLogCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicHazard_swiginit(self, _QuantLib.new_PiecewiseLogCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicHazard
+
+# Register PiecewiseLogCubicHazard in _QuantLib:
+_QuantLib.PiecewiseLogCubicHazard_swigregister(PiecewiseLogCubicHazard)
+
+class PiecewiseLogMixedLinearCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicHazard_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicHazard
+
+# Register PiecewiseLogMixedLinearCubicHazard in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicHazard_swigregister(PiecewiseLogMixedLinearCubicHazard)
+
+class PiecewiseMixedLinearCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicHazard_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicHazard
+
+# Register PiecewiseMixedLinearCubicHazard in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicHazard_swigregister(PiecewiseMixedLinearCubicHazard)
+
+class PiecewiseDefaultLogCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseDefaultLogCubicHazard_swiginit(self, _QuantLib.new_PiecewiseDefaultLogCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseDefaultLogCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseDefaultLogCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseDefaultLogCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseDefaultLogCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseDefaultLogCubicHazard
+
+# Register PiecewiseDefaultLogCubicHazard in _QuantLib:
+_QuantLib.PiecewiseDefaultLogCubicHazard_swigregister(PiecewiseDefaultLogCubicHazard)
+
+class PiecewiseMonotonicLogCubicHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMonotonicLogCubicHazard_swiginit(self, _QuantLib.new_PiecewiseMonotonicLogCubicHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMonotonicLogCubicHazard
+
+# Register PiecewiseMonotonicLogCubicHazard in _QuantLib:
+_QuantLib.PiecewiseMonotonicLogCubicHazard_swigregister(PiecewiseMonotonicLogCubicHazard)
+
+class PiecewiseKrugerLogHazard(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseKrugerLogHazard_swiginit(self, _QuantLib.new_PiecewiseKrugerLogHazard(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseKrugerLogHazard_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseKrugerLogHazard_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseKrugerLogHazard_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseKrugerLogHazard_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseKrugerLogHazard
+
+# Register PiecewiseKrugerLogHazard in _QuantLib:
+_QuantLib.PiecewiseKrugerLogHazard_swigregister(PiecewiseKrugerLogHazard)
+
+class PiecewiseLinearFlatDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearFlatDefault_swiginit(self, _QuantLib.new_PiecewiseLinearFlatDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearFlatDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearFlatDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearFlatDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearFlatDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearFlatDefault
+
+# Register PiecewiseLinearFlatDefault in _QuantLib:
+_QuantLib.PiecewiseLinearFlatDefault_swigregister(PiecewiseLinearFlatDefault)
+
+class PiecewiseBackwardFlatDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseBackwardFlatDefault_swiginit(self, _QuantLib.new_PiecewiseBackwardFlatDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseBackwardFlatDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseBackwardFlatDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseBackwardFlatDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseBackwardFlatDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseBackwardFlatDefault
+
+# Register PiecewiseBackwardFlatDefault in _QuantLib:
+_QuantLib.PiecewiseBackwardFlatDefault_swigregister(PiecewiseBackwardFlatDefault)
+
+class PiecewiseConvexMonotoneDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseConvexMonotoneDefault_swiginit(self, _QuantLib.new_PiecewiseConvexMonotoneDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseConvexMonotoneDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseConvexMonotoneDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseConvexMonotoneDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseConvexMonotoneDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseConvexMonotoneDefault
+
+# Register PiecewiseConvexMonotoneDefault in _QuantLib:
+_QuantLib.PiecewiseConvexMonotoneDefault_swigregister(PiecewiseConvexMonotoneDefault)
+
+class PiecewiseCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseCubicDefault_swiginit(self, _QuantLib.new_PiecewiseCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseCubicDefault
+
+# Register PiecewiseCubicDefault in _QuantLib:
+_QuantLib.PiecewiseCubicDefault_swigregister(PiecewiseCubicDefault)
+
+class PiecewiseForwardFlatDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseForwardFlatDefault_swiginit(self, _QuantLib.new_PiecewiseForwardFlatDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseForwardFlatDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseForwardFlatDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseForwardFlatDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseForwardFlatDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseForwardFlatDefault
+
+# Register PiecewiseForwardFlatDefault in _QuantLib:
+_QuantLib.PiecewiseForwardFlatDefault_swigregister(PiecewiseForwardFlatDefault)
+
+class PiecewiseLinearDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearDefault_swiginit(self, _QuantLib.new_PiecewiseLinearDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearDefault
+
+# Register PiecewiseLinearDefault in _QuantLib:
+_QuantLib.PiecewiseLinearDefault_swigregister(PiecewiseLinearDefault)
+
+class PiecewiseLogLinearDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogLinearDefault_swiginit(self, _QuantLib.new_PiecewiseLogLinearDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogLinearDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogLinearDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogLinearDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogLinearDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogLinearDefault
+
+# Register PiecewiseLogLinearDefault in _QuantLib:
+_QuantLib.PiecewiseLogLinearDefault_swigregister(PiecewiseLogLinearDefault)
+
+class PiecewiseLogCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicDefault_swiginit(self, _QuantLib.new_PiecewiseLogCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicDefault
+
+# Register PiecewiseLogCubicDefault in _QuantLib:
+_QuantLib.PiecewiseLogCubicDefault_swigregister(PiecewiseLogCubicDefault)
+
+class PiecewiseLogMixedLinearCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicDefault_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicDefault
+
+# Register PiecewiseLogMixedLinearCubicDefault in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicDefault_swigregister(PiecewiseLogMixedLinearCubicDefault)
+
+class PiecewiseMixedLinearCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicDefault_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicDefault
+
+# Register PiecewiseMixedLinearCubicDefault in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicDefault_swigregister(PiecewiseMixedLinearCubicDefault)
+
+class PiecewiseDefaultLogCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseDefaultLogCubicDefault_swiginit(self, _QuantLib.new_PiecewiseDefaultLogCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseDefaultLogCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseDefaultLogCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseDefaultLogCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseDefaultLogCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseDefaultLogCubicDefault
+
+# Register PiecewiseDefaultLogCubicDefault in _QuantLib:
+_QuantLib.PiecewiseDefaultLogCubicDefault_swigregister(PiecewiseDefaultLogCubicDefault)
+
+class PiecewiseMonotonicLogCubicDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMonotonicLogCubicDefault_swiginit(self, _QuantLib.new_PiecewiseMonotonicLogCubicDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMonotonicLogCubicDefault
+
+# Register PiecewiseMonotonicLogCubicDefault in _QuantLib:
+_QuantLib.PiecewiseMonotonicLogCubicDefault_swigregister(PiecewiseMonotonicLogCubicDefault)
+
+class PiecewiseKrugerLogDefault(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseKrugerLogDefault_swiginit(self, _QuantLib.new_PiecewiseKrugerLogDefault(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseKrugerLogDefault_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseKrugerLogDefault_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseKrugerLogDefault_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseKrugerLogDefault_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseKrugerLogDefault
+
+# Register PiecewiseKrugerLogDefault in _QuantLib:
+_QuantLib.PiecewiseKrugerLogDefault_swigregister(PiecewiseKrugerLogDefault)
+
+class PiecewiseLinearFlatSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearFlatSurvival_swiginit(self, _QuantLib.new_PiecewiseLinearFlatSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearFlatSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearFlatSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearFlatSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearFlatSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearFlatSurvival
+
+# Register PiecewiseLinearFlatSurvival in _QuantLib:
+_QuantLib.PiecewiseLinearFlatSurvival_swigregister(PiecewiseLinearFlatSurvival)
+
+class PiecewiseBackwardFlatSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseBackwardFlatSurvival_swiginit(self, _QuantLib.new_PiecewiseBackwardFlatSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseBackwardFlatSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseBackwardFlatSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseBackwardFlatSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseBackwardFlatSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseBackwardFlatSurvival
+
+# Register PiecewiseBackwardFlatSurvival in _QuantLib:
+_QuantLib.PiecewiseBackwardFlatSurvival_swigregister(PiecewiseBackwardFlatSurvival)
+
+class PiecewiseConvexMonotoneSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseConvexMonotoneSurvival_swiginit(self, _QuantLib.new_PiecewiseConvexMonotoneSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseConvexMonotoneSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseConvexMonotoneSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseConvexMonotoneSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseConvexMonotoneSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseConvexMonotoneSurvival
+
+# Register PiecewiseConvexMonotoneSurvival in _QuantLib:
+_QuantLib.PiecewiseConvexMonotoneSurvival_swigregister(PiecewiseConvexMonotoneSurvival)
+
+class PiecewiseCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseCubicSurvival
+
+# Register PiecewiseCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseCubicSurvival_swigregister(PiecewiseCubicSurvival)
+
+class PiecewiseForwardFlatSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseForwardFlatSurvival_swiginit(self, _QuantLib.new_PiecewiseForwardFlatSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseForwardFlatSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseForwardFlatSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseForwardFlatSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseForwardFlatSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseForwardFlatSurvival
+
+# Register PiecewiseForwardFlatSurvival in _QuantLib:
+_QuantLib.PiecewiseForwardFlatSurvival_swigregister(PiecewiseForwardFlatSurvival)
+
+class PiecewiseLinearSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearSurvival_swiginit(self, _QuantLib.new_PiecewiseLinearSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearSurvival
+
+# Register PiecewiseLinearSurvival in _QuantLib:
+_QuantLib.PiecewiseLinearSurvival_swigregister(PiecewiseLinearSurvival)
+
+class PiecewiseLogLinearSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogLinearSurvival_swiginit(self, _QuantLib.new_PiecewiseLogLinearSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogLinearSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogLinearSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogLinearSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogLinearSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogLinearSurvival
+
+# Register PiecewiseLogLinearSurvival in _QuantLib:
+_QuantLib.PiecewiseLogLinearSurvival_swigregister(PiecewiseLogLinearSurvival)
+
+class PiecewiseLogCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseLogCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicSurvival
+
+# Register PiecewiseLogCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseLogCubicSurvival_swigregister(PiecewiseLogCubicSurvival)
+
+class PiecewiseLogMixedLinearCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicSurvival
+
+# Register PiecewiseLogMixedLinearCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicSurvival_swigregister(PiecewiseLogMixedLinearCubicSurvival)
+
+class PiecewiseMixedLinearCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicSurvival
+
+# Register PiecewiseMixedLinearCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicSurvival_swigregister(PiecewiseMixedLinearCubicSurvival)
+
+class PiecewiseDefaultLogCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseDefaultLogCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseDefaultLogCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseDefaultLogCubicSurvival
+
+# Register PiecewiseDefaultLogCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseDefaultLogCubicSurvival_swigregister(PiecewiseDefaultLogCubicSurvival)
+
+class PiecewiseMonotonicLogCubicSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMonotonicLogCubicSurvival_swiginit(self, _QuantLib.new_PiecewiseMonotonicLogCubicSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMonotonicLogCubicSurvival
+
+# Register PiecewiseMonotonicLogCubicSurvival in _QuantLib:
+_QuantLib.PiecewiseMonotonicLogCubicSurvival_swigregister(PiecewiseMonotonicLogCubicSurvival)
+
+class PiecewiseKrugerLogSurvival(DefaultProbabilityTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseKrugerLogSurvival_swiginit(self, _QuantLib.new_PiecewiseKrugerLogSurvival(*args))
+
+    def times(self):
+        return _QuantLib.PiecewiseKrugerLogSurvival_times(self)
+
+    def dates(self):
+        return _QuantLib.PiecewiseKrugerLogSurvival_dates(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseKrugerLogSurvival_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseKrugerLogSurvival_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseKrugerLogSurvival
+
+# Register PiecewiseKrugerLogSurvival in _QuantLib:
+_QuantLib.PiecewiseKrugerLogSurvival_swigregister(PiecewiseKrugerLogSurvival)
 
 class YoYInflationTermStructure(InflationTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -35424,6 +37538,110 @@ class CapFloorTermVolCurve(CapFloorTermVolatilityStructure):
 # Register CapFloorTermVolCurve in _QuantLib:
 _QuantLib.CapFloorTermVolCurve_swigregister(CapFloorTermVolCurve)
 
+class CapFloorTermVolCurveHandle(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.CapFloorTermVolCurveHandle_swiginit(self, _QuantLib.new_CapFloorTermVolCurveHandle(*args))
+
+    def __deref__(self):
+        return _QuantLib.CapFloorTermVolCurveHandle___deref__(self)
+
+    def currentLink(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_currentLink(self)
+
+    def __ref__(self):
+        return _QuantLib.CapFloorTermVolCurveHandle___ref__(self)
+
+    def empty(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_empty(self)
+
+    def __nonzero__(self):
+        return _QuantLib.CapFloorTermVolCurveHandle___nonzero__(self)
+
+    def __bool__(self):
+        return _QuantLib.CapFloorTermVolCurveHandle___bool__(self)
+
+    def asObservable(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_asObservable(self)
+    __swig_destroy__ = _QuantLib.delete_CapFloorTermVolCurveHandle
+
+    def optionTenors(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_optionTenors(self)
+
+    def optionDates(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_optionDates(self)
+
+    def optionTimes(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_optionTimes(self)
+
+    def volatility(self, *args):
+        return _QuantLib.CapFloorTermVolCurveHandle_volatility(self, *args)
+
+    def businessDayConvention(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_businessDayConvention(self)
+
+    def optionDateFromTenor(self, arg2):
+        return _QuantLib.CapFloorTermVolCurveHandle_optionDateFromTenor(self, arg2)
+
+    def minStrike(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_minStrike(self)
+
+    def maxStrike(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_maxStrike(self)
+
+    def dayCounter(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_dayCounter(self)
+
+    def timeFromReference(self, date):
+        return _QuantLib.CapFloorTermVolCurveHandle_timeFromReference(self, date)
+
+    def maxDate(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_maxDate(self)
+
+    def maxTime(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_maxTime(self)
+
+    def referenceDate(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_referenceDate(self)
+
+    def calendar(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_calendar(self)
+
+    def settlementDays(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_settlementDays(self)
+
+    def registerWithObservables(self, arg2):
+        return _QuantLib.CapFloorTermVolCurveHandle_registerWithObservables(self, arg2)
+
+    def unregisterWith(self, arg2):
+        return _QuantLib.CapFloorTermVolCurveHandle_unregisterWith(self, arg2)
+
+    def unregisterWithAll(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_unregisterWithAll(self)
+
+    def update(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_update(self)
+
+    def deepUpdate(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_deepUpdate(self)
+
+    def notifyObservers(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_notifyObservers(self)
+
+    def enableExtrapolation(self, b=True):
+        return _QuantLib.CapFloorTermVolCurveHandle_enableExtrapolation(self, b)
+
+    def disableExtrapolation(self, b=True):
+        return _QuantLib.CapFloorTermVolCurveHandle_disableExtrapolation(self, b)
+
+    def allowsExtrapolation(self):
+        return _QuantLib.CapFloorTermVolCurveHandle_allowsExtrapolation(self)
+
+# Register CapFloorTermVolCurveHandle in _QuantLib:
+_QuantLib.CapFloorTermVolCurveHandle_swigregister(CapFloorTermVolCurveHandle)
+
 class CapFloorTermVolSurface(CapFloorTermVolatilityStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -35720,6 +37938,28 @@ class SpreadedBackwardFlatZeroInterpolatedTermStructure(YieldTermStructure):
 # Register SpreadedBackwardFlatZeroInterpolatedTermStructure in _QuantLib:
 _QuantLib.SpreadedBackwardFlatZeroInterpolatedTermStructure_swigregister(SpreadedBackwardFlatZeroInterpolatedTermStructure)
 
+class SpreadedForwardFlatZeroInterpolatedTermStructure(YieldTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SpreadedForwardFlatZeroInterpolatedTermStructure_swiginit(self, _QuantLib.new_SpreadedForwardFlatZeroInterpolatedTermStructure(*args))
+    __swig_destroy__ = _QuantLib.delete_SpreadedForwardFlatZeroInterpolatedTermStructure
+
+# Register SpreadedForwardFlatZeroInterpolatedTermStructure in _QuantLib:
+_QuantLib.SpreadedForwardFlatZeroInterpolatedTermStructure_swigregister(SpreadedForwardFlatZeroInterpolatedTermStructure)
+
+class SpreadedCubicZeroInterpolatedTermStructure(YieldTermStructure):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.SpreadedCubicZeroInterpolatedTermStructure_swiginit(self, _QuantLib.new_SpreadedCubicZeroInterpolatedTermStructure(*args))
+    __swig_destroy__ = _QuantLib.delete_SpreadedCubicZeroInterpolatedTermStructure
+
+# Register SpreadedCubicZeroInterpolatedTermStructure in _QuantLib:
+_QuantLib.SpreadedCubicZeroInterpolatedTermStructure_swigregister(SpreadedCubicZeroInterpolatedTermStructure)
+
 class FlatForward(YieldTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
@@ -35759,7 +37999,7 @@ class CompositeBFZeroYieldStructure(YieldTermStructure):
 # Register CompositeBFZeroYieldStructure in _QuantLib:
 _QuantLib.CompositeBFZeroYieldStructure_swigregister(CompositeBFZeroYieldStructure)
 
-class PiecewiseLinearFlatForward(YieldTermStructure):
+class PiecewiseLinearFlatForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35782,7 +38022,7 @@ class PiecewiseLinearFlatForward(YieldTermStructure):
 # Register PiecewiseLinearFlatForward in _QuantLib:
 _QuantLib.PiecewiseLinearFlatForward_swigregister(PiecewiseLinearFlatForward)
 
-class PiecewiseBackwardFlatForward(YieldTermStructure):
+class PiecewiseBackwardFlatForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35805,7 +38045,7 @@ class PiecewiseBackwardFlatForward(YieldTermStructure):
 # Register PiecewiseBackwardFlatForward in _QuantLib:
 _QuantLib.PiecewiseBackwardFlatForward_swigregister(PiecewiseBackwardFlatForward)
 
-class PiecewiseConvexMonotoneForward(YieldTermStructure):
+class PiecewiseConvexMonotoneForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35828,7 +38068,7 @@ class PiecewiseConvexMonotoneForward(YieldTermStructure):
 # Register PiecewiseConvexMonotoneForward in _QuantLib:
 _QuantLib.PiecewiseConvexMonotoneForward_swigregister(PiecewiseConvexMonotoneForward)
 
-class PiecewiseCubicForward(YieldTermStructure):
+class PiecewiseCubicForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35851,7 +38091,7 @@ class PiecewiseCubicForward(YieldTermStructure):
 # Register PiecewiseCubicForward in _QuantLib:
 _QuantLib.PiecewiseCubicForward_swigregister(PiecewiseCubicForward)
 
-class PiecewiseForwardFlatForward(YieldTermStructure):
+class PiecewiseForwardFlatForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35874,7 +38114,7 @@ class PiecewiseForwardFlatForward(YieldTermStructure):
 # Register PiecewiseForwardFlatForward in _QuantLib:
 _QuantLib.PiecewiseForwardFlatForward_swigregister(PiecewiseForwardFlatForward)
 
-class PiecewiseLinearForward(YieldTermStructure):
+class PiecewiseLinearForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35897,7 +38137,7 @@ class PiecewiseLinearForward(YieldTermStructure):
 # Register PiecewiseLinearForward in _QuantLib:
 _QuantLib.PiecewiseLinearForward_swigregister(PiecewiseLinearForward)
 
-class PiecewiseLogLinearForward(YieldTermStructure):
+class PiecewiseLogLinearForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35920,7 +38160,76 @@ class PiecewiseLogLinearForward(YieldTermStructure):
 # Register PiecewiseLogLinearForward in _QuantLib:
 _QuantLib.PiecewiseLogLinearForward_swigregister(PiecewiseLogLinearForward)
 
-class PiecewiseDefaultLogCubicForward(YieldTermStructure):
+class PiecewiseLogCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicForward_swiginit(self, _QuantLib.new_PiecewiseLogCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicForward
+
+# Register PiecewiseLogCubicForward in _QuantLib:
+_QuantLib.PiecewiseLogCubicForward_swigregister(PiecewiseLogCubicForward)
+
+class PiecewiseLogMixedLinearCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicForward_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicForward
+
+# Register PiecewiseLogMixedLinearCubicForward in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicForward_swigregister(PiecewiseLogMixedLinearCubicForward)
+
+class PiecewiseMixedLinearCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicForward_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicForward
+
+# Register PiecewiseMixedLinearCubicForward in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicForward_swigregister(PiecewiseMixedLinearCubicForward)
+
+class PiecewiseDefaultLogCubicForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35943,7 +38252,7 @@ class PiecewiseDefaultLogCubicForward(YieldTermStructure):
 # Register PiecewiseDefaultLogCubicForward in _QuantLib:
 _QuantLib.PiecewiseDefaultLogCubicForward_swigregister(PiecewiseDefaultLogCubicForward)
 
-class PiecewiseMonotonicLogCubicForward(YieldTermStructure):
+class PiecewiseMonotonicLogCubicForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35966,7 +38275,7 @@ class PiecewiseMonotonicLogCubicForward(YieldTermStructure):
 # Register PiecewiseMonotonicLogCubicForward in _QuantLib:
 _QuantLib.PiecewiseMonotonicLogCubicForward_swigregister(PiecewiseMonotonicLogCubicForward)
 
-class PiecewiseKrugerLogForward(YieldTermStructure):
+class PiecewiseKrugerLogForward(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -35989,7 +38298,7 @@ class PiecewiseKrugerLogForward(YieldTermStructure):
 # Register PiecewiseKrugerLogForward in _QuantLib:
 _QuantLib.PiecewiseKrugerLogForward_swigregister(PiecewiseKrugerLogForward)
 
-class PiecewiseLinearFlatDiscount(YieldTermStructure):
+class PiecewiseLinearFlatDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36012,7 +38321,7 @@ class PiecewiseLinearFlatDiscount(YieldTermStructure):
 # Register PiecewiseLinearFlatDiscount in _QuantLib:
 _QuantLib.PiecewiseLinearFlatDiscount_swigregister(PiecewiseLinearFlatDiscount)
 
-class PiecewiseBackwardFlatDiscount(YieldTermStructure):
+class PiecewiseBackwardFlatDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36035,7 +38344,7 @@ class PiecewiseBackwardFlatDiscount(YieldTermStructure):
 # Register PiecewiseBackwardFlatDiscount in _QuantLib:
 _QuantLib.PiecewiseBackwardFlatDiscount_swigregister(PiecewiseBackwardFlatDiscount)
 
-class PiecewiseConvexMonotoneDiscount(YieldTermStructure):
+class PiecewiseConvexMonotoneDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36058,7 +38367,7 @@ class PiecewiseConvexMonotoneDiscount(YieldTermStructure):
 # Register PiecewiseConvexMonotoneDiscount in _QuantLib:
 _QuantLib.PiecewiseConvexMonotoneDiscount_swigregister(PiecewiseConvexMonotoneDiscount)
 
-class PiecewiseCubicDiscount(YieldTermStructure):
+class PiecewiseCubicDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36081,7 +38390,7 @@ class PiecewiseCubicDiscount(YieldTermStructure):
 # Register PiecewiseCubicDiscount in _QuantLib:
 _QuantLib.PiecewiseCubicDiscount_swigregister(PiecewiseCubicDiscount)
 
-class PiecewiseForwardFlatDiscount(YieldTermStructure):
+class PiecewiseForwardFlatDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36104,7 +38413,7 @@ class PiecewiseForwardFlatDiscount(YieldTermStructure):
 # Register PiecewiseForwardFlatDiscount in _QuantLib:
 _QuantLib.PiecewiseForwardFlatDiscount_swigregister(PiecewiseForwardFlatDiscount)
 
-class PiecewiseLinearDiscount(YieldTermStructure):
+class PiecewiseLinearDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36127,7 +38436,7 @@ class PiecewiseLinearDiscount(YieldTermStructure):
 # Register PiecewiseLinearDiscount in _QuantLib:
 _QuantLib.PiecewiseLinearDiscount_swigregister(PiecewiseLinearDiscount)
 
-class PiecewiseLogLinearDiscount(YieldTermStructure):
+class PiecewiseLogLinearDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36150,7 +38459,76 @@ class PiecewiseLogLinearDiscount(YieldTermStructure):
 # Register PiecewiseLogLinearDiscount in _QuantLib:
 _QuantLib.PiecewiseLogLinearDiscount_swigregister(PiecewiseLogLinearDiscount)
 
-class PiecewiseDefaultLogCubicDiscount(YieldTermStructure):
+class PiecewiseLogCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicDiscount_swiginit(self, _QuantLib.new_PiecewiseLogCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicDiscount
+
+# Register PiecewiseLogCubicDiscount in _QuantLib:
+_QuantLib.PiecewiseLogCubicDiscount_swigregister(PiecewiseLogCubicDiscount)
+
+class PiecewiseLogMixedLinearCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicDiscount_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicDiscount
+
+# Register PiecewiseLogMixedLinearCubicDiscount in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicDiscount_swigregister(PiecewiseLogMixedLinearCubicDiscount)
+
+class PiecewiseMixedLinearCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicDiscount_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicDiscount
+
+# Register PiecewiseMixedLinearCubicDiscount in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicDiscount_swigregister(PiecewiseMixedLinearCubicDiscount)
+
+class PiecewiseDefaultLogCubicDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36173,7 +38551,7 @@ class PiecewiseDefaultLogCubicDiscount(YieldTermStructure):
 # Register PiecewiseDefaultLogCubicDiscount in _QuantLib:
 _QuantLib.PiecewiseDefaultLogCubicDiscount_swigregister(PiecewiseDefaultLogCubicDiscount)
 
-class PiecewiseMonotonicLogCubicDiscount(YieldTermStructure):
+class PiecewiseMonotonicLogCubicDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36196,7 +38574,7 @@ class PiecewiseMonotonicLogCubicDiscount(YieldTermStructure):
 # Register PiecewiseMonotonicLogCubicDiscount in _QuantLib:
 _QuantLib.PiecewiseMonotonicLogCubicDiscount_swigregister(PiecewiseMonotonicLogCubicDiscount)
 
-class PiecewiseKrugerLogDiscount(YieldTermStructure):
+class PiecewiseKrugerLogDiscount(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36219,7 +38597,7 @@ class PiecewiseKrugerLogDiscount(YieldTermStructure):
 # Register PiecewiseKrugerLogDiscount in _QuantLib:
 _QuantLib.PiecewiseKrugerLogDiscount_swigregister(PiecewiseKrugerLogDiscount)
 
-class PiecewiseLinearFlatZeroYield(YieldTermStructure):
+class PiecewiseLinearFlatZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36242,7 +38620,7 @@ class PiecewiseLinearFlatZeroYield(YieldTermStructure):
 # Register PiecewiseLinearFlatZeroYield in _QuantLib:
 _QuantLib.PiecewiseLinearFlatZeroYield_swigregister(PiecewiseLinearFlatZeroYield)
 
-class PiecewiseBackwardFlatZeroYield(YieldTermStructure):
+class PiecewiseBackwardFlatZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36265,7 +38643,7 @@ class PiecewiseBackwardFlatZeroYield(YieldTermStructure):
 # Register PiecewiseBackwardFlatZeroYield in _QuantLib:
 _QuantLib.PiecewiseBackwardFlatZeroYield_swigregister(PiecewiseBackwardFlatZeroYield)
 
-class PiecewiseConvexMonotoneZeroYield(YieldTermStructure):
+class PiecewiseConvexMonotoneZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36288,7 +38666,7 @@ class PiecewiseConvexMonotoneZeroYield(YieldTermStructure):
 # Register PiecewiseConvexMonotoneZeroYield in _QuantLib:
 _QuantLib.PiecewiseConvexMonotoneZeroYield_swigregister(PiecewiseConvexMonotoneZeroYield)
 
-class PiecewiseCubicZeroYield(YieldTermStructure):
+class PiecewiseCubicZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36311,7 +38689,7 @@ class PiecewiseCubicZeroYield(YieldTermStructure):
 # Register PiecewiseCubicZeroYield in _QuantLib:
 _QuantLib.PiecewiseCubicZeroYield_swigregister(PiecewiseCubicZeroYield)
 
-class PiecewiseForwardFlatZeroYield(YieldTermStructure):
+class PiecewiseForwardFlatZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36334,7 +38712,7 @@ class PiecewiseForwardFlatZeroYield(YieldTermStructure):
 # Register PiecewiseForwardFlatZeroYield in _QuantLib:
 _QuantLib.PiecewiseForwardFlatZeroYield_swigregister(PiecewiseForwardFlatZeroYield)
 
-class PiecewiseLinearZeroYield(YieldTermStructure):
+class PiecewiseLinearZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36357,7 +38735,7 @@ class PiecewiseLinearZeroYield(YieldTermStructure):
 # Register PiecewiseLinearZeroYield in _QuantLib:
 _QuantLib.PiecewiseLinearZeroYield_swigregister(PiecewiseLinearZeroYield)
 
-class PiecewiseLogLinearZeroYield(YieldTermStructure):
+class PiecewiseLogLinearZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36380,7 +38758,76 @@ class PiecewiseLogLinearZeroYield(YieldTermStructure):
 # Register PiecewiseLogLinearZeroYield in _QuantLib:
 _QuantLib.PiecewiseLogLinearZeroYield_swigregister(PiecewiseLogLinearZeroYield)
 
-class PiecewiseDefaultLogCubicZeroYield(YieldTermStructure):
+class PiecewiseLogCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicZeroYield_swiginit(self, _QuantLib.new_PiecewiseLogCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicZeroYield
+
+# Register PiecewiseLogCubicZeroYield in _QuantLib:
+_QuantLib.PiecewiseLogCubicZeroYield_swigregister(PiecewiseLogCubicZeroYield)
+
+class PiecewiseLogMixedLinearCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicZeroYield_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicZeroYield
+
+# Register PiecewiseLogMixedLinearCubicZeroYield in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicZeroYield_swigregister(PiecewiseLogMixedLinearCubicZeroYield)
+
+class PiecewiseMixedLinearCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicZeroYield_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicZeroYield
+
+# Register PiecewiseMixedLinearCubicZeroYield in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicZeroYield_swigregister(PiecewiseMixedLinearCubicZeroYield)
+
+class PiecewiseDefaultLogCubicZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36403,7 +38850,7 @@ class PiecewiseDefaultLogCubicZeroYield(YieldTermStructure):
 # Register PiecewiseDefaultLogCubicZeroYield in _QuantLib:
 _QuantLib.PiecewiseDefaultLogCubicZeroYield_swigregister(PiecewiseDefaultLogCubicZeroYield)
 
-class PiecewiseMonotonicLogCubicZeroYield(YieldTermStructure):
+class PiecewiseMonotonicLogCubicZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36426,7 +38873,7 @@ class PiecewiseMonotonicLogCubicZeroYield(YieldTermStructure):
 # Register PiecewiseMonotonicLogCubicZeroYield in _QuantLib:
 _QuantLib.PiecewiseMonotonicLogCubicZeroYield_swigregister(PiecewiseMonotonicLogCubicZeroYield)
 
-class PiecewiseKrugerLogZeroYield(YieldTermStructure):
+class PiecewiseKrugerLogZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -36449,25 +38896,1592 @@ class PiecewiseKrugerLogZeroYield(YieldTermStructure):
 # Register PiecewiseKrugerLogZeroYield in _QuantLib:
 _QuantLib.PiecewiseKrugerLogZeroYield_swigregister(PiecewiseKrugerLogZeroYield)
 
-class GlobalLinearSimpleZeroCurve(YieldTermStructure):
+class PiecewiseLinearFlatSimpleZeroYield(YieldTermStructure, LazyObject):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, referenceDate, instruments, dayCounter, b):
-        _QuantLib.GlobalLinearSimpleZeroCurve_swiginit(self, _QuantLib.new_GlobalLinearSimpleZeroCurve(referenceDate, instruments, dayCounter, b))
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearFlatSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseLinearFlatSimpleZeroYield(*args))
 
     def dates(self):
-        return _QuantLib.GlobalLinearSimpleZeroCurve_dates(self)
+        return _QuantLib.PiecewiseLinearFlatSimpleZeroYield_dates(self)
 
     def times(self):
-        return _QuantLib.GlobalLinearSimpleZeroCurve_times(self)
+        return _QuantLib.PiecewiseLinearFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearFlatSimpleZeroYield_data(self)
 
     def nodes(self):
-        return _QuantLib.GlobalLinearSimpleZeroCurve_nodes(self)
-    __swig_destroy__ = _QuantLib.delete_GlobalLinearSimpleZeroCurve
+        return _QuantLib.PiecewiseLinearFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearFlatSimpleZeroYield
 
-# Register GlobalLinearSimpleZeroCurve in _QuantLib:
-_QuantLib.GlobalLinearSimpleZeroCurve_swigregister(GlobalLinearSimpleZeroCurve)
+# Register PiecewiseLinearFlatSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseLinearFlatSimpleZeroYield_swigregister(PiecewiseLinearFlatSimpleZeroYield)
+
+class PiecewiseBackwardFlatSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseBackwardFlatSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseBackwardFlatSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseBackwardFlatSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseBackwardFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseBackwardFlatSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseBackwardFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseBackwardFlatSimpleZeroYield
+
+# Register PiecewiseBackwardFlatSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseBackwardFlatSimpleZeroYield_swigregister(PiecewiseBackwardFlatSimpleZeroYield)
+
+class PiecewiseConvexMonotoneSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseConvexMonotoneSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseConvexMonotoneSimpleZeroYield
+
+# Register PiecewiseConvexMonotoneSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseConvexMonotoneSimpleZeroYield_swigregister(PiecewiseConvexMonotoneSimpleZeroYield)
+
+class PiecewiseCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseCubicSimpleZeroYield
+
+# Register PiecewiseCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseCubicSimpleZeroYield_swigregister(PiecewiseCubicSimpleZeroYield)
+
+class PiecewiseForwardFlatSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseForwardFlatSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseForwardFlatSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseForwardFlatSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseForwardFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseForwardFlatSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseForwardFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseForwardFlatSimpleZeroYield
+
+# Register PiecewiseForwardFlatSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseForwardFlatSimpleZeroYield_swigregister(PiecewiseForwardFlatSimpleZeroYield)
+
+class PiecewiseLinearSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLinearSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseLinearSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLinearSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLinearSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLinearSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLinearSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLinearSimpleZeroYield
+
+# Register PiecewiseLinearSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseLinearSimpleZeroYield_swigregister(PiecewiseLinearSimpleZeroYield)
+
+class PiecewiseLogLinearSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogLinearSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseLogLinearSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogLinearSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogLinearSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogLinearSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogLinearSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogLinearSimpleZeroYield
+
+# Register PiecewiseLogLinearSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseLogLinearSimpleZeroYield_swigregister(PiecewiseLogLinearSimpleZeroYield)
+
+class PiecewiseLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogCubicSimpleZeroYield
+
+# Register PiecewiseLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseLogCubicSimpleZeroYield_swigregister(PiecewiseLogCubicSimpleZeroYield)
+
+class PiecewiseLogMixedLinearCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseLogMixedLinearCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseLogMixedLinearCubicSimpleZeroYield
+
+# Register PiecewiseLogMixedLinearCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseLogMixedLinearCubicSimpleZeroYield_swigregister(PiecewiseLogMixedLinearCubicSimpleZeroYield)
+
+class PiecewiseMixedLinearCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseMixedLinearCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMixedLinearCubicSimpleZeroYield
+
+# Register PiecewiseMixedLinearCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseMixedLinearCubicSimpleZeroYield_swigregister(PiecewiseMixedLinearCubicSimpleZeroYield)
+
+class PiecewiseDefaultLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseDefaultLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseDefaultLogCubicSimpleZeroYield
+
+# Register PiecewiseDefaultLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseDefaultLogCubicSimpleZeroYield_swigregister(PiecewiseDefaultLogCubicSimpleZeroYield)
+
+class PiecewiseMonotonicLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseMonotonicLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseMonotonicLogCubicSimpleZeroYield
+
+# Register PiecewiseMonotonicLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseMonotonicLogCubicSimpleZeroYield_swigregister(PiecewiseMonotonicLogCubicSimpleZeroYield)
+
+class PiecewiseKrugerLogSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.PiecewiseKrugerLogSimpleZeroYield_swiginit(self, _QuantLib.new_PiecewiseKrugerLogSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.PiecewiseKrugerLogSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.PiecewiseKrugerLogSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.PiecewiseKrugerLogSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.PiecewiseKrugerLogSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_PiecewiseKrugerLogSimpleZeroYield
+
+# Register PiecewiseKrugerLogSimpleZeroYield in _QuantLib:
+_QuantLib.PiecewiseKrugerLogSimpleZeroYield_swigregister(PiecewiseKrugerLogSimpleZeroYield)
+
+class GlobalPiecewiseLinearFlatForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearFlatForward_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearFlatForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearFlatForward
+
+# Register GlobalPiecewiseLinearFlatForward in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearFlatForward_swigregister(GlobalPiecewiseLinearFlatForward)
+
+class GlobalPiecewiseBackwardFlatForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseBackwardFlatForward_swiginit(self, _QuantLib.new_GlobalPiecewiseBackwardFlatForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseBackwardFlatForward
+
+# Register GlobalPiecewiseBackwardFlatForward in _QuantLib:
+_QuantLib.GlobalPiecewiseBackwardFlatForward_swigregister(GlobalPiecewiseBackwardFlatForward)
+
+class GlobalPiecewiseConvexMonotoneForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseConvexMonotoneForward_swiginit(self, _QuantLib.new_GlobalPiecewiseConvexMonotoneForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseConvexMonotoneForward
+
+# Register GlobalPiecewiseConvexMonotoneForward in _QuantLib:
+_QuantLib.GlobalPiecewiseConvexMonotoneForward_swigregister(GlobalPiecewiseConvexMonotoneForward)
+
+class GlobalPiecewiseCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseCubicForward
+
+# Register GlobalPiecewiseCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseCubicForward_swigregister(GlobalPiecewiseCubicForward)
+
+class GlobalPiecewiseForwardFlatForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseForwardFlatForward_swiginit(self, _QuantLib.new_GlobalPiecewiseForwardFlatForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseForwardFlatForward
+
+# Register GlobalPiecewiseForwardFlatForward in _QuantLib:
+_QuantLib.GlobalPiecewiseForwardFlatForward_swigregister(GlobalPiecewiseForwardFlatForward)
+
+class GlobalPiecewiseLinearForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearForward_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearForward
+
+# Register GlobalPiecewiseLinearForward in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearForward_swigregister(GlobalPiecewiseLinearForward)
+
+class GlobalPiecewiseLogLinearForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogLinearForward_swiginit(self, _QuantLib.new_GlobalPiecewiseLogLinearForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogLinearForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogLinearForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogLinearForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogLinearForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogLinearForward
+
+# Register GlobalPiecewiseLogLinearForward in _QuantLib:
+_QuantLib.GlobalPiecewiseLogLinearForward_swigregister(GlobalPiecewiseLogLinearForward)
+
+class GlobalPiecewiseLogCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseLogCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogCubicForward
+
+# Register GlobalPiecewiseLogCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseLogCubicForward_swigregister(GlobalPiecewiseLogCubicForward)
+
+class GlobalPiecewiseLogMixedLinearCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseLogMixedLinearCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogMixedLinearCubicForward
+
+# Register GlobalPiecewiseLogMixedLinearCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseLogMixedLinearCubicForward_swigregister(GlobalPiecewiseLogMixedLinearCubicForward)
+
+class GlobalPiecewiseMixedLinearCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMixedLinearCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseMixedLinearCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMixedLinearCubicForward
+
+# Register GlobalPiecewiseMixedLinearCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseMixedLinearCubicForward_swigregister(GlobalPiecewiseMixedLinearCubicForward)
+
+class GlobalPiecewiseDefaultLogCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseDefaultLogCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseDefaultLogCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseDefaultLogCubicForward
+
+# Register GlobalPiecewiseDefaultLogCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseDefaultLogCubicForward_swigregister(GlobalPiecewiseDefaultLogCubicForward)
+
+class GlobalPiecewiseMonotonicLogCubicForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMonotonicLogCubicForward_swiginit(self, _QuantLib.new_GlobalPiecewiseMonotonicLogCubicForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMonotonicLogCubicForward
+
+# Register GlobalPiecewiseMonotonicLogCubicForward in _QuantLib:
+_QuantLib.GlobalPiecewiseMonotonicLogCubicForward_swigregister(GlobalPiecewiseMonotonicLogCubicForward)
+
+class GlobalPiecewiseKrugerLogForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseKrugerLogForward_swiginit(self, _QuantLib.new_GlobalPiecewiseKrugerLogForward(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogForward_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogForward_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseKrugerLogForward
+
+# Register GlobalPiecewiseKrugerLogForward in _QuantLib:
+_QuantLib.GlobalPiecewiseKrugerLogForward_swigregister(GlobalPiecewiseKrugerLogForward)
+
+class GlobalPiecewiseLinearFlatDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearFlatDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearFlatDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearFlatDiscount
+
+# Register GlobalPiecewiseLinearFlatDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearFlatDiscount_swigregister(GlobalPiecewiseLinearFlatDiscount)
+
+class GlobalPiecewiseBackwardFlatDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseBackwardFlatDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseBackwardFlatDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseBackwardFlatDiscount
+
+# Register GlobalPiecewiseBackwardFlatDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseBackwardFlatDiscount_swigregister(GlobalPiecewiseBackwardFlatDiscount)
+
+class GlobalPiecewiseConvexMonotoneDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseConvexMonotoneDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseConvexMonotoneDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseConvexMonotoneDiscount
+
+# Register GlobalPiecewiseConvexMonotoneDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseConvexMonotoneDiscount_swigregister(GlobalPiecewiseConvexMonotoneDiscount)
+
+class GlobalPiecewiseCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseCubicDiscount
+
+# Register GlobalPiecewiseCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseCubicDiscount_swigregister(GlobalPiecewiseCubicDiscount)
+
+class GlobalPiecewiseForwardFlatDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseForwardFlatDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseForwardFlatDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseForwardFlatDiscount
+
+# Register GlobalPiecewiseForwardFlatDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseForwardFlatDiscount_swigregister(GlobalPiecewiseForwardFlatDiscount)
+
+class GlobalPiecewiseLinearDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearDiscount
+
+# Register GlobalPiecewiseLinearDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearDiscount_swigregister(GlobalPiecewiseLinearDiscount)
+
+class GlobalPiecewiseLogLinearDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogLinearDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseLogLinearDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogLinearDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogLinearDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogLinearDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogLinearDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogLinearDiscount
+
+# Register GlobalPiecewiseLogLinearDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseLogLinearDiscount_swigregister(GlobalPiecewiseLogLinearDiscount)
+
+class GlobalPiecewiseLogCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseLogCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogCubicDiscount
+
+# Register GlobalPiecewiseLogCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseLogCubicDiscount_swigregister(GlobalPiecewiseLogCubicDiscount)
+
+class GlobalPiecewiseLogMixedLinearCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseLogMixedLinearCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogMixedLinearCubicDiscount
+
+# Register GlobalPiecewiseLogMixedLinearCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseLogMixedLinearCubicDiscount_swigregister(GlobalPiecewiseLogMixedLinearCubicDiscount)
+
+class GlobalPiecewiseMixedLinearCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseMixedLinearCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMixedLinearCubicDiscount
+
+# Register GlobalPiecewiseMixedLinearCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseMixedLinearCubicDiscount_swigregister(GlobalPiecewiseMixedLinearCubicDiscount)
+
+class GlobalPiecewiseDefaultLogCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseDefaultLogCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseDefaultLogCubicDiscount
+
+# Register GlobalPiecewiseDefaultLogCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseDefaultLogCubicDiscount_swigregister(GlobalPiecewiseDefaultLogCubicDiscount)
+
+class GlobalPiecewiseMonotonicLogCubicDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseMonotonicLogCubicDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMonotonicLogCubicDiscount
+
+# Register GlobalPiecewiseMonotonicLogCubicDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseMonotonicLogCubicDiscount_swigregister(GlobalPiecewiseMonotonicLogCubicDiscount)
+
+class GlobalPiecewiseKrugerLogDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseKrugerLogDiscount_swiginit(self, _QuantLib.new_GlobalPiecewiseKrugerLogDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseKrugerLogDiscount
+
+# Register GlobalPiecewiseKrugerLogDiscount in _QuantLib:
+_QuantLib.GlobalPiecewiseKrugerLogDiscount_swigregister(GlobalPiecewiseKrugerLogDiscount)
+
+class GlobalPiecewiseLinearFlatZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearFlatZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearFlatZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearFlatZeroYield
+
+# Register GlobalPiecewiseLinearFlatZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearFlatZeroYield_swigregister(GlobalPiecewiseLinearFlatZeroYield)
+
+class GlobalPiecewiseBackwardFlatZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseBackwardFlatZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseBackwardFlatZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseBackwardFlatZeroYield
+
+# Register GlobalPiecewiseBackwardFlatZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseBackwardFlatZeroYield_swigregister(GlobalPiecewiseBackwardFlatZeroYield)
+
+class GlobalPiecewiseConvexMonotoneZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseConvexMonotoneZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseConvexMonotoneZeroYield
+
+# Register GlobalPiecewiseConvexMonotoneZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseConvexMonotoneZeroYield_swigregister(GlobalPiecewiseConvexMonotoneZeroYield)
+
+class GlobalPiecewiseCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseCubicZeroYield
+
+# Register GlobalPiecewiseCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseCubicZeroYield_swigregister(GlobalPiecewiseCubicZeroYield)
+
+class GlobalPiecewiseForwardFlatZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseForwardFlatZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseForwardFlatZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseForwardFlatZeroYield
+
+# Register GlobalPiecewiseForwardFlatZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseForwardFlatZeroYield_swigregister(GlobalPiecewiseForwardFlatZeroYield)
+
+class GlobalPiecewiseLinearZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearZeroYield
+
+# Register GlobalPiecewiseLinearZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearZeroYield_swigregister(GlobalPiecewiseLinearZeroYield)
+
+class GlobalPiecewiseLogLinearZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogLinearZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogLinearZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogLinearZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogLinearZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogLinearZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogLinearZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogLinearZeroYield
+
+# Register GlobalPiecewiseLogLinearZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogLinearZeroYield_swigregister(GlobalPiecewiseLogLinearZeroYield)
+
+class GlobalPiecewiseLogCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogCubicZeroYield
+
+# Register GlobalPiecewiseLogCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogCubicZeroYield_swigregister(GlobalPiecewiseLogCubicZeroYield)
+
+class GlobalPiecewiseLogMixedLinearCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogMixedLinearCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogMixedLinearCubicZeroYield
+
+# Register GlobalPiecewiseLogMixedLinearCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogMixedLinearCubicZeroYield_swigregister(GlobalPiecewiseLogMixedLinearCubicZeroYield)
+
+class GlobalPiecewiseMixedLinearCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseMixedLinearCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMixedLinearCubicZeroYield
+
+# Register GlobalPiecewiseMixedLinearCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseMixedLinearCubicZeroYield_swigregister(GlobalPiecewiseMixedLinearCubicZeroYield)
+
+class GlobalPiecewiseDefaultLogCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseDefaultLogCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseDefaultLogCubicZeroYield
+
+# Register GlobalPiecewiseDefaultLogCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseDefaultLogCubicZeroYield_swigregister(GlobalPiecewiseDefaultLogCubicZeroYield)
+
+class GlobalPiecewiseMonotonicLogCubicZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseMonotonicLogCubicZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMonotonicLogCubicZeroYield
+
+# Register GlobalPiecewiseMonotonicLogCubicZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseMonotonicLogCubicZeroYield_swigregister(GlobalPiecewiseMonotonicLogCubicZeroYield)
+
+class GlobalPiecewiseKrugerLogZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseKrugerLogZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseKrugerLogZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseKrugerLogZeroYield
+
+# Register GlobalPiecewiseKrugerLogZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseKrugerLogZeroYield_swigregister(GlobalPiecewiseKrugerLogZeroYield)
+
+class GlobalPiecewiseLinearFlatSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearFlatSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearFlatSimpleZeroYield
+
+# Register GlobalPiecewiseLinearFlatSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearFlatSimpleZeroYield_swigregister(GlobalPiecewiseLinearFlatSimpleZeroYield)
+
+class GlobalPiecewiseBackwardFlatSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseBackwardFlatSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseBackwardFlatSimpleZeroYield
+
+# Register GlobalPiecewiseBackwardFlatSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseBackwardFlatSimpleZeroYield_swigregister(GlobalPiecewiseBackwardFlatSimpleZeroYield)
+
+class GlobalPiecewiseConvexMonotoneSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseConvexMonotoneSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseConvexMonotoneSimpleZeroYield
+
+# Register GlobalPiecewiseConvexMonotoneSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseConvexMonotoneSimpleZeroYield_swigregister(GlobalPiecewiseConvexMonotoneSimpleZeroYield)
+
+class GlobalPiecewiseCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseCubicSimpleZeroYield
+
+# Register GlobalPiecewiseCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseCubicSimpleZeroYield_swigregister(GlobalPiecewiseCubicSimpleZeroYield)
+
+class GlobalPiecewiseForwardFlatSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseForwardFlatSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseForwardFlatSimpleZeroYield
+
+# Register GlobalPiecewiseForwardFlatSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseForwardFlatSimpleZeroYield_swigregister(GlobalPiecewiseForwardFlatSimpleZeroYield)
+
+class GlobalPiecewiseLinearSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLinearSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLinearSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLinearSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLinearSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLinearSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLinearSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLinearSimpleZeroYield
+
+# Register GlobalPiecewiseLinearSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLinearSimpleZeroYield_swigregister(GlobalPiecewiseLinearSimpleZeroYield)
+
+class GlobalPiecewiseLogLinearSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogLinearSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogLinearSimpleZeroYield
+
+# Register GlobalPiecewiseLogLinearSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogLinearSimpleZeroYield_swigregister(GlobalPiecewiseLogLinearSimpleZeroYield)
+
+class GlobalPiecewiseLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogCubicSimpleZeroYield
+
+# Register GlobalPiecewiseLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogCubicSimpleZeroYield_swigregister(GlobalPiecewiseLogCubicSimpleZeroYield)
+
+class GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield
+
+# Register GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield_swigregister(GlobalPiecewiseLogMixedLinearCubicSimpleZeroYield)
+
+class GlobalPiecewiseMixedLinearCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseMixedLinearCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMixedLinearCubicSimpleZeroYield
+
+# Register GlobalPiecewiseMixedLinearCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseMixedLinearCubicSimpleZeroYield_swigregister(GlobalPiecewiseMixedLinearCubicSimpleZeroYield)
+
+class GlobalPiecewiseDefaultLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseDefaultLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseDefaultLogCubicSimpleZeroYield
+
+# Register GlobalPiecewiseDefaultLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseDefaultLogCubicSimpleZeroYield_swigregister(GlobalPiecewiseDefaultLogCubicSimpleZeroYield)
+
+class GlobalPiecewiseMonotonicLogCubicSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseMonotonicLogCubicSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseMonotonicLogCubicSimpleZeroYield
+
+# Register GlobalPiecewiseMonotonicLogCubicSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseMonotonicLogCubicSimpleZeroYield_swigregister(GlobalPiecewiseMonotonicLogCubicSimpleZeroYield)
+
+class GlobalPiecewiseKrugerLogSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_swiginit(self, _QuantLib.new_GlobalPiecewiseKrugerLogSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_GlobalPiecewiseKrugerLogSimpleZeroYield
+
+# Register GlobalPiecewiseKrugerLogSimpleZeroYield in _QuantLib:
+_QuantLib.GlobalPiecewiseKrugerLogSimpleZeroYield_swigregister(GlobalPiecewiseKrugerLogSimpleZeroYield)
+
+class LocalPiecewiseConvexMonotoneForward(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.LocalPiecewiseConvexMonotoneForward_swiginit(self, _QuantLib.new_LocalPiecewiseConvexMonotoneForward(*args))
+
+    def dates(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneForward_dates(self)
+
+    def times(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneForward_times(self)
+
+    def data(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneForward_data(self)
+
+    def nodes(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneForward_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_LocalPiecewiseConvexMonotoneForward
+
+# Register LocalPiecewiseConvexMonotoneForward in _QuantLib:
+_QuantLib.LocalPiecewiseConvexMonotoneForward_swigregister(LocalPiecewiseConvexMonotoneForward)
+
+class LocalPiecewiseConvexMonotoneDiscount(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.LocalPiecewiseConvexMonotoneDiscount_swiginit(self, _QuantLib.new_LocalPiecewiseConvexMonotoneDiscount(*args))
+
+    def dates(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneDiscount_dates(self)
+
+    def times(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneDiscount_times(self)
+
+    def data(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneDiscount_data(self)
+
+    def nodes(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneDiscount_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_LocalPiecewiseConvexMonotoneDiscount
+
+# Register LocalPiecewiseConvexMonotoneDiscount in _QuantLib:
+_QuantLib.LocalPiecewiseConvexMonotoneDiscount_swigregister(LocalPiecewiseConvexMonotoneDiscount)
+
+class LocalPiecewiseConvexMonotoneZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.LocalPiecewiseConvexMonotoneZeroYield_swiginit(self, _QuantLib.new_LocalPiecewiseConvexMonotoneZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_LocalPiecewiseConvexMonotoneZeroYield
+
+# Register LocalPiecewiseConvexMonotoneZeroYield in _QuantLib:
+_QuantLib.LocalPiecewiseConvexMonotoneZeroYield_swigregister(LocalPiecewiseConvexMonotoneZeroYield)
+
+class LocalPiecewiseConvexMonotoneSimpleZeroYield(YieldTermStructure, LazyObject):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        _QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_swiginit(self, _QuantLib.new_LocalPiecewiseConvexMonotoneSimpleZeroYield(*args))
+
+    def dates(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_dates(self)
+
+    def times(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_times(self)
+
+    def data(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_data(self)
+
+    def nodes(self):
+        return _QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_nodes(self)
+    __swig_destroy__ = _QuantLib.delete_LocalPiecewiseConvexMonotoneSimpleZeroYield
+
+# Register LocalPiecewiseConvexMonotoneSimpleZeroYield in _QuantLib:
+_QuantLib.LocalPiecewiseConvexMonotoneSimpleZeroYield_swigregister(LocalPiecewiseConvexMonotoneSimpleZeroYield)
 
 class DiscountCurve(YieldTermStructure):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
@@ -37564,6 +41578,20 @@ class GarmanKlassSigma6(object):
 
 # Register GarmanKlassSigma6 in _QuantLib:
 _QuantLib.GarmanKlassSigma6_swigregister(GarmanKlassSigma6)
+
+class SimpleLocalEstimator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self, y):
+        _QuantLib.SimpleLocalEstimator_swiginit(self, _QuantLib.new_SimpleLocalEstimator(y))
+
+    def calculate(self, quoteSeries):
+        return _QuantLib.SimpleLocalEstimator_calculate(self, quoteSeries)
+    __swig_destroy__ = _QuantLib.delete_SimpleLocalEstimator
+
+# Register SimpleLocalEstimator in _QuantLib:
+_QuantLib.SimpleLocalEstimator_swigregister(SimpleLocalEstimator)
 
 class UnitOfMeasureConversionManager(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")

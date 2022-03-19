@@ -1226,6 +1226,50 @@ using QuantLib::ReplicatingVarianceSwapEngine;
 using QuantLib::MCVarianceSwapEngine;
 using QuantLib::MakeMCVarianceSwapEngine;
 using QuantLib::FdmExtOUJumpModelInnerValue;
+using QuantLib::TreeCallableZeroCouponBondEngine;
+using QuantLib::CmsLeg;
+using QuantLib::FixedRateLeg;
+using QuantLib::IborLeg;
+using QuantLib::OvernightLeg;
+using QuantLib::yoyInflationLeg;
+using QuantLib::SubPeriodsLeg;
+using QuantLib::MakeCreditDefaultSwap;
+using QuantLib::FdCIRVanillaEngine;
+using QuantLib::MakeFdCIRVanillaEngine;
+using QuantLib::MakeCms;
+using QuantLib::ConstNotionalCrossCurrencyBasisSwapRateHelper;
+using QuantLib::MtMCrossCurrencyBasisSwapRateHelper;
+using QuantLib::Replication;
+using QuantLib::DigitalReplication;
+using QuantLib::DigitalCoupon;
+using QuantLib::detail::D0Interpolator;
+using QuantLib::MakeCapFloor;
+using QuantLib::TreeVanillaSwapEngine;
+using QuantLib::SimpleLocalEstimator;
+using QuantLib::CmsSpreadLeg;
+using QuantLib::IborLegCashFlows;
+using QuantLib::SwapCashFlows;
+using QuantLib::SwaptionCashFlows;
+using QuantLib::CatBond;
+using QuantLib::FloatingCatBond;
+using QuantLib::CatSimulation;
+using QuantLib::EventSetSimulation;
+using QuantLib::BetaRiskSimulation;
+using QuantLib::CatRisk;
+using QuantLib::EventSet;
+using QuantLib::BetaRisk;
+using QuantLib::EventPaymentOffset;
+using QuantLib::NoOffset;
+using QuantLib::NotionalPath;
+using QuantLib::NotionalRisk;
+using QuantLib::DigitalNotionalRisk;
+using QuantLib::ProportionalNotionalRisk;
+using QuantLib::MonteCarloCatBondEngine;
+using QuantLib::BMASwapRateHelper;
+using QuantLib::MakeSwaption;
+using QuantLib::NormalCLVModel;
+using QuantLib::SquareRootCLVModel;
+using QuantLib::SABRVolTermStructure;
 %}
 
 %{
@@ -1235,7 +1279,6 @@ typedef QuantLib::FittedBondDiscountCurve::FittingMethod FittingMethod;
 typedef QuantLib::LowDiscrepancy::rsg_type GaussianLowDiscrepancySequenceGenerator;
 typedef QuantLib::LowDiscrepancy::ursg_type UniformLowDiscrepancySequenceGenerator;
 typedef QuantLib::Matrix::row_iterator MatrixRow;
-typedef QuantLib::PiecewiseYieldCurve<SimpleZeroYield, Linear, QuantLib::GlobalBootstrap> GlobalLinearSimpleZeroCurve;
 typedef QuantLib::PricingEngine::arguments arguments;
 typedef QuantLib::PricingEngine::results results;
 typedef QuantLib::PseudoRandom::rng_type GaussianRandomGenerator;
@@ -1251,6 +1294,7 @@ typedef IborCoupon::Settings IborCouponSettings;
 typedef double doubleOrNull;
 typedef int intOrNull;
 typedef std::vector<ext::shared_ptr<FdmBoundaryCondition>> FdmBoundaryConditionSet;
+typedef QuantLib::HestonModel::FellerConstraint FellerConstraint;
 %}
 
 #endif

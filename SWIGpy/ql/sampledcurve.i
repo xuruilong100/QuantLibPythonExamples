@@ -31,6 +31,9 @@ class SampledCurve {
     void scaleGrid(Real s);
     void regrid(const Array& new_grid);
     %extend {
+        void setValue(Size i, Real v) {
+            self->value(i) = v;
+        }
         void sample(PyObject *func) {
             const UnaryFunction f(func);
             self->sample(f);

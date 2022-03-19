@@ -21,6 +21,7 @@ using QuantLib::ZeroCouponInflationSwap;
 using QuantLib::ZeroCouponSwap;
 using QuantLib::MakeOIS;
 using QuantLib::MakeVanillaSwap;
+using QuantLib::MakeCms;
 %}
 
 %shared_ptr(ArithmeticAverageOIS)
@@ -544,7 +545,7 @@ class MakeOIS {
         const Period& fwdStart = 0*Days);
 
     %extend{
-        ext::shared_ptr<OvernightIndexedSwap> makeOIS(){
+        ext::shared_ptr<OvernightIndexedSwap> makeOIS() const {
             return (ext::shared_ptr<OvernightIndexedSwap>)(*self);
         }
     }
@@ -571,84 +572,15 @@ class MakeOIS {
         const ext::shared_ptr<PricingEngine>& engine);
 };
 
-%pythoncode{
-def MakeOIS(
-        swapTenor,
-        overnightIndex,
-        fixedRate=None,
-        fwdStart=Period(0, Days),
-        receiveFixed=True,
-        swapType=OvernightIndexedSwap.Payer,
-        nominal=1.0,
-        settlementDays=2,
-        effectiveDate=None,
-        terminationDate=None,
-        dateGenerationRule=DateGeneration.Backward,
-        paymentFrequency=Annual,
-        paymentAdjustmentConvention=Following,
-        paymentLag=0,
-        paymentCalendar=None,
-        endOfMonth=True,
-        fixedLegDayCount=None,
-        overnightLegSpread=0.0,
-        discountingTermStructure=None,
-        telescopicValueDates=False,
-        pricingEngine=None,
-        averagingMethod=None):
-    mv = MakeOIS(
-        swapTenor, overnightIndex, fixedRate, fwdStart)
-
-    if not receiveFixed:
-        mv.receiveFixed(receiveFixed)
-    if swapType != OvernightIndexedSwap.Payer:
-        mv.withType(swapType)
-    if nominal != 1.0:
-        mv.withNominal(nominal)
-    if settlementDays != 2:
-        mv.withSettlementDays(settlementDays)
-    if effectiveDate is not None:
-        mv.withEffectiveDate(effectiveDate)
-    if terminationDate is not None:
-        mv.withTerminationDate(terminationDate)
-    if dateGenerationRule != DateGeneration.Backward:
-        mv.withRule(dateGenerationRule)
-    if paymentFrequency != Annual:
-        mv.withPaymentFrequency(paymentFrequency)
-    if paymentAdjustmentConvention != Following:
-        mv.withPaymentAdjustment(paymentAdjustmentConvention)
-    if paymentLag != 0:
-        mv.withPaymentLag(paymentLag)
-    if paymentCalendar is not None:
-        mv.withPaymentCalendar(paymentCalendar)
-    if not endOfMonth:
-        mv.withEndOfMonth(endOfMonth)
-    if fixedLegDayCount is not None:
-        mv.withFixedLegDayCount(fixedLegDayCount)
-    else:
-        mv.withFixedLegDayCount(overnightIndex.dayCounter())
-    if overnightLegSpread != 0.0:
-        mv.withOvernightLegSpread(overnightLegSpread)
-    if discountingTermStructure is not None:
-        mv.withDiscountingTermStructure(discountingTermStructure)
-    if telescopicValueDates:
-        mv.withTelescopicValueDates(telescopicValueDates)
-    if averagingMethod is not None:
-        mv.withAveragingMethod(averagingMethod)
-    if pricingEngine is not None:
-        mv.withPricingEngine(pricingEngine)
-
-    return mv.makeOIS()
-}
-
 class MakeVanillaSwap {
   public:
     MakeVanillaSwap(
         const Period& swapTenor,
         const ext::shared_ptr<IborIndex>& index,
         Rate fixedRate,
-        const Period& forwardStart);
+        const Period& forwardStart = Period(0, Days));
     %extend{
-        ext::shared_ptr<VanillaSwap> makeVanillaSwap(){
+        ext::shared_ptr<VanillaSwap> makeVanillaSwap() const {
             return (ext::shared_ptr<VanillaSwap>)(*self);
         }
     }
@@ -683,77 +615,51 @@ class MakeVanillaSwap {
     MakeVanillaSwap& withPricingEngine(const ext::shared_ptr<PricingEngine>& engine);
 };
 
-%pythoncode{
-def MakeVanillaSwap(
-        swapTenor, iborIndex, fixedRate, forwardStart,
-        receiveFixed=None, swapType=None, Nominal=None, settlementDays=None,
-        effectiveDate=None, terminationDate=None, dateGenerationRule=None,
-        fixedLegTenor=None, fixedLegCalendar=None, fixedLegConvention=None,
-        fixedLegDayCount=None, floatingLegTenor=None, floatingLegCalendar=None,
-        floatingLegConvention=None, floatingLegDayCount=None, floatingLegSpread=None,
-        discountingTermStructure=None, pricingEngine=None,
-        fixedLegTerminationDateConvention=None,  fixedLegDateGenRule=None,
-        fixedLegEndOfMonth=None, fixedLegFirstDate=None, fixedLegNextToLastDate=None,
-        floatingLegTerminationDateConvention=None,  floatingLegDateGenRule=None,
-        floatingLegEndOfMonth=None, floatingLegFirstDate=None, floatingLegNextToLastDate=None):
-    mv = MakeVanillaSwap(swapTenor, iborIndex, fixedRate, forwardStart)
-    if receiveFixed is not None:
-        mv.receiveFixed(receiveFixed)
-    if swapType is not None:
-        mv.withType(swapType)
-    if Nominal is not None:
-        mv.withNominal(Nominal)
-    if settlementDays is not None:
-        mv.withSettlementDays(settlementDays)
-    if effectiveDate is not None:
-        mv.withEffectiveDate(effectiveDate)
-    if terminationDate is not None:
-        mv.withTerminationDate(terminationDate)
-    if dateGenerationRule is not None:
-        mv.withRule(dateGenerationRule)
-    if fixedLegTenor is not None:
-        mv.withFixedLegTenor(fixedLegTenor)
-    if fixedLegCalendar is not None:
-        mv.withFixedLegCalendar(fixedLegCalendar)
-    if fixedLegConvention is not None:
-        mv.withFixedLegConvention(fixedLegConvention)
-    if fixedLegDayCount is not None:
-        mv.withFixedLegDayCount(fixedLegDayCount)
-    if floatingLegTenor is not None:
-        mv.withFloatingLegTenor(floatingLegTenor)
-    if floatingLegCalendar is not None:
-        mv.withFloatingLegCalendar(floatingLegCalendar)
-    if floatingLegConvention is not None:
-        mv.withFloatingLegConvention(floatingLegConvention)
-    if floatingLegDayCount is not None:
-        mv.withFloatingLegDayCount(floatingLegDayCount)
-    if floatingLegSpread is not None:
-        mv.withFloatingLegSpread(floatingLegSpread)
-    if discountingTermStructure is not None:
-        mv.withDiscountingTermStructure(discountingTermStructure)
-    if pricingEngine is not None:
-        mv.withPricingEngine(pricingEngine)
-    if fixedLegTerminationDateConvention is not None:
-        mv.withFixedLegTerminationDateConvention(fixedLegTerminationDateConvention)
-    if fixedLegDateGenRule is not None:
-        mv.withFixedLegRule(fixedLegDateGenRule)
-    if fixedLegEndOfMonth is not None:
-        mv.withFixedLegEndOfMonth(fixedLegEndOfMonth)
-    if fixedLegFirstDate is not None:
-        mv.withFixedLegFirstDate(fixedLegFirstDate)
-    if fixedLegNextToLastDate is not None:
-        mv.withFixedLegNextToLastDate(fixedLegNextToLastDate)
-    if floatingLegTerminationDateConvention is not None:
-        mv.withFloatingLegTerminationDateConvention(floatingLegTerminationDateConvention)
-    if floatingLegDateGenRule is not None:
-        mv.withFloatingLegRule(floatingLegDateGenRule)
-    if floatingLegEndOfMonth is not None:
-        mv.withFloatingLegEndOfMonth(floatingLegEndOfMonth)
-    if floatingLegFirstDate is not None:
-        mv.withFloatingLegFirstDate(floatingLegFirstDate)
-    if floatingLegNextToLastDate is not None:
-        mv.withFloatingLegNextToLastDate(floatingLegNextToLastDate)
-    return mv.makeVanillaSwap()
-}
+class MakeCms {
+  public:
+    MakeCms(const Period& swapTenor,
+            const ext::shared_ptr<SwapIndex>& swapIndex,
+            const ext::shared_ptr<IborIndex>& iborIndex,
+            Spread iborSpread = 0.0,
+            const Period& forwardStart = 0*Days);
+    MakeCms(const Period& swapTenor,
+            const ext::shared_ptr<SwapIndex>& swapIndex,
+            Spread iborSpread = 0.0,
+            const Period& forwardStart = 0*Days);
+
+    %extend {
+        ext::shared_ptr<Swap> makeCms() const {
+            return (ext::shared_ptr<Swap>)(*self);
+        }
+    }
+
+    MakeCms& receiveCms(bool flag = true);
+    MakeCms& withNominal(Real n);
+    MakeCms& withEffectiveDate(const Date&);
+    MakeCms& withCmsLegTenor(const Period& t);
+    MakeCms& withCmsLegCalendar(const Calendar& cal);
+    MakeCms& withCmsLegConvention(BusinessDayConvention bdc);
+    MakeCms& withCmsLegTerminationDateConvention(BusinessDayConvention);
+    MakeCms& withCmsLegRule(DateGeneration::Rule r);
+    MakeCms& withCmsLegEndOfMonth(bool flag = true);
+    MakeCms& withCmsLegFirstDate(const Date& d);
+    MakeCms& withCmsLegNextToLastDate(const Date& d);
+    MakeCms& withCmsLegDayCount(const DayCounter& dc);
+    MakeCms& withFloatingLegTenor(const Period& t);
+    MakeCms& withFloatingLegCalendar(const Calendar& cal);
+    MakeCms& withFloatingLegConvention(BusinessDayConvention bdc);
+    MakeCms& withFloatingLegTerminationDateConvention(
+        BusinessDayConvention bdc);
+    MakeCms& withFloatingLegRule(DateGeneration::Rule r);
+    MakeCms& withFloatingLegEndOfMonth(bool flag = true);
+    MakeCms& withFloatingLegFirstDate(const Date& d);
+    MakeCms& withFloatingLegNextToLastDate(const Date& d);
+    MakeCms& withFloatingLegDayCount(const DayCounter& dc);
+    MakeCms& withAtmSpread(bool flag = true);
+    MakeCms& withDiscountingTermStructure(
+        const Handle<YieldTermStructure>& discountingTermStructure);
+    MakeCms& withCmsCouponPricer(
+        const ext::shared_ptr<CmsCouponPricer>& couponPricer);
+};
 
 #endif

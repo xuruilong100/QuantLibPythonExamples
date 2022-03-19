@@ -26,9 +26,15 @@ ql_module = Extension(
         'qlex/time/daycounters/Actual365_25.cpp'],
     include_dirs=['/usr/include/', './'],
     library_dirs=['/usr/lib/'],
-    libraries=['QuantLib'],
-    extra_compile_args=['-fopenmp', '-Wno-unused', '-w', '-ferror-limit=0'],
-    extra_link_args=['-fopenmp'])
+    libraries=[
+        'QuantLib',
+        'svml'  # for intel oneapi compiler
+    ],
+    # config extra_compile_args by yourself
+    extra_compile_args=[
+        '-w',
+        '-ferror-limit=0'
+    ])
 
 setup(
     name='QuantLib',

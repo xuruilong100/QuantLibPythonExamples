@@ -855,8 +855,7 @@ class InterpolationTest(unittest.TestCase):
 
             for curri in range(len(yd)):
                 f = SafeKernelInterpolation(
-                    deltaGrid,
-                    yd[curri], myKernel)
+                    deltaGrid, yd[curri], myKernel, 1.0e-6)
                 f.update()
 
                 for dIt in range(len(deltaGrid)):

@@ -5,6 +5,7 @@
 %include ../ql/common.i
 %include ../ql/alltypes.i
 %include ../ql/base.i
+%include ../ql/termstructures/YieldTermStructure.i
 
 %{
 using QuantLib::YoYInflationCapFloor;

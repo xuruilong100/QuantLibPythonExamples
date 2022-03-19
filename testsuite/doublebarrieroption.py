@@ -344,7 +344,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
                 bsVanillaPrice = blackFormula(value.type, value.strike,
                                               spot.value() * qTS.discount(value.t) / rTS.discount(value.t),
                                               value.v * sqrt(value.t), rTS.discount(value.t))
-                vannaVolgaEngine = VannaVolgaWYDoubleBarrierEngine(
+                vannaVolgaEngine = VannaVolgaSWDoubleBarrierEngine(
                     volAtmQuote,
                     vol25PutQuote,
                     vol25CallQuote,

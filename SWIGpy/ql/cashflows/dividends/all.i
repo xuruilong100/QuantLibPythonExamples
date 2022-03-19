@@ -28,5 +28,6 @@ class FractionalDividend : public Dividend {
 };
 
 %template(DividendSchedule) std::vector<ext::shared_ptr<Dividend>>;
+typedef std::vector<ext::shared_ptr<Dividend>> DividendSchedule;
 
 #endif

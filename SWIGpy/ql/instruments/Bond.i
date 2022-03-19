@@ -54,7 +54,7 @@ class Bond : public Instrument {
                Real accuracy = 1.0e-8,
                Size maxEvaluations = 100,
                Real guess = 0.05,
-               Bond::Price::Type priceType = Bond::Price::Clean) const;
+               BondPrice::Type priceType = BondPrice::Clean) const;
     Real cleanPrice(Rate yield,
                     const DayCounter& dc,
                     Compounding comp,
@@ -74,7 +74,7 @@ class Bond : public Instrument {
                Real accuracy = 1.0e-8,
                Size maxEvaluations = 100,
                Real guess = 0.05,
-               Bond::Price::Type priceType = Bond::Price::Clean) const;
+               BondPrice::Type priceType = BondPrice::Clean) const;
     Real accruedAmount(Date d = Date()) const;
     Rate nextCouponRate(Date d = Date()) const;
     Rate previousCouponRate(Date d = Date()) const;

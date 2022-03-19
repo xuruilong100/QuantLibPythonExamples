@@ -10,9 +10,8 @@ using QuantLib::Calendar;
 %}
 
 class Calendar {
-  protected:
-    Calendar();
   public:
+    Calendar();
     bool empty() const;
     std::string name();
     const std::set<Date>& addedHolidays() const;

@@ -17,6 +17,7 @@ using QuantLib::Stock;
 using QuantLib::cdsMaturity;
 using QuantLib::VarianceOption;
 using QuantLib::VarianceSwap;
+using QuantLib::MakeCreditDefaultSwap;
 %}
 
 %shared_ptr(Claim)
@@ -60,54 +61,88 @@ class CreditDefaultSwap : public Instrument {
         Midpoint,
         ISDA
     };
-
-    CreditDefaultSwap(
-        Protection::Side side,
-        Real notional,
-        Rate spread,
-        const Schedule& schedule,
-        BusinessDayConvention paymentConvention,
-        const DayCounter& dayCounter,
-        bool settlesAccrual = true,
-        bool paysAtDefaultTime = true,
-        const Date& protectionStart = Date(),
-        ext::shared_ptr<Claim> = ext::shared_ptr<Claim>(),
-        const DayCounter& lastPeriodDayCounter = DayCounter(),
-        bool rebatesAccrual = true,
-        const Date& tradeDate = Date(),
-        Natural cashSettlementDays = 3);
-    CreditDefaultSwap(
-        Protection::Side side,
-        Real notional,
-        Rate upfront,
-        Rate spread,
-        const Schedule& schedule,
-        BusinessDayConvention paymentConvention,
-        const DayCounter& dayCounter,
-        bool settlesAccrual = true,
-        bool paysAtDefaultTime = true,
-        const Date& protectionStart = Date(),
-        const Date& upfrontDate = Date(),
-        ext::shared_ptr<Claim> = ext::shared_ptr<Claim>(),
-        const DayCounter& lastPeriodDayCounter = DayCounter(),
-        bool rebatesAccrual = true,
-        const Date& tradeDate = Date(),
-        Natural cashSettlementDays = 3);
+    %extend {
+        CreditDefaultSwap(
+            Protection::Side side,
+            Real notional,
+            Rate spread,
+            const Schedule& schedule,
+            BusinessDayConvention paymentConvention,
+            const DayCounter& dayCounter,
+            bool settlesAccrual = true,
+            bool paysAtDefaultTime = true,
+            const Date& protectionStart = Date(),
+            const DayCounter& lastPeriodDayCounter = DayCounter(),
+            bool rebatesAccrual = true,
+            const Date& tradeDate = Date(),
+            Natural cashSettlementDays = 3,
+            ext::shared_ptr<Claim> claim = ext::shared_ptr<Claim>()) {
+                return new CreditDefaultSwap(
+                    side,
+                    notional,
+                    spread,
+                    schedule,
+                    paymentConvention,
+                    dayCounter,
+                    settlesAccrual,
+                    paysAtDefaultTime,
+                    protectionStart,
+                    claim,
+                    lastPeriodDayCounter,
+                    rebatesAccrual,
+                    tradeDate,
+                    cashSettlementDays);
+            }
+        CreditDefaultSwap(
+            Protection::Side side,
+            Real notional,
+            Rate upfront,
+            Rate spread,
+            const Schedule& schedule,
+            BusinessDayConvention paymentConvention,
+            const DayCounter& dayCounter,
+            bool settlesAccrual = true,
+            bool paysAtDefaultTime = true,
+            const Date& protectionStart = Date(),
+            const Date& upfrontDate = Date(),
+            const DayCounter& lastPeriodDayCounter = DayCounter(),
+            bool rebatesAccrual = true,
+            const Date& tradeDate = Date(),
+            Natural cashSettlementDays = 3,
+            ext::shared_ptr<Claim> claim = ext::shared_ptr<Claim>()) {
+                return new CreditDefaultSwap(
+                    side,
+                    notional,
+                    upfront,
+                    spread,
+                    schedule,
+                    paymentConvention,
+                    dayCounter,
+                    settlesAccrual,
+                    paysAtDefaultTime,
+                    protectionStart,
+                    upfrontDate,
+                    claim,
+                    lastPeriodDayCounter,
+                    rebatesAccrual,
+                    tradeDate,
+                    cashSettlementDays);
+            }
+    }
 
     Protection::Side side() const;
     Real notional() const;
     Rate runningSpread() const;
-    boost::optional<Rate> upfront() const;
-    /* %extend {
+    // boost::optional<Rate> upfront() const;
+    %extend {
         Real upfront() const {
-            boost::optional<Rate> result =
-                self->upfront();
+            boost::optional<Rate> result = self->upfront();
             if (result)
                 return *result;
             else
-                return Null<double>();
+                return Null<Rate>();
         }
-    } */
+    }
     bool settlesAccrual() const;
     bool paysAtDefaultTime() const;
     const Leg& coupons() const;
@@ -171,6 +206,28 @@ class ForwardRateAgreement : public Instrument {
 
 Date cdsMaturity(
     const Date& tradeDate, const Period& tenor, DateGeneration::Rule rule);
+
+class MakeCreditDefaultSwap {
+  public:
+    MakeCreditDefaultSwap(const Period& tenor, Real couponRate);
+    MakeCreditDefaultSwap(const Date& termDate, Real couponRate);
+
+    MakeCreditDefaultSwap& withUpfrontRate(Real);
+    MakeCreditDefaultSwap& withSide(Protection::Side);
+    MakeCreditDefaultSwap& withNominal(Real);
+    MakeCreditDefaultSwap& withCouponTenor(Period);
+    MakeCreditDefaultSwap& withDayCounter(DayCounter&);
+    MakeCreditDefaultSwap& withLastPeriodDayCounter(DayCounter&);
+    MakeCreditDefaultSwap& withDateGenerationRule(DateGeneration::Rule rule);
+    MakeCreditDefaultSwap& withCashSettlementDays(Natural cashSettlementDays);
+    MakeCreditDefaultSwap& withPricingEngine(const ext::shared_ptr<PricingEngine>&);
+
+    %extend {
+        ext::shared_ptr<CreditDefaultSwap> makeCDS() const {
+            return (ext::shared_ptr<CreditDefaultSwap>)(*self);
+        }
+    }
+};
 
 %shared_ptr(Stock)
 class Stock : public Instrument {

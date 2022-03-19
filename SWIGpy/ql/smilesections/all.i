@@ -212,6 +212,13 @@ class SabrSmileSection : public SmileSection {
     Real rho() const;
 };
 
+%inline %{
+    ext::shared_ptr<SabrSmileSection> as_sabr_smile_section(
+        const ext::shared_ptr<SmileSection>& cf) {
+        return ext::dynamic_pointer_cast<SabrSmileSection>(cf);
+    }
+%}
+
 %shared_ptr(SabrInterpolatedSmileSection)
 class SabrInterpolatedSmileSection : public SmileSection, public LazyObject {
   public:

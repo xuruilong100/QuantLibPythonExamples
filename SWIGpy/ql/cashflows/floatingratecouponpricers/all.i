@@ -1,6 +1,24 @@
 #ifndef ql_cashflows_floatingratecouponpricers_all_i
 #define ql_cashflows_floatingratecouponpricers_all_i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
@@ -163,11 +181,10 @@ class BlackIborCouponPricer : public IborCouponPricer {
     enum TimingAdjustment {
         Black76, BivariateLognormal };
     BlackIborCouponPricer(
-        const Handle<OptionletVolatilityStructure>& v =
-        Handle<OptionletVolatilityStructure>(),
+        const Handle<OptionletVolatilityStructure>& v = Handle<OptionletVolatilityStructure>(),
         const TimingAdjustment timingAdjustment = Black76,
-        const Handle<Quote> correlation =
-        Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(1.0))));
+        Handle<Quote> correlation = Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(1.0))),
+        boost::optional<bool> useIndexedCoupon = boost::none);
 };
 
 %shared_ptr(CompoundingRatePricer)

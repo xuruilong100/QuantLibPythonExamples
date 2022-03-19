@@ -11,6 +11,8 @@ using QuantLib::AnalyticDividendEuropeanEngine;
 using QuantLib::FdOrnsteinUhlenbeckVanillaEngine;
 using QuantLib::FdBlackScholesShoutEngine;
 using QuantLib::FdHestonHullWhiteVanillaEngine;
+using QuantLib::FdCIRVanillaEngine;
+using QuantLib::MakeFdCIRVanillaEngine;
 %}
 
 %shared_ptr(AnalyticDividendEuropeanEngine)
@@ -61,6 +63,45 @@ class FdHestonHullWhiteVanillaEngine : public PricingEngine {
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
 
     void enableMultipleStrikesCaching(const std::vector<Real>& strikes);
+};
+
+%shared_ptr(FdCIRVanillaEngine)
+class FdCIRVanillaEngine : public PricingEngine {
+  public:
+    explicit FdCIRVanillaEngine(
+        ext::shared_ptr<CoxIngersollRossProcess> cirProcess,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> bsProcess,
+        Size tGrid,
+        Size xGrid,
+        Size vGrid,
+        Size dampingSteps,
+        Real rho,
+        const FdmSchemeDesc& schemeDesc,
+        ext::shared_ptr<FdmQuantoHelper> quantoHelper);
+
+    FdmSolverDesc getSolverDesc(Real equityScaleFactor) const;
+};
+
+class MakeFdCIRVanillaEngine {
+  public:
+    explicit MakeFdCIRVanillaEngine(
+        ext::shared_ptr<CoxIngersollRossProcess> cirProcess,
+        ext::shared_ptr<GeneralizedBlackScholesProcess> bsProcess,
+        Real rho);
+
+    MakeFdCIRVanillaEngine& withQuantoHelper(
+        const ext::shared_ptr<FdmQuantoHelper>& quantoHelper);
+    MakeFdCIRVanillaEngine& withTGrid(Size tGrid);
+    MakeFdCIRVanillaEngine& withXGrid(Size xGrid);
+    MakeFdCIRVanillaEngine& withRGrid(Size rGrid);
+    MakeFdCIRVanillaEngine& withDampingSteps(Size dampingSteps);
+    MakeFdCIRVanillaEngine& withFdmSchemeDesc(const FdmSchemeDesc& schemeDesc);
+
+    %extend {
+        ext::shared_ptr<PricingEngine> makeEngine() const {
+            return(ext::shared_ptr<PricingEngine>)(*self);
+        }
+    }
 };
 
 #endif

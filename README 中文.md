@@ -12,9 +12,9 @@
 > 相关博客：<https://www.cnblogs.com/xuruilong100/p/13281006.html>
 >
 > 环境：
-> * QuantLib: 1.24
+> * QuantLib: 1.25
 > * swig: 4.0.1
-> * clang: 10.0.0-4ubuntu1
+> * icx, icpx: Intel(R) oneAPI DPC++/C++ Compiler 2022.0.0 (2022.0.0.20211123)
 > * ubuntu: 20.04.2 LTS
 
 ---
@@ -32,7 +32,7 @@ swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp quantlib.i
 2. 编译 `.cpp` 文件：
 
 ```
-CC=clang CXX=clang++ python3 setup.py build
+CC=icx CXX=icpx python3 setup.py build
 ```
 
 3. 安装 Python 包装：
@@ -77,41 +77,41 @@ python3 setup.py install
 * [ ] assetswap
 * [x] autocovariances
 * [x] barrieroption
-* [ ] basismodels
+* [x] basismodels
 * [x] basketoption
 * [x] batesmodel
-* [ ] bermudanswaption
+* [x] bermudanswaption
 * [x] binaryoption
 * [x] blackdeltacalculator
 * [x] blackformula
-* [ ] bonds
+* [x] bonds
 * [x] brownianbridge
 * [x] businessdayconventions
 * [x] calendars
-* [ ] callablebonds
-* [ ] capflooredcoupon
-* [ ] capfloor
-* [ ] cashflows
-* [ ] catbonds
+* [x] callablebonds
+* [x] capflooredcoupon
+* [x] capfloor
+* [x] cashflows
+* [x] catbonds
 * [ ] cdo
-* [ ] cdsoption
+* [x] cdsoption
 * [x] chooseroption
 * [x] cliquetoption
-* [ ] cms
-* [ ] cmsspread
+* [x] cms
+* [x] cmsspread
 * [x] commodityunitofmeasure
 * [ ] compiledboostversion
 * [x] compoundoption
-* [ ] convertiblebonds
+* [x] convertiblebonds
 * [x] covariance
-* [ ] creditdefaultswap
+* [x] creditdefaultswap
 * [x] creditriskplus
 * [x] currency
 * [ ] curvestates
 * [x] dates
 * [x] daycounters
-* [ ] defaultprobabilitycurves
-* [ ] digitalcoupon
+* [x] defaultprobabilitycurves
+* [x] digitalcoupon
 * [x] digitaloption
 * [x] distributions
 * [x] dividendoption
@@ -124,18 +124,18 @@ python3 setup.py install
 * [x] extensibleoptions
 * [x] fastfouriertransform
 * [x] fdcev
-* [ ] fdcir
+* [x] fdcir
 * [x] fdheston
 * [ ] fdmlinearop
 * [x] fdsabr
-* [ ] fittedbonddiscountcurve
+* [x] fittedbonddiscountcurve
 * [x] forwardoption
 * [ ] forwardrateagreement
 * [x] functions
 * [x] garch
 * [x] gaussianquadratures
 * [x] gjrgarchmodel
-* [ ] gsr
+* [x] gsr
 * [x] hestonmodel
 * [x] hestonslvmodel
 * [x] himalayaoption
@@ -171,8 +171,8 @@ python3 setup.py install
 * [x] mclongstaffschwartzengine
 * [x] mersennetwister
 * [x] money
-* [ ] noarbsabr
-* [ ] normalclvmodel
+* [x] noarbsabr
+* [x] normalclvmodel
 * [ ] nthorderderivativeop
 * [ ] nthtodefault
 * [x] numericaldifferentiation
@@ -180,15 +180,15 @@ python3 setup.py install
 * [ ] ode
 * [ ] operators
 * [ ] optimizers
-* [ ] optionletstripper
-* [ ] overnightindexedswap
+* [x] optionletstripper
+* [x] overnightindexedswap
 * [x] pagodaoption
 * [ ] paralleltestrunner
 * [x] partialtimebarrieroption
 * [x] pathgenerator
 * [x] period
-* [ ] piecewiseyieldcurve
-* [ ] piecewisezerospreadedtermstructure
+* [x] piecewiseyieldcurve
+* [x] piecewisezerospreadedtermstructure
 * [x] quantooption
 * [x] quotes
 * [ ] rangeaccrual
@@ -196,20 +196,20 @@ python3 setup.py install
 * [x] riskstats
 * [x] rngtraits
 * [x] rounding
-* [ ] sampledcurve
+* [x] sampledcurve
 * [x] schedule
-* [ ] shortratemodels
+* [x] shortratemodels
 * [ ] sofrfutures
 * [x] solvers
 * [ ] speedlevel
 * [x] spreadoption
-* [ ] squarerootclvmodel
+* [x] squarerootclvmodel
 * [x] stats
 * [ ] swapforwardmappings
-* [ ] swap
-* [ ] swaption
-* [ ] swaptionvolatilitycube
-* [ ] swaptionvolatilitymatrix
+* [x] swap
+* [x] swaption
+* [x] swaptionvolatilitycube
+* [x] swaptionvolatilitymatrix
 * [ ] swaptionvolstructuresutilities
 * [x] swingoption
 * [x] termstructures
@@ -220,10 +220,11 @@ python3 setup.py install
 * [x] transformedgrid
 * [x] twoassetbarrieroption
 * [x] twoassetcorrelationoption
-* [ ] ultimateforwardtermstructure
-* [ ] variancegamma
+* [x] ultimateforwardtermstructure
+* [x] variancegamma
 * [x] varianceoption
 * [x] varianceswaps
-* [ ] volatilitymodels
+* [x] volatilitymodels
 * [ ] vpp
-* [ ] zabr
+* [x] zabr
+* [x] zerocouponswap

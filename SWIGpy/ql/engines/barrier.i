@@ -272,7 +272,7 @@ class VannaVolgaDoubleBarrierEngine : public PricingEngine {
 };
 
 %template(VannaVolgaIKDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<AnalyticDoubleBarrierEngine>;
-%template(VannaVolgaWYDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<SuoWangDoubleBarrierEngine>;
+%template(VannaVolgaSWDoubleBarrierEngine) VannaVolgaDoubleBarrierEngine<SuoWangDoubleBarrierEngine>;
 
 %shared_ptr(AnalyticDoubleBarrierBinaryEngine)
 class AnalyticDoubleBarrierBinaryEngine : public PricingEngine {

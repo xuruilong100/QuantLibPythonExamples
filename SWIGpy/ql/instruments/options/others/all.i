@@ -13,6 +13,7 @@ using QuantLib::FloatFloatSwaption;
 using QuantLib::NonstandardSwaption;
 using QuantLib::Swaption;
 using QuantLib::TwoAssetBarrierOption;
+using QuantLib::MakeSwaption;
 %}
 
 %shared_ptr(CdsOption)
@@ -98,6 +99,31 @@ class Swaption : public Option {
             return self->result<Real>("annuity");
         }
     }
+};
+
+class MakeSwaption {
+  public:
+    MakeSwaption(ext::shared_ptr<SwapIndex> swapIndex,
+                 const Period& optionTenor,
+                 Rate strike = Null<Rate>());
+    MakeSwaption(ext::shared_ptr<SwapIndex> swapIndex,
+                 const Date& fixingDate,
+                 Rate strike = Null<Rate>());
+
+    %extend {
+        ext::shared_ptr<Swaption> makeSwaption() const {
+            return (ext::shared_ptr<Swaption>)(*self);
+        }
+    }
+
+    MakeSwaption& withNominal(Real n);
+    MakeSwaption& withSettlementType(Settlement::Type delivery);
+    MakeSwaption& withSettlementMethod(Settlement::Method settlementMethod);
+    MakeSwaption& withOptionConvention(BusinessDayConvention bdc);
+    MakeSwaption& withExerciseDate(const Date&);
+    MakeSwaption& withUnderlyingType(Swap::Type type);
+    MakeSwaption& withPricingEngine(
+        const ext::shared_ptr<PricingEngine>& engine);
 };
 
 %shared_ptr(NonstandardSwaption)

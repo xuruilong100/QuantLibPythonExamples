@@ -37,6 +37,7 @@ class Path {
 
 %shared_ptr(PathGenerator<GaussianRandomSequenceGenerator>)
 %shared_ptr(PathGenerator<GaussianLowDiscrepancySequenceGenerator>)
+%shared_ptr(PathGenerator<SobolBrownianBridgeRsg>)
 template <class GSG>
 class PathGenerator {
   public:
@@ -60,6 +61,7 @@ class PathGenerator {
 
 %template(GaussianPathGenerator) PathGenerator<GaussianRandomSequenceGenerator>;
 %template(GaussianSobolPathGenerator) PathGenerator<GaussianLowDiscrepancySequenceGenerator>;
+%template(BrownianBridgeSobolPathGenerator) PathGenerator<SobolBrownianBridgeRsg>;
 
 class MultiPath {
     %rename(__len__) pathSize;

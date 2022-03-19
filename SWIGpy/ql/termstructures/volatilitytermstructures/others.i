@@ -154,6 +154,8 @@ class CapFloorTermVolCurve : public CapFloorTermVolatilityStructure {
     const std::vector<Time>& optionTimes() const;
 };
 
+%template(CapFloorTermVolCurveHandle) Handle<CapFloorTermVolCurve>;
+
 %shared_ptr(CapFloorTermVolSurface)
 class CapFloorTermVolSurface : public CapFloorTermVolatilityStructure {
   public:

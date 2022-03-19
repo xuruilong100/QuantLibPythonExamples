@@ -4,6 +4,8 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/instruments/Bond.i
+%include ../ql/termstructures/YieldTermStructure.i
 
 %{
 using QuantLib::BondFunctions;
@@ -95,7 +97,7 @@ struct BondFunctions {
                       Real accuracy = 1.0e-10,
                       Size maxIterations = 100,
                       Rate guess = 0.05,
-                      Bond::Price::Type priceType = Bond::Price::Clean);
+                      BondPrice::Type priceType = BondPrice::Clean);
 
     %extend {
         %define DefineYieldFunctionSolver(SolverType)
@@ -108,7 +110,7 @@ struct BondFunctions {
                                         Date settlementDate = Date(),
                                         Real accuracy = 1.0e-10,
                                         Rate guess = 0.05,
-                                        Bond::Price::Type priceType = Bond::Price::Clean) {
+                                        BondPrice::Type priceType = BondPrice::Clean) {
             return BondFunctions::yield<SolverType>(
                         solver, bond, cleanPrice, dayCounter, compounding,
                         frequency, settlementDate, accuracy, guess);

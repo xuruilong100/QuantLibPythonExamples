@@ -5,6 +5,36 @@
 %include ../ql/common.i
 %include ../ql/alltypes.i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
+%typemap(out) boost::optional<bool> {
+    if ($1 == boost::none) {
+        Py_INCREF(Py_None);
+        $result = Py_None;
+    } else {
+		if ($1 == true)
+        	$result = Py_True;
+		else
+			$result = Py_False;
+    }
+}
+
 %{
 using QuantLib::Settings;
 using QuantLib::SavedSettings;
@@ -23,11 +53,17 @@ class Settings {
         void setEvaluationDate(const Date& d) {
             self->evaluationDate() = d;
         }
-        void includeReferenceDateEvents(bool b) {
+        void setIncludeReferenceDateEvents(bool b) {
             self->includeReferenceDateEvents() = b;
         }
-        void includeTodaysCashFlows(bool b) {
+        bool getIncludeReferenceDateEvents() {
+            return self->includeReferenceDateEvents();
+        }
+		void setIncludeTodaysCashFlows(boost::optional<bool> b) {
             self->includeTodaysCashFlows() = b;
+        }
+        boost::optional<bool> getIncludeTodaysCashFlows() {
+            return self->includeTodaysCashFlows();
         }
         void setEnforcesTodaysHistoricFixings(bool b) {
             self->enforcesTodaysHistoricFixings() = b;
@@ -45,18 +81,18 @@ class Settings {
         evaluationDate = property(
             getEvaluationDate, setEvaluationDate, None)
         includeReferenceDateCashFlows = property(
-            None, includeReferenceDateEvents, None)
+            getIncludeReferenceDateEvents, setIncludeReferenceDateEvents, None)
         includeReferenceDateEvents = property(
-            None, includeReferenceDateEvents, None)
+            getIncludeReferenceDateEvents, setIncludeReferenceDateEvents, None)
         includeTodaysCashFlows = property(
-            None, includeTodaysCashFlows, None)
+            getIncludeTodaysCashFlows, setIncludeTodaysCashFlows, None)
         enforcesTodaysHistoricFixings = property(
             getEnforcesTodaysHistoricFixings, setEnforcesTodaysHistoricFixings, None)
     %}
 };
 
 class SavedSettings {
-    public:
+  public:
     SavedSettings();
 };
 

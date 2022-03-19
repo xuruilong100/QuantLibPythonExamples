@@ -80,7 +80,6 @@ class DividendOptionTest(unittest.TestCase):
                                     error = abs(calculated - expected)
                                     self.assertFalse(error > tolerance)
 
-    @unittest.skip("Doesn't quite work.  Need to deal with date conventions")
     def testEuropeanKnownValue(self):
         TEST_MESSAGE(
             "Testing dividend European option against known value...")
@@ -108,7 +107,7 @@ class DividendOptionTest(unittest.TestCase):
         exDate = today + Period(180, Days)
         exercise = EuropeanExercise(exDate)
 
-        dividendDates = [today + Period(3 * 30, Days), today + Period(5 * 30, Days)]
+        dividendDates = [today + Period(2 * 30, Days), today + Period(5 * 30, Days)]
         dividends = [0.50, 0.50]
 
         payoff = PlainVanillaPayoff(Option.Call, 40.0)

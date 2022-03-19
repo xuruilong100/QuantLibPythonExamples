@@ -1,395 +1,245 @@
 #ifndef ql_cashflows_Leg_i
 #define ql_cashflows_Leg_i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
 %include ../ql/base.i
 
 %{
-Leg _FixedRateLeg(
-    const Schedule& schedule,
-    const DayCounter& dayCount,
-    const std::vector<Real>& nominals,
-    const std::vector<Rate>& couponRates,
-    BusinessDayConvention paymentAdjustment = Following,
-    const DayCounter& firstPeriodDayCount = DayCounter(),
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0) {
-    return QuantLib::FixedRateLeg(schedule)
-        .withNotionals(nominals)
-        .withCouponRates(couponRates, dayCount)
-        .withPaymentAdjustment(paymentAdjustment)
-        .withPaymentCalendar(paymentCalendar.empty() ? schedule.calendar() : paymentCalendar)
-        .withPaymentLag(paymentLag)
-        .withFirstPeriodDayCounter(firstPeriodDayCount)
-        .withExCouponPeriod(exCouponPeriod,
-                            exCouponCalendar,
-                            exCouponConvention,
-                            exCouponEndOfMonth);
-}
+using QuantLib::CmsLeg;
+using QuantLib::CmsSpreadLeg;
+using QuantLib::FixedRateLeg;
+using QuantLib::IborLeg;
+using QuantLib::OvernightLeg;
+using QuantLib::yoyInflationLeg;
+using QuantLib::SubPeriodsLeg;
 %}
 
-%feature("kwargs") _FixedRateLeg;
-%rename(FixedRateLeg) _FixedRateLeg;
-Leg _FixedRateLeg(
-    const Schedule& schedule,
-    const DayCounter& dayCount,
-    const std::vector<Real>& nominals,
-    const std::vector<Rate>& couponRates,
-    BusinessDayConvention paymentAdjustment = Following,
-    const DayCounter& firstPeriodDayCount = DayCounter(),
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0);
+class FixedRateLeg {
+  public:
+    FixedRateLeg(const Schedule& schedule);
+    FixedRateLeg& withNotionals(Real);
+    FixedRateLeg& withNotionals(const std::vector<Real>&);
+    FixedRateLeg& withCouponRates(Rate,
+                                  const DayCounter& paymentDayCounter,
+                                  Compounding comp = Simple,
+                                  Frequency freq = Annual);
+    FixedRateLeg& withCouponRates(const std::vector<Rate>&,
+                                  const DayCounter& paymentDayCounter,
+                                  Compounding comp = Simple,
+                                  Frequency freq = Annual);
+    FixedRateLeg& withCouponRates(const InterestRate&);
+    FixedRateLeg& withCouponRates(const std::vector<InterestRate>&);
+    FixedRateLeg& withPaymentAdjustment(BusinessDayConvention);
+    FixedRateLeg& withFirstPeriodDayCounter(const DayCounter&);
+    FixedRateLeg& withLastPeriodDayCounter(const DayCounter&);
+    FixedRateLeg& withPaymentCalendar(const Calendar&);
+    FixedRateLeg& withPaymentLag(Natural lag);
+    FixedRateLeg& withExCouponPeriod(
+        const Period&,
+        const Calendar&,
+        BusinessDayConvention,
+        bool endOfMonth = false);
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%{
-Leg _IborLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<IborIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false,
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0) {
-    return QuantLib::IborLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withPaymentCalendar(paymentCalendar.empty() ? schedule.calendar() : paymentCalendar)
-        .withPaymentLag(paymentLag)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withCaps(caps)
-        .withFloors(floors)
-        .inArrears(isInArrears)
-        .withExCouponPeriod(
-            exCouponPeriod,
-            exCouponCalendar,
-            exCouponConvention,
-            exCouponEndOfMonth);
-}
-%}
+class IborLeg {
+  public:
+    IborLeg(Schedule schedule, ext::shared_ptr<IborIndex> index);
+    IborLeg& withNotionals(Real notional);
+    IborLeg& withNotionals(const std::vector<Real>& notionals);
+    IborLeg& withPaymentDayCounter(const DayCounter&);
+    IborLeg& withPaymentAdjustment(BusinessDayConvention);
+    IborLeg& withPaymentLag(Natural lag);
+    IborLeg& withPaymentCalendar(const Calendar&);
+    IborLeg& withFixingDays(Natural fixingDays);
+    IborLeg& withFixingDays(const std::vector<Natural>& fixingDays);
+    IborLeg& withGearings(Real gearing);
+    IborLeg& withGearings(const std::vector<Real>& gearings);
+    IborLeg& withSpreads(Spread spread);
+    IborLeg& withSpreads(const std::vector<Spread>& spreads);
+    IborLeg& withCaps(Rate cap);
+    IborLeg& withCaps(const std::vector<Rate>& caps);
+    IborLeg& withFloors(Rate floor);
+    IborLeg& withFloors(const std::vector<Rate>& floors);
+    IborLeg& inArrears(bool flag = true);
+    IborLeg& withZeroPayments(bool flag = true);
+    IborLeg& withExCouponPeriod(
+        const Period&,
+        const Calendar&,
+        BusinessDayConvention,
+        bool endOfMonth = false);
+    IborLeg& withIndexedCoupons(boost::optional<bool> b = true);
+    IborLeg& withAtParCoupons(bool b = true);
 
-%feature("kwargs") _IborLeg;
-%rename(IborLeg) _IborLeg;
-Leg _IborLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<IborIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false,
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0);
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%{
-Leg _OvernightLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<OvernightIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    bool telescopicValueDates = false,
-    RateAveraging::Type averagingMethod = RateAveraging::Compound,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0) {
-    return QuantLib::OvernightLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withPaymentCalendar(paymentCalendar.empty() ? schedule.calendar() : paymentCalendar)
-        .withPaymentLag(paymentLag)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withTelescopicValueDates(telescopicValueDates)
-        .withAveragingMethod(averagingMethod);
-}
-%}
+class OvernightLeg {
+  public:
+    OvernightLeg(const Schedule& schedule, ext::shared_ptr<OvernightIndex> overnightIndex);
+    OvernightLeg& withNotionals(Real notional);
+    OvernightLeg& withNotionals(const std::vector<Real>& notionals);
+    OvernightLeg& withPaymentDayCounter(const DayCounter&);
+    OvernightLeg& withPaymentAdjustment(BusinessDayConvention);
+    OvernightLeg& withPaymentCalendar(const Calendar&);
+    OvernightLeg& withPaymentLag(Natural lag);
+    OvernightLeg& withGearings(Real gearing);
+    OvernightLeg& withGearings(const std::vector<Real>& gearings);
+    OvernightLeg& withSpreads(Spread spread);
+    OvernightLeg& withSpreads(const std::vector<Spread>& spreads);
+    OvernightLeg& withTelescopicValueDates(bool telescopicValueDates);
+    OvernightLeg& withAveragingMethod(RateAveraging::Type averagingMethod);
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%feature("kwargs") _OvernightLeg;
-%rename(OvernightLeg) _OvernightLeg;
-Leg _OvernightLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<OvernightIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    bool telescopicValueDates = false,
-    RateAveraging::Type averagingMethod = RateAveraging::Compound,
-    const Calendar& paymentCalendar = Calendar(),
-    const Natural paymentLag = 0);
+class CmsLeg {
+  public:
+    CmsLeg(Schedule schedule, ext::shared_ptr<SwapIndex> swapIndex);
+    CmsLeg& withNotionals(Real notional);
+    CmsLeg& withNotionals(const std::vector<Real>& notionals);
+    CmsLeg& withPaymentDayCounter(const DayCounter&);
+    CmsLeg& withPaymentAdjustment(BusinessDayConvention);
+    CmsLeg& withFixingDays(Natural fixingDays);
+    CmsLeg& withFixingDays(const std::vector<Natural>& fixingDays);
+    CmsLeg& withGearings(Real gearing);
+    CmsLeg& withGearings(const std::vector<Real>& gearings);
+    CmsLeg& withSpreads(Spread spread);
+    CmsLeg& withSpreads(const std::vector<Spread>& spreads);
+    CmsLeg& withCaps(Rate cap);
+    CmsLeg& withCaps(const std::vector<Rate>& caps);
+    CmsLeg& withFloors(Rate floor);
+    CmsLeg& withFloors(const std::vector<Rate>& floors);
+    CmsLeg& inArrears(bool flag = true);
+    CmsLeg& withZeroPayments(bool flag = true);
+    CmsLeg& withExCouponPeriod(const Period&,
+                               const Calendar&,
+                               BusinessDayConvention,
+                               bool endOfMonth);
 
-%{
-Leg _CmsLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false,
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    const BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false) {
-    return QuantLib::CmsLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withCaps(caps)
-        .withFloors(floors)
-        .withExCouponPeriod(
-            exCouponPeriod, exCouponCalendar,
-            exCouponConvention, exCouponEndOfMonth)
-        .inArrears(isInArrears);
-}
-%}
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%feature("kwargs") _CmsLeg;
-%rename(CmsLeg) _CmsLeg;
-Leg _CmsLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false,
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    const BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false);
+class CmsSpreadLeg {
+  public:
+    CmsSpreadLeg(Schedule schedule, ext::shared_ptr<SwapSpreadIndex> swapSpreadIndex);
+    CmsSpreadLeg& withNotionals(Real notional);
+    CmsSpreadLeg& withNotionals(const std::vector<Real>& notionals);
+    CmsSpreadLeg& withPaymentDayCounter(const DayCounter&);
+    CmsSpreadLeg& withPaymentAdjustment(BusinessDayConvention);
+    CmsSpreadLeg& withFixingDays(Natural fixingDays);
+    CmsSpreadLeg& withFixingDays(const std::vector<Natural>& fixingDays);
+    CmsSpreadLeg& withGearings(Real gearing);
+    CmsSpreadLeg& withGearings(const std::vector<Real>& gearings);
+    CmsSpreadLeg& withSpreads(Spread spread);
+    CmsSpreadLeg& withSpreads(const std::vector<Spread>& spreads);
+    CmsSpreadLeg& withCaps(Rate cap);
+    CmsSpreadLeg& withCaps(const std::vector<Rate>& caps);
+    CmsSpreadLeg& withFloors(Rate floor);
+    CmsSpreadLeg& withFloors(const std::vector<Rate>& floors);
+    CmsSpreadLeg& inArrears(bool flag = true);
+    CmsSpreadLeg& withZeroPayments(bool flag = true);
 
-%{
-Leg _CmsZeroLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    const BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false) {
-    return QuantLib::CmsLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withCaps(caps)
-        .withFloors(floors)
-        .withExCouponPeriod(
-            exCouponPeriod, exCouponCalendar,
-            exCouponConvention, exCouponEndOfMonth)
-        .withZeroPayments();
-}
-%}
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%feature("kwargs") _CmsZeroLeg;
-%rename(CmsZeroLeg) _CmsZeroLeg;
-Leg _CmsZeroLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    const Period& exCouponPeriod = Period(),
-    const Calendar& exCouponCalendar = Calendar(),
-    const BusinessDayConvention exCouponConvention = Unadjusted,
-    bool exCouponEndOfMonth = false);
+class yoyInflationLeg {
+public:
+    yoyInflationLeg(
+        Schedule schedule,
+        Calendar cal,
+        ext::shared_ptr<YoYInflationIndex> index,
+        const Period& observationLag);
+    yoyInflationLeg& withNotionals(Real notional);
+    yoyInflationLeg& withNotionals(const std::vector<Real>& notionals);
+    yoyInflationLeg& withPaymentDayCounter(const DayCounter&);
+    yoyInflationLeg& withPaymentAdjustment(BusinessDayConvention);
+    yoyInflationLeg& withFixingDays(Natural fixingDays);
+    yoyInflationLeg& withFixingDays(const std::vector<Natural>& fixingDays);
+    yoyInflationLeg& withGearings(Real gearing);
+    yoyInflationLeg& withGearings(const std::vector<Real>& gearings);
+    yoyInflationLeg& withSpreads(Spread spread);
+    yoyInflationLeg& withSpreads(const std::vector<Spread>& spreads);
+    yoyInflationLeg& withCaps(Rate cap);
+    yoyInflationLeg& withCaps(const std::vector<Rate>& caps);
+    yoyInflationLeg& withFloors(Rate floor);
+    yoyInflationLeg& withFloors(const std::vector<Rate>& floors);
 
-%{
-Leg _CmsSpreadLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapSpreadIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false) {
-    return QuantLib::CmsSpreadLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withCaps(caps)
-        .withFloors(floors)
-        .inArrears(isInArrears);
-}
-%}
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
-%feature("kwargs") _CmsSpreadLeg;
-%rename(CmsSpreadLeg) _CmsSpreadLeg;
-Leg _CmsSpreadLeg(
-    const std::vector<Real>& nominals,
-    const Schedule& schedule,
-    const ext::shared_ptr<SwapSpreadIndex>& index,
-    const DayCounter& paymentDayCounter = DayCounter(),
-    const BusinessDayConvention paymentConvention = Following,
-    const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>(),
-    bool isInArrears = false);
+class SubPeriodsLeg {
+  public:
+    SubPeriodsLeg(const Schedule &schedule, ext::shared_ptr<IborIndex> index);
+    SubPeriodsLeg& withNotionals(Real notional);
+    SubPeriodsLeg& withNotionals(const std::vector<Real>& notionals);
+    SubPeriodsLeg& withPaymentDayCounter(const DayCounter&);
+    SubPeriodsLeg& withPaymentAdjustment(BusinessDayConvention);
+    SubPeriodsLeg& withPaymentCalendar(const Calendar&);
+    SubPeriodsLeg& withPaymentLag(Natural lag);
+    SubPeriodsLeg& withFixingDays(Natural fixingDays);
+    SubPeriodsLeg& withFixingDays(const std::vector<Natural>& fixingDays);
+    SubPeriodsLeg& withGearings(Real gearing);
+    SubPeriodsLeg& withGearings(const std::vector<Real>& gearings);
+    SubPeriodsLeg& withCouponSpreads(Spread spread);
+    SubPeriodsLeg& withCouponSpreads(const std::vector<Spread>& spreads);
+    SubPeriodsLeg& withRateSpreads(Spread spread);
+    SubPeriodsLeg& withRateSpreads(const std::vector<Spread>& spreads);
+    SubPeriodsLeg& withExCouponPeriod(
+        const Period&,
+        const Calendar&,
+        BusinessDayConvention,
+        bool endOfMonth = false);
+    SubPeriodsLeg& withAveragingMethod(RateAveraging::Type averagingMethod);
 
-%{
-Leg _yoyInflationLeg(
-    const Schedule& schedule,
-    const Calendar& calendar,
-    const ext::shared_ptr<YoYInflationIndex>& index,
-    const Period& observationLag,
-    const std::vector<Real>& notionals,
-    const DayCounter& paymentDayCounter,
-    BusinessDayConvention paymentAdjustment = Following,
-    Natural fixingDays = 0,
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>()) {
-    return QuantLib::yoyInflationLeg(
-        schedule, calendar,
-        index, observationLag)
-        .withNotionals(notionals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentAdjustment)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withSpreads(spreads)
-        .withCaps(caps)
-        .withFloors(floors);
-}
-%}
-
-%feature("kwargs") _yoyInflationLeg;
-%rename(yoyInflationLeg) _yoyInflationLeg;
-Leg _yoyInflationLeg(
-    const Schedule& schedule,
-    const Calendar& calendar,
-    const ext::shared_ptr<YoYInflationIndex>& index,
-    const Period& observationLag,
-    const std::vector<Real>& notionals,
-    const DayCounter& paymentDayCounter,
-    BusinessDayConvention paymentAdjustment = Following,
-    Natural fixingDays = 0,
-    const std::vector<Real>& gearings = std::vector<Real>(),
-    const std::vector<Spread>& spreads = std::vector<Spread>(),
-    const std::vector<Rate>& caps = std::vector<Rate>(),
-    const std::vector<Rate>& floors = std::vector<Rate>());
-
-%{
-Leg _SubPeriodsLeg(const std::vector<Real>& nominals,
-                   const Schedule& schedule,
-                   const ext::shared_ptr<IborIndex>& index,
-                   const DayCounter& paymentDayCounter = DayCounter(),
-                   const BusinessDayConvention paymentConvention = Following,
-                   const Calendar& paymentCalendar = Calendar(),
-                   Natural paymentLag = 0,
-                   const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-                   const std::vector<Real>& gearings = std::vector<Real>(),
-                   const std::vector<Spread>& couponSpreads = std::vector<Spread>(),
-                   const std::vector<Spread>& rateSpreads = std::vector<Spread>(),
-                   const Period& exCouponPeriod = Period(),
-                   const Calendar& exCouponCalendar = Calendar(),
-                   BusinessDayConvention exCouponConvention = Unadjusted,
-                   bool exCouponEndOfMonth = false,
-                   RateAveraging::Type averagingMethod = RateAveraging::Compound) {
-    return QuantLib::SubPeriodsLeg(schedule, index)
-        .withNotionals(nominals)
-        .withPaymentDayCounter(paymentDayCounter)
-        .withPaymentAdjustment(paymentConvention)
-        .withPaymentCalendar(paymentCalendar.empty() ? schedule.calendar() : paymentCalendar)
-        .withPaymentLag(paymentLag)
-        .withFixingDays(fixingDays)
-        .withGearings(gearings)
-        .withCouponSpreads(couponSpreads)
-        .withRateSpreads(rateSpreads)
-        .withExCouponPeriod(exCouponPeriod,
-                            exCouponCalendar,
-                            exCouponConvention,
-                            exCouponEndOfMonth)
-        .withAveragingMethod(averagingMethod);
-}
-%}
-
-%feature("kwargs") _SubPeriodsLeg;
-%rename(SubPeriodsLeg) _SubPeriodsLeg;
-Leg _SubPeriodsLeg(const std::vector<Real>& nominals,
-                   const Schedule& schedule,
-                   const ext::shared_ptr<IborIndex>& index,
-                   const DayCounter& paymentDayCounter = DayCounter(),
-                   const BusinessDayConvention paymentConvention = Following,
-                   const Calendar& paymentCalendar = Calendar(),
-                   Natural paymentLag = 0,
-                   const std::vector<Natural>& fixingDays = std::vector<Natural>(),
-                   const std::vector<Real>& gearings = std::vector<Real>(),
-                   const std::vector<Spread>& couponSpreads = std::vector<Spread>(),
-                   const std::vector<Spread>& rateSpreads = std::vector<Spread>(),
-                   const Period& exCouponPeriod = Period(),
-                   const Calendar& exCouponCalendar = Calendar(),
-                   BusinessDayConvention exCouponConvention = Unadjusted,
-                   bool exCouponEndOfMonth = false,
-                   RateAveraging::Type averagingMethod = RateAveraging::Compound);
+    %extend {
+        Leg makeLeg() const {
+            return (Leg)(*self);
+        }
+    }
+};
 
 #endif

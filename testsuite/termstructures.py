@@ -14,16 +14,9 @@ class Datum(object):
 
 
 class CommonVars(object):
-    # common data
-    # calendar
-    # settlementDays
-    # termStructure
-    # dummyTermStructure
-
-    # cleanup
-    backup = SavedSettings()
 
     def __init__(self):
+        self.backup = SavedSettings()
         self.calendar = TARGET()
         self.settlementDays = 2
         today = self.calendar.adjust(Date.todaysDate())
@@ -72,11 +65,9 @@ class CommonVars(object):
                 index)
 
         self.termStructure = PiecewiseLogLinearDiscount(
-            settlement,
-            instruments, Actual360())
+            settlement, instruments, Actual360(), LogLinear())
         self.dummyTermStructure = PiecewiseLogLinearDiscount(
-            settlement,
-            instruments, Actual360())
+            settlement, instruments, Actual360(), LogLinear())
 
 
 def sub(x, y):

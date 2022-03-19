@@ -28,39 +28,32 @@ using QuantLib::Abcd;
 
 class LinearFlat {
   public:
-    %rename(globalInterpolate) global;
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return LinearFlat::global; }
+        Size requiredPoints() const { return LinearFlat::requiredPoints; }
     }
-    static const bool global = false;
-    static const Size requiredPoints = 1;
 };
 
 class BackwardFlat {
   public:
-    %rename(globalInterpolate) global;
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return BackwardFlat::global; }
+        Size requiredPoints() const { return BackwardFlat::requiredPoints; }
     }
-    static const bool global = false;
-    static const Size requiredPoints = 1;
 };
 
 class ConvexMonotone {
   public:
-    %rename(globalInterpolate) global;
-    static const bool global = true;
-    static const Size requiredPoints = 2;
-    static const Size dataSizeAdjustment = 1;
-
     explicit ConvexMonotone(
         Real quadraticity = 0.3,
         Real monotonicity = 0.7,
@@ -72,12 +65,14 @@ class ConvexMonotone {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return ConvexMonotone::global; }
+        Size requiredPoints() const { return ConvexMonotone::requiredPoints; }
+        Size dataSizeAdjustment() const { return ConvexMonotone::dataSizeAdjustment; }
     }
 };
 
 class Cubic {
   public:
-    %rename(globalInterpolate) global;
     Cubic(CubicInterpolation::DerivativeApprox da = CubicInterpolation::Kruger,
           bool monotonic = false,
           CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
@@ -91,56 +86,52 @@ class Cubic {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return Cubic::global; }
+        Size requiredPoints() const { return Cubic::requiredPoints; }
     }
-    static const bool global = true;
-    static const Size requiredPoints = 2;
 };
 
 class ForwardFlat {
   public:
-    %rename(globalInterpolate) global;
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return ForwardFlat::global; }
+        Size requiredPoints() const { return ForwardFlat::requiredPoints; }
     }
-    static const bool global = false;
-    static const Size requiredPoints = 2;
 };
 
 class Linear {
   public:
-    %rename(globalInterpolate) global;
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return Linear::global; }
+        Size requiredPoints() const { return Linear::requiredPoints; }
     }
-    static const bool global = false;
-    static const Size requiredPoints = 2;
 };
 
 class LogLinear {
   public:
-    %rename(globalInterpolate) global;
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return LogLinear::global; }
+        Size requiredPoints() const { return LogLinear::requiredPoints; }
     }
-    static const bool global = false;
-    static const Size requiredPoints = 2;
 };
 
 class LogCubic {
   public:
-    %rename(globalInterpolate) global;
     LogCubic(
         CubicInterpolation::DerivativeApprox da,
         bool monotonic = true,
@@ -154,57 +145,53 @@ class LogCubic {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return LogCubic::global; }
+        Size requiredPoints() const { return LogCubic::requiredPoints; }
     }
-    static const bool global = true;
-    static const Size requiredPoints = 2;
 };
 
 class LogMixedLinearCubic {
   public:
-    %rename(globalInterpolate) global;
-    LogMixedLinearCubic(const Size n,
-                        MixedInterpolation::Behavior behavior,
-                        CubicInterpolation::DerivativeApprox da,
-                        bool monotonic = true,
-                        CubicInterpolation::BoundaryCondition leftCondition
-                            = CubicInterpolation::SecondDerivative,
-                        Real leftConditionValue = 0.0,
-                        CubicInterpolation::BoundaryCondition rightCondition
-                            = CubicInterpolation::SecondDerivative,
-                        Real rightConditionValue = 0.0);
+    LogMixedLinearCubic(
+        const Size n,
+        MixedInterpolation::Behavior behavior,
+        CubicInterpolation::DerivativeApprox da,
+        bool monotonic = true,
+        CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
+        Real leftConditionValue = 0.0,
+        CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
+        Real rightConditionValue = 0.0);
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return LogMixedLinearCubic::global; }
+        Size requiredPoints() const { return LogMixedLinearCubic::requiredPoints; }
     }
-    static const bool global = true;
-    static const Size requiredPoints = 3;
 };
 
 class MixedLinearCubic {
   public:
-    %rename(globalInterpolate) global;
-    MixedLinearCubic(Size n,
-                     MixedInterpolation::Behavior behavior,
-                     CubicInterpolation::DerivativeApprox da,
-                     bool monotonic = true,
-                     CubicInterpolation::BoundaryCondition leftCondition
-                         = CubicInterpolation::SecondDerivative,
-                     Real leftConditionValue = 0.0,
-                     CubicInterpolation::BoundaryCondition rightCondition
-                         = CubicInterpolation::SecondDerivative,
-                     Real rightConditionValue = 0.0);
+    MixedLinearCubic(
+        Size n,
+        MixedInterpolation::Behavior behavior,
+        CubicInterpolation::DerivativeApprox da,
+        bool monotonic = true,
+        CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
+        Real leftConditionValue = 0.0,
+        CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
+        Real rightConditionValue = 0.0);
     %extend {
         Interpolation interpolate(
             const Array& x, const Array& y) const {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return MixedLinearCubic::global; }
+        Size requiredPoints() const { return MixedLinearCubic::requiredPoints; }
     }
-    static const bool global = true;
-    static const Size requiredPoints = 3;
 };
 
 class DefaultLogCubic : public LogCubic {
@@ -224,7 +211,6 @@ class KrugerLog : public LogCubic {
 
 class SABR {
   public:
-    %rename(globalInterpolate) global;
     SABR(Time t,
          Real forward,
          Real alpha,
@@ -249,13 +235,12 @@ class SABR {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return SABR::global; }
     }
-    static const bool global = true;
 };
 
 class Abcd {
   public:
-    %rename(globalInterpolate) global;
     Abcd(Real a,
          Real b,
          Real c,
@@ -273,8 +258,8 @@ class Abcd {
                 return self->interpolate(
                     x.begin(), x.end(), y.begin());
         }
+        bool isGlobal() const { return Abcd::global; }
     }
-    static const bool global = true;
 };
 
 %{

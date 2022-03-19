@@ -31,13 +31,13 @@ class FdSimpleExtOUJumpSwingEngine : public PricingEngine {
             Size tGrid = 50,
             Size xGrid = 200,
             Size yGrid = 50,
-            const std::vector<std::pair<Time,Real>>& shape = std::vector<std::pair<Time,Real>>(),
+            const std::vector<std::pair<Time, Real>>& shape = std::vector<std::pair<Time, Real>>(),
             const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer()) {
                 typedef std::vector<std::pair<Time, Real>> Shape;
                 ext::shared_ptr<Shape> shape_;
                 if (!shape.empty())
                     shape_.reset(new Shape(shape));
-            return new FdSimpleExtOUJumpSwingEngine(
+                return new FdSimpleExtOUJumpSwingEngine(
                     p, rTS, tGrid, xGrid, yGrid, shape_, schemeDesc);
         }
     }

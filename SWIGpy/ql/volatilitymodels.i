@@ -16,6 +16,7 @@ using QuantLib::GarmanKlassSigma3;
 using QuantLib::GarmanKlassSigma4;
 using QuantLib::GarmanKlassSigma5;
 using QuantLib::GarmanKlassSigma6;
+using QuantLib::SimpleLocalEstimator;
 %}
 
 class VolatilityCompositor {
@@ -131,6 +132,12 @@ class GarmanKlassSigma6 {
   public:
     GarmanKlassSigma6(Real yearFraction, Real marketOpenFraction);
     TimeSeries<Volatility> calculate(const TimeSeries<IntervalPrice>&);
+};
+
+class SimpleLocalEstimator {
+  public:
+    SimpleLocalEstimator(Real y);
+    TimeSeries<Volatility> calculate(const TimeSeries<Real>& quoteSeries);
 };
 
 #endif

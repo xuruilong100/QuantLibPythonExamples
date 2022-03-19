@@ -1,29 +1,46 @@
 #ifndef ql_scheduler_i
 #define ql_scheduler_i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
 %include ../ql/date.i
-
-%define QL_TYPECHECK_BUSINESSDAYCONVENTION       6210    %enddef
-%define QL_TYPECHECK_PERIOD                      5220    %enddef
-%define QL_TYPECHECK_DATEGENERATION       7210    %enddef
-%define QL_TYPECHECK_BOOL                        7220    %enddef
 
 %{
 using QuantLib::Schedule;
 using QuantLib::MakeSchedule;
 %}
 
-%typemap(in) boost::optional<BusinessDayConvention> %{
+%define QL_TYPECHECK_BUSINESSDAYCONVENTION       6210    %enddef
+%define QL_TYPECHECK_PERIOD                      5220    %enddef
+%define QL_TYPECHECK_DATEGENERATION              7210    %enddef
+
+%typemap(in) boost::optional<BusinessDayConvention> {
 	if($input == Py_None)
 		$1 = boost::none;
     else if (PyInt_Check($input))
 		$1 = BusinessDayConvention(PyInt_AsLong($input));
 	else
 		$1 = BusinessDayConvention(PyLong_AsLong($input));
-%}
+}
 
 %typecheck (QL_TYPECHECK_BUSINESSDAYCONVENTION) boost::optional<BusinessDayConvention> {
     if (PyInt_Check($input) || PyLong_Check($input) || Py_None == $input)
@@ -32,7 +49,7 @@ using QuantLib::MakeSchedule;
     	$1 = 0;
 }
 
-%typemap(in) boost::optional<Period> %{
+%typemap(in) boost::optional<Period> {
     if($input == Py_None)
         $1 = boost::none;
     else
@@ -42,7 +59,7 @@ using QuantLib::MakeSchedule;
             SWIG_exception_fail(SWIG_TypeError, "in method '$symname', expecting type Period");
         $1 = (boost::optional<Period>) *temp;
     }
-%}
+}
 
 %typecheck (QL_TYPECHECK_PERIOD) boost::optional<Period> {
     if($input == Py_None)
@@ -54,36 +71,20 @@ using QuantLib::MakeSchedule;
     }
 }
 
-%typemap(in) boost::optional<DateGeneration::Rule> %{
+%typemap(in) boost::optional<DateGeneration::Rule> {
     if($input == Py_None)
         $1 = boost::none;
     else if (PyInt_Check($input))
         $1 = (DateGeneration::Rule) PyInt_AsLong($input);
     else
         $1 = (DateGeneration::Rule) PyLong_AsLong($input);
-%}
+}
 
 %typecheck (QL_TYPECHECK_DATEGENERATION) boost::optional<DateGeneration::Rule> {
     if (PyInt_Check($input) || PyLong_Check($input) || Py_None == $input)
         $1 = 1;
     else
         $1 = 0;
-}
-
-%typemap(in) boost::optional<bool> %{
-	if($input == Py_None)
-		$1 = boost::none;
-	else if ($input == Py_True)
-		$1 = true;
-	else
-		$1 = false;
-%}
-
-%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
-    if (PyBool_Check($input) || Py_None == $input)
-    	$1 = 1;
-    else
-    	$1 = 0;
 }
 
 class Schedule {

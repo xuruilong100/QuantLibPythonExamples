@@ -1501,10 +1501,18 @@ class CalendarTest(unittest.TestCase):
         expectedWorkingWeekEnds.push_back(Date(18, September, 2021))
         expectedWorkingWeekEnds.push_back(Date(26, September, 2021))
         expectedWorkingWeekEnds.push_back(Date(9, October, 2021))
+        # China Inter Bank working weekends list in the year 2022
+        expectedWorkingWeekEnds.push_back(Date(29, Jan, 2022))
+        expectedWorkingWeekEnds.push_back(Date(30, Jan, 2022))
+        expectedWorkingWeekEnds.push_back(Date(2, April, 2022))
+        expectedWorkingWeekEnds.push_back(Date(24, April, 2022))
+        expectedWorkingWeekEnds.push_back(Date(7, May, 2022))
+        expectedWorkingWeekEnds.push_back(Date(8, October, 2022))
+        expectedWorkingWeekEnds.push_back(Date(9, October, 2022))
 
         c = China(China.IB)
         start = Date(1, Jan, 2014)
-        end = Date(31, Dec, 2021)
+        end = Date(31, Dec, 2022)
 
         k = 0
 
@@ -1592,7 +1600,7 @@ class CalendarTest(unittest.TestCase):
         cvh = JointCalendar(calendar_vect, JoinHolidays)
 
         # test one year, starting today
-        firstDate = Date(16, Sep, 2015) # Date.todaysDate()
+        firstDate = Date(16, Sep, 2015)  # Date.todaysDate()
         endDate = firstDate + Period(1, Years)
 
         d = firstDate
@@ -1819,6 +1827,10 @@ class CalendarTest(unittest.TestCase):
         germany = Germany()
         firstDate = Settings.instance().evaluationDate
         endDate = firstDate + Period(1, Years)
+
+        # Test that same day holidayList and businessDayList does not throw an error
+        germany.holidayList(firstDate, firstDate, true)
+        germany.businessDayList(firstDate, firstDate)
 
         holidays = germany.holidayList(firstDate, endDate, true)
         businessDays = germany.businessDayList(firstDate, endDate)

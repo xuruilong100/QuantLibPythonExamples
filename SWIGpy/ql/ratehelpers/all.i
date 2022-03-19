@@ -7,6 +7,7 @@
 %include ../ql/base.i
 
 %{
+using QuantLib::BMASwapRateHelper;
 using QuantLib::DepositRateHelper;
 using QuantLib::FraRateHelper;
 using QuantLib::FuturesRateHelper;
@@ -18,8 +19,24 @@ using QuantLib::DatedOISRateHelper;
 using QuantLib::FxSwapRateHelper;
 using QuantLib::OvernightIndexFutureRateHelper;
 using QuantLib::SofrFutureRateHelper;
-/* using QuantLib::CrossCurrencyBasisSwapRateHelper; */
+using QuantLib::ConstNotionalCrossCurrencyBasisSwapRateHelper;
+using QuantLib::MtMCrossCurrencyBasisSwapRateHelper;
 %}
+
+%shared_ptr(BMASwapRateHelper)
+class BMASwapRateHelper : public BootstrapHelper<YieldTermStructure> {
+  public:
+    BMASwapRateHelper(
+        const Handle<Quote>& liborFraction,
+        const Period& tenor,
+        Natural settlementDays,
+        Calendar calendar,
+        const Period& bmaPeriod,
+        BusinessDayConvention bmaConvention,
+        DayCounter bmaDayCount,
+        ext::shared_ptr<BMAIndex> bmaIndex,
+        ext::shared_ptr<IborIndex> index);
+};
 
 %shared_ptr(DepositRateHelper)
 class DepositRateHelper : public BootstrapHelper<YieldTermStructure> {
@@ -51,60 +68,88 @@ class DepositRateHelper : public BootstrapHelper<YieldTermStructure> {
 %shared_ptr(FraRateHelper)
 class FraRateHelper : public BootstrapHelper<YieldTermStructure> {
   public:
-    FraRateHelper(
-        const Handle<Quote>& rate,
-        Natural monthsToStart,
-        Natural monthsToEnd,
-        Natural fixingDays,
-        const Calendar& calendar,
-        BusinessDayConvention convention,
-        bool endOfMonth,
-        const DayCounter& dayCounter,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
-    FraRateHelper(
-        Rate rate,
-        Natural monthsToStart,
-        Natural monthsToEnd,
-        Natural fixingDays,
-        const Calendar& calendar,
-        BusinessDayConvention convention,
-        bool endOfMonth,
-        const DayCounter& dayCounter,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
-    FraRateHelper(
-        const Handle<Quote>& rate,
-        Natural monthsToStart,
-        const ext::shared_ptr<IborIndex>& index,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
-    FraRateHelper(
-        Rate rate,
-        Natural monthsToStart,
-        const ext::shared_ptr<IborIndex>& index,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
-    FraRateHelper(
-        const Handle<Quote>& rate,
-        Natural immOffsetStart,
-        Natural immOffsetEnd,
-        const ext::shared_ptr<IborIndex>& iborIndex,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
-    FraRateHelper(
-        Rate rate,
-        Natural immOffsetStart,
-        Natural immOffsetEnd,
-        const ext::shared_ptr<IborIndex>& iborIndex,
-        Pillar::Choice pillar = Pillar::LastRelevantDate,
-        Date customPillarDate = Date(),
-        bool useIndexedCoupon = true);
+    FraRateHelper(const Handle<Quote>& rate,
+                  Natural monthsToStart,
+                  Natural monthsToEnd,
+                  Natural fixingDays,
+                  const Calendar& calendar,
+                  BusinessDayConvention convention,
+                  bool endOfMonth,
+                  const DayCounter& dayCounter,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(Rate rate,
+                  Natural monthsToStart,
+                  Natural monthsToEnd,
+                  Natural fixingDays,
+                  const Calendar& calendar,
+                  BusinessDayConvention convention,
+                  bool endOfMonth,
+                  const DayCounter& dayCounter,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(const Handle<Quote>& rate,
+                  Natural monthsToStart,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(Rate rate,
+                  Natural monthsToStart,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(const Handle<Quote>& rate,
+                  Period periodToStart,
+                  Natural lengthInMonths,
+                  Natural fixingDays,
+                  const Calendar& calendar,
+                  BusinessDayConvention convention,
+                  bool endOfMonth,
+                  const DayCounter& dayCounter,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(Rate rate,
+                  Period periodToStart,
+                  Natural lengthInMonths,
+                  Natural fixingDays,
+                  const Calendar& calendar,
+                  BusinessDayConvention convention,
+                  bool endOfMonth,
+                  const DayCounter& dayCounter,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(const Handle<Quote>& rate,
+                  Period periodToStart,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(Rate rate,
+                  Period periodToStart,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(const Handle<Quote>& rate,
+                  Natural immOffsetStart,
+                  Natural immOffsetEnd,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
+    FraRateHelper(Rate rate,
+                  Natural immOffsetStart,
+                  Natural immOffsetEnd,
+                  const ext::shared_ptr<IborIndex>& iborIndex,
+                  Pillar::Choice pillar = Pillar::LastRelevantDate,
+                  Date customPillarDate = Date(),
+                  bool useIndexedCoupon = true);
 };
 
 %shared_ptr(FuturesRateHelper)
@@ -352,23 +397,6 @@ class SofrFutureRateHelper : public OvernightIndexFutureRateHelper {
         RateAveraging::Type averagingMethod = RateAveraging::Compound);
 };
 
-/* %shared_ptr(CrossCurrencyBasisSwapRateHelper)
-class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
-  public:
-    CrossCurrencyBasisSwapRateHelper(
-        const Handle<Quote>& basis,
-        const Period& tenor,
-        Natural fixingDays,
-        Calendar calendar,
-        BusinessDayConvention convention,
-        bool endOfMonth,
-        ext::shared_ptr<IborIndex> baseCurrencyIndex,
-        ext::shared_ptr<IborIndex> quoteCurrencyIndex,
-        Handle<YieldTermStructure> collateralCurve,
-        bool isFxBaseCurrencyCollateralCurrency,
-        bool isBasisOnFxBaseCurrencyLeg);
-}; */
-
 %template(BondHelperVector) std::vector<ext::shared_ptr<BondHelper>>;
 
 %inline %{
@@ -388,10 +416,41 @@ class CrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructu
         const ext::shared_ptr<RateHelper> helper) {
         return ext::dynamic_pointer_cast<OISRateHelper>(helper);
     }
-    /* const ext::shared_ptr<CrossCurrencyBasisSwapRateHelper> as_crosscurrencybasisswapratehelper(
-            const ext::shared_ptr<RateHelper> helper) {
-        return ext::dynamic_pointer_cast<CrossCurrencyBasisSwapRateHelper>(helper);
-    } */
 %}
+
+%shared_ptr(ConstNotionalCrossCurrencyBasisSwapRateHelper)
+class ConstNotionalCrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
+  public:
+    ConstNotionalCrossCurrencyBasisSwapRateHelper(
+        const Handle<Quote>& basis,
+        const Period& tenor,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const ext::shared_ptr<IborIndex>& baseCurrencyIndex,
+        const ext::shared_ptr<IborIndex>& quoteCurrencyIndex,
+        const Handle<YieldTermStructure>& collateralCurve,
+        bool isFxBaseCurrencyCollateralCurrency,
+        bool isBasisOnFxBaseCurrencyLeg);
+};
+
+%shared_ptr(MtMCrossCurrencyBasisSwapRateHelper)
+class MtMCrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
+  public:
+    MtMCrossCurrencyBasisSwapRateHelper(
+        const Handle<Quote>& basis,
+        const Period& tenor,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const ext::shared_ptr<IborIndex>& baseCurrencyIndex,
+        const ext::shared_ptr<IborIndex>& quoteCurrencyIndex,
+        const Handle<YieldTermStructure>& collateralCurve,
+        bool isFxBaseCurrencyCollateralCurrency,
+        bool isBasisOnFxBaseCurrencyLeg,
+        bool isFxBaseCurrencyLegResettable);
+};
 
 #endif

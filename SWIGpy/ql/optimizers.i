@@ -34,13 +34,13 @@ using QuantLib::GaussianSimulatedAnnealing;
 using QuantLib::MirrorGaussianSimulatedAnnealing;
 using QuantLib::LogNormalSimulatedAnnealing;
 using QuantLib::Problem;
+typedef QuantLib::HestonModel::FellerConstraint FellerConstraint;
 %}
 
 %shared_ptr(Constraint)
 class Constraint {
-  private:
-    Constraint();
   public:
+    Constraint();
     bool empty() const;
     bool test(const Array& p) const;
     Array upperBound(const Array& params);
@@ -78,6 +78,12 @@ class NonhomogeneousBoundaryConstraint : public Constraint {
   public:
     NonhomogeneousBoundaryConstraint(
         const Array& l, const Array& u);
+};
+
+%shared_ptr(FellerConstraint)
+class FellerConstraint : public Constraint {
+  public:
+    FellerConstraint();
 };
 
 %shared_ptr(EndCriteria)
@@ -169,6 +175,10 @@ class GoldsteinLineSearch : public LineSearch {
 class OptimizationMethod {
   private:
     OptimizationMethod();
+  public:
+    EndCriteria::Type minimize(
+        Problem& P,
+        const EndCriteria& endCriteria);
 };
 
 %shared_ptr(LineSearchBasedMethod)
@@ -392,5 +402,31 @@ class LogNormalSimulatedAnnealing : public OptimizationMethod {
         }
     };
 %}
+
+class Problem {
+  public:
+    Problem(
+        CostFunction& costFunction,
+        Constraint& constraint,
+        Array initialValue = Array());
+
+    void reset();
+    Real value(const Array& x);
+    Array values(const Array& x);
+    void gradient(Array& grad_f,
+                  const Array& x);
+    Real valueAndGradient(Array& grad_f,
+                          const Array& x);
+    Constraint& constraint() const;
+    CostFunction& costFunction() const;
+    void setCurrentValue(const Array& currentValue);
+    const Array& currentValue() const;
+    void setFunctionValue(Real functionValue);
+    Real functionValue() const;
+    void setGradientNormValue(Real squaredNorm);
+    Real gradientNormValue() const;
+    Integer functionEvaluation() const;
+    Integer gradientEvaluation() const;
+};
 
 #endif

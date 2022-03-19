@@ -6,9 +6,28 @@
 %include ../ql/alltypes.i
 %include ../ql/base.i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %{
 using QuantLib::DiscountingBondEngine;
 using QuantLib::TreeCallableFixedRateBondEngine;
+using QuantLib::TreeCallableZeroCouponBondEngine;
 using QuantLib::BlackCallableFixedRateBondEngine;
 using QuantLib::BinomialConvertibleEngine;
 using QuantLib::RiskyBondEngine;
@@ -19,7 +38,7 @@ class DiscountingBondEngine : public PricingEngine {
   public:
     DiscountingBondEngine(
         Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
-        const boost::optional<bool>& includeSettlementDateFlows = boost::none);
+        boost::optional<bool> includeSettlementDateFlows = boost::none);
     Handle<YieldTermStructure> discountCurve() const;
 };
 
@@ -33,6 +52,20 @@ class TreeCallableFixedRateBondEngine : public PricingEngine {
     TreeCallableFixedRateBondEngine(
         const ext::shared_ptr<ShortRateModel>& model,
         const TimeGrid& grid,
+        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+};
+
+%shared_ptr(TreeCallableZeroCouponBondEngine)
+class TreeCallableZeroCouponBondEngine : public TreeCallableFixedRateBondEngine {
+  public:
+    TreeCallableZeroCouponBondEngine(
+        const ext::shared_ptr<ShortRateModel>& model,
+        const Size timeSteps,
+        const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
+
+    TreeCallableZeroCouponBondEngine(
+        const ext::shared_ptr<ShortRateModel>& model,
+        const TimeGrid& timeGrid,
         const Handle<YieldTermStructure>& termStructure = Handle<YieldTermStructure>());
 };
 

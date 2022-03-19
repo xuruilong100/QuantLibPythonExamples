@@ -72,7 +72,7 @@ class BMAIndex : public InterestRateIndex {
   public:
     explicit BMAIndex(
         const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
-    
+
     bool isValidFixingDate(const Date& fixingDate) const;
     Handle<YieldTermStructure> forwardingTermStructure() const;
     Date maturityDate(const Date& valueDate) const;
@@ -178,6 +178,9 @@ class SwapIndex : public InterestRateIndex {
     ext::shared_ptr<IborIndex> iborIndex() const;
     Handle<YieldTermStructure> forwardingTermStructure() const;
     Handle<YieldTermStructure> discountingTermStructure() const;
+    bool exogenousDiscount() const;
+    ext::shared_ptr<VanillaSwap> underlyingSwap(
+        const Date& fixingDate) const;
     ext::shared_ptr<SwapIndex> clone(
         const Handle<YieldTermStructure>& h) const;
     ext::shared_ptr<SwapIndex> clone(

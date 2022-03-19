@@ -6,6 +6,24 @@
 %include ../ql/alltypes.i
 %include ../ql/base.i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %{
 using QuantLib::MidPointCdsEngine;
 using QuantLib::IntegralCdsEngine;
@@ -20,7 +38,7 @@ class MidPointCdsEngine : public PricingEngine {
         Handle<DefaultProbabilityTermStructure> probability,
         Real recoveryRate,
         Handle<YieldTermStructure> discountCurve,
-        const boost::optional<bool>& includeSettlementDateFlows = boost::none);
+        boost::optional<bool> includeSettlementDateFlows = boost::none);
 };
 
 %shared_ptr(IntegralCdsEngine)
@@ -30,7 +48,7 @@ class IntegralCdsEngine : public PricingEngine {
                       Handle<DefaultProbabilityTermStructure>,
                       Real recoveryRate,
                       Handle<YieldTermStructure> discountCurve,
-                      const boost::optional<bool>& includeSettlementDateFlows = boost::none);
+                      boost::optional<bool> includeSettlementDateFlows = boost::none);
 };
 
 %shared_ptr(IsdaCdsEngine)
@@ -44,7 +62,7 @@ class IsdaCdsEngine : public PricingEngine {
         Handle<DefaultProbabilityTermStructure> probability,
         Real recoveryRate,
         Handle<YieldTermStructure> discountCurve,
-        const boost::optional<bool>& includeSettlementDateFlows=boost::none,
+        boost::optional<bool> includeSettlementDateFlows=boost::none,
         NumericalFix numericalFix=Taylor,
         AccrualBias accrualBias=HalfDayBias,
         ForwardsInCouponPeriod forwardsInCouponPeriod=Piecewise);

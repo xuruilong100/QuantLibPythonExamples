@@ -14,7 +14,7 @@ class SafeLinearFlat {
         const Array& x, const Array& y) const {
             return SafeLinearFlatInterpolation(x, y);
     }
-    static const bool globalInterpolate = false;
+    static const bool global = false;
     static const Size requiredPoints = 1;
 };
 
@@ -24,7 +24,7 @@ class SafeBackwardFlat {
         const Array& x, const Array& y) const {
             return SafeBackwardFlatInterpolation(x, y);
     }
-    static const bool globalInterpolate = false;
+    static const bool global = false;
     static const Size requiredPoints = 1;
 };
 
@@ -33,7 +33,7 @@ class SafeConvexMonotone {
     Real quadraticity_, monotonicity_;
     bool forcePositive_;
   public:
-    static const bool globalInterpolate = true;
+    static const bool global = true;
     static const Size requiredPoints = 2;
     static const Size dataSizeAdjustment = 1;
 
@@ -81,7 +81,7 @@ class SafeCubic {
                 rightType_, rightValue_);
     }
 
-    static const bool globalInterpolate = true;
+    static const bool global = true;
     static const Size requiredPoints = 2;
 };
 
@@ -91,7 +91,7 @@ class SafeForwardFlat {
         const Array& x, const Array& y) const {
             return SafeForwardFlatInterpolation(x, y);
     }
-    static const bool globalInterpolate = false;
+    static const bool global = false;
     static const Size requiredPoints = 2;
 };
 
@@ -101,7 +101,7 @@ class SafeLinear {
         const Array& x, const Array& y) const {
             return SafeLinearInterpolation(x, y);
     }
-    static const bool globalInterpolate = false;
+    static const bool global = false;
     static const Size requiredPoints = 2;
 };
 
@@ -111,7 +111,7 @@ class SafeLogLinear {
         const Array& x, const Array& y) const {
             return SafeLogLinearInterpolation(x, y);
     }
-    static const bool globalInterpolate = false;
+    static const bool global = false;
     static const Size requiredPoints = 2;
 };
 
@@ -141,7 +141,7 @@ class SafeLogCubic {
                 leftType_, leftValue_,
                 rightType_, rightValue_);
     }
-    static const bool globalInterpolate = true;
+    static const bool global = true;
     static const Size requiredPoints = 2;
 };
 
@@ -175,7 +175,7 @@ class SafeLogMixedLinearCubic {
                 leftType_, leftValue_,
                 rightType_, rightValue_);
     }
-    static const bool globalInterpolate = true;
+    static const bool global = true;
     static const Size requiredPoints = 3;
 };
 
@@ -208,7 +208,7 @@ class SafeMixedLinearCubic {
                 leftType_, leftValue_,
                 rightType_, rightValue_);
     }
-    static const bool globalInterpolate = true;
+    static const bool global = true;
     static const Size requiredPoints = 3;
 };
 
@@ -284,7 +284,7 @@ class SafeSABR {
                 useMaxError_, maxGuesses_, shift_);
     }
 
-    static const bool globalInterpolate = true;
+    static const bool global = true;
 };
 
 class SafeAbcd {
@@ -322,7 +322,7 @@ class SafeAbcd {
                 vegaWeighted_,
                 endCriteria_, optMethod_);
     }
-    static const bool globalInterpolate = true;
+    static const bool global = true;
 };
 
 class SafeMonotonicCubic : public SafeCubic {
@@ -352,24 +352,24 @@ class SafeLinearFlat {
   public:
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = false;
-    static const Size requiredPoints = 1;
+    %extend {
+        bool isGlobal() const { return SafeLinearFlat::global; }
+        Size requiredPoints() const { return SafeLinearFlat::requiredPoints; }
+    }
 };
 
 class SafeBackwardFlat {
   public:
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = false;
-    static const Size requiredPoints = 1;
+    %extend {
+        bool isGlobal() const { return SafeBackwardFlat::global; }
+        Size requiredPoints() const { return SafeBackwardFlat::requiredPoints; }
+    }
 };
 
 class SafeConvexMonotone {
   public:
-    static const bool globalInterpolate = true;
-    static const Size requiredPoints = 2;
-    static const Size dataSizeAdjustment = 1;
-
     explicit SafeConvexMonotone(
         Real quadraticity = 0.3,
         Real monotonicity = 0.7,
@@ -377,6 +377,11 @@ class SafeConvexMonotone {
 
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
+    %extend {
+        bool isGlobal() const { return SafeConvexMonotone::global; }
+        Size requiredPoints() const { return SafeConvexMonotone::requiredPoints; }
+        Size dataSizeAdjustment() const { return SafeConvexMonotone::dataSizeAdjustment; }
+    }
 };
 
 class SafeCubic {
@@ -391,33 +396,40 @@ class SafeCubic {
 
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-
-    static const bool globalInterpolate = true;
-    static const Size requiredPoints = 2;
+    %extend {
+        bool isGlobal() const { return SafeCubic::global; }
+        Size requiredPoints() const { return SafeCubic::requiredPoints; }
+    }
 };
 
 class SafeForwardFlat {
   public:
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = false;
-    static const Size requiredPoints = 2;
+    %extend {
+        bool isGlobal() const { return SafeForwardFlat::global; }
+        Size requiredPoints() const { return SafeForwardFlat::requiredPoints; }
+    }
 };
 
 class SafeLinear {
   public:
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = false;
-    static const Size requiredPoints = 2;
+    %extend {
+        bool isGlobal() const { return SafeLinear::global; }
+        Size requiredPoints() const { return SafeLinear::requiredPoints; }
+    }
 };
 
 class SafeLogLinear {
   public:
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = false;
-    static const Size requiredPoints = 2;
+    %extend {
+        bool isGlobal() const { return SafeLogLinear::global; }
+        Size requiredPoints() const { return SafeLogLinear::requiredPoints; }
+    }
 };
 
 class SafeLogCubic {
@@ -432,8 +444,10 @@ class SafeLogCubic {
 
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = true;
-    static const Size requiredPoints = 2;
+    %extend {
+        bool isGlobal() const { return SafeLogCubic::global; }
+        Size requiredPoints() const { return SafeLogCubic::requiredPoints; }
+    }
 };
 
 class SafeLogMixedLinearCubic {
@@ -449,8 +463,10 @@ class SafeLogMixedLinearCubic {
         Real rightConditionValue = 0.0);
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = true;
-    static const Size requiredPoints = 3;
+    %extend {
+        bool isGlobal() const { return SafeLogMixedLinearCubic::global; }
+        Size requiredPoints() const { return SafeLogMixedLinearCubic::requiredPoints; }
+    }
 };
 
 class SafeMixedLinearCubic {
@@ -466,8 +482,10 @@ class SafeMixedLinearCubic {
         Real rightConditionValue = 0.0);
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = true;
-    static const Size requiredPoints = 3;
+    %extend {
+        bool isGlobal() const { return SafeMixedLinearCubic::global; }
+        Size requiredPoints() const { return SafeMixedLinearCubic::requiredPoints; }
+    }
 };
 
 class SafeDefaultLogCubic : public SafeLogCubic {
@@ -508,7 +526,9 @@ class SafeSABR {
 
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = true;
+    %extend {
+        bool isGlobal() const { return SafeSABR::global; }
+    }
 };
 
 class SafeAbcd {
@@ -528,7 +548,9 @@ class SafeAbcd {
 
     SafeInterpolation interpolate(
         const Array& x, const Array& y) const;
-    static const bool globalInterpolate = true;
+    %extend {
+        bool isGlobal() const { return SafeAbcd::global; }
+    }
 };
 
 class SafeMonotonicCubic : public SafeCubic {

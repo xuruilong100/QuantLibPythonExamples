@@ -8,6 +8,24 @@
 %include ../ql/date.i
 %include ../ql/scheduler.i
 
+%define QL_TYPECHECK_BOOL                        7220    %enddef
+
+%typemap(in) boost::optional<bool> {
+	if($input == Py_None)
+		$1 = boost::none;
+	else if ($input == Py_True)
+		$1 = true;
+	else
+		$1 = false;
+}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+    if (PyBool_Check($input) || Py_None == $input)
+    	$1 = 1;
+    else
+    	$1 = 0;
+}
+
 %{
 // This is necessary to avoid compile failures on
 // GCC 4
@@ -133,11 +151,13 @@ using QuantLib::Pillar;
 %}
 
 %inline %{
+    Natural NullNatural() { return Null<Natural>(); }
     int NullSize() { return Null<Size>(); }
     double NullReal() { return Null<Real>(); }
     double NullTime() { return Null<Time>(); }
     Date NullDate() { return Null<Date>(); }
     Array NullArray() { return Null<Array>(); }
+    bool NullBool() { return Null<bool>(); }
 %}
 
 %typemap(in) intOrNull {
@@ -313,6 +333,23 @@ bool close_enough(Real x, Real y, Size n);
     }
 %}
 
+class CostFunction {
+  private:
+	CostFunction();
+  public:
+	Real value(const Array& x) const;
+	Array values(const Array& x) const;
+	void gradient(Array& grad, const Array& x) const;
+	Real valueAndGradient(
+		Array& grad,
+		const Array& x) const;
+	void jacobian(Matrix &jac, const Array &x) const;
+	Array valuesAndJacobian(
+		Matrix &jac,
+		const Array &x) const;
+	Real finiteDifferenceEpsilon() const;
+};
+
 struct LsmBasisSystem {
     enum PolynomType {
         Monomial,
@@ -369,9 +406,7 @@ class UnaryFunction {
         Py_XINCREF(function_);
     }
     UnaryFunction(UnaryFunction&& f) {
-        PyObject* temp = function_;
-        function_ = f.function_;
-        f.function_ = temp;
+        std::swap(function_, f.function_);
     }
     UnaryFunction& operator=(const UnaryFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {
@@ -433,9 +468,7 @@ class BinaryFunction {
         Py_XINCREF(function_);
     }
     BinaryFunction(BinaryFunction&& f) {
-        PyObject* temp = function_;
-        function_ = f.function_;
-        f.function_ = temp;
+        std::swap(function_, f.function_);
     }
     BinaryFunction& operator=(const BinaryFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {
@@ -472,9 +505,7 @@ class PyCostFunction : public CostFunction {
         Py_XINCREF(function_);
     }
     PyCostFunction(PyCostFunction&& f) {
-        PyObject* temp = function_;
-        function_ = f.function_;
-        f.function_ = temp;
+        std::swap(function_, f.function_);
     }
     PyCostFunction& operator=(const PyCostFunction& f) {
         if ((this != &f) && (function_ != f.function_)) {
@@ -520,14 +551,14 @@ enum VolatilityType {
     Normal
 };
 
-%typemap(in) boost::optional<VolatilityType> %{
+%typemap(in) boost::optional<VolatilityType> {
     if($input == Py_None)
         $1 = boost::none;
     else if (PyInt_Check($input))
         $1 = (VolatilityType) PyInt_AsLong($input);
     else
         $1 = (VolatilityType) PyLong_AsLong($input);
-%}
+}
 
 %typecheck (QL_TYPECHECK_VOLATILITYTYPE) boost::optional<VolatilityType> {
     if (PyInt_Check($input) || PyLong_Check($input) || Py_None == $input)
