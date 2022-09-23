@@ -105,24 +105,26 @@ class BMASwap : public Swap {
 %shared_ptr(AssetSwap)
 class AssetSwap : public Swap {
   public:
-    AssetSwap(bool payBondCoupon,
-              const ext::shared_ptr<Bond>& bond,
-              Real bondCleanPrice,
-              const ext::shared_ptr<IborIndex>& iborIndex,
-              Spread spread,
-              const Schedule& floatSchedule = Schedule(),
-              const DayCounter& floatingDayCount = DayCounter(),
-              bool parAssetSwap = true);
-    AssetSwap(bool parAssetSwap,
-              const ext::shared_ptr<Bond>& bond,
-              Real bondCleanPrice,
-              Real nonParRepayment,
-              Real gearing,
-              const ext::shared_ptr<IborIndex>& iborIndex,
-              Spread spread = 0.0,
-              const DayCounter& floatingDayCount = DayCounter(),
-              Date dealMaturity = Date(),
-              bool payBondCoupon = false);
+    AssetSwap(
+        bool payBondCoupon,
+        const ext::shared_ptr<Bond>& bond,
+        Real bondCleanPrice,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Spread spread,
+        const Schedule& floatSchedule = Schedule(),
+        const DayCounter& floatingDayCount = DayCounter(),
+        bool parAssetSwap = true);
+    AssetSwap(
+        bool parAssetSwap,
+        const ext::shared_ptr<Bond>& bond,
+        Real bondCleanPrice,
+        Real nonParRepayment,
+        Real gearing,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Spread spread = 0.0,
+        const DayCounter& floatingDayCount = DayCounter(),
+        Date dealMaturity = Date(),
+        bool payBondCoupon = false);
 
     Spread fairSpread() const;
     Real floatingLegBPS() const;
@@ -371,7 +373,8 @@ class VanillaSwap : public Swap {
 %shared_ptr(NonstandardSwap)
 class NonstandardSwap : public Swap {
   public:
-    NonstandardSwap(const VanillaSwap& fromVanilla);
+    NonstandardSwap(
+        const VanillaSwap& fromVanilla);
     NonstandardSwap(
         VanillaSwap::Type type,
         const std::vector<Real>& fixedNominal,
@@ -465,8 +468,8 @@ class ZeroCouponInflationSwap : public Swap {
     ZeroCouponInflationSwap(
         Type type,
         Real nominal,
-        const Date& startDate, // start date of contract (only)
-        const Date& maturity,  // this is pre-adjustment!
+        const Date& startDate,
+        const Date& maturity,
         Calendar fixCalendar,
         BusinessDayConvention fixConvention,
         DayCounter dayCounter,
@@ -502,25 +505,27 @@ class ZeroCouponInflationSwap : public Swap {
 %shared_ptr(ZeroCouponSwap)
 class ZeroCouponSwap : public Swap {
   public:
-    ZeroCouponSwap(Type type,
-                   Real baseNominal,
-                   const Date& startDate,
-                   const Date& maturityDate,
-                   Real fixedPayment,
-                   ext::shared_ptr<IborIndex> iborIndex,
-                   const Calendar& paymentCalendar,
-                   BusinessDayConvention paymentConvention = Following,
-                   Natural paymentDelay = 0);
-    ZeroCouponSwap(Type type,
-                   Real baseNominal,
-                   const Date& startDate,
-                   const Date& maturityDate,
-                   Rate fixedRate,
-                   const DayCounter& fixedDayCounter,
-                   ext::shared_ptr<IborIndex> iborIndex,
-                   const Calendar& paymentCalendar,
-                   BusinessDayConvention paymentConvention = Following,
-                   Natural paymentDelay = 0);
+    ZeroCouponSwap(
+        Type type,
+        Real baseNominal,
+        const Date& startDate,
+        const Date& maturityDate,
+        Real fixedPayment,
+        ext::shared_ptr<IborIndex> iborIndex,
+        const Calendar& paymentCalendar,
+        BusinessDayConvention paymentConvention = Following,
+        Natural paymentDelay = 0);
+    ZeroCouponSwap(
+        Type type,
+        Real baseNominal,
+        const Date& startDate,
+        const Date& maturityDate,
+        Rate fixedRate,
+        const DayCounter& fixedDayCounter,
+        ext::shared_ptr<IborIndex> iborIndex,
+        const Calendar& paymentCalendar,
+        BusinessDayConvention paymentConvention = Following,
+        Natural paymentDelay = 0);
 
     Type type() const { return type_; }
     Real baseNominal() const { return baseNominal_; }
@@ -617,15 +622,17 @@ class MakeVanillaSwap {
 
 class MakeCms {
   public:
-    MakeCms(const Period& swapTenor,
-            const ext::shared_ptr<SwapIndex>& swapIndex,
-            const ext::shared_ptr<IborIndex>& iborIndex,
-            Spread iborSpread = 0.0,
-            const Period& forwardStart = 0*Days);
-    MakeCms(const Period& swapTenor,
-            const ext::shared_ptr<SwapIndex>& swapIndex,
-            Spread iborSpread = 0.0,
-            const Period& forwardStart = 0*Days);
+    MakeCms(
+        const Period& swapTenor,
+        const ext::shared_ptr<SwapIndex>& swapIndex,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Spread iborSpread = 0.0,
+        const Period& forwardStart = 0*Days);
+    MakeCms(
+        const Period& swapTenor,
+        const ext::shared_ptr<SwapIndex>& swapIndex,
+        Spread iborSpread = 0.0,
+        const Period& forwardStart = 0*Days);
 
     %extend {
         ext::shared_ptr<Swap> makeCms() const {

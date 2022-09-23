@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class ExchangeRateTest(unittest.TestCase):
 
     def testDirect(self):
-        TEST_MESSAGE("Testing direct exchange rates...")
+        TEST_MESSAGE(
+            "Testing direct exchange rates...")
 
         EUR = EURCurrency()
         USD = USDCurrency()
@@ -29,7 +32,8 @@ class ExchangeRateTest(unittest.TestCase):
         self.assertFalse(not close(calculated, expected))
 
     def testDerived(self):
-        TEST_MESSAGE("Testing derived exchange rates...")
+        TEST_MESSAGE(
+            "Testing derived exchange rates...")
 
         EUR = EURCurrency()
         USD = USDCurrency()
@@ -56,7 +60,8 @@ class ExchangeRateTest(unittest.TestCase):
         self.assertFalse(not close(calculated, expected))
 
     def testDirectLookup(self):
-        TEST_MESSAGE("Testing lookup of direct exchange rates...")
+        TEST_MESSAGE(
+            "Testing lookup of direct exchange rates...")
 
         rateManager = ExchangeRateManager.instance()
         rateManager.clear()
@@ -113,7 +118,8 @@ class ExchangeRateTest(unittest.TestCase):
         self.assertFalse(not close(calculated, expected))
 
     def testTriangulatedLookup(self):
-        TEST_MESSAGE("Testing lookup of triangulated exchange rates...")
+        TEST_MESSAGE(
+            "Testing lookup of triangulated exchange rates...")
 
         rateManager = ExchangeRateManager.instance()
         rateManager.clear()
@@ -162,7 +168,8 @@ class ExchangeRateTest(unittest.TestCase):
         self.assertFalse(not close(calculated, expected))
 
     def testSmartLookup(self):
-        TEST_MESSAGE("Testing lookup of derived exchange rates...")
+        TEST_MESSAGE(
+            "Testing lookup of derived exchange rates...")
 
         EUR = EURCurrency()
         USD = USDCurrency()
@@ -208,8 +215,6 @@ class ExchangeRateTest(unittest.TestCase):
 
         MoneySettings.instance().conversionType = Money.NoConversion
 
-        # two-rate chain
-
         usd_sek = rateManager.lookup(USD, SEK, Date(4, August, 2004))
         calculated = usd_sek.exchange(m1)
         expected = Money(m1.value() * usd_chf1.rate() / chf_sek1.rate(), SEK)
@@ -221,8 +226,6 @@ class ExchangeRateTest(unittest.TestCase):
         expected = Money(m5.value() * usd_chf2.rate() / chf_sek2.rate(), USD)
 
         self.assertFalse(not close(calculated, expected))
-
-        # three-rate chain
 
         eur_sek = rateManager.lookup(EUR, SEK, Date(4, August, 2004))
         calculated = eur_sek.exchange(m2)
@@ -240,8 +243,6 @@ class ExchangeRateTest(unittest.TestCase):
 
         self.assertFalse(not close(calculated, expected))
 
-        # four-rate chain
-
         eur_jpy = rateManager.lookup(EUR, JPY, Date(4, August, 2004))
         calculated = eur_jpy.exchange(m2)
         expected = Money(m2.value() * eur_usd1.rate() * usd_chf1.rate() * jpy_sek1.rate() / chf_sek1.rate(), JPY)
@@ -255,8 +256,6 @@ class ExchangeRateTest(unittest.TestCase):
             EUR)
 
         self.assertFalse(not close(calculated, expected))
-
-        # five-rate chain
 
         gbp_jpy = rateManager.lookup(GBP, JPY, Date(4, August, 2004))
         calculated = gbp_jpy.exchange(m3)

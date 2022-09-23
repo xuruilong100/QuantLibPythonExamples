@@ -1,9 +1,12 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class TwoAssetCorrelationOptionTest(unittest.TestCase):
+
     def testAnalyticEngine(self):
         TEST_MESSAGE(
             "Testing analytic engine for two-asset correlation option...")

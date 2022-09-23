@@ -1,21 +1,17 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class GsrTest(unittest.TestCase):
 
     def testGsrProcess(self):
-        TEST_MESSAGE("Testing GSR process...")
+        TEST_MESSAGE(
+            "Testing GSR process...")
 
         refDate = Settings.instance().evaluationDate
-
-        # constant reversion, constant volatility, test conditional expectation and
-        # variance against
-        # existing HullWhiteForwardProcess
-        # technically we test two representations of the same constant reversion
-        # and volatility structure,
-        # namely with and without step dates
 
         tol = 1E-8
 
@@ -75,8 +71,6 @@ class GsrTest(unittest.TestCase):
             if T > 30.0:
                 break
 
-        # time dependent reversion and volatility (test cases to be added)
-
         times = Array(2)
         vols = Array(3)
         reversions = Array(3)
@@ -93,22 +87,21 @@ class GsrTest(unittest.TestCase):
         p = GsrProcess(times, vols, reversions)
         p.setForwardMeasureTime(10.0)
 
-        # add more test cases here ...
-
     def testGsrModel(self):
-        TEST_MESSAGE("Testing GSR model...")
+        TEST_MESSAGE(
+            "Testing GSR model...")
 
         refDate = Settings.instance().evaluationDate
 
         modelvol = 0.01
         reversion = 0.01
 
-        stepDates = DateVector()  # no step dates
+        stepDates = DateVector()
         vols = DoubleVector(1, modelvol)
         reversions = DoubleVector(1, reversion)
 
-        stepDates1 = DateVector()  # artificial step dates (should yield the
-        # same result)
+        stepDates1 = DateVector()
+
         for i in range(1, 60):
             stepDates1.append(refDate + (i * Period(6, Months)))
         vols1 = DoubleVector(stepDates1.size() + 1, modelvol)
@@ -120,11 +113,6 @@ class GsrTest(unittest.TestCase):
         model2 = Gsr(yts, stepDates1, vols1, reversions1, 50.0)
         hw = HullWhite(yts, reversion, modelvol)
 
-        # test zerobond prices against existing HullWhite model
-        # technically we test two representations of the same constant reversion
-        # and volatility structure,
-        # namely with and without step dates
-
         tol0 = 1E-8
 
         w = 0.1
@@ -135,7 +123,7 @@ class GsrTest(unittest.TestCase):
                 while True:
                     yw = (xw - model.stateProcess().expectation(0.0, 0.0, w)) / \
                          model.stateProcess().stdDeviation(0.0, 0.0, w)
-                    rw = xw + 0.03  # instantaneous forward is 0.03
+                    rw = xw + 0.03
                     gsrVal = model.zerobond(t, w, yw)
                     gsr2Val = model2.zerobond(t, w, yw)
                     hwVal = hw.discountBond(w, t, rw)
@@ -150,9 +138,6 @@ class GsrTest(unittest.TestCase):
             w += 5.0
             if w > 50.0:
                 break
-
-        # test standard, nonstandard and jamshidian engine against existing Hull
-        # White Jamshidian engine
 
         expiry = TARGET().advance(refDate, Period(5, Years))
         tenor = Period(10, Years)

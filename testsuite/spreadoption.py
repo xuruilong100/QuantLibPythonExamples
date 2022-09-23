@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class Case(object):
@@ -28,15 +30,10 @@ class Case(object):
 
 
 class SpreadOptionTest(unittest.TestCase):
+
     def testKirkEngine(self):
-        TEST_MESSAGE("Testing Kirk approximation for spread options...")
-
-        # The example data below are from "complete guide to option
-        # pricing formulas", Espen Gaarder Haug, p 60
-
-        # Expected values of option theta were calculated using automatic
-        # differentiation of the pricing function. The engine uses closed-form
-        # formula */
+        TEST_MESSAGE(
+            "Testing Kirk approximation for spread options...")
 
         cases = [
             Case(28.0, 20.0, 7.0, 0.05, 0.29, 0.36, 0.42, 90, 2.1670, -3.0431),
@@ -57,35 +54,26 @@ class SpreadOptionTest(unittest.TestCase):
             Case(122.0, 120.0, 3.0, 0.10, 0.20, 0.25, 0.5, 36, 2.9723, -16.8060),
             Case(122.0, 120.0, 3.0, 0.10, 0.20, 0.25, -0.5, 180, 12.1483, -11.3200),
             Case(122.0, 120.0, 3.0, 0.10, 0.20, 0.25, 0.0, 180, 9.8780, -9.3091),
-            Case(122.0, 120.0, 3.0, 0.10, 0.20, 0.25, 0.5, 180, 6.9284, -6.6761)
-        ]
+            Case(122.0, 120.0, 3.0, 0.10, 0.20, 0.25, 0.5, 180, 6.9284, -6.6761)]
 
         for i in cases:
-            # First step: preparing the test values
-            # Useful dates
             dc = Actual360()
-            today = Date.todaysDate()
+            today = knownGoodDefault
             exerciseDate = today + i.length
 
-            # Futures values
             F1 = SimpleQuote(i.F1)
             F2 = SimpleQuote(i.F2)
 
-            # Risk-free interest rate
             riskFreeRate = i.r
             forwardRate = flatRate(today, riskFreeRate, dc)
 
-            # Correlation
             rho = SimpleQuote(i.rho)
 
-            # Volatilities
             vol1 = i.sigma1
             vol2 = i.sigma2
             volTS1 = flatVol(today, vol1, dc)
             volTS2 = flatVol(today, vol2, dc)
 
-            # Black-Scholes Processes
-            # The BlackProcess is the relevant class for futures contracts
             stochProcess1 = BlackProcess(
                 QuoteHandle(F1),
                 YieldTermStructureHandle(forwardRate),
@@ -96,11 +84,9 @@ class SpreadOptionTest(unittest.TestCase):
                 YieldTermStructureHandle(forwardRate),
                 BlackVolTermStructureHandle(volTS2))
 
-            # Creating the pricing engine
             engine = KirkSpreadOptionEngine(
                 stochProcess1, stochProcess2, QuoteHandle(rho))
 
-            # Finally, create the option:
             typeOpt = Option.Call
             strike = i.X
             payoff = PlainVanillaPayoff(typeOpt, strike)
@@ -109,7 +95,6 @@ class SpreadOptionTest(unittest.TestCase):
             option = SpreadOption(payoff, exercise)
             option.setPricingEngine(engine)
 
-            # And test the data
             value = option.NPV()
             theta = option.theta()
             tolerance = 1e-4

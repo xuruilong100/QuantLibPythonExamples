@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 data = [3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0]
 weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
@@ -11,29 +13,28 @@ Statistics = RiskStatistics
 class StatisticsTest(unittest.TestCase):
 
     def testStatistics(self):
-        TEST_MESSAGE("Testing statistics...")
+        TEST_MESSAGE(
+            "Testing statistics...")
         self.check(IncrementalStatistics, "IncrementalStatistics")
         self.check(Statistics, "Statistics")
 
     def testSequenceStatistics(self):
-        TEST_MESSAGE("Testing sequence statistics...")
+        TEST_MESSAGE(
+            "Testing sequence statistics...")
 
         self.checkSequence(SequenceStatisticsInc, "IncrementalStatistics", 5)
         self.checkSequence(SequenceStatistics, "Statistics", 5)
 
     def testConvergenceStatistics(self):
-        TEST_MESSAGE("Testing convergence statistics...")
+        TEST_MESSAGE(
+            "Testing convergence statistics...")
 
         self.checkConvergence(ConvergeStatisticsInc, "IncrementalStatistics")
         self.checkConvergence(ConvergeStatistics, "Statistics")
 
     def testIncrementalStatistics(self):
-        TEST_MESSAGE("Testing incremental statistics...")
-
-        # With QuantLib 1.7 IncrementalStatistics was changed to
-        # a wrapper to the boost accumulator library. This is
-        # a test of the new implementation against results from
-        # the old one.
+        TEST_MESSAGE(
+            "Testing incremental statistics...")
 
         mt = MersenneTwisterUniformRng(42)
 
@@ -58,10 +59,6 @@ class StatisticsTest(unittest.TestCase):
         self.assertFalse(not close_enough(stat.downsideVariance(), 5.0786776146975247e+05))
         self.assertFalse(not close_enough(stat.downsideDeviation(), 7.1264841364431061e+02))
 
-        # This is a test for numerical stability,
-        # where the old implementation fails
-
-        # normal_gen = InverseCumulativeRng < MersenneTwisterUniformRng, InverseCumulativeNormal > (mt)
         normal_gen = InvCumulativeMersenneTwisterGaussianRng(mt)
 
         stat2 = IncrementalStatistics()
@@ -84,19 +81,16 @@ class StatisticsTest(unittest.TestCase):
 
         self.assertFalse(s.samples() != len(data))
 
-        # expected = accumulate(weights, weights + len(weights), Real(0.0))
         expected = 0.0
         for w in weights:
             expected += w
         calculated = s.weightSum()
         self.assertFalse(calculated != expected)
 
-        # expected = *min_element(data, data + len(data))
         expected = min(data)
         calculated = s.min()
         self.assertFalse(calculated != expected)
 
-        # expected = *max_element(data, data + len(data))
         expected = max(data)
         calculated = s.max()
         self.assertFalse(calculated != expected)
@@ -126,7 +120,7 @@ class StatisticsTest(unittest.TestCase):
                       S,
                       name,
                       dimension):
-        # ss = GenericSequenceStatistics < S > (dimension)
+
         ss = S(dimension)
 
         for i in range(len(data)):
@@ -135,19 +129,16 @@ class StatisticsTest(unittest.TestCase):
 
         self.assertFalse(ss.samples() != len(data))
 
-        # expected = accumulate(weights, weights + len(weights), Real(0.0))
         expected = 0.0
         for w in weights:
             expected += w
         self.assertFalse(ss.weightSum() != expected)
 
-        # expected = *min_element(data, data + len(data))
         expected = min(data)
         calculated = ss.min()
         for i in range(dimension):
             self.assertFalse(calculated[i] != expected)
 
-        # expected = *max_element(data, data + len(data))
         expected = max(data)
         calculated = ss.max()
         for i in range(dimension):
@@ -179,8 +170,9 @@ class StatisticsTest(unittest.TestCase):
         for i in range(dimension):
             self.assertFalse(abs(calculated[i] - expected) > tolerance)
 
-    def checkConvergence(self, S, name):
-        # stats = ConvergenceStatistics < S > ()
+    def checkConvergence(self,
+                         S,
+                         name):
         stats = S()
 
         stats.add(1.0)

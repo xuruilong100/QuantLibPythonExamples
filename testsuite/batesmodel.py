@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 def getCalibrationError(options):
@@ -33,26 +35,22 @@ class HestonModelData(object):
         self.q = q
 
 
+hestonModels = [
+    HestonModelData("'t Hout case 1", 0.04, 1.5, 0.04, 0.3, -0.9, 0.025, 0.0),
+    HestonModelData("Ikonen-Toivanen", 0.0625, 5, 0.16, 0.9, 0.1, 0.1, 0.0),
+    HestonModelData("Kahl-Jaeckel", 0.16, 1.0, 0.16, 2.0, -0.8, 0.0, 0.0),
+    HestonModelData("Equity case", 0.07, 2.0, 0.04, 0.55, -0.8, 0.03, 0.035)]
+
+
 class BatesModelTest(unittest.TestCase):
-    _hestonModels = [
-        # ADI finite difference schemes for option pricing in the
-        # Heston model with correlation, K.J. in t'Hout and S. Foulon,
-        HestonModelData("'t Hout case 1", 0.04, 1.5, 0.04, 0.3, -0.9, 0.025, 0.0),
-        # Efficient numerical methods for pricing American options under
-        # stochastic volatility, Samuli Ikonen and Jari Toivanen,
-        HestonModelData("Ikonen-Toivanen", 0.0625, 5, 0.16, 0.9, 0.1, 0.1, 0.0),
-        # Not-so-complex logarithms in the Heston model,
-        # Christian Kahl and Peter Jäckel
-        HestonModelData("Kahl-Jaeckel", 0.16, 1.0, 0.16, 2.0, -0.8, 0.0, 0.0),
-        # self defined test cases
-        HestonModelData("Equity case", 0.07, 2.0, 0.04, 0.55, -0.8, 0.03, 0.035)]
 
     def testAnalyticVsBlack(self):
-        TEST_MESSAGE("Testing analytic Bates engine against Black formula...")
+        TEST_MESSAGE(
+            "Testing analytic Bates engine against Black formula...")
 
         backup = SavedSettings()
 
-        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
+        settlementDate = knownGoodDefault
         Settings.instance().evaluationDate = settlementDate
 
         dayCounter = ActualActual(ActualActual.ISDA)
@@ -131,11 +129,12 @@ class BatesModelTest(unittest.TestCase):
         self.assertFalse(error > tolerance)
 
     def testAnalyticAndMcVsJumpDiffusion(self):
-        TEST_MESSAGE("Testing analytic Bates engine against Merton-76 engine...")
+        TEST_MESSAGE(
+            "Testing analytic Bates engine against Merton-76 engine...")
 
         backup = SavedSettings()
 
-        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
+        settlementDate = knownGoodDefault
         Settings.instance().evaluationDate = settlementDate
 
         dayCounter = ActualActual(ActualActual.ISDA)
@@ -147,7 +146,7 @@ class BatesModelTest(unittest.TestCase):
         s0 = QuoteHandle(SimpleQuote(100))
 
         v0 = 0.0433
-        # FLOATING_POINT_EXCEPTION
+
         vol = SimpleQuote(sqrt(v0))
         volTS = flatVol(settlementDate, vol, dayCounter)
 
@@ -212,7 +211,8 @@ class BatesModelTest(unittest.TestCase):
             self.assertFalse(mcError > 3 * mcTol)
 
     def testAnalyticVsMCPricing(self):
-        TEST_MESSAGE("Testing analytic Bates engine against Monte-Carlo engine...")
+        TEST_MESSAGE(
+            "Testing analytic Bates engine against Monte-Carlo engine...")
 
         backup = SavedSettings()
 
@@ -225,7 +225,7 @@ class BatesModelTest(unittest.TestCase):
         payoff = PlainVanillaPayoff(Option.Put, 100)
         exercise = EuropeanExercise(exerciseDate)
 
-        for hestonModel in self._hestonModels:
+        for hestonModel in hestonModels:
             riskFreeTS = YieldTermStructureHandle(flatRate(hestonModel.r, dayCounter))
             dividendTS = YieldTermStructureHandle(flatRate(hestonModel.q, dayCounter))
             s0 = QuoteHandle(SimpleQuote(100))
@@ -269,10 +269,6 @@ class BatesModelTest(unittest.TestCase):
             self.assertFalse(fdError > fdTolerance)
 
     def testDAXCalibration(self):
-        # this example is taken from A. Sepp
-        # Pricing European-Style Options under Jump Diffusion Processes
-        # with Stochstic Volatility: Applications of Fourier Transform
-        # http://math.ut.ee/~spartak/papers/stochjumpvols.pdf
 
         TEST_MESSAGE(
             "Testing Bates model calibration using DAX volatility data...")
@@ -296,7 +292,6 @@ class BatesModelTest(unittest.TestCase):
             dates.push_back(settlementDate + Period(t[i], Days))
             rates.push_back(r[i])
 
-        # FLOATING_POINT_EXCEPTION
         riskFreeTS = YieldTermStructureHandle(ZeroCurve(dates, rates, dayCounter))
 
         dividendTS = YieldTermStructureHandle(
@@ -348,9 +343,8 @@ class BatesModelTest(unittest.TestCase):
                 vol = QuoteHandle(
                     SimpleQuote(v[s * 8 + m]))
 
-                maturity = Period(int((t[m] + 3.0) / 7.0), Weeks)  # round to weeks
+                maturity = Period(int((t[m] + 3.0) / 7.0), Weeks)
 
-                # this is the calibration helper for the bates models
                 options.push_back(
                     HestonModelHelper(
                         maturity, calendar,
@@ -363,7 +357,6 @@ class BatesModelTest(unittest.TestCase):
         for option in options:
             optionsClone.append(option)
 
-        # check calibration engine
         om = LevenbergMarquardt()
         batesModel.calibrate(
             optionsClone,
@@ -374,7 +367,6 @@ class BatesModelTest(unittest.TestCase):
 
         self.assertFalse(abs(calculated - expected) > 2.5)
 
-        # check pricing of derived engines
         pricingEngines = []
 
         process = BatesProcess(

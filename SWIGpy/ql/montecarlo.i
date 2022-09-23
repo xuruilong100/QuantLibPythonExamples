@@ -16,7 +16,9 @@ using QuantLib::BrownianBridge;
 class Path {
     %rename(__len__) length;
   public:
-    Path(TimeGrid timeGrid, Array values = Array());
+    Path(
+        TimeGrid timeGrid, 
+        Array values = Array());
     bool empty() const;
     Size length() const;
     Real at(Size i) const;
@@ -33,7 +35,6 @@ class Path {
 };
 
 %template(SamplePath) Sample<Path>;
-//%template(PathVector) std::vector<Path>;
 
 %shared_ptr(PathGenerator<GaussianRandomSequenceGenerator>)
 %shared_ptr(PathGenerator<GaussianLowDiscrepancySequenceGenerator>)
@@ -70,7 +71,6 @@ class MultiPath {
     MultiPath(
         Size nAsset,
         const TimeGrid& timeGrid);
-    //MultiPath(std::vector<Path> multiPath);
     Size pathSize() const;
     Size assetNumber() const;
 	const Path& at(Size j) const;

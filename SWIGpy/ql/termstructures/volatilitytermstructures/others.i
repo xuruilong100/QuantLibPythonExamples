@@ -26,6 +26,7 @@ using QuantLib::ConstantCapFloorTermVolatility;
 using QuantLib::CapletVarianceCurve;
 using QuantLib::SpreadedOptionletVolatility;
 using QuantLib::TenorOptionletVTS;
+using QuantLib::AbcdCalibration;
 typedef QuantLib::TenorOptionletVTS::CorrelationStructure TenorOptionletVTSCorrelationStructure;
 typedef QuantLib::TenorOptionletVTS::TwoParameterCorrelation TwoParameterCorrelation;
 %}
@@ -42,7 +43,7 @@ class OptionletVolatilityStructure : public VolatilityTermStructure {
     Volatility volatility(Time, Real strike,
                           bool extrapolate = false) const;
     Real blackVariance(const Period& optionTenor,
-                       Rate strike, bool extrapolate=false) const;
+                       Rate strike, bool extrapolate = false) const;
     Real blackVariance(const Date&, Rate strike,
                        bool extrapolate = false) const ;
     Real blackVariance(Time, Rate strike,
@@ -266,10 +267,10 @@ class ConstantYoYOptionletVolatility : public YoYOptionletVolatilitySurface {
         const Period& observationLag,
         Frequency frequency,
         bool indexIsInterpolated,
-        Rate minStrike=-1.0,
-        Rate maxStrike=100.0,
-        VolatilityType volType=ShiftedLognormal,
-        Real displacement=0.0);
+        Rate minStrike = -1.0,
+        Rate maxStrike = 100.0,
+        VolatilityType volType = ShiftedLognormal,
+        Real displacement = 0.0);
 };
 
 %shared_ptr(InterpolatedYoYOptionletVolatilityCurve<Linear>)
@@ -311,9 +312,9 @@ class KInterpolatedYoYOptionletVolatilitySurface : public YoYOptionletVolatility
         ext::shared_ptr<YoYInflationCapFloorEngine> pricer,
         ext::shared_ptr<YoYOptionletStripper> yoyOptionletStripper,
         Real slope,
-        const Interpolator1D& interpolator=Interpolator1D(),
-        VolatilityType volType=ShiftedLognormal,
-        Real displacement=0.0);
+        const Interpolator1D& interpolator = Interpolator1D(),
+        VolatilityType volType = ShiftedLognormal,
+        Real displacement = 0.0);
 
     std::pair<std::vector<Rate>, std::vector<Volatility>> Dslice(
         const Date& d) const;
@@ -446,6 +447,39 @@ class TenorOptionletVTS : public OptionletVolatilityStructure {
         ext::shared_ptr<IborIndex> baseIndex,
         ext::shared_ptr<IborIndex> targIndex,
         ext::shared_ptr<TenorOptionletVTSCorrelationStructure> correlation);
+};
+
+class AbcdCalibration {
+  public:
+    AbcdCalibration();
+    AbcdCalibration(
+        const std::vector<Real>& t,
+        const std::vector<Real>& blackVols,
+        Real aGuess = -0.06,
+        Real bGuess = 0.17,
+        Real cGuess = 0.54,
+        Real dGuess = 0.17,
+        bool aIsFixed = false,
+        bool bIsFixed = false,
+        bool cIsFixed = false,
+        bool dIsFixed = false,
+        bool vegaWeighted = false,
+        ext::shared_ptr<EndCriteria> endCriteria = ext::shared_ptr<EndCriteria>(),
+        ext::shared_ptr<OptimizationMethod> method = ext::shared_ptr<OptimizationMethod>());
+    
+    std::vector<Real> k(
+        const std::vector<Real>& t,
+        const std::vector<Real>& blackVols) const;
+    void compute();    
+    Real value(Real x) const;
+    Real error() const;
+    Real maxError() const;
+    Array errors() const;
+    EndCriteria::Type endCriteria() const;
+    Real a() const;
+    Real b() const;
+    Real c() const;
+    Real d() const;    
 };
 
 #endif

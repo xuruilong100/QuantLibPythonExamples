@@ -1,11 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class PagodaOptionTest(unittest.TestCase):
+
     def testCached(self):
-        TEST_MESSAGE("Testing pagoda option against cached values...")
+        TEST_MESSAGE(
+            "Testing pagoda option against cached values...")
 
         today = Settings.instance().evaluationDate
 

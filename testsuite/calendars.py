@@ -1,16 +1,18 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CalendarTest(unittest.TestCase):
 
     def testRussia(self):
-        TEST_MESSAGE("Testing Russia holiday list...")
+        TEST_MESSAGE(
+            "Testing Russia holiday list...")
 
         expectedHol = DateVector()
 
-        # exhaustive holiday list for the year 2012
         expectedHol.push_back(Date(1, January, 2012))
         expectedHol.push_back(Date(2, January, 2012))
         expectedHol.push_back(Date(7, January, 2012))
@@ -123,7 +125,6 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(30, December, 2012))
         expectedHol.push_back(Date(31, December, 2012))
 
-        # exhaustive holiday list for the year 2013
         expectedHol.push_back(Date(1, January, 2013))
         expectedHol.push_back(Date(2, January, 2013))
         expectedHol.push_back(Date(3, January, 2013))
@@ -240,7 +241,6 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(29, December, 2013))
         expectedHol.push_back(Date(31, December, 2013))
 
-        # exhaustive holiday list for the year 2014
         expectedHol.push_back(Date(1, January, 2014))
         expectedHol.push_back(Date(2, January, 2014))
         expectedHol.push_back(Date(3, January, 2014))
@@ -356,7 +356,6 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(28, December, 2014))
         expectedHol.push_back(Date(31, December, 2014))
 
-        # exhaustive holiday list for the year 2015
         expectedHol.push_back(Date(1, January, 2015))
         expectedHol.push_back(Date(2, January, 2015))
         expectedHol.push_back(Date(3, January, 2015))
@@ -472,7 +471,6 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(27, December, 2015))
         expectedHol.push_back(Date(31, December, 2015))
 
-        # exhaustive holiday list for the year 2016
         expectedHol.push_back(Date(1, January, 2016))
         expectedHol.push_back(Date(2, January, 2016))
         expectedHol.push_back(Date(3, January, 2016))
@@ -593,32 +591,30 @@ class CalendarTest(unittest.TestCase):
 
         hol = c.holidayList(
             Date(1, January, 2012),
-            Date(31, December, 2016),  # only dates for which calendars are available
-            true)  # include week-ends since lists are exhaustive
+            Date(31, December, 2016),
+            true)
         for i in range(min(len(hol), len(expectedHol))):
             self.assertFalse(hol[i] != expectedHol[i])
 
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testBrazil(self):
-        TEST_MESSAGE("Testing Brazil holiday list...")
+        TEST_MESSAGE(
+            "Testing Brazil holiday list...")
 
         expectedHol = DateVector()
 
-        # expectedHol.push_back(Date(1,January,2005)) # Saturday
         expectedHol.push_back(Date(7, February, 2005))
         expectedHol.push_back(Date(8, February, 2005))
         expectedHol.push_back(Date(25, March, 2005))
         expectedHol.push_back(Date(21, April, 2005))
-        # expectedHol.push_back(Date(1,May,2005)) # Sunday
+
         expectedHol.push_back(Date(26, May, 2005))
         expectedHol.push_back(Date(7, September, 2005))
         expectedHol.push_back(Date(12, October, 2005))
         expectedHol.push_back(Date(2, November, 2005))
         expectedHol.push_back(Date(15, November, 2005))
-        # expectedHol.push_back(Date(25,December,2005)) # Sunday
 
-        # expectedHol.push_back(Date(1,January,2006)) # Sunday
         expectedHol.push_back(Date(27, February, 2006))
         expectedHol.push_back(Date(28, February, 2006))
         expectedHol.push_back(Date(14, April, 2006))
@@ -639,7 +635,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testItalyExchange(self):
-        TEST_MESSAGE("Testing Milan Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing Milan Stock Exchange holiday list...")
 
         expectedHol = DateVector()
 
@@ -675,7 +672,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testUKSettlement(self):
-        TEST_MESSAGE("Testing UK settlement holiday list...")
+        TEST_MESSAGE(
+            "Testing UK settlement holiday list...")
 
         expectedHol = DateVector()
 
@@ -720,7 +718,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testUKExchange(self):
-        TEST_MESSAGE("Testing London Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing London Stock Exchange holiday list...")
 
         expectedHol = DateVector()
 
@@ -765,7 +764,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testUKMetals(self):
-        TEST_MESSAGE("Testing London Metals Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing London Metals Exchange holiday list...")
 
         expectedHol = DateVector()
 
@@ -810,7 +810,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testGermanyFrankfurt(self):
-        TEST_MESSAGE("Testing Frankfurt Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing Frankfurt Stock Exchange holiday list...")
 
         expectedHol = DateVector()
 
@@ -834,7 +835,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testGermanyXetra(self):
-        TEST_MESSAGE("Testing Xetra holiday list...")
+        TEST_MESSAGE(
+            "Testing Xetra holiday list...")
 
         expectedHol = DateVector()
 
@@ -858,7 +860,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testGermanyEurex(self):
-        TEST_MESSAGE("Testing Eurex holiday list...")
+        TEST_MESSAGE(
+            "Testing Eurex holiday list...")
 
         expectedHol = DateVector()
 
@@ -884,7 +887,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testTARGET(self):
-        TEST_MESSAGE("Testing TARGET holiday list...")
+        TEST_MESSAGE(
+            "Testing TARGET holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 1999))
@@ -935,7 +939,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testUSSettlement(self):
-        TEST_MESSAGE("Testing US settlement holiday list...")
+        TEST_MESSAGE(
+            "Testing US settlement holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 2004))
@@ -967,7 +972,6 @@ class CalendarTest(unittest.TestCase):
         for i in range(len(hol)):
             self.assertFalse(hol[i] != expectedHol[i])
 
-        # before Uniform Monday Holiday Act
         expectedHol = DateVector()
         expectedHol.push_back(Date(2, January, 1961))
         expectedHol.push_back(Date(22, February, 1961))
@@ -986,7 +990,8 @@ class CalendarTest(unittest.TestCase):
             self.assertFalse(hol[i] != expectedHol[i])
 
     def testUSGovernmentBondMarket(self):
-        TEST_MESSAGE("Testing US government bond market holiday list...")
+        TEST_MESSAGE(
+            "Testing US government bond market holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 2004))
@@ -994,7 +999,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(16, February, 2004))
         expectedHol.push_back(Date(9, April, 2004))
         expectedHol.push_back(Date(31, May, 2004))
-        expectedHol.push_back(Date(11, June, 2004))  # Reagan's funeral
+        expectedHol.push_back(Date(11, June, 2004))
         expectedHol.push_back(Date(5, July, 2004))
         expectedHol.push_back(Date(6, September, 2004))
         expectedHol.push_back(Date(11, October, 2004))
@@ -1011,7 +1016,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testUSNewYorkStockExchange(self):
-        TEST_MESSAGE("Testing New York Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing New York Stock Exchange holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 2004))
@@ -1051,31 +1057,30 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
         histClose = DateVector()
-        histClose.push_back(Date(30, October, 2012))  # Hurricane Sandy
-        histClose.push_back(Date(29, October, 2012))  # Hurricane Sandy
-        histClose.push_back(Date(11, June, 2004))  # Reagan's funeral
-        histClose.push_back(Date(14, September, 2001))  # September 11, 2001
-        histClose.push_back(Date(13, September, 2001))  # September 11, 2001
-        histClose.push_back(Date(12, September, 2001))  # September 11, 2001
-        histClose.push_back(Date(11, September, 2001))  # September 11, 2001
-        histClose.push_back(Date(27, April, 1994))  # Nixon's funeral.
-        histClose.push_back(Date(27, September, 1985))  # Hurricane Gloria
-        histClose.push_back(Date(14, July, 1977))  # 1977 Blackout
-        histClose.push_back(Date(25, January, 1973))  # Johnson's funeral.
-        histClose.push_back(Date(28, December, 1972))  # Truman's funeral
-        histClose.push_back(Date(21, July, 1969))  # Lunar exploration nat. day
-        histClose.push_back(Date(31, March, 1969))  # Eisenhower's funeral
-        histClose.push_back(Date(10, February, 1969))  # heavy snow
-        histClose.push_back(Date(5, July, 1968))  # Day after Independence Day
-        histClose.push_back(Date(9, April, 1968))  # Mourning for MLK
-        histClose.push_back(Date(24, December, 1965))  # Christmas Eve
-        histClose.push_back(Date(25, November, 1963))  # Kennedy's funeral
-        histClose.push_back(Date(29, May, 1961))  # Day before Decoration Day
-        histClose.push_back(Date(26, December, 1958))  # Day after Christmas
-        histClose.push_back(Date(24, December, 1956))  # Christmas Eve
-        histClose.push_back(Date(24, December, 1954))  # Christmas Eve
-        # June 12-Dec. 31, 1968
-        # Four day week (closed on Wednesdays) - Paperwork Crisis
+        histClose.push_back(Date(30, October, 2012))
+        histClose.push_back(Date(29, October, 2012))
+        histClose.push_back(Date(11, June, 2004))
+        histClose.push_back(Date(14, September, 2001))
+        histClose.push_back(Date(13, September, 2001))
+        histClose.push_back(Date(12, September, 2001))
+        histClose.push_back(Date(11, September, 2001))
+        histClose.push_back(Date(27, April, 1994))
+        histClose.push_back(Date(27, September, 1985))
+        histClose.push_back(Date(14, July, 1977))
+        histClose.push_back(Date(25, January, 1973))
+        histClose.push_back(Date(28, December, 1972))
+        histClose.push_back(Date(21, July, 1969))
+        histClose.push_back(Date(31, March, 1969))
+        histClose.push_back(Date(10, February, 1969))
+        histClose.push_back(Date(5, July, 1968))
+        histClose.push_back(Date(9, April, 1968))
+        histClose.push_back(Date(24, December, 1965))
+        histClose.push_back(Date(25, November, 1963))
+        histClose.push_back(Date(29, May, 1961))
+        histClose.push_back(Date(26, December, 1958))
+        histClose.push_back(Date(24, December, 1956))
+        histClose.push_back(Date(24, December, 1954))
+
         histClose.push_back(Date(12, Jun, 1968))
         histClose.push_back(Date(19, Jun, 1968))
         histClose.push_back(Date(26, Jun, 1968))
@@ -1087,7 +1092,7 @@ class CalendarTest(unittest.TestCase):
         histClose.push_back(Date(4, Dec, 1968))
         histClose.push_back(Date(11, Dec, 1968))
         histClose.push_back(Date(18, Dec, 1968))
-        # Presidential election days
+
         histClose.push_back(Date(4, Nov, 1980))
         histClose.push_back(Date(2, Nov, 1976))
         histClose.push_back(Date(7, Nov, 1972))
@@ -1097,7 +1102,8 @@ class CalendarTest(unittest.TestCase):
             self.assertFalse(not c.isHoliday(histClose[i]))
 
     def testSouthKoreanSettlement(self):
-        TEST_MESSAGE("Testing South-Korean settlement holiday list...")
+        TEST_MESSAGE(
+            "Testing South-Korean settlement holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 2004))
@@ -1106,60 +1112,49 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(23, January, 2004))
         expectedHol.push_back(Date(1, March, 2004))
         expectedHol.push_back(Date(5, April, 2004))
-        expectedHol.push_back(Date(15, April, 2004))  # election day
-        #    expectedHol.push_back(Date(1,May,2004)) # Saturday
+        expectedHol.push_back(Date(15, April, 2004))
+
         expectedHol.push_back(Date(5, May, 2004))
         expectedHol.push_back(Date(26, May, 2004))
-        #    expectedHol.push_back(Date(6,June,2004)) # Sunday
-        #    expectedHol.push_back(Date(17,July,2004)) # Saturday
-        #    expectedHol.push_back(Date(15,August,2004)) # Sunday
+
         expectedHol.push_back(Date(27, September, 2004))
         expectedHol.push_back(Date(28, September, 2004))
         expectedHol.push_back(Date(29, September, 2004))
-        #    expectedHol.push_back(Date(3,October,2004)) # Sunday
-        #    expectedHol.push_back(Date(25,December,2004)) # Saturday
 
-        #    expectedHol.push_back(Date(1,January,2005)) # Saturday
         expectedHol.push_back(Date(8, February, 2005))
         expectedHol.push_back(Date(9, February, 2005))
         expectedHol.push_back(Date(10, February, 2005))
         expectedHol.push_back(Date(1, March, 2005))
         expectedHol.push_back(Date(5, April, 2005))
         expectedHol.push_back(Date(5, May, 2005))
-        #    expectedHol.push_back(Date(15,May,2005)) # Sunday
+
         expectedHol.push_back(Date(6, June, 2005))
-        #    expectedHol.push_back(Date(17,July,2005)) # Sunday
+
         expectedHol.push_back(Date(15, August, 2005))
-        #    expectedHol.push_back(Date(17,September,2005)) # Saturday
-        #    expectedHol.push_back(Date(18,September,2005)) # Sunday
+
         expectedHol.push_back(Date(19, September, 2005))
         expectedHol.push_back(Date(3, October, 2005))
-        #    expectedHol.push_back(Date(25,December,2005)) # Sunday
 
-        #    expectedHol.push_back(Date(1,January,2006)) # Sunday
-        #    expectedHol.push_back(Date(28,January,2006)) # Saturday
-        #    expectedHol.push_back(Date(29,January,2006)) # Sunday
         expectedHol.push_back(Date(30, January, 2006))
         expectedHol.push_back(Date(1, March, 2006))
         expectedHol.push_back(Date(1, May, 2006))
         expectedHol.push_back(Date(5, May, 2006))
-        expectedHol.push_back(Date(31, May, 2006))  # election
+        expectedHol.push_back(Date(31, May, 2006))
         expectedHol.push_back(Date(6, June, 2006))
         expectedHol.push_back(Date(17, July, 2006))
         expectedHol.push_back(Date(15, August, 2006))
         expectedHol.push_back(Date(3, October, 2006))
         expectedHol.push_back(Date(5, October, 2006))
         expectedHol.push_back(Date(6, October, 2006))
-        #    expectedHol.push_back(Date(7,October,2006)) # Saturday
+
         expectedHol.push_back(Date(25, December, 2006))
 
         expectedHol.push_back(Date(1, January, 2007))
-        #    expectedHol.push_back(Date(17,February,2007)) # Saturday
-        #    expectedHol.push_back(Date(18,February,2007)) # Sunday
+
         expectedHol.push_back(Date(19, February, 2007))
         expectedHol.push_back(Date(1, March, 2007))
         expectedHol.push_back(Date(1, May, 2007))
-        #    expectedHol.push_back(Date(5,May,2007)) # Saturday
+
         expectedHol.push_back(Date(24, May, 2007))
         expectedHol.push_back(Date(6, June, 2007))
         expectedHol.push_back(Date(17, July, 2007))
@@ -1168,7 +1163,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(25, September, 2007))
         expectedHol.push_back(Date(26, September, 2007))
         expectedHol.push_back(Date(3, October, 2007))
-        expectedHol.push_back(Date(19, December, 2007))  # election
+        expectedHol.push_back(Date(19, December, 2007))
         expectedHol.push_back(Date(25, December, 2007))
 
         c = SouthKorea(SouthKorea.Settlement)
@@ -1179,7 +1174,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testKoreaStockExchange(self):
-        TEST_MESSAGE("Testing Korea Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing Korea Stock Exchange holiday list...")
 
         expectedHol = DateVector()
         expectedHol.push_back(Date(1, January, 2004))
@@ -1188,60 +1184,53 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(23, January, 2004))
         expectedHol.push_back(Date(1, March, 2004))
         expectedHol.push_back(Date(5, April, 2004))
-        expectedHol.push_back(Date(15, April, 2004))  # election day
-        #    expectedHol.push_back(Date(1,May,2004)) # Saturday
+        expectedHol.push_back(Date(15, April, 2004))
+
         expectedHol.push_back(Date(5, May, 2004))
         expectedHol.push_back(Date(26, May, 2004))
-        #    expectedHol.push_back(Date(6,June,2004)) # Sunday
-        #    expectedHol.push_back(Date(17,July,2004)) # Saturday
-        #    expectedHol.push_back(Date(15,August,2004)) # Sunday
+
         expectedHol.push_back(Date(27, September, 2004))
         expectedHol.push_back(Date(28, September, 2004))
         expectedHol.push_back(Date(29, September, 2004))
-        #    expectedHol.push_back(Date(3,October,2004)) # Sunday
-        #    expectedHol.push_back(Date(25,December,2004)) # Saturday
+
         expectedHol.push_back(Date(31, December, 2004))
-        #    expectedHol.push_back(Date(1,January,2005)) # Saturday
+
         expectedHol.push_back(Date(8, February, 2005))
         expectedHol.push_back(Date(9, February, 2005))
         expectedHol.push_back(Date(10, February, 2005))
         expectedHol.push_back(Date(1, March, 2005))
         expectedHol.push_back(Date(5, April, 2005))
         expectedHol.push_back(Date(5, May, 2005))
-        #    expectedHol.push_back(Date(15,May,2005)) # Sunday
+
         expectedHol.push_back(Date(6, June, 2005))
-        #    expectedHol.push_back(Date(17,July,2005)) # Sunday
+
         expectedHol.push_back(Date(15, August, 2005))
-        #    expectedHol.push_back(Date(17,September,2005)) # Saturday
-        #    expectedHol.push_back(Date(18,September,2005)) # Sunday
+
         expectedHol.push_back(Date(19, September, 2005))
         expectedHol.push_back(Date(3, October, 2005))
-        #    expectedHol.push_back(Date(25,December,2005)) # Sunday
+
         expectedHol.push_back(Date(30, December, 2005))
-        #    expectedHol.push_back(Date(1,January,2006)) # Sunday
-        #    expectedHol.push_back(Date(28,January,2006)) # Saturday
-        #    expectedHol.push_back(Date(29,January,2006)) # Sunday
+
         expectedHol.push_back(Date(30, January, 2006))
         expectedHol.push_back(Date(1, March, 2006))
         expectedHol.push_back(Date(1, May, 2006))
         expectedHol.push_back(Date(5, May, 2006))
-        expectedHol.push_back(Date(31, May, 2006))  # election
+        expectedHol.push_back(Date(31, May, 2006))
         expectedHol.push_back(Date(6, June, 2006))
         expectedHol.push_back(Date(17, July, 2006))
         expectedHol.push_back(Date(15, August, 2006))
         expectedHol.push_back(Date(3, October, 2006))
         expectedHol.push_back(Date(5, October, 2006))
         expectedHol.push_back(Date(6, October, 2006))
-        #    expectedHol.push_back(Date(7,October,2006)) # Saturday
+
         expectedHol.push_back(Date(25, December, 2006))
         expectedHol.push_back(Date(29, December, 2006))
         expectedHol.push_back(Date(1, January, 2007))
-        #    expectedHol.push_back(Date(17,February,2007)) # Saturday
-        #    expectedHol.push_back(Date(18,February,2007)) # Sunday
+
         expectedHol.push_back(Date(19, February, 2007))
         expectedHol.push_back(Date(1, March, 2007))
         expectedHol.push_back(Date(1, May, 2007))
-        #    expectedHol.push_back(Date(5,May,2007)) # Saturday
+
         expectedHol.push_back(Date(24, May, 2007))
         expectedHol.push_back(Date(6, June, 2007))
         expectedHol.push_back(Date(17, July, 2007))
@@ -1250,7 +1239,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(25, September, 2007))
         expectedHol.push_back(Date(26, September, 2007))
         expectedHol.push_back(Date(3, October, 2007))
-        expectedHol.push_back(Date(19, December, 2007))  # election
+        expectedHol.push_back(Date(19, December, 2007))
         expectedHol.push_back(Date(25, December, 2007))
         expectedHol.push_back(Date(31, December, 2007))
 
@@ -1263,11 +1252,11 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testChinaSSE(self):
-        TEST_MESSAGE("Testing China Shanghai Stock Exchange holiday list...")
+        TEST_MESSAGE(
+            "Testing China Shanghai Stock Exchange holiday list...")
 
         expectedHol = DateVector()
 
-        # China Shanghai Securities Exchange holiday list in the year 2014
         expectedHol.push_back(Date(1, Jan, 2014))
         expectedHol.push_back(Date(31, Jan, 2014))
         expectedHol.push_back(Date(3, Feb, 2014))
@@ -1284,7 +1273,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(3, Oct, 2014))
         expectedHol.push_back(Date(6, Oct, 2014))
         expectedHol.push_back(Date(7, Oct, 2014))
-        # China Shanghai Securities Exchange holiday list in the year 2015
+
         expectedHol.push_back(Date(1, Jan, 2015))
         expectedHol.push_back(Date(2, Jan, 2015))
         expectedHol.push_back(Date(18, Feb, 2015))
@@ -1302,7 +1291,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(5, Oct, 2015))
         expectedHol.push_back(Date(6, Oct, 2015))
         expectedHol.push_back(Date(7, Oct, 2015))
-        # China Shanghai Securities Exchange holiday list in the year 2016
+
         expectedHol.push_back(Date(1, Jan, 2016))
         expectedHol.push_back(Date(8, Feb, 2016))
         expectedHol.push_back(Date(9, Feb, 2016))
@@ -1320,7 +1309,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(5, Oct, 2016))
         expectedHol.push_back(Date(6, Oct, 2016))
         expectedHol.push_back(Date(7, Oct, 2016))
-        # China Shanghai Securities Exchange holiday list in the year 2017
+
         expectedHol.push_back(Date(2, Jan, 2017))
         expectedHol.push_back(Date(27, Jan, 2017))
         expectedHol.push_back(Date(30, Jan, 2017))
@@ -1337,7 +1326,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(4, Oct, 2017))
         expectedHol.push_back(Date(5, Oct, 2017))
         expectedHol.push_back(Date(6, Oct, 2017))
-        # China Shanghai Securities Exchange holiday list in the year 2018
+
         expectedHol.push_back(Date(1, Jan, 2018))
         expectedHol.push_back(Date(15, Feb, 2018))
         expectedHol.push_back(Date(16, Feb, 2018))
@@ -1356,7 +1345,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(4, Oct, 2018))
         expectedHol.push_back(Date(5, Oct, 2018))
         expectedHol.push_back(Date(31, December, 2018))
-        # China Shanghai Securities Exchange holiday list in the year 2019
+
         expectedHol.push_back(Date(1, Jan, 2019))
         expectedHol.push_back(Date(4, Feb, 2019))
         expectedHol.push_back(Date(5, Feb, 2019))
@@ -1374,7 +1363,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(3, October, 2019))
         expectedHol.push_back(Date(4, October, 2019))
         expectedHol.push_back(Date(7, October, 2019))
-        # China Shanghai Securities Exchange holiday list in the year 2020
+
         expectedHol.push_back(Date(1, Jan, 2020))
         expectedHol.push_back(Date(24, Jan, 2020))
         expectedHol.push_back(Date(27, Jan, 2020))
@@ -1394,7 +1383,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(6, October, 2020))
         expectedHol.push_back(Date(7, October, 2020))
         expectedHol.push_back(Date(8, October, 2020))
-        # China Shanghai Securities Exchange holiday list in the year 2021
+
         expectedHol.push_back(Date(1, Jan, 2021))
         expectedHol.push_back(Date(11, Feb, 2021))
         expectedHol.push_back(Date(12, Feb, 2021))
@@ -1413,7 +1402,7 @@ class CalendarTest(unittest.TestCase):
         expectedHol.push_back(Date(5, October, 2021))
         expectedHol.push_back(Date(6, October, 2021))
         expectedHol.push_back(Date(7, October, 2021))
-        # China Shanghai Securities Exchange holiday list in the year 2021
+
         expectedHol.push_back(Date(3, Jan, 2022))
         expectedHol.push_back(Date(31, Jan, 2022))
         expectedHol.push_back(Date(1, Feb, 2022))
@@ -1442,36 +1431,36 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(len(hol) != len(expectedHol))
 
     def testChinaIB(self):
-        TEST_MESSAGE("Testing China Inter Bank working weekends list...")
+        TEST_MESSAGE(
+            "Testing China Inter Bank working weekends list...")
 
         expectedWorkingWeekEnds = DateVector()
 
-        # China Inter Bank working weekends list in the year 2014
         expectedWorkingWeekEnds.push_back(Date(26, Jan, 2014))
         expectedWorkingWeekEnds.push_back(Date(8, Feb, 2014))
         expectedWorkingWeekEnds.push_back(Date(4, May, 2014))
         expectedWorkingWeekEnds.push_back(Date(28, Sep, 2014))
         expectedWorkingWeekEnds.push_back(Date(11, Oct, 2014))
-        # China Inter Bank working weekends list in the year 2015
+
         expectedWorkingWeekEnds.push_back(Date(4, Jan, 2015))
         expectedWorkingWeekEnds.push_back(Date(15, Feb, 2015))
         expectedWorkingWeekEnds.push_back(Date(28, Feb, 2015))
         expectedWorkingWeekEnds.push_back(Date(6, Sep, 2015))
         expectedWorkingWeekEnds.push_back(Date(10, Oct, 2015))
-        # China Inter Bank working weekends list in the year 2016
+
         expectedWorkingWeekEnds.push_back(Date(6, Feb, 2016))
         expectedWorkingWeekEnds.push_back(Date(14, Feb, 2016))
         expectedWorkingWeekEnds.push_back(Date(12, Jun, 2016))
         expectedWorkingWeekEnds.push_back(Date(18, Sep, 2016))
         expectedWorkingWeekEnds.push_back(Date(8, Oct, 2016))
         expectedWorkingWeekEnds.push_back(Date(9, Oct, 2016))
-        # China Inter Bank working weekends list in the year 2017
+
         expectedWorkingWeekEnds.push_back(Date(22, Jan, 2017))
         expectedWorkingWeekEnds.push_back(Date(4, Feb, 2017))
         expectedWorkingWeekEnds.push_back(Date(1, April, 2017))
         expectedWorkingWeekEnds.push_back(Date(27, May, 2017))
         expectedWorkingWeekEnds.push_back(Date(30, Sep, 2017))
-        # China Inter Bank working weekends list in the year 2018
+
         expectedWorkingWeekEnds.push_back(Date(11, Feb, 2018))
         expectedWorkingWeekEnds.push_back(Date(24, Feb, 2018))
         expectedWorkingWeekEnds.push_back(Date(8, April, 2018))
@@ -1479,21 +1468,21 @@ class CalendarTest(unittest.TestCase):
         expectedWorkingWeekEnds.push_back(Date(29, Sep, 2018))
         expectedWorkingWeekEnds.push_back(Date(30, Sep, 2018))
         expectedWorkingWeekEnds.push_back(Date(29, December, 2018))
-        # China Inter Bank working weekends list in the year 2019
+
         expectedWorkingWeekEnds.push_back(Date(2, Feb, 2019))
         expectedWorkingWeekEnds.push_back(Date(3, Feb, 2019))
         expectedWorkingWeekEnds.push_back(Date(28, April, 2019))
         expectedWorkingWeekEnds.push_back(Date(5, May, 2019))
         expectedWorkingWeekEnds.push_back(Date(29, September, 2019))
         expectedWorkingWeekEnds.push_back(Date(12, October, 2019))
-        # China Inter Bank working weekends list in the year 2020
+
         expectedWorkingWeekEnds.push_back(Date(19, January, 2020))
         expectedWorkingWeekEnds.push_back(Date(26, April, 2020))
         expectedWorkingWeekEnds.push_back(Date(9, May, 2020))
         expectedWorkingWeekEnds.push_back(Date(28, June, 2020))
         expectedWorkingWeekEnds.push_back(Date(27, September, 2020))
         expectedWorkingWeekEnds.push_back(Date(10, October, 2020))
-        # China Inter Bank working weekends list in the year 2021
+
         expectedWorkingWeekEnds.push_back(Date(7, Feb, 2021))
         expectedWorkingWeekEnds.push_back(Date(20, Feb, 2021))
         expectedWorkingWeekEnds.push_back(Date(25, April, 2021))
@@ -1501,7 +1490,7 @@ class CalendarTest(unittest.TestCase):
         expectedWorkingWeekEnds.push_back(Date(18, September, 2021))
         expectedWorkingWeekEnds.push_back(Date(26, September, 2021))
         expectedWorkingWeekEnds.push_back(Date(9, October, 2021))
-        # China Inter Bank working weekends list in the year 2022
+
         expectedWorkingWeekEnds.push_back(Date(29, Jan, 2022))
         expectedWorkingWeekEnds.push_back(Date(30, Jan, 2022))
         expectedWorkingWeekEnds.push_back(Date(2, April, 2022))
@@ -1526,12 +1515,13 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(k != (len(expectedWorkingWeekEnds)))
 
     def testModifiedCalendars(self):
-        TEST_MESSAGE("Testing calendar modification...")
+        TEST_MESSAGE(
+            "Testing calendar modification...")
 
         c1 = TARGET()
         c2 = UnitedStates(UnitedStates.NYSE)
-        d1 = Date(1, May, 2004)  # holiday for both calendars
-        d2 = Date(26, April, 2004)  # business day
+        d1 = Date(1, May, 2004)
+        d2 = Date(26, April, 2004)
 
         self.assertTrue(c1.isHoliday(d1))
         self.assertTrue(c1.isBusinessDay(d2))
@@ -1539,16 +1529,11 @@ class CalendarTest(unittest.TestCase):
         self.assertTrue(c2.isHoliday(d1))
         self.assertTrue(c2.isBusinessDay(d2))
 
-        # modify the TARGET calendar
         c1.removeHoliday(d1)
         c1.addHoliday(d2)
 
-        # test
         addedHolidays = c1.addedHolidays()
         removedHolidays = c1.removedHolidays()
-
-        # addedHolidays = [a for a in addedHolidays]
-        # removedHolidays = [r for r in removedHolidays]
 
         self.assertTrue(d1 not in addedHolidays)
         self.assertTrue(d2 in addedHolidays)
@@ -1558,16 +1543,13 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(c1.isHoliday(d1))
         self.assertFalse(c1.isBusinessDay(d2))
 
-        # any instance of TARGET should be modified...
         c3 = TARGET()
         self.assertFalse(c3.isHoliday(d1))
         self.assertFalse(c3.isBusinessDay(d2))
 
-        # ...but not other calendars
         self.assertFalse(c2.isBusinessDay(d1))
         self.assertFalse(c2.isHoliday(d2))
 
-        # restore original holiday set---test the other way around
         c3.addHoliday(d1)
         c3.removeHoliday(d2)
 
@@ -1575,7 +1557,8 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(c1.isHoliday(d2))
 
     def testJointCalendars(self):
-        TEST_MESSAGE("Testing joint calendars...")
+        TEST_MESSAGE(
+            "Testing joint calendars...")
 
         c1 = TARGET()
         c2 = UnitedKingdom()
@@ -1599,13 +1582,11 @@ class CalendarTest(unittest.TestCase):
         c1234b = JointCalendar(c1, c2, c3, c4, JoinBusinessDays)
         cvh = JointCalendar(calendar_vect, JoinHolidays)
 
-        # test one year, starting today
-        firstDate = Date(16, Sep, 2015)  # Date.todaysDate()
+        firstDate = knownGoodDefault
         endDate = firstDate + Period(1, Years)
 
         d = firstDate
         while d < endDate:
-            # for (d = firstDate d < endDate d++) {
             b1 = c1.isBusinessDay(d)
             b2 = c2.isBusinessDay(d)
             b3 = c3.isBusinessDay(d)
@@ -1622,15 +1603,16 @@ class CalendarTest(unittest.TestCase):
             d += Period(1, Days)
 
     def testBespokeCalendars(self):
-        TEST_MESSAGE("Testing bespoke calendars...")
+        TEST_MESSAGE(
+            "Testing bespoke calendars...")
 
         a1 = BespokeCalendar()
         b1 = BespokeCalendar()
 
-        testDate1 = Date(4, October, 2008)  # Saturday
-        testDate2 = Date(5, October, 2008)  # Sunday
-        testDate3 = Date(6, October, 2008)  # Monday
-        testDate4 = Date(7, October, 2008)  # Tuesday
+        testDate1 = Date(4, October, 2008)
+        testDate2 = Date(5, October, 2008)
+        testDate3 = Date(6, October, 2008)
+        testDate4 = Date(7, October, 2008)
 
         self.assertFalse(not a1.isBusinessDay(testDate1))
         self.assertFalse(not a1.isBusinessDay(testDate2))
@@ -1663,7 +1645,7 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(not b1.isBusinessDay(testDate3))
         self.assertFalse(not b1.isBusinessDay(testDate4))
 
-        a2 = a1  # linked to a1
+        a2 = a1
 
         a2.addWeekend(Saturday)
 
@@ -1688,55 +1670,53 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(a2.isBusinessDay(testDate4))
 
     def testEndOfMonth(self):
-        TEST_MESSAGE("Testing end-of-month calculation...")
+        TEST_MESSAGE(
+            "Testing end-of-month calculation...")
 
-        c = TARGET()  # any calendar would be OK
+        c = TARGET()
 
         counter = Date.minDate()
         last = Date.maxDate() - Period(2, Months)
 
         while counter <= last:
             eom = c.endOfMonth(counter)
-            # check that eom is eom
+
             self.assertFalse(not c.isEndOfMonth(eom))
-            # check that eom is in the same month as counter
+
             self.assertFalse(eom.month() != counter.month())
             counter = counter + 1
 
     def testBusinessDaysBetween(self):
-        TEST_MESSAGE("Testing calculation of business days between dates...")
+        TEST_MESSAGE(
+            "Testing calculation of business days between dates...")
 
         testDates = DateVector()
-        testDates.push_back(Date(1, February, 2002))  # isBusinessDay = true
-        testDates.push_back(Date(4, February, 2002))  # isBusinessDay = true
-        testDates.push_back(Date(16, May, 2003))  # isBusinessDay = true
-        testDates.push_back(Date(17, December, 2003))  # isBusinessDay = true
-        testDates.push_back(Date(17, December, 2004))  # isBusinessDay = true
-        testDates.push_back(Date(19, December, 2005))  # isBusinessDay = true
-        testDates.push_back(Date(2, January, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(13, March, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(15, May, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(17, March, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(15, May, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(26, July, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(26, July, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(27, July, 2006))  # isBusinessDay = true
-        testDates.push_back(Date(29, July, 2006))  # isBusinessDay = false
-        testDates.push_back(Date(29, July, 2006))  # isBusinessDay = false
+        testDates.push_back(Date(1, February, 2002))
+        testDates.push_back(Date(4, February, 2002))
+        testDates.push_back(Date(16, May, 2003))
+        testDates.push_back(Date(17, December, 2003))
+        testDates.push_back(Date(17, December, 2004))
+        testDates.push_back(Date(19, December, 2005))
+        testDates.push_back(Date(2, January, 2006))
+        testDates.push_back(Date(13, March, 2006))
+        testDates.push_back(Date(15, May, 2006))
+        testDates.push_back(Date(17, March, 2006))
+        testDates.push_back(Date(15, May, 2006))
+        testDates.push_back(Date(26, July, 2006))
+        testDates.push_back(Date(26, July, 2006))
+        testDates.push_back(Date(27, July, 2006))
+        testDates.push_back(Date(29, July, 2006))
+        testDates.push_back(Date(29, July, 2006))
 
-        # default params: from date included, to excluded
         expected = [
             1, 321, 152, 251, 252, 10, 48, 42, -38, 38, 51, 0, 1, 2, 0]
 
-        # exclude from, include to
         expected_include_to = [
             1, 321, 152, 251, 252, 10, 48, 42, -38, 38, 51, 0, 1, 1, 0]
 
-        # include both from and to
         expected_include_all = [
             2, 322, 153, 252, 253, 11, 49, 43, -39, 39, 52, 1, 2, 2, 0]
 
-        # exclude both from and to
         expected_exclude_all = [
             0, 320, 151, 250, 251, 9, 47, 41, -37, 37, 50, 0, 0, 1, 0]
 
@@ -1760,44 +1740,38 @@ class CalendarTest(unittest.TestCase):
             self.assertFalse(calculated != expected_exclude_all[i - 1])
 
     def testIntradayAddHolidays(self):
-        TEST_MESSAGE("Testing addHolidays with enable-intraday...")
-
-        # test cases taken from testModifiedCalendars
+        TEST_MESSAGE(
+            "Testing addHolidays with enable-intraday...")
 
         c1 = TARGET()
         c2 = UnitedStates(UnitedStates.NYSE)
-        d1 = Date(1, May, 2004)  # holiday for both calendars
-        d2 = Date(26, April, 2004, 0, 0, 1, 1)  # business day
+        d1 = Date(1, May, 2004)
+        d2 = Date(26, April, 2004, 0, 0, 1, 1)
 
-        d1Mock = Date(1, May, 2004, 1, 1, 0, 0)  # holiday for both calendars
-        d2Mock = Date(26, April, 2004)  # business day
+        d1Mock = Date(1, May, 2004, 1, 1, 0, 0)
+        d2Mock = Date(26, April, 2004)
 
-        # this works anyhow because implementation uses day() month() etc
         self.assertTrue(c1.isHoliday(d1))
         self.assertTrue(c1.isBusinessDay(d2))
 
         self.assertTrue(c2.isHoliday(d1))
         self.assertTrue(c2.isBusinessDay(d2))
 
-        # now with different hourly/min/sec
         self.assertTrue(c1.isHoliday(d1Mock))
         self.assertTrue(c1.isBusinessDay(d2Mock))
 
         self.assertTrue(c2.isHoliday(d1Mock))
         self.assertTrue(c2.isBusinessDay(d2Mock))
 
-        # modify the TARGET calendar
         c1.removeHoliday(d1)
         c1.addHoliday(d2)
 
-        # test
         self.assertFalse(c1.isHoliday(d1))
         self.assertFalse(c1.isBusinessDay(d2))
 
         self.assertFalse(c1.isHoliday(d1Mock))
         self.assertFalse(c1.isBusinessDay(d2Mock))
 
-        # any instance of TARGET should be modified...
         c3 = TARGET()
         self.assertFalse(c3.isHoliday(d1))
         self.assertFalse(c3.isBusinessDay(d2))
@@ -1805,14 +1779,12 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(c3.isHoliday(d1Mock))
         self.assertFalse(c3.isBusinessDay(d2Mock))
 
-        # ...but not other calendars
         self.assertFalse(c2.isBusinessDay(d1))
         self.assertFalse(c2.isHoliday(d2))
 
         self.assertFalse(c2.isBusinessDay(d1Mock))
         self.assertFalse(c2.isHoliday(d2Mock))
 
-        # restore original holiday set---test the other way around
         c3.addHoliday(d1Mock)
         c3.removeHoliday(d2Mock)
 
@@ -1823,20 +1795,20 @@ class CalendarTest(unittest.TestCase):
         self.assertFalse(c1.isHoliday(d2Mock))
 
     def testDayLists(self):
-        TEST_MESSAGE("Testing holidayList and businessDaysList...")
+        TEST_MESSAGE(
+            "Testing holidayList and businessDaysList...")
         germany = Germany()
         firstDate = Settings.instance().evaluationDate
         endDate = firstDate + Period(1, Years)
 
-        # Test that same day holidayList and businessDayList does not throw an error
         germany.holidayList(firstDate, firstDate, true)
         germany.businessDayList(firstDate, firstDate)
 
         holidays = germany.holidayList(firstDate, endDate, true)
         businessDays = germany.businessDayList(firstDate, endDate)
 
-        it_holidays = 0  # holidays.begin()
-        it_businessDays = 0  # businessDays.begin()
+        it_holidays = 0
+        it_businessDays = 0
         d = firstDate
         while d < endDate:
             self.assertFalse(

@@ -12,8 +12,12 @@ typedef QuantLib::Money::Settings MoneySettings;
 class Money {
   public:
     Money();
-    Money(Currency currency, Decimal value);
-    Money(Decimal value, Currency currency);
+    Money(
+        Currency currency, 
+        Decimal value);
+    Money(
+        Decimal value, 
+        Currency currency);
     const Currency& currency() const;
     Decimal value() const;
     Money rounded() const;
@@ -60,8 +64,6 @@ class Money {
 
 bool close(const Money& m1, const Money& m2, Size n = 42);
 bool close_enough(const Money& m1, const Money& m2, Size n = 42);
-
-//typedef QuantLib::Money::Settings MoneySettings;
 
 class MoneySettings {
   private:

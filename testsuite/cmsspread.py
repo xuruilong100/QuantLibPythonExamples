@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, log, exp
+
+from QuantLib import *
+
+from utilities import *
 
 
 class TestData(object):
@@ -48,7 +50,7 @@ def mcReferenceValue(cpn1,
                      vol,
                      correlation):
     samples = 1000000
-    # accumulator_set<double, stats<tag.mean> > acc
+
     acc = 0.0
     Cov = Matrix(2, 2)
     Cov[0][0] = vol.blackVariance(cpn1.fixingDate(), cpn1.index().tenor(), cpn1.indexFixing())
@@ -80,24 +82,24 @@ def mcReferenceValue(cpn1,
     z = Array(2)
     for i in range(samples):
         seq = sb_.nextSequence().value()
-        # transform(seq.begin(), seq.end(), w.begin(), icn)
-        for i in range(len(seq)):
-            w[i] = icn(seq[i])
+
+        for j in range(len(seq)):
+            w[j] = icn(seq[j])
         z = C * w + avg
-        for i in range(2):
+        for j in range(2):
             if vol.volatilityType() == ShiftedLognormal:
-                z[i] = (atmRate[i] + volShift[i]) * exp(z[i]) - volShift[i]
+                z[j] = (atmRate[j] + volShift[j]) * exp(z[j]) - volShift[j]
 
         acc += min(max(z[0] - z[1], floor), cap)
 
-    # return mean(acc)
     return acc / samples
 
 
 class CmsSpreadTest(unittest.TestCase):
 
     def testFixings(self):
-        TEST_MESSAGE("Testing fixings of cms spread indices...")
+        TEST_MESSAGE(
+            "Testing fixings of cms spread indices...")
 
         d = TestData()
 
@@ -109,7 +111,7 @@ class CmsSpreadTest(unittest.TestCase):
 
         self.assertRaises(
             Exception, cms10y2y.fixing, d.refDate - Period(1, Days))
-        # BOOST_REQUIRE_NO_THROW(cms10y2y.fixing(d.refDate))
+
         try:
             cms10y2y.fixing(d.refDate)
         except Exception as e:
@@ -137,11 +139,13 @@ class CmsSpreadTest(unittest.TestCase):
             cms10y.fixing(d.refDate) - cms2y.fixing(d.refDate))
         IndexManager.instance().clearHistories()
 
+    @unittest.skipIf(skipSlowTest, "testCouponPricing")
     def testCouponPricing(self):
-        TEST_MESSAGE("Testing pricing of cms spread coupons...")
+        TEST_MESSAGE(
+            "Testing pricing of cms spread coupons...")
 
         d = TestData()
-        tol = 1E-6  # abs tolerance coupon rate
+        tol = 1E-6
 
         cms10y = EuriborSwapIsdaFixA(Period(10, Years), d.yts2, d.yts2)
         cms2y = EuriborSwapIsdaFixA(Period(2, Years), d.yts2, d.yts2)
@@ -163,8 +167,7 @@ class CmsSpreadTest(unittest.TestCase):
         cpn1b.setPricer(d.cmsPricerLn)
         cpn1.setPricer(d.cmsspPricerLn)
 
-        eqTol = 100 * QL_EPSILON  # for fast test
-        # eqTol = 1e-13 # for slow test
+        eqTol = 1e-13
 
         self.assertTrue(abs(cpn1.rate() - (cpn1a.rate() - cpn1b.rate())) < eqTol)
         cms10y.addFixing(d.refDate, 0.05)
@@ -259,7 +262,6 @@ class CmsSpreadTest(unittest.TestCase):
                 mcReferenceValue(
                     cpn2a, cpn2b, QL_MAX_REAL, 0.01, d.swSln,
                     d.correlation.value())),
-
             tol)
         self.assertLess(
             abs(collaredCpn.rate() -

@@ -46,32 +46,35 @@ class Settings {
     Settings();
   public:
     static Settings& instance();
-    %extend {
-        Date getEvaluationDate() {
-            return self->evaluationDate();
-        }
+    %extend {        
         void setEvaluationDate(const Date& d) {
             self->evaluationDate() = d;
+        }
+        Date getEvaluationDate() const {
+            return self->evaluationDate();
         }
         void setIncludeReferenceDateEvents(bool b) {
             self->includeReferenceDateEvents() = b;
         }
-        bool getIncludeReferenceDateEvents() {
+        bool getIncludeReferenceDateEvents() const {
             return self->includeReferenceDateEvents();
         }
 		void setIncludeTodaysCashFlows(boost::optional<bool> b) {
             self->includeTodaysCashFlows() = b;
         }
-        boost::optional<bool> getIncludeTodaysCashFlows() {
-            return self->includeTodaysCashFlows();
+        boost::optional<bool> getIncludeTodaysCashFlows() const {
+			boost::optional<bool> result = self->includeTodaysCashFlows();
+            if (result)
+                return *result;
+            else
+                return boost::none;
         }
         void setEnforcesTodaysHistoricFixings(bool b) {
             self->enforcesTodaysHistoricFixings() = b;
         }
-        bool getEnforcesTodaysHistoricFixings() {
+        bool getEnforcesTodaysHistoricFixings() const {
             return self->enforcesTodaysHistoricFixings();
         }
-
         ext::shared_ptr<Observable> evaluationDateAsObservable() const {
             return ext::shared_ptr<Observable>(self->evaluationDate());
         }

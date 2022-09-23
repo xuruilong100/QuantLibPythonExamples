@@ -1,17 +1,19 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class EngineType(object):
-    Analytic = 'Analytic'
-    JR = 'JR'
-    CRR = 'CRR'
-    EQP = 'EQP'
-    TGEO = 'TGEO'
-    TIAN = 'TIAN'
-    LR = 'LR'
-    JOSHI = 'JOSHI'
+    Analytic = "Analytic"
+    JR = "JR"
+    CRR = "CRR"
+    EQP = "EQP"
+    TGEO = "TGEO"
+    TIAN = "TIAN"
+    LR = "LR"
+    JOSHI = "JOSHI"
 
 
 def makeProcess(u,
@@ -37,27 +39,27 @@ def makeOption(payoff,
 
     engine = None
 
-    if engineType == 'Analytic':
+    if engineType == "Analytic":
         engine = AnalyticEuropeanEngine(stochProcess)
-    elif engineType == 'JR':
+    elif engineType == "JR":
         engine = BinomialExJRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'CRR':
+    elif engineType == "CRR":
         engine = BinomialExCRRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'EQP':
+    elif engineType == "EQP":
         engine = BinomialExEQPVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'TGEO':
+    elif engineType == "TGEO":
         engine = BinomialExTrigeorgisVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'TIAN':
+    elif engineType == "TIAN":
         engine = BinomialExTianVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'LR':
+    elif engineType == "LR":
         engine = BinomialExLRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'JOSHI':
+    elif engineType == "JOSHI":
         engine = BinomialExJ4VanillaEngine(
             stochProcess, binomialSteps)
 
@@ -68,9 +70,11 @@ def makeOption(payoff,
 
 
 class ExtendedTreesTest(unittest.TestCase):
+
     def testJRBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent JR binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent JR binomial European engines "
+            "against analytic results...")
         backup = SavedSettings()
 
         engine = EngineType.JR
@@ -83,8 +87,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testCRRBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent CRR binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent CRR binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -98,8 +103,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testEQPBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent EQP binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent EQP binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -113,8 +119,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testTGEOBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent TGEO binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent TGEO binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -128,8 +135,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testTIANBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent TIAN binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent TIAN binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -143,8 +151,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testLRBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent LR binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent LR binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -158,8 +167,9 @@ class ExtendedTreesTest(unittest.TestCase):
         self._testEngineConsistency(engine, steps, relativeTol)
 
     def testJOSHIBinomialEngines(self):
-        TEST_MESSAGE("Testing time-dependent Joshi binomial European engines "
-                     "against analytic results...")
+        TEST_MESSAGE(
+            "Testing time-dependent Joshi binomial European engines "
+            "against analytic results...")
 
         backup = SavedSettings()
 
@@ -180,19 +190,17 @@ class ExtendedTreesTest(unittest.TestCase):
         calculated = dict()
         expected = dict()
 
-        # test options
         types = [Option.Call, Option.Put]
         strikes = [75.0, 100.0, 125.0]
         lengths = [1]
 
-        # test data
         underlyings = [100.0]
         qRates = [0.00, 0.05]
         rRates = [0.01, 0.05, 0.15]
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         vol = SimpleQuote(0.0)
@@ -208,19 +216,18 @@ class ExtendedTreesTest(unittest.TestCase):
                     exDate = today + Period(length * 360, Days)
                     exercise = EuropeanExercise(exDate)
                     payoff = PlainVanillaPayoff(optType, strike)
-                    # reference option
+
                     refOption = makeOption(
-                        payoff, exercise, spot, qTS, rTS, volTS, 'Analytic', NullSize())
-                    # option to check
+                        payoff, exercise, spot, qTS, rTS, volTS, "Analytic", NullSize())
+
                     option = makeOption(
                         payoff, exercise, spot, qTS, rTS, volTS, engine, binomialSteps)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -229,7 +236,6 @@ class ExtendedTreesTest(unittest.TestCase):
                                     expected.clear()
                                     calculated.clear()
 
-                                    # FLOATING_POINT_EXCEPTION
                                     expected["value"] = refOption.NPV()
                                     calculated["value"] = option.NPV()
 

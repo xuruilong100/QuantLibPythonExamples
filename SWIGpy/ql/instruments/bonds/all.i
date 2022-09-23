@@ -115,10 +115,11 @@ class AmortizingFloatingRateBond : public Bond {
 %shared_ptr(CatBond)
 class CatBond : public Bond {
 public:
-    CatBond(Natural settlementDays,
-            const Calendar& calendar,
-            const Date& issueDate,
-            ext::shared_ptr<NotionalRisk> notionalRisk);
+    CatBond(
+        Natural settlementDays,
+        const Calendar& calendar,
+        const Date& issueDate,
+        ext::shared_ptr<NotionalRisk> notionalRisk);
 
     Real lossProbability() const;
     Real expectedLoss() const;
@@ -284,49 +285,51 @@ class FixedRateBond : public Bond {
 %shared_ptr(FloatingRateBond)
 class FloatingRateBond : public Bond {
     public:
-    FloatingRateBond(Natural settlementDays,
-                     Real faceAmount,
-                     const Schedule& schedule,
-                     const ext::shared_ptr<IborIndex>& iborIndex,
-                     const DayCounter& accrualDayCounter,
-                     BusinessDayConvention paymentConvention = Following,
-                     Natural fixingDays = Null<Natural>(),
-                     const std::vector<Real>& gearings = std::vector<Real>(1, 1.0),
-                     const std::vector<Spread>& spreads = std::vector<Spread>(1, 0.0),
-                     const std::vector<Rate>& caps = std::vector<Rate>(),
-                     const std::vector<Rate>& floors = std::vector<Rate>(),
-                     bool inArrears = false,
-                     Real redemption = 100.0,
-                     const Date& issueDate = Date(),
-                     const Period& exCouponPeriod = Period(),
-                     const Calendar& exCouponCalendar = Calendar(),
-                     BusinessDayConvention exCouponConvention = Unadjusted,
-                     bool exCouponEndOfMonth = false);
-    FloatingRateBond(Natural settlementDays,
-                     Real faceAmount,
-                     const Date& startDate,
-                     const Date& maturityDate,
-                     Frequency couponFrequency,
-                     const Calendar& calendar,
-                     const ext::shared_ptr<IborIndex>& iborIndex,
-                     const DayCounter& accrualDayCounter,
-                     BusinessDayConvention accrualConvention = Following,
-                     BusinessDayConvention paymentConvention = Following,
-                     Natural fixingDays = Null<Natural>(),
-                     const std::vector<Real>& gearings = std::vector<Real>(1, 1.0),
-                     const std::vector<Spread>& spreads = std::vector<Spread>(1, 0.0),
-                     const std::vector<Rate>& caps = std::vector<Rate>(),
-                     const std::vector<Rate>& floors = std::vector<Rate>(),
-                     bool inArrears = false,
-                     Real redemption = 100.0,
-                     const Date& issueDate = Date(),
-                     const Date& stubDate = Date(),
-                     DateGeneration::Rule rule = DateGeneration::Backward,
-                     bool endOfMonth = false,
-                     const Period& exCouponPeriod = Period(),
-                     const Calendar& exCouponCalendar = Calendar(),
-                     BusinessDayConvention exCouponConvention = Unadjusted,
-                     bool exCouponEndOfMonth = false);
+    FloatingRateBond(
+        Natural settlementDays,
+        Real faceAmount,
+        const Schedule& schedule,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        const DayCounter& accrualDayCounter,
+        BusinessDayConvention paymentConvention = Following,
+        Natural fixingDays = Null<Natural>(),
+        const std::vector<Real>& gearings = std::vector<Real>(1, 1.0),
+        const std::vector<Spread>& spreads = std::vector<Spread>(1, 0.0),
+        const std::vector<Rate>& caps = std::vector<Rate>(),
+        const std::vector<Rate>& floors = std::vector<Rate>(),
+        bool inArrears = false,
+        Real redemption = 100.0,
+        const Date& issueDate = Date(),
+        const Period& exCouponPeriod = Period(),
+        const Calendar& exCouponCalendar = Calendar(),
+        BusinessDayConvention exCouponConvention = Unadjusted,
+        bool exCouponEndOfMonth = false);
+    FloatingRateBond(
+        Natural settlementDays,
+        Real faceAmount,
+        const Date& startDate,
+        const Date& maturityDate,
+        Frequency couponFrequency,
+        const Calendar& calendar,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        const DayCounter& accrualDayCounter,
+        BusinessDayConvention accrualConvention = Following,
+        BusinessDayConvention paymentConvention = Following,
+        Natural fixingDays = Null<Natural>(),
+        const std::vector<Real>& gearings = std::vector<Real>(1, 1.0),
+        const std::vector<Spread>& spreads = std::vector<Spread>(1, 0.0),
+        const std::vector<Rate>& caps = std::vector<Rate>(),
+        const std::vector<Rate>& floors = std::vector<Rate>(),
+        bool inArrears = false,
+        Real redemption = 100.0,
+        const Date& issueDate = Date(),
+        const Date& stubDate = Date(),
+        DateGeneration::Rule rule = DateGeneration::Backward,
+        bool endOfMonth = false,
+        const Period& exCouponPeriod = Period(),
+        const Calendar& exCouponCalendar = Calendar(),
+        BusinessDayConvention exCouponConvention = Unadjusted,
+        bool exCouponEndOfMonth = false);
 };
 
 %shared_ptr(CallableFixedRateBond)

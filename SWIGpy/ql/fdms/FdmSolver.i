@@ -230,10 +230,6 @@ class FdmNdimSolver : public LazyObject {
 
     Real interpolateAt(const std::vector<Real>& x) const;
     Real thetaAt(const std::vector<Real>& x) const;
-
-    /* typedef typename MultiCubicSpline<N>::data_table data_table;
-    void static setValue(data_table& f,
-                         const std::vector<Size>& x, Real value); */
 };
 
 %template(Fdm4dimSolver) FdmNdimSolver<4>;

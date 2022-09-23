@@ -16,6 +16,7 @@ using QuantLib::HestonSLVProcess;
 using QuantLib::HybridHestonHullWhiteProcess;
 using QuantLib::KlugeExtOUProcess;
 using QuantLib::StochasticProcessArray;
+using QuantLib::LiborForwardModelProcess;
 %}
 
 %{
@@ -28,7 +29,10 @@ class ExtOUWithJumpsProcess : public StochasticProcess {
   public:
     ExtOUWithJumpsProcess(
         const ext::shared_ptr<ExtendedOrnsteinUhlenbeckProcess>& process,
-        Real Y0, Real beta, Real jumpIntensity, Real eta);
+        Real Y0, 
+        Real beta, 
+        Real jumpIntensity, 
+        Real eta);
     ext::shared_ptr<ExtendedOrnsteinUhlenbeckProcess> getExtendedOrnsteinUhlenbeckProcess() const;
     Real beta() const;
     Real eta() const;
@@ -55,8 +59,13 @@ class GJRGARCHProcess : public StochasticProcess {
         Handle<YieldTermStructure> riskFreeRate,
         Handle<YieldTermStructure> dividendYield,
         Handle<Quote> s0,
-        Real v0, Real omega, Real alpha, Real beta,
-        Real gamma, Real lambda, Real daysPerYear = 252.0,
+        Real v0, 
+        Real omega, 
+        Real alpha,
+        Real beta,
+        Real gamma, 
+        Real lambda, 
+        Real daysPerYear = 252.0,
         Discretization d = FullTruncation);
 
     const Handle<Quote>& s0();
@@ -68,8 +77,11 @@ class GJRGARCHProcess : public StochasticProcess {
 class G2Process : public StochasticProcess {
   public:
     G2Process(
-        Real a, Real sigma, Real b,
-        Real eta, Real rho);
+        Real a, 
+        Real sigma, 
+        Real b,
+        Real eta, 
+        Real rho);
     Real x0() const;
     Real y0() const;
     Real a() const;
@@ -98,8 +110,11 @@ class HestonProcess : public StochasticProcess {
         const Handle<YieldTermStructure>& riskFreeTS,
         const Handle<YieldTermStructure>& dividendTS,
         const Handle<Quote>& s0,
-        Real v0, Real kappa,
-        Real theta, Real sigma, Real rho,
+        Real v0, 
+        Real kappa,
+        Real theta, 
+        Real sigma, 
+        Real rho,
         Discretization d = QuadraticExponentialMartingale);
 
     Real v0() const;
@@ -110,7 +125,7 @@ class HestonProcess : public StochasticProcess {
     const Handle<Quote>& s0() const;
     const Handle<YieldTermStructure>& dividendYield() const;
     const Handle<YieldTermStructure>& riskFreeRate() const;
-    Real pdf(Real x, Real v, Time t, Real eps=1e-3) const;
+    Real pdf(Real x, Real v, Time t, Real eps = 1e-3) const;
 };
 
 %template(HestonProcessHandle) Handle<HestonProcess>;
@@ -175,6 +190,24 @@ class StochasticProcessArray : public StochasticProcess {
     Matrix correlation() const;
 };
 
+%shared_ptr(LiborForwardModelProcess)
+class LiborForwardModelProcess : public StochasticProcess {
+  public:
+    LiborForwardModelProcess(Size size, ext::shared_ptr<IborIndex> index);
+    ext::shared_ptr<IborIndex> index() const;
+    Leg cashFlows(Real amount = 1.0) const;
+    void setCovarParam(
+           const ext::shared_ptr<LfmCovarianceParameterization>& param);
+    ext::shared_ptr<LfmCovarianceParameterization> covarParam() const;
+    Size nextIndexReset(Time t) const;
+    const std::vector<Time>& fixingTimes() const;
+    const std::vector<Date>& fixingDates() const;
+    const std::vector<Time>& accrualStartTimes() const;
+    const std::vector<Time>& accrualEndTimes() const;
+    std::vector<DiscountFactor> discountBond(
+        const std::vector<Rate>& rates) const;
+};
+
 %shared_ptr(G2ForwardProcess)
 class G2ForwardProcess : public ForwardMeasureProcess {
   public:
@@ -190,9 +223,14 @@ class BatesProcess : public HestonProcess {
         const Handle<YieldTermStructure>& riskFreeRate,
         const Handle<YieldTermStructure>& dividendYield,
         const Handle<Quote>& s0,
-        Real v0, Real kappa,
-        Real theta, Real sigma, Real rho,
-        Real lambda, Real nu, Real delta);
+        Real v0, 
+        Real kappa,
+        Real theta, 
+        Real sigma, 
+        Real rho,
+        Real lambda, 
+        Real nu, 
+        Real delta);
     Real lambda() const;
     Real nu() const;
     Real delta() const;

@@ -1,11 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class AutocovariancesTest(unittest.TestCase):
+
     def testConvolutions(self):
-        TEST_MESSAGE("Testing convolutions...")
+        TEST_MESSAGE(
+            "Testing convolutions...")
         x = Array(10, 1, 1)
         conv = convolutions(x, 5)
         expected = [385, 330, 276, 224, 175, 130]
@@ -16,7 +20,8 @@ class AutocovariancesTest(unittest.TestCase):
         self.assertFalse(DotProduct(delta, delta) > 1.0e-6)
 
     def testAutoCovariances(self):
-        TEST_MESSAGE("Testing auto-covariances...")
+        TEST_MESSAGE(
+            "Testing auto-covariances...")
         x = Array(10, 1, 1)
         tmp = autocovariances(x, 5, false)
         mean = tmp.first
@@ -30,7 +35,8 @@ class AutocovariancesTest(unittest.TestCase):
         self.assertFalse(DotProduct(delta, delta) > 1.0e-6)
 
     def testAutoCorrelations(self):
-        TEST_MESSAGE("Testing auto-correlations...")
+        TEST_MESSAGE(
+            "Testing auto-correlations...")
         x = Array(10, 1, 1)
         tmp = autocorrelations(x, 5, true)
         mean = tmp.first

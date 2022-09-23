@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp
+
+from QuantLib import *
+
+from utilities import *
 
 
 class Datum(object):
@@ -39,12 +41,6 @@ class CommonVars(object):
             "FTK_IDX", self.floatingTenor, self.settlementDays, self.ccy, self.calendar,
             self.businessConvention, false, self.dayCount, self.ftkCurveHandle)
 
-        # Data source: https:#fred.stlouisfed.org/
-        # Note that these rates are used as a proxy.
-
-        # In order to fully replicate the rates published by the Dutch Central Bank
-        # (with the required accuracy) one needs to use Bloomberg CMPL BID Euribor 6m swap
-        # rates as stated in the documentation: https:#www.toezicht.dnb.nl 
         swapData = [
             Datum(1, Years, -0.00315), Datum(2, Years, -0.00205), Datum(3, Years, -0.00144),
             Datum(4, Years, -0.00068), Datum(5, Years, 0.00014), Datum(6, Years, 0.00103),
@@ -103,7 +99,8 @@ def calculateExtrapolatedForward(t, fsp, llfr, ufr, alpha):
 class UltimateForwardTermStructureTest(unittest.TestCase):
 
     def testDutchCentralBankRates(self):
-        TEST_MESSAGE("Testing DNB replication of UFR zero annually compounded rates...")
+        TEST_MESSAGE(
+            "Testing DNB replication of UFR zero annually compounded rates...")
 
         vars = CommonVars()
 
@@ -113,8 +110,6 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
             vars.ftkCurveHandle, QuoteHandle(llfr),
             QuoteHandle(vars.ufrRate), vars.fsp, vars.alpha)
 
-        # Official annually compounded zero rates published
-        # by the Dutch Central Bank: https:#statistiek.dnb.nl/
         expectedZeroes = [
             Datum(10, Years, 0.00477), Datum(20, Years, 0.01004), Datum(30, Years, 0.01223),
             Datum(40, Years, 0.01433), Datum(50, Years, 0.01589), Datum(60, Years, 0.01702),
@@ -135,7 +130,8 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
             self.assertFalse(abs(actual - expected) > tolerance)
 
     def testExtrapolatedForward(self):
-        TEST_MESSAGE("Testing continuous forward rates in extrapolation region...")
+        TEST_MESSAGE(
+            "Testing continuous forward rates in extrapolation region...")
 
         vars = CommonVars()
 
@@ -147,7 +143,6 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
         cutOff = ufrTs.timeFromReference(ufrTs.referenceDate() + vars.fsp)
 
         tenors = [
-            # Period(20, Years),
             Period(30, Years), Period(40, Years), Period(50, Years),
             Period(60, Years), Period(70, Years), Period(80, Years),
             Period(90, Years), Period(100, Years)]
@@ -168,7 +163,8 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
             self.assertFalse(abs(actual - expected) > tolerance)
 
     def testZeroRateAtFirstSmoothingPoint(self):
-        TEST_MESSAGE("Testing zero rate on the first smoothing point...")
+        TEST_MESSAGE(
+            "Testing zero rate on the first smoothing point...")
 
         vars = CommonVars()
 
@@ -189,7 +185,8 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(actual - expected) > tolerance)
 
     def testThatInspectorsEqualToBaseCurve(self):
-        TEST_MESSAGE("Testing UFR curve inspectors...")
+        TEST_MESSAGE(
+            "Testing UFR curve inspectors...")
 
         vars = CommonVars()
 
@@ -205,7 +202,8 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
         self.assertFalse(ufrTs.maxTime() == vars.ftkCurveHandle.maxTime())
 
     def testExceptionWhenFspLessOrEqualZero(self):
-        TEST_MESSAGE("Testing exception when the first smoothing point is less than or equal to zero...")
+        TEST_MESSAGE(
+            "Testing exception when the first smoothing point is less than or equal to zero...")
 
         vars = CommonVars()
 
@@ -224,7 +222,8 @@ class UltimateForwardTermStructureTest(unittest.TestCase):
             QuoteHandle(vars.ufrRate), -Period(1, Years), vars.alpha)
 
     def testObservability(self):
-        TEST_MESSAGE("Testing observability of the UFR curve...")
+        TEST_MESSAGE(
+            "Testing observability of the UFR curve...")
 
         vars = CommonVars()
 

@@ -16,14 +16,14 @@ using QuantLib::MakeMCPerformanceEngine;
 %shared_ptr(AnalyticCliquetEngine)
 class AnalyticCliquetEngine : public PricingEngine {
   public:
-    explicit AnalyticCliquetEngine(
+    AnalyticCliquetEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
 %shared_ptr(AnalyticPerformanceEngine)
 class AnalyticPerformanceEngine : public PricingEngine {
   public:
-    explicit AnalyticPerformanceEngine(
+    AnalyticPerformanceEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 

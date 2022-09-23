@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class PlusOne(object):
@@ -14,7 +16,8 @@ class PlusOne(object):
 class TransformedGridTest(unittest.TestCase):
 
     def testConstruction(self):
-        TEST_MESSAGE("Testing transformed grid construction...")
+        TEST_MESSAGE(
+            "Testing transformed grid construction...")
 
         p1 = PlusOne()
         grid = BoundedGrid(0, 100, 100)

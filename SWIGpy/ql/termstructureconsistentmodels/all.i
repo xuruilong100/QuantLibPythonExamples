@@ -18,41 +18,41 @@ class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
     ext::shared_ptr<StochasticProcess1D> stateProcess() const;
     Real numeraire(
         Time t, Real y = 0.0,
-        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
     Real zerobond(
         Time T, Time t = 0.0, Real y = 0.0,
-        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
     Real numeraire(
         const Date& referenceDate, Real y = 0.0,
-        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
     Real zerobond(
         const Date& maturity,
         const Date& referenceDate = Null<Date>(), Real y = 0.0,
-        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>()) const;
+        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>()) const;
     Real zerobondOption(
         const Option::Type& type, const Date& expiry,
         const Date& valueDate, const Date& maturity, Rate strike,
         const Date& referenceDate = Null<Date>(), Real y = 0.0,
-        const Handle<YieldTermStructure>& yts=Handle<YieldTermStructure>(),
-        Real yStdDevs=7.0, Size yGridPoints=64,
-        bool extrapolatePayoff=true,
-        bool flatPayoffExtrapolation=false) const;
+        const Handle<YieldTermStructure>& yts = Handle<YieldTermStructure>(),
+        Real yStdDevs = 7.0, Size yGridPoints = 64,
+        bool extrapolatePayoff = true,
+        bool flatPayoffExtrapolation = false) const;
     Real forwardRate(
         const Date& fixing,
         const Date& referenceDate = Null<Date>(),
         Real y = 0.0,
-        const ext::shared_ptr<IborIndex>& iborIdx=ext::shared_ptr<IborIndex>()) const;
+        const ext::shared_ptr<IborIndex>& iborIdx = ext::shared_ptr<IborIndex>()) const;
     Real swapRate(
         const Date& fixing, const Period& tenor,
         const Date& referenceDate = Null<Date>(), Real y = 0.0,
-        const ext::shared_ptr<SwapIndex>& swapIdx=ext::shared_ptr<SwapIndex>()) const;
+        const ext::shared_ptr<SwapIndex>& swapIdx = ext::shared_ptr<SwapIndex>()) const;
     Real swapAnnuity(
         const Date& fixing, const Period& tenor,
         const Date& referenceDate = Null<Date>(), Real y = 0.0,
         const ext::shared_ptr<SwapIndex>& swapIdx = ext::shared_ptr<SwapIndex>()) const;
     Array yGrid(
         Real yStdDevs, int gridPoints,
-        Real T=1.0, Real t=0, Real y=0) const;
+        Real T = 1.0, Real t = 0, Real y = 0) const;
     static Real gaussianPolynomialIntegral(
         Real a, Real b, Real c, Real d, Real e, Real x0, Real x1);
     static Real gaussianShiftedPolynomialIntegral(

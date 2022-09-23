@@ -12,13 +12,18 @@ using QuantLib::TimeGrid;
 class TimeGrid {
     %rename(__len__)   size;
   public:
-    TimeGrid() {}
-    TimeGrid(Time end, Size steps);
+    TimeGrid();
+    TimeGrid(
+        Time end, 
+        Size steps);
     %extend {
-        TimeGrid(const std::vector<Time>& times) {
+        TimeGrid(
+            const std::vector<Time>& times) {
             return new TimeGrid(times.begin(), times.end());
         }
-        TimeGrid(const std::vector<Time>& times, Size steps) {
+        TimeGrid(
+            const std::vector<Time>& times, 
+            Size steps) {
             return new TimeGrid(times.begin(), times.end(), steps);
         }
     }

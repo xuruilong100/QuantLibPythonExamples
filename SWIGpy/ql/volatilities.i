@@ -115,16 +115,17 @@ class OptionletStripper : public StrippedOptionletBase {
 %shared_ptr(StrippedOptionlet)
 class StrippedOptionlet : public StrippedOptionletBase {
   public:
-    StrippedOptionlet(Natural settlementDays,
-                      const Calendar& calendar,
-                      BusinessDayConvention bdc,
-                      ext::shared_ptr<IborIndex> iborIndex,
-                      const std::vector<Date>& optionletDates,
-                      const std::vector<Rate>& strikes,
-                      std::vector<std::vector<Handle<Quote>>>,
-                      DayCounter dc,
-                      VolatilityType type = ShiftedLognormal,
-                      Real displacement = 0.0);
+    StrippedOptionlet(
+        Natural settlementDays,
+        const Calendar& calendar,
+        BusinessDayConvention bdc,
+        ext::shared_ptr<IborIndex> iborIndex,
+        const std::vector<Date>& optionletDates,
+        const std::vector<Rate>& strikes,
+        std::vector<std::vector<Handle<Quote>>>,
+        DayCounter dc,
+        VolatilityType type = ShiftedLognormal,
+        Real displacement = 0.0);
 };
 
 %shared_ptr(OptionletStripper1)

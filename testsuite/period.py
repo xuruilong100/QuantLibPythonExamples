@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class PeriodTest(unittest.TestCase):
 
     def testYearsMonthsAlgebra(self):
-        TEST_MESSAGE("Testing period algebra on years/months...")
+        TEST_MESSAGE(
+            "Testing period algebra on years/months...")
 
         OneYear = Period(1, Years)
         SixMonths = Period(6, Months)
@@ -34,7 +37,8 @@ class PeriodTest(unittest.TestCase):
         self.assertFalse(NormalizedTwelveMonths.units() != Years)
 
     def testWeeksDaysAlgebra(self):
-        TEST_MESSAGE("Testing period algebra on weeks/days...")
+        TEST_MESSAGE(
+            "Testing period algebra on weeks/days...")
 
         TwoWeeks = Period(2, Weeks)
         OneWeek = Period(1, Weeks)
@@ -56,3 +60,29 @@ class PeriodTest(unittest.TestCase):
         SevenDays = Period(7, Days)
         self.assertFalse(SevenDays.length() != 7)
         self.assertFalse(SevenDays.units() != Days)
+
+    def testNormalization(self):
+
+        TEST_MESSAGE(
+            "Testing period normalization...")
+
+        test_values = [
+            Period(0, Days), Period(0, Weeks), Period(0, Months), Period(0, Years), Period(3, Days),
+            Period(7, Days), Period(14, Days), Period(30, Days), Period(60, Days), Period(365, Days),
+            Period(1, Weeks), Period(2, Weeks), Period(4, Weeks), Period(8, Weeks), Period(52, Weeks),
+            Period(1, Months), Period(2, Months), Period(6, Months), Period(12, Months), Period(18, Months),
+            Period(24, Months), Period(1, Years), Period(2, Years)]
+
+        for p1 in test_values:
+            n1 = p1.normalized()
+            self.assertFalse(n1 != p1)
+
+            for p2 in test_values:
+                n2 = p2.normalized()
+                comparison = (p1 == p2)
+
+                if comparison:
+                    self.assertFalse(n1.units() != n2.units() or n1.length() != n2.length())
+
+                if n1.units() == n2.units() and n1.length() == n2.length():
+                    self.assertFalse(p1 != p2)

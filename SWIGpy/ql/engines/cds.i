@@ -44,11 +44,12 @@ class MidPointCdsEngine : public PricingEngine {
 %shared_ptr(IntegralCdsEngine)
 class IntegralCdsEngine : public PricingEngine {
   public:
-    IntegralCdsEngine(const Period& integrationStep,
-                      Handle<DefaultProbabilityTermStructure>,
-                      Real recoveryRate,
-                      Handle<YieldTermStructure> discountCurve,
-                      boost::optional<bool> includeSettlementDateFlows = boost::none);
+    IntegralCdsEngine(
+        const Period& integrationStep,
+        Handle<DefaultProbabilityTermStructure>,
+        Real recoveryRate,
+        Handle<YieldTermStructure> discountCurve,
+        boost::optional<bool> includeSettlementDateFlows = boost::none);
 };
 
 %shared_ptr(IsdaCdsEngine)
@@ -62,10 +63,10 @@ class IsdaCdsEngine : public PricingEngine {
         Handle<DefaultProbabilityTermStructure> probability,
         Real recoveryRate,
         Handle<YieldTermStructure> discountCurve,
-        boost::optional<bool> includeSettlementDateFlows=boost::none,
-        NumericalFix numericalFix=Taylor,
-        AccrualBias accrualBias=HalfDayBias,
-        ForwardsInCouponPeriod forwardsInCouponPeriod=Piecewise);
+        boost::optional<bool> includeSettlementDateFlows = boost::none,
+        NumericalFix numericalFix = Taylor,
+        AccrualBias accrualBias = HalfDayBias,
+        ForwardsInCouponPeriod forwardsInCouponPeriod = Piecewise);
         Handle<YieldTermStructure> isdaRateCurve() const;
         Handle<DefaultProbabilityTermStructure> isdaCreditCurve() const;
 };

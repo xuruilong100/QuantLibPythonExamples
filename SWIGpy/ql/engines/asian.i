@@ -20,6 +20,7 @@ using QuantLib::MCDiscreteArithmeticASEngine;
 using QuantLib::MCDiscreteGeometricAPEngine;
 using QuantLib::MCDiscreteGeometricAPHestonEngine;
 using QuantLib::FdBlackScholesAsianEngine;
+using QuantLib::TurnbullWakemanAsianEngine;
 using QuantLib::MakeMCDiscreteArithmeticASEngine;
 using QuantLib::MakeMCDiscreteGeometricAPEngine;
 using QuantLib::MakeMCDiscreteGeometricAPHestonEngine;
@@ -124,7 +125,7 @@ class MCDiscreteArithmeticAPEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDiscreteArithmeticAPEngine {
   public:
-    explicit MakeMCDiscreteArithmeticAPEngine(
+    MakeMCDiscreteArithmeticAPEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 
     MakeMCDiscreteArithmeticAPEngine& withBrownianBridge(bool b = true);
@@ -157,9 +158,9 @@ class MCDiscreteArithmeticAPHestonEngine : public PricingEngine {
         Real requiredTolerance,
         Size maxSamples,
         BigNatural seed,
-        Size timeSteps=Null<Size>(),
-        Size timeStepsPerYear=Null<Size>(),
-        bool controlVariate=false);
+        Size timeSteps = Null<Size>(),
+        Size timeStepsPerYear = Null<Size>(),
+        bool controlVariate = false);
 };
 
 %template(MCPRDiscreteArithmeticAPHestonEngine) MCDiscreteArithmeticAPHestonEngine<PseudoRandom>;
@@ -168,7 +169,7 @@ class MCDiscreteArithmeticAPHestonEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDiscreteArithmeticAPHestonEngine {
   public:
-    explicit MakeMCDiscreteArithmeticAPHestonEngine(ext::shared_ptr<HestonProcess> process);
+    MakeMCDiscreteArithmeticAPHestonEngine(ext::shared_ptr<HestonProcess> process);
 
     MakeMCDiscreteArithmeticAPHestonEngine& withSamples(Size samples);
     MakeMCDiscreteArithmeticAPHestonEngine& withAbsoluteTolerance(Real tolerance);
@@ -210,7 +211,7 @@ class MCDiscreteArithmeticASEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDiscreteArithmeticASEngine {
   public:
-    explicit MakeMCDiscreteArithmeticASEngine(
+    MakeMCDiscreteArithmeticASEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 
     MakeMCDiscreteArithmeticASEngine& withBrownianBridge(bool b = true);
@@ -252,7 +253,7 @@ class MCDiscreteGeometricAPEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDiscreteGeometricAPEngine {
   public:
-    explicit MakeMCDiscreteGeometricAPEngine(
+    MakeMCDiscreteGeometricAPEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 
     MakeMCDiscreteGeometricAPEngine& withBrownianBridge(bool b = true);
@@ -294,7 +295,7 @@ class MCDiscreteGeometricAPHestonEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDiscreteGeometricAPHestonEngine {
   public:
-    explicit MakeMCDiscreteGeometricAPHestonEngine(
+    MakeMCDiscreteGeometricAPHestonEngine(
         ext::shared_ptr<HestonProcess> process);
 
     MakeMCDiscreteGeometricAPHestonEngine& withSamples(Size samples);
@@ -320,8 +321,17 @@ class FdBlackScholesAsianEngine : public PricingEngine {
   public:
     FdBlackScholesAsianEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
-        Size tGrid, Size xGrid, Size aGrid,
+        Size tGrid, 
+        Size xGrid, 
+        Size aGrid,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas());
+};
+
+%shared_ptr(TurnbullWakemanAsianEngine)
+class TurnbullWakemanAsianEngine : public PricingEngine {
+  public:
+    TurnbullWakemanAsianEngine(
+        ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
 #endif

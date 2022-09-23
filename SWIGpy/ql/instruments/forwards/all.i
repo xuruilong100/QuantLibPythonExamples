@@ -7,13 +7,13 @@
 %include ../ql/instruments/Forward.i
 
 %{
-using QuantLib::FixedRateBondForward;
+using QuantLib::BondForward;
 %}
 
-%shared_ptr(FixedRateBondForward)
-class FixedRateBondForward : public Forward {
+%shared_ptr(BondForward)
+class BondForward : public Forward {
   public:
-    FixedRateBondForward(
+    BondForward(
         const Date& valueDate,
         const Date& maturityDate,
         Position::Type type,
@@ -22,11 +22,12 @@ class FixedRateBondForward : public Forward {
         const DayCounter& dayCounter,
         const Calendar& calendar,
         BusinessDayConvention businessDayConvention,
-        const ext::shared_ptr<FixedRateBond>& fixedBond,
+        const ext::shared_ptr<Bond>& bond,
         const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
         const Handle<YieldTermStructure>& incomeDiscountCurve = Handle<YieldTermStructure>());
-    Real forwardPrice();
-    Real cleanForwardPrice();
+
+    Real forwardPrice() const;
+    Real cleanForwardPrice() const;
 };
 
 #endif

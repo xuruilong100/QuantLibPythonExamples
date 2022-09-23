@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 expected_calc = [
     0.452769, 0.513323, 0.530141, 0.5350841, 0.536558,
@@ -8,12 +10,15 @@ expected_calc = [
 
 
 class GARCHTest(unittest.TestCase):
-    @unittest.skip('skip testCalibration')
+
+    @unittest.skip("testCalibration")
     def testCalibration(self):
-        pass
+        TEST_MESSAGE(
+            "Testing GARCH model calibration...")
 
     def testCalculation(self):
-        TEST_MESSAGE("Testing GARCH model calculation...")
+        TEST_MESSAGE(
+            "Testing GARCH model calculation...")
 
         d = Date(7, July, 1962)
         ts = RealTimeSeries()

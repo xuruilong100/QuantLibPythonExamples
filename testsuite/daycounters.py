@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class SingleCaseI(object):
@@ -24,8 +26,6 @@ class SingleCaseII(object):
                  convention,
                  start,
                  end,
-                 #  refStart,
-                 #  refEnd,
                  result):
         self.convention = convention
         self.start = start
@@ -41,9 +41,9 @@ def ISMAYearFractionWithReferenceDates(dayCounter,
                                        refStart,
                                        refEnd):
     referenceDayCount = dayCounter.dayCount(refStart, refEnd)
-    # guess how many coupon periods per year:
+
     couponsPerYear = round(365.0 / referenceDayCount)
-    # the above is good enough for annual or semi annual payments.
+
     return dayCounter.dayCount(start, end) / (referenceDayCount * couponsPerYear)
 
 
@@ -53,7 +53,7 @@ def actualActualDaycountComputation(schedule,
     daycounter = ActualActual(ActualActual.ISMA, schedule)
     yearFraction = 0.0
 
-    for i in range(1, len(schedule) - 1):  # (i = 1 i < schedule.size() - 1 i++) {
+    for i in range(1, len(schedule) - 1):
         referenceStart = schedule.date(i)
         referenceEnd = schedule.date(i + 1)
         if start < referenceEnd and end > referenceStart:
@@ -80,35 +80,28 @@ class Thirty360Case(object):
 class DayCounterTest(unittest.TestCase):
 
     def testActualActual(self):
-        TEST_MESSAGE("Testing actual/actual day counters...")
+        TEST_MESSAGE(
+            "Testing actual/actual day counters...")
 
         testCases = [
-            # first example
             SingleCaseII(ActualActual.ISDA, Date(1, November, 2003), Date(1, May, 2004), 0.497724380567),
             SingleCaseI(ActualActual.ISMA, Date(1, November, 2003), Date(1, May, 2004), Date(1, November, 2003), Date(1, May, 2004), 0.500000000000),
             SingleCaseII(ActualActual.AFB, Date(1, November, 2003), Date(1, May, 2004), 0.497267759563),
-            # short first calculation period (first period)
             SingleCaseII(ActualActual.ISDA, Date(1, February, 1999), Date(1, July, 1999), 0.410958904110),
             SingleCaseI(ActualActual.ISMA, Date(1, February, 1999), Date(1, July, 1999), Date(1, July, 1998), Date(1, July, 1999), 0.410958904110),
             SingleCaseII(ActualActual.AFB, Date(1, February, 1999), Date(1, July, 1999), 0.410958904110),
-            # short first calculation period (second period)
             SingleCaseII(ActualActual.ISDA, Date(1, July, 1999), Date(1, July, 2000), 1.001377348600),
             SingleCaseI(ActualActual.ISMA, Date(1, July, 1999), Date(1, July, 2000), Date(1, July, 1999), Date(1, July, 2000), 1.000000000000),
             SingleCaseII(ActualActual.AFB, Date(1, July, 1999), Date(1, July, 2000), 1.000000000000),
-            # long first calculation period (first period)
             SingleCaseII(ActualActual.ISDA, Date(15, August, 2002), Date(15, July, 2003), 0.915068493151),
             SingleCaseI(ActualActual.ISMA, Date(15, August, 2002), Date(15, July, 2003), Date(15, January, 2003), Date(15, July, 2003), 0.915760869565),
             SingleCaseII(ActualActual.AFB, Date(15, August, 2002), Date(15, July, 2003), 0.915068493151),
-            # long first calculation period (second period)
-            # /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
             SingleCaseII(ActualActual.ISDA, Date(15, July, 2003), Date(15, January, 2004), 0.504004790778),
             SingleCaseI(ActualActual.ISMA, Date(15, July, 2003), Date(15, January, 2004), Date(15, July, 2003), Date(15, January, 2004), 0.500000000000),
             SingleCaseII(ActualActual.AFB, Date(15, July, 2003), Date(15, January, 2004), 0.504109589041),
-            # short final calculation period (penultimate period)
             SingleCaseII(ActualActual.ISDA, Date(30, July, 1999), Date(30, January, 2000), 0.503892506924),
             SingleCaseI(ActualActual.ISMA, Date(30, July, 1999), Date(30, January, 2000), Date(30, July, 1999), Date(30, January, 2000), 0.500000000000),
             SingleCaseII(ActualActual.AFB, Date(30, July, 1999), Date(30, January, 2000), 0.504109589041),
-            # short final calculation period (final period)
             SingleCaseII(ActualActual.ISDA, Date(30, January, 2000), Date(30, June, 2000), 0.415300546448),
             SingleCaseI(ActualActual.ISMA, Date(30, January, 2000), Date(30, June, 2000), Date(30, January, 2000), Date(30, July, 2000), 0.417582417582),
             SingleCaseII(ActualActual.AFB, Date(30, January, 2000), Date(30, June, 2000), 0.41530054644)]
@@ -126,7 +119,8 @@ class DayCounterTest(unittest.TestCase):
                 self.assertFalse(testCases[i].convention == ActualActual.ISMA)
 
     def testActualActualIsma(self):
-        TEST_MESSAGE("Testing actual/actual (ISMA) with odd last period...")
+        TEST_MESSAGE(
+            "Testing actual/actual (ISMA) with odd last period...")
 
         isEndOfMonth = false
         frequency = Semiannual
@@ -207,9 +201,9 @@ class DayCounterTest(unittest.TestCase):
         self.assertFalse(abs(calculated - expected) > 1.0e-10)
 
     def testActualActualWithSchedule(self):
-        TEST_MESSAGE("Testing actual/actual day counter with schedule...")
+        TEST_MESSAGE(
+            "Testing actual/actual day counter with schedule...")
 
-        # long first coupon
         issueDateExpected = Date(17, January, 2017)
         firstCouponDateExpected = Date(31, August, 2017)
 
@@ -229,7 +223,6 @@ class DayCounterTest(unittest.TestCase):
         firstCouponDate = schedule.date(1)
         self.assertTrue(firstCouponDate == firstCouponDateExpected)
 
-        # Make thw quasi coupon dates:
         quasiCouponDate2 = schedule.calendar().advance(
             firstCouponDate,
             -schedule.tenor(),
@@ -249,7 +242,6 @@ class DayCounterTest(unittest.TestCase):
 
         dayCounter = ActualActual(ActualActual.ISMA, schedule)
 
-        # full coupon
         t_with_reference = dayCounter.yearFraction(
             issueDate, firstCouponDate,
             quasiCouponDate2, firstCouponDate)
@@ -265,7 +257,6 @@ class DayCounterTest(unittest.TestCase):
         self.assertFalse(abs(t_with_reference - expected) > 1.0e-10)
         self.assertFalse(abs(t_no_reference - t_with_reference) > 1.0e-10)
 
-        # settlement date in the first quasi-period
         settlementDate = Date(29, January, 2017)
 
         t_with_reference = ISMAYearFractionWithReferenceDates(
@@ -273,13 +264,12 @@ class DayCounterTest(unittest.TestCase):
             issueDate, settlementDate,
             quasiCouponDate1, quasiCouponDate2)
         t_no_reference = dayCounter.yearFraction(issueDate, settlementDate)
-        t_expected_first_qp = 0.03314917127071823  # 12.0/362
+        t_expected_first_qp = 0.03314917127071823
         self.assertFalse(abs(t_with_reference - t_expected_first_qp) > 1.0e-10)
         self.assertFalse(abs(t_no_reference - t_with_reference) > 1.0e-10)
         t2 = dayCounter.yearFraction(settlementDate, firstCouponDate)
         self.assertFalse(abs(t_expected_first_qp + t2 - expected) > 1.0e-10)
 
-        # settlement date in the second quasi-period
         settlementDate = Date(29, July, 2017)
 
         t_no_reference = dayCounter.yearFraction(issueDate, settlementDate)
@@ -300,7 +290,6 @@ class DayCounterTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing actual/actual with schedule for undefined annual reference periods...")
 
-        # Now do an annual schedule
         calendar = UnitedStates(UnitedStates.GovernmentBond)
         schedule = MakeSchedule()
         schedule.fromDate(Date(10, January, 2017))
@@ -329,8 +318,9 @@ class DayCounterTest(unittest.TestCase):
             testDate = calendar.advance(testDate, 1, Days)
 
     def testActualActualWithSemiannualSchedule(self):
-        TEST_MESSAGE("Testing actual/actual with schedule "
-                     "for undefined semiannual reference periods...")
+        TEST_MESSAGE(
+            "Testing actual/actual with schedule "
+            "for undefined semiannual reference periods...")
 
         calendar = UnitedStates(UnitedStates.GovernmentBond)
         fromDate = Date(10, January, 2017)
@@ -355,7 +345,6 @@ class DayCounterTest(unittest.TestCase):
         referencePeriodStart = schedule.date(1)
         referencePeriodEnd = schedule.date(2)
 
-        # Test
         self.assertTrue(
             dayCounter.yearFraction(
                 referencePeriodStart,
@@ -393,15 +382,12 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(abs(difference) > 1.0e-10)
             testDate = calendar.advance(testDate, 1, Days)
 
-        # Test long first coupon
         calculatedYearFraction = dayCounter.yearFraction(fromDate, firstCoupon)
         expectedYearFraction = 0.5 + (dayCounter.dayCount(fromDate, quasiCoupon)) / \
                                (2 * dayCounter.dayCount(quasiCoupon2, quasiCoupon))
 
         self.assertTrue(
             abs(calculatedYearFraction - expectedYearFraction) < 1.0e-10)
-
-        # test multiple periods
 
         schedule = MakeSchedule()
         schedule.fromDate(Date(10, January, 2017))
@@ -429,20 +415,20 @@ class DayCounterTest(unittest.TestCase):
             periodEndDate = calendar.advance(periodEndDate, 1, Days)
 
     def testSimple(self):
-        TEST_MESSAGE("Testing simple day counter...")
+        TEST_MESSAGE(
+            "Testing simple day counter...")
 
         p = [Period(3, Months), Period(6, Months), Period(1, Years)]
         expected = [0.25, 0.5, 1.0]
         n = len(p)
 
-        # 4 years should be enough
         first = Date(1, January, 2002)
         last = Date(31, December, 2005)
         dayCounter = SimpleDayCounter()
 
         start = first
         while start <= last:
-            # for (start = first start <= last start++) {
+
             for i in range(n):
                 end = start + p[i]
                 calculated = dayCounter.yearFraction(start, end)
@@ -450,20 +436,20 @@ class DayCounterTest(unittest.TestCase):
                 start += Period(1, Days)
 
     def testOne(self):
-        TEST_MESSAGE("Testing 1/1 day counter...")
+        TEST_MESSAGE(
+            "Testing 1/1 day counter...")
 
         p = [Period(3, Months), Period(6, Months), Period(1, Years)]
         expected = [1.0, 1.0, 1.0]
         n = len(p)
 
-        # 1 years should be enough
         first = Date(1, January, 2004)
         last = Date(31, December, 2004)
         dayCounter = OneDayCounter()
 
         start = first
         while start <= last:
-            # for (start = first start <= last start++) {
+
             for i in range(n):
                 end = start + p[i]
                 calculated = dayCounter.yearFraction(start, end)
@@ -471,7 +457,8 @@ class DayCounterTest(unittest.TestCase):
                 start += Period(1, Days)
 
     def testBusiness252(self):
-        TEST_MESSAGE("Testing business/252 day counter...")
+        TEST_MESSAGE(
+            "Testing business/252 day counter...")
 
         testDates = [
             Date(1, February, 2002),
@@ -519,7 +506,8 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected[i - 1]) > 1.0e-12)
 
     def testThirty365(self):
-        TEST_MESSAGE("Testing 30/365 day counter...")
+        TEST_MESSAGE(
+            "Testing 30/365 day counter...")
 
         d1 = Date(17, June, 2011)
         d2 = Date(30, December, 2012)
@@ -533,28 +521,24 @@ class DayCounterTest(unittest.TestCase):
         self.assertFalse(abs(t - expected) > 1.0e-12)
 
     def testThirty360_BondBasis(self):
-        TEST_MESSAGE("Testing 30/360 day counter (Bond Basis)...")
-
-        # See https:#www.isda.org/2008/12/22/30-360-day-count-conventions/
+        TEST_MESSAGE(
+            "Testing 30/360 day counter (Bond Basis)...")
 
         dayCounter = Thirty360(Thirty360.BondBasis)
 
         data = [
-            # Example 1: End dates do not involve the last day of February
             Thirty360Case(Date(20, August, 2006), Date(20, February, 2007), 180),
             Thirty360Case(Date(20, February, 2007), Date(20, August, 2007), 180),
             Thirty360Case(Date(20, August, 2007), Date(20, February, 2008), 180),
             Thirty360Case(Date(20, February, 2008), Date(20, August, 2008), 180),
             Thirty360Case(Date(20, August, 2008), Date(20, February, 2009), 180),
             Thirty360Case(Date(20, February, 2009), Date(20, August, 2009), 180),
-            # Example 2: End dates include some end-February dates
             Thirty360Case(Date(31, August, 2006), Date(28, February, 2007), 178),
             Thirty360Case(Date(28, February, 2007), Date(31, August, 2007), 183),
             Thirty360Case(Date(31, August, 2007), Date(29, February, 2008), 179),
             Thirty360Case(Date(29, February, 2008), Date(31, August, 2008), 182),
             Thirty360Case(Date(31, August, 2008), Date(28, February, 2009), 178),
             Thirty360Case(Date(28, February, 2009), Date(31, August, 2009), 183),
-            # Example 3: Miscellaneous calculations
             Thirty360Case(Date(31, January, 2006), Date(28, February, 2006), 28),
             Thirty360Case(Date(30, January, 2006), Date(28, February, 2006), 28),
             Thirty360Case(Date(28, February, 2006), Date(3, March, 2006), 5),
@@ -576,21 +560,18 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(calculated != x.expected)
 
     def testThirty360_EurobondBasis(self):
-        TEST_MESSAGE("Testing 30/360 day counter (Eurobond Basis)...")
-
-        # See https:#www.isda.org/2008/12/22/30-360-day-count-conventions/
+        TEST_MESSAGE(
+            "Testing 30/360 day counter (Eurobond Basis)...")
 
         dayCounter = Thirty360(Thirty360.EurobondBasis)
 
         data = [
-            # Example 1: End dates do not involve the last day of February
             Thirty360Case(Date(20, August, 2006), Date(20, February, 2007), 180),
             Thirty360Case(Date(20, February, 2007), Date(20, August, 2007), 180),
             Thirty360Case(Date(20, August, 2007), Date(20, February, 2008), 180),
             Thirty360Case(Date(20, February, 2008), Date(20, August, 2008), 180),
             Thirty360Case(Date(20, August, 2008), Date(20, February, 2009), 180),
             Thirty360Case(Date(20, February, 2009), Date(20, August, 2009), 180),
-            # Example 2: End dates include some end-February dates
             Thirty360Case(Date(28, February, 2006), Date(31, August, 2006), 182),
             Thirty360Case(Date(31, August, 2006), Date(28, February, 2007), 178),
             Thirty360Case(Date(28, February, 2007), Date(31, August, 2007), 182),
@@ -603,7 +584,6 @@ class DayCounterTest(unittest.TestCase):
             Thirty360Case(Date(31, August, 2010), Date(28, Feb, 2011), 178),
             Thirty360Case(Date(28, February, 2011), Date(31, August, 2011), 182),
             Thirty360Case(Date(31, August, 2011), Date(29, Feb, 2012), 179),
-            # Example 3: Miscellaneous calculations
             Thirty360Case(Date(31, January, 2006), Date(28, February, 2006), 28),
             Thirty360Case(Date(30, January, 2006), Date(28, February, 2006), 28),
             Thirty360Case(Date(28, February, 2006), Date(3, March, 2006), 5),
@@ -625,12 +605,10 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(calculated != x.expected)
 
     def testThirty360_ISDA(self):
-        TEST_MESSAGE("Testing 30/360 day counter (ISDA)...")
-
-        # See https:#www.isda.org/2008/12/22/30-360-day-count-conventions/
+        TEST_MESSAGE(
+            "Testing 30/360 day counter (ISDA)...")
 
         data1 = [
-            # Example 1: End dates do not involve the last day of February
             Thirty360Case(Date(20, August, 2006), Date(20, February, 2007), 180),
             Thirty360Case(Date(20, February, 2007), Date(20, August, 2007), 180),
             Thirty360Case(Date(20, August, 2007), Date(20, February, 2008), 180),
@@ -646,7 +624,6 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(calculated != x.expected)
 
         data2 = [
-            # Example 2: End dates include some end-February dates
             Thirty360Case(Date(28, February, 2006), Date(31, August, 2006), 180),
             Thirty360Case(Date(31, August, 2006), Date(28, February, 2007), 180),
             Thirty360Case(Date(28, February, 2007), Date(31, August, 2007), 180),
@@ -668,7 +645,6 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(calculated != x.expected)
 
         data3 = [
-            # Example 3: Miscellaneous calculations
             Thirty360Case(Date(31, January, 2006), Date(28, February, 2006), 30),
             Thirty360Case(Date(30, January, 2006), Date(28, February, 2006), 30),
             Thirty360Case(Date(28, February, 2006), Date(3, March, 2006), 3),
@@ -693,21 +669,19 @@ class DayCounterTest(unittest.TestCase):
             self.assertFalse(calculated != x.expected)
 
     def testActual365_Canadian(self):
-        TEST_MESSAGE("Testing that Actual/365 (Canadian) throws when needed...")
+        TEST_MESSAGE(
+            "Testing that Actual/365 (Canadian) throws when needed...")
 
         dayCounter = Actual365Fixed(Actual365Fixed.Canadian)
 
         try:
-            # no reference period
             dayCounter.yearFraction(
                 Date(10, September, 2018),
                 Date(10, September, 2019))
-            # BOOST_ERROR("Invalid call to yearFraction failed to throw")
         except Exception as e:
             print(e)
 
         try:
-            # reference period shorter than a month
             dayCounter.yearFraction(
                 Date(10, September, 2018),
                 Date(12, September, 2018),
@@ -717,7 +691,8 @@ class DayCounterTest(unittest.TestCase):
             print(e)
 
     def testIntraday(self):
-        TEST_MESSAGE("Testing intraday behavior of day counter ...")
+        TEST_MESSAGE(
+            "Testing intraday behavior of day counter ...")
 
         d1 = Date(12, February, 2015)
         d2 = Date(14, February, 2015, 12, 34, 17, 1, 230298)

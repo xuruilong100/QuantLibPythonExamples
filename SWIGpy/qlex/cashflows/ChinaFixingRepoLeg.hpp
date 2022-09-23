@@ -8,34 +8,34 @@
 
 namespace QuantLib {
 
-class ChinaFixingRepo;
+    class ChinaFixingRepo;
 
-class ChinaFixingRepoLeg {
-  public:
-    ChinaFixingRepoLeg(const Schedule& schedule,
-                       ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo);
+    class ChinaFixingRepoLeg {
+      public:
+        ChinaFixingRepoLeg(const Schedule& schedule,
+                           ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo);
 
-    ChinaFixingRepoLeg& withNotional(Real notional);
-    ChinaFixingRepoLeg& withPaymentDayCounter(const DayCounter&);
-    ChinaFixingRepoLeg& withPaymentAdjustment(BusinessDayConvention);
-    ChinaFixingRepoLeg& withPaymentCalendar(const Calendar&);
-    ChinaFixingRepoLeg& withPaymentLag(Natural lag);
-    ChinaFixingRepoLeg& withGearing(Real gearing);
-    ChinaFixingRepoLeg& withSpread(Spread spread);
-    operator Leg() const;
+        ChinaFixingRepoLeg& withNotional(Real notional);
+        ChinaFixingRepoLeg& withPaymentDayCounter(const DayCounter&);
+        ChinaFixingRepoLeg& withPaymentAdjustment(BusinessDayConvention);
+        ChinaFixingRepoLeg& withPaymentCalendar(const Calendar&);
+        ChinaFixingRepoLeg& withPaymentLag(Natural lag);
+        ChinaFixingRepoLeg& withGearing(Real gearing);
+        ChinaFixingRepoLeg& withSpread(Spread spread);
+        operator Leg() const;
 
-  private:
-    Schedule schedule_;
-    ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo_;
-    Real notional_;
-    DayCounter paymentDayCounter_;
-    Calendar paymentCalendar_;
-    BusinessDayConvention paymentConvention_;
-    Natural paymentLag_;
-    Real gearing_;
-    Spread spread_;
-};
+      private:
+        Schedule schedule_;
+        ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo_;
+        Real notional_;
+        DayCounter paymentDayCounter_;
+        Calendar paymentCalendar_;
+        BusinessDayConvention paymentConvention_;
+        Natural paymentLag_;
+        Real gearing_;
+        Spread spread_;
+    };
 
-}    // namespace QuantLib
+} // namespace QuantLib
 
-#endif    // ChinaFixingRepoLeg_HPP
+#endif // ChinaFixingRepoLeg_HPP

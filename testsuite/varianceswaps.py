@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class MCVarianceSwapData(object):
@@ -8,27 +10,27 @@ class MCVarianceSwapData(object):
                  typeOpt,
                  varStrike,
                  nominal,
-                 s,  # spot
-                 q,  # dividend
-                 r,  # risk-free rate
-                 t1,  # intermediate time
-                 t,  # time to maturity
-                 v1,  # volatility at t1
-                 v,  # volatility at t
-                 result,  # result
+                 s,
+                 q,
+                 r,
+                 t1,
+                 t,
+                 v1,
+                 v,
+                 result,
                  tol, ):
         self.typeOpt = typeOpt
         self.varStrike = varStrike
         self.nominal = nominal
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t1 = t1  # intermediate time
-        self.t = t  # time to maturity
-        self.v1 = v1  # volatility at t1
-        self.v = v  # volatility at t
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t1 = t1
+        self.t = t
+        self.v1 = v1
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class ReplicatingVarianceSwapData(object):
@@ -36,23 +38,23 @@ class ReplicatingVarianceSwapData(object):
                  typeOpt,
                  varStrike,
                  nominal,
-                 s,  # spot
-                 q,  # dividend
-                 r,  # risk-free rate
-                 t,  # time to maturity
-                 v,  # volatility at t
-                 result,  # result
+                 s,
+                 q,
+                 r,
+                 t,
+                 v,
+                 result,
                  tol, ):
         self.typeOpt = typeOpt
         self.varStrike = varStrike
         self.nominal = nominal
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility at t
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class Datum(object):
@@ -66,25 +68,15 @@ class Datum(object):
 
 
 class VarianceSwapTest(unittest.TestCase):
+
     def testReplicatingVarianceSwap(self):
-        TEST_MESSAGE("Testing variance swap with replicating cost engine...")
+        TEST_MESSAGE(
+            "Testing variance swap with replicating cost engine...")
 
         values = [
-
-            # data from "A Guide to and Variance Swaps",
-            #   Derman, Kamal & Zou, 1999
-            #   with maturity t corrected from 0.25 to 0.246575
-            #   corresponding to Jan 1, 1999 to Apr 1, 1999
-
-            # type, varStrike, nominal,     s,    q,    r,        t,    v,  result, tol
             ReplicatingVarianceSwapData(Position.Long, 0.04, 50000, 100.0, 0.00, 0.05, 0.246575, 0.20, 0.04189, 1.0e-4)]
 
         replicatingOptionData = [
-
-            # data from "A Guide to and Variance Swaps",
-            #   Derman, Kamal & Zou, 1999
-
-            # Option.Type, strike, v
             Datum(Option.Put, 50, 0.30),
             Datum(Option.Put, 55, 0.29),
             Datum(Option.Put, 60, 0.28),
@@ -106,7 +98,7 @@ class VarianceSwapTest(unittest.TestCase):
             Datum(Option.Call, 135, 0.13)]
 
         dc = Actual365Fixed()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -129,7 +121,6 @@ class VarianceSwapTest(unittest.TestCase):
             callVols = DoubleVector()
             putVols = DoubleVector()
 
-            # Assumes ascending strikes and same min call and max put strikes
             for j in range(options):
                 if replicatingOptionData[j].typeOpt == Option.Call:
                     callStrikes.push_back(replicatingOptionData[j].strike)
@@ -173,23 +164,14 @@ class VarianceSwapTest(unittest.TestCase):
             self.assertFalse(error > value.tol)
 
     def testMCVarianceSwap(self):
-        TEST_MESSAGE("Testing variance swap with Monte Carlo engine...")
+        TEST_MESSAGE(
+            "Testing variance swap with Monte Carlo engine...")
 
         values = [
-
-            # data from "A Guide to and Variance Swaps",
-            #   Derman, Kamal & Zou, 1999
-            #   with maturity t corrected from 0.25 to 0.246575
-            #   corresponding to Jan 1, 1999 to Apr 1, 1999
-
-            # exercising code using BlackVarianceCurve because BlackVarianceSurface is unreliable
-            # Result should be v*v for arbitrary t1 and v1 (as long as 0<=t1<t and 0<=v1<v)
-
-            # type, varStrike, nominal,     s,    q,    r,  t1,     t,     v1,    v, result, tol
             MCVarianceSwapData(Position.Long, 0.04, 50000, 100.0, 0.00, 0.05, 0.1, 0.246575, 0.1, 0.20, 0.04, 3.0e-4)]
 
         dc = Actual365Fixed()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)

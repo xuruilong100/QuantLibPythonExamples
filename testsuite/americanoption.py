@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class AmericanOptionData(object):
@@ -15,103 +17,21 @@ class AmericanOptionData(object):
                  result):
         self.optType = optType
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk - free        rate
-        self.t = t  # time        to        maturity
-        self.v = v  # volatility
-        self.result = result  # expected        result
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
 
 
 class AmericanOptionTest(unittest.TestCase):
-
-    def _testFdGreeks(self,
-                      Engine,
-                      testName):
-        backup = SavedSettings()
-        calculated = dict()
-        expected = dict()
-        tolerance = dict()
-        tolerance["delta"] = 7.0e-4
-        tolerance["gamma"] = 2.0e-4
-
-        types = [Option.Call, Option.Put]
-        strikes = [50.0, 99.5, 100.0, 100.5, 150.0]
-        underlyings = [100.0]
-        qRates = [0.04, 0.05, 0.06]
-        rRates = [0.01, 0.05, 0.15]
-        years = [1, 2]
-        vols = [0.11, 0.50, 1.20]
-
-        today = Date.todaysDate()
-        dc = Actual360()
-
-        spot = SimpleQuote(0.0)
-        qRate = SimpleQuote(0.0)
-        qTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
-        rRate = SimpleQuote(0.0)
-        rTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
-        vol = SimpleQuote(0.0)
-        volTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
-
-        for i in range(len(types)):
-            for j in range(len(strikes)):
-                for k in range(len(years)):
-                    exDate = today + Period(years[k], Years)
-                    exercise = AmericanExercise(today, exDate)
-                    payoff = PlainVanillaPayoff(types[i], strikes[j])
-                    stochProcess = BlackScholesMertonProcess(
-                        QuoteHandle(spot), qTS, rTS, volTS)
-
-                    engine = Engine(stochProcess)
-                    option = VanillaOption(payoff, exercise)
-                    option.setPricingEngine(engine)
-
-                    for l in range(len(underlyings)):
-                        for m in range(len(qRates)):
-                            for n in range(len(rRates)):
-                                for p in range(len(vols)):
-                                    u = underlyings[l]
-                                    q = qRates[m]
-                                    r = rRates[n]
-                                    v = vols[p]
-
-                                    spot.setValue(u)
-                                    qRate.setValue(q)
-                                    rRate.setValue(r)
-                                    vol.setValue(v)
-
-                                    value = option.NPV()
-                                    calculated["delta"] = option.delta()
-                                    calculated["gamma"] = option.gamma()
-
-                                    if value > spot.value() * 1.0e-5:
-                                        du = u * 1.0e-4
-
-                                        spot.setValue(u + du)
-                                        value_p = option.NPV()
-                                        delta_p = option.delta()
-                                        spot.setValue(u - du)
-                                        value_m = option.NPV()
-                                        delta_m = option.delta()
-                                        spot.setValue(u)
-                                        expected["delta"] = (value_p - value_m) / (2 * du)
-                                        expected["gamma"] = (delta_p - delta_m) / (2 * du)
-
-                                        for greek in calculated.keys():
-                                            expct = expected[greek]
-                                            calcl = calculated[greek]
-                                            tol = tolerance[greek]
-                                            error = relativeError(expct, calcl, u)
-
-                                            self.assertFalse(error > tol)
 
     def testBaroneAdesiWhaleyValues(self):
         TEST_MESSAGE(
             "Testing Barone-Adesi and Whaley approximation for American options...")
 
         values = [
-            # type, strike, spot, q, r, t, vol, values
             AmericanOptionData(Option.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0206),
             AmericanOptionData(Option.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8771),
             AmericanOptionData(Option.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 10.0089),
@@ -150,7 +70,7 @@ class AmericanOptionTest(unittest.TestCase):
             AmericanOptionData(Option.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823),
             AmericanOptionData(Option.Put, 100.00, 100.00, 0.00, 0.00, 0.50, 0.15, 4.2294)]
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         dc = Actual360()
 
         spot = SimpleQuote(0.0)
@@ -162,15 +82,15 @@ class AmericanOptionTest(unittest.TestCase):
         volTS = flatVol(today, vol, dc)
         tolerance = 3.0e-3
 
-        for i in range(len(values)):
-            payoff = PlainVanillaPayoff(values[i].optType, values[i].strike)
-            exDate = today + Period(int(values[i].t * 360 + 0.5), Days)
+        for value in values:
+            payoff = PlainVanillaPayoff(value.optType, value.strike)
+            exDate = today + timeToDays(value.t)
             exercise = AmericanExercise(today, exDate)
 
-            spot.setValue(values[i].s)
-            qRate.setValue(values[i].q)
-            rRate.setValue(values[i].r)
-            vol.setValue(values[i].v)
+            spot.setValue(value.s)
+            qRate.setValue(value.q)
+            rRate.setValue(value.r)
+            vol.setValue(value.v)
 
             stochProcess = BlackScholesMertonProcess(
                 QuoteHandle(spot),
@@ -183,32 +103,24 @@ class AmericanOptionTest(unittest.TestCase):
             option.setPricingEngine(engine)
 
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
+            error = abs(calculated - value.result)
             self.assertFalse(error > tolerance)
 
     def testBjerksundStenslandValues(self):
         TEST_MESSAGE(
-            "Testing Bjerksund and Stensland approximation, for American options...")
+            "Testing Bjerksund and Stensland approximation for American options...")
 
         values = [
-            #      type, strike,   spot,    q,    r,    t,  vol,   value, tol
-            # from "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
             AmericanOptionData(Option.Call, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
-            # from "Option pricing formulas", Haug, McGraw-Hill 1998, VBA code
             AmericanOptionData(Option.Put, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531),
-            # ATM option with very small volatility, reference value taken from R
             AmericanOptionData(Option.Call, 100, 100, 0.05, 0.05, 1.0, 0.0021, 0.08032314),
-            # ATM option with very small volatility,
-            # reference value taken from Barone-Adesi and Whaley Approximation
             AmericanOptionData(Option.Call, 100, 100, 0.05, 0.05, 1.0, 0.0001, 0.003860656),
             AmericanOptionData(Option.Call, 100, 99.99, 0.05, 0.05, 1.0, 0.0001, 0.00081),
-            # ITM option with a very small volatility
             AmericanOptionData(Option.Call, 100, 110, 0.05, 0.05, 1.0, 0.0001, 10.0),
             AmericanOptionData(Option.Put, 110, 100, 0.05, 0.05, 1.0, 0.0001, 10.0),
-            # ATM option with a very large volatility
             AmericanOptionData(Option.Put, 100, 110, 0.05, 0.05, 1.0, 10, 94.89543)]
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         dc = Actual360()
 
         spot = SimpleQuote(0.0)
@@ -220,16 +132,16 @@ class AmericanOptionTest(unittest.TestCase):
         volTS = flatVol(today, vol, dc)
         tolerance = 5.0e-5
 
-        for i in range(len(values)):
+        for value in values:
             payoff = PlainVanillaPayoff(
-                values[i].optType, values[i].strike)
-            exDate = today + Period(int(values[i].t * 360 + 0.5), Days)
+                value.optType, value.strike)
+            exDate = today + timeToDays(value.t)
             exercise = AmericanExercise(today, exDate)
 
-            spot.setValue(values[i].s)
-            qRate.setValue(values[i].q)
-            rRate.setValue(values[i].r)
-            vol.setValue(values[i].v)
+            spot.setValue(value.s)
+            qRate.setValue(value.q)
+            rRate.setValue(value.r)
+            vol.setValue(value.v)
 
             stochProcess = BlackScholesMertonProcess(
                 QuoteHandle(spot),
@@ -243,15 +155,14 @@ class AmericanOptionTest(unittest.TestCase):
             option.setPricingEngine(engine)
 
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
+            error = abs(calculated - value.result)
             self.assertFalse(error > tolerance)
 
     def testJuValues(self):
-        TEST_MESSAGE("Testing Ju approximation for American options...")
+        TEST_MESSAGE(
+            "Testing Ju approximation for American options...")
 
-        values = [
-            #        type, strike,   spot,    q,    r,    t,     vol,   value, tol
-            # These values are from Exhibit 3 - Short dated Put Options
+        juValues = [
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
@@ -279,11 +190,6 @@ class AmericanOptionTest(unittest.TestCase):
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
-
-            # Type in Exhibits 4 and 5 if you have some spare time -)
-
-            #        type, strike,   spot,    q,    r,    t,     vol,   value, tol
-            # values from Exhibit 6 - Long dated Call Options with dividends
             AmericanOptionData(Option.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
             AmericanOptionData(Option.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
             AmericanOptionData(Option.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
@@ -305,7 +211,7 @@ class AmericanOptionTest(unittest.TestCase):
             AmericanOptionData(Option.Call, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
             AmericanOptionData(Option.Call, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177)]
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         dc = Actual360()
 
         spot = SimpleQuote(0.0)
@@ -318,16 +224,16 @@ class AmericanOptionTest(unittest.TestCase):
 
         tolerance = 1.0e-3
 
-        for i in range(len(values)):
+        for juValue in juValues:
             payoff = PlainVanillaPayoff(
-                values[i].optType, values[i].strike)
-            exDate = today + Period(int(values[i].t * 360 + 0.5), Days)
+                juValue.optType, juValue.strike)
+            exDate = today + timeToDays(juValue.t)
             exercise = AmericanExercise(today, exDate)
 
-            spot.setValue(values[i].s)
-            qRate.setValue(values[i].q)
-            rRate.setValue(values[i].r)
-            vol.setValue(values[i].v)
+            spot.setValue(juValue.s)
+            qRate.setValue(juValue.q)
+            rRate.setValue(juValue.r)
+            vol.setValue(juValue.v)
 
             stochProcess = BlackScholesMertonProcess(
                 QuoteHandle(spot),
@@ -341,15 +247,14 @@ class AmericanOptionTest(unittest.TestCase):
             option.setPricingEngine(engine)
 
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
+            error = abs(calculated - juValue.result)
             self.assertFalse(error > tolerance)
 
     def testFdValues(self):
-        TEST_MESSAGE("Testing finite-difference engine, for American options...")
+        TEST_MESSAGE(
+            "Testing finite-difference engine for American options...")
 
-        values = [
-            #        type, strike,   spot,    q,    r,    t,     vol,   value, tol
-            # These values are from Exhibit 3 - Short dated Put Options
+        juValues = [
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
             AmericanOptionData(Option.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
@@ -377,11 +282,6 @@ class AmericanOptionTest(unittest.TestCase):
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
             AmericanOptionData(Option.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
-
-            # Type in Exhibits 4 and 5 if you have some spare time -)
-
-            #        type, strike,   spot,    q,    r,    t,     vol,   value, tol
-            # values from Exhibit 6 - Long dated Call Options with dividends
             AmericanOptionData(Option.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
             AmericanOptionData(Option.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
             AmericanOptionData(Option.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
@@ -403,7 +303,7 @@ class AmericanOptionTest(unittest.TestCase):
             AmericanOptionData(Option.Call, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
             AmericanOptionData(Option.Call, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177)]
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         dc = Actual360()
 
         spot = SimpleQuote(0.0)
@@ -416,16 +316,16 @@ class AmericanOptionTest(unittest.TestCase):
 
         tolerance = 8.0e-2
 
-        for i in range(len(values)):
+        for juValue in juValues:
             payoff = PlainVanillaPayoff(
-                values[i].optType, values[i].strike)
-            exDate = today + Period(int(values[i].t * 360 + 0.5), Days)
+                juValue.optType, juValue.strike)
+            exDate = today + timeToDays(juValue.t)
             exercise = AmericanExercise(today, exDate)
 
-            spot.setValue(values[i].s)
-            qRate.setValue(values[i].q)
-            rRate.setValue(values[i].r)
-            vol.setValue(values[i].v)
+            spot.setValue(juValue.s)
+            qRate.setValue(juValue.q)
+            rRate.setValue(juValue.r)
+            vol.setValue(juValue.v)
 
             stochProcess = BlackScholesMertonProcess(
                 QuoteHandle(spot),
@@ -439,21 +339,22 @@ class AmericanOptionTest(unittest.TestCase):
             option.setPricingEngine(engine)
 
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
+            error = abs(calculated - juValue.result)
             self.assertFalse(error > tolerance)
 
     def testFdAmericanGreeks(self):
-        TEST_MESSAGE("Testing finite-differences American option greeks...")
-        self._testFdGreeks(
-            FdBlackScholesVanillaEngine, 'testFdAmericanGreeks')
+        TEST_MESSAGE(
+            "Testing finite-differences American option greeks...")
+        self._testFdGreeks(FdBlackScholesVanillaEngine)
 
     def testFdShoutGreeks(self):
-        TEST_MESSAGE("Testing finite-differences shout option greeks...")
-        self._testFdGreeks(
-            FdBlackScholesShoutEngine, 'testFdShoutGreeks')
+        TEST_MESSAGE(
+            "Testing finite-differences shout option greeks...")
+        self._testFdGreeks(FdBlackScholesShoutEngine)
 
     def testFDShoutNPV(self):
-        TEST_MESSAGE("Testing finite-differences shout option pricing...")
+        TEST_MESSAGE(
+            "Testing finite-differences shout option pricing...")
 
         backup = SavedSettings()
 
@@ -472,7 +373,10 @@ class AmericanOptionTest(unittest.TestCase):
         maturityDate = today + Period(5, Years)
 
         class TestDescription(object):
-            def __init__(self, strike, optType, expected):
+            def __init__(self,
+                         strike,
+                         optType,
+                         expected):
                 self.strike = strike
                 self.type = optType
                 self.expected = expected
@@ -504,7 +408,8 @@ class AmericanOptionTest(unittest.TestCase):
             self.assertFalse(diff > tol)
 
     def testZeroVolFDShoutNPV(self):
-        TEST_MESSAGE("Testing zero volatility shout option pricing with discrete dividends...")
+        TEST_MESSAGE(
+            "Testing zero volatility shout option pricing with discrete dividends...")
 
         backup = SavedSettings()
 
@@ -546,7 +451,8 @@ class AmericanOptionTest(unittest.TestCase):
         self.assertFalse(diff > tol)
 
     def testLargeDividendShoutNPV(self):
-        TEST_MESSAGE("Testing zero strike shout option pricing with discrete dividends...")
+        TEST_MESSAGE(
+            "Testing zero strike shout option pricing with discrete dividends...")
 
         backup = SavedSettings()
 
@@ -595,7 +501,8 @@ class AmericanOptionTest(unittest.TestCase):
         self.assertFalse(diff > tol)
 
     def testEscrowedVsSpotAmericanOption(self):
-        TEST_MESSAGE("Testing escrowed vs spot dividend model for American options...")
+        TEST_MESSAGE(
+            "Testing escrowed vs spot dividend model for American options...")
 
         backup = SavedSettings()
 
@@ -652,7 +559,8 @@ class AmericanOptionTest(unittest.TestCase):
         self.assertFalse(diffDelta > tol)
 
     def testTodayIsDividendDate(self):
-        TEST_MESSAGE("Testing escrowed vs spot dividend model on dividend dates for American options...")
+        TEST_MESSAGE(
+            "Testing escrowed vs spot dividend model on dividend dates for American options...")
 
         backup = SavedSettings()
 
@@ -731,3 +639,80 @@ class AmericanOptionTest(unittest.TestCase):
         tol = 5e-2
 
         self.assertFalse(diffNpv > tol)
+
+    def _testFdGreeks(self,
+                      Engine):
+        backup = SavedSettings()
+        calculated = dict()
+        expected = dict()
+        tolerance = dict()
+        tolerance["delta"] = 7.0e-4
+        tolerance["gamma"] = 2.0e-4
+
+        types = [Option.Call, Option.Put]
+        strikes = [50.0, 99.5, 100.0, 100.5, 150.0]
+        underlyings = [100.0]
+        qRates = [0.04, 0.05, 0.06]
+        rRates = [0.01, 0.05, 0.15]
+        years = [1, 2]
+        vols = [0.11, 0.50, 1.20]
+
+        dc = Actual360()
+        today = knownGoodDefault
+        Settings.instance().evaluationDate = today
+
+        spot = SimpleQuote(0.0)
+        qRate = SimpleQuote(0.0)
+        qTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
+        rRate = SimpleQuote(0.0)
+        rTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
+        vol = SimpleQuote(0.0)
+        volTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
+
+        for ty in types:
+            for strike in strikes:
+                for year in years:
+                    exDate = today + Period(year, Years)
+                    exercise = AmericanExercise(today, exDate)
+                    payoff = PlainVanillaPayoff(ty, strike)
+                    stochProcess = BlackScholesMertonProcess(
+                        QuoteHandle(spot), qTS, rTS, volTS)
+
+                    engine = Engine(stochProcess)
+                    option = VanillaOption(payoff, exercise)
+                    option.setPricingEngine(engine)
+
+                    for u in underlyings:
+                        for q in qRates:
+                            for r in rRates:
+                                for v in vols:
+
+                                    spot.setValue(u)
+                                    qRate.setValue(q)
+                                    rRate.setValue(r)
+                                    vol.setValue(v)
+
+                                    value = option.NPV()
+                                    calculated["delta"] = option.delta()
+                                    calculated["gamma"] = option.gamma()
+
+                                    if value > spot.value() * 1.0e-5:
+                                        du = u * 1.0e-4
+
+                                        spot.setValue(u + du)
+                                        value_p = option.NPV()
+                                        delta_p = option.delta()
+                                        spot.setValue(u - du)
+                                        value_m = option.NPV()
+                                        delta_m = option.delta()
+                                        spot.setValue(u)
+                                        expected["delta"] = (value_p - value_m) / (2 * du)
+                                        expected["gamma"] = (delta_p - delta_m) / (2 * du)
+
+                                        for greek in calculated.keys():
+                                            expct = expected[greek]
+                                            calcl = calculated[greek]
+                                            tol = tolerance[greek]
+                                            error = relativeError(expct, calcl, u)
+
+                                            self.assertFalse(error > tol)

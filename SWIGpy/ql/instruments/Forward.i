@@ -9,6 +9,7 @@
 %{
 using QuantLib::Forward;
 using QuantLib::OvernightIndexFuture;
+using QuantLib::ForwardRateAgreement;
 %}
 
 %shared_ptr(Forward)
@@ -44,6 +45,23 @@ class OvernightIndexFuture : public Instrument {
         RateAveraging::Type averagingMethod = RateAveraging::Compound);
 
     Real convexityAdjustment() const;
+};
+
+%shared_ptr(ForwardRateAgreement)
+class ForwardRateAgreement : public Instrument {
+  public:
+    ForwardRateAgreement(
+        const Date& valueDate,
+        const Date& maturityDate,
+        Position::Type type,
+        Rate strikeForwardRate,
+        Real notionalAmount,
+        const ext::shared_ptr<IborIndex>& index,
+        const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
+        bool useIndexedCoupon = true);
+
+    Date fixingDate() const;
+    InterestRate forwardRate() const;
 };
 
 #endif

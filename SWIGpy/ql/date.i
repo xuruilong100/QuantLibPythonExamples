@@ -37,12 +37,16 @@ using QuantLib::days;
 class Period {
   public:
     Period();
-    Period(Integer n, TimeUnit units);
-    explicit Period(Frequency);
+    Period(
+        Integer n, 
+        TimeUnit units);
+    Period(
+        Frequency);
     Integer length() const;
     TimeUnit units() const;
     Frequency frequency() const;
     void normalize();
+    Period normalized() const;
     %extend {
         Period(const std::string& str) {
             return new Period(PeriodParser::parse(str));
@@ -138,12 +142,18 @@ void _replace_format(
 class Date {
   public:
     Date();
-    Date(Day d, Month m, Year y);
+    Date(Day d, 
+         Month m, 
+         Year y);
     Date(BigInteger serialNumber);
     %#ifdef QL_HIGH_RESOLUTION_DATE
     %extend {
-        Date(Day d, Month m, Year y,
-             Hour hours, Minute minutes, Second seconds,
+        Date(Day d, 
+             Month m, 
+             Year y,
+             Hour hours, 
+             Minute minutes, 
+             Second seconds,
              Millisecond millisec = 0,
              Microsecond microsec = 0) {
             return new Date(
@@ -292,6 +302,8 @@ class Date {
         return Date(date.day, date.month, date.year)
     %}
 };
+
+%template(DateDatePair) std::pair<Date, Date>;
 
 class DateParser {
   public:

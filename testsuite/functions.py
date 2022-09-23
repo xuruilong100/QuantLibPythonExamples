@@ -1,13 +1,17 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import log, sin
+
+from QuantLib import *
 from numpy import exp
+
+from utilities import *
 
 
 class FunctionsTest(unittest.TestCase):
+
     def testFactorial(self):
-        TEST_MESSAGE("Testing factorial numbers...")
+        TEST_MESSAGE(
+            "Testing factorial numbers...")
 
         expected = 1.0
         calculated = Factorial.get(0)
@@ -19,7 +23,8 @@ class FunctionsTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected) / expected > 1.0e-9)
 
     def testGammaFunction(self):
-        TEST_MESSAGE("Testing Gamma function...")
+        TEST_MESSAGE(
+            "Testing Gamma function...")
 
         expected = 0.0
         calculated = GammaFunction().logValue(1)
@@ -31,9 +36,9 @@ class FunctionsTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected) / expected > 1.0e-9)
 
     def testGammaValues(self):
-        TEST_MESSAGE("Testing Gamma values...")
+        TEST_MESSAGE(
+            "Testing Gamma values...")
 
-        # reference results are calculated with R
         tasks = [
             [0.0001, 9999.422883231624, 1e3],
             [1.2, 0.9181687423997607, 1e3],
@@ -55,10 +60,8 @@ class FunctionsTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected) > tol)
 
     def testModifiedBesselFunctions(self):
-        TEST_MESSAGE("Testing modified Bessel function of first and second kind...")
-
-        # reference values are computed with R and the additional package Bessel
-        # http://cran.r-project.org/web/packages/Bessel
+        TEST_MESSAGE(
+            "Testing modified Bessel function of first and second kind...")
 
         r = [
             [-1.3, 2.0, 1.2079888436539505, 0.1608243636110430],
@@ -116,11 +119,12 @@ class FunctionsTest(unittest.TestCase):
 
             self.assertFalse(abs(expected_i - calculated_i) > tol_i)
             self.assertFalse(
-                abs(expected_k) > 1e-4  # do not check small values
+                abs(expected_k) > 1e-4
                 and abs(expected_k - calculated_k) > tol_k)
 
     def testWeightedModifiedBesselFunctions(self):
-        TEST_MESSAGE("Testing weighted modified Bessel functions...")
+        TEST_MESSAGE(
+            "Testing weighted modified Bessel functions...")
         nu = -5.0
         while nu <= 5.0:
             x = 0.1

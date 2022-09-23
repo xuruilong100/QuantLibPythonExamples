@@ -25,10 +25,11 @@ class Rounding {
         Floor,
         Ceiling
     };
-    Rounding() = default;
-    explicit Rounding(Integer precision,
-                      Type type = Closest,
-                      Integer digit = 5);
+    Rounding();
+    Rounding(
+        Integer precision,
+        Type type = Closest,
+        Integer digit = 5);
     Decimal operator()(Decimal value) const;
     Integer precision() const;
     Type type() const;
@@ -37,27 +38,37 @@ class Rounding {
 
 class UpRounding : public Rounding {
   public:
-    UpRounding(Integer precision, Integer digit = 5);
+    UpRounding(
+        Integer precision, 
+        Integer digit = 5);
 };
 
 class DownRounding : public Rounding {
   public:
-    DownRounding(Integer precision, Integer digit = 5);
+    DownRounding(
+        Integer precision, 
+        Integer digit = 5);
 };
 
 class ClosestRounding : public Rounding {
   public:
-    ClosestRounding(Integer precision, Integer digit = 5);
+    ClosestRounding(
+        Integer precision, 
+        Integer digit = 5);
 };
 
 class CeilingTruncation : public Rounding {
   public:
-    CeilingTruncation(Integer precision, Integer digit = 5);
+    CeilingTruncation(
+        Integer precision, 
+        Integer digit = 5);
 };
 
 class FloorTruncation : public Rounding {
   public:
-    FloorTruncation(Integer precision, Integer digit = 5);
+    FloorTruncation(
+        Integer precision, 
+        Integer digit = 5);
 };
 
 #endif

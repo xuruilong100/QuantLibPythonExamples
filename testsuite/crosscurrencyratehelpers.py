@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class XccyTestDatum(object):
@@ -28,13 +30,6 @@ class CommonVars(object):
         self.baseCcyIdx = Euribor3M(self.baseCcyIdxHandle)
         self.quoteCcyIdx = USDLibor(
             Period(3, Months), self.quoteCcyIdxHandle)
-
-        # Data source:
-        # N. Moreni, A. Pallavicini (2015)
-        # FX Modelling in Collateralized Markets: foreign measures, basis curves
-        # and pricing formulae.
-
-        # section 4.2.1, Table 2.
 
         self.basisData = []
         self.basisData.append(XccyTestDatum(1, Years, -14.5))
@@ -77,7 +72,7 @@ class CommonVars(object):
                                              isFxBaseCurrencyCollateralCurrency,
                                              isBasisOnFxBaseCurrencyLeg):
         instruments = RateHelperVector()
-        # instruments.reserve(len(xccyData))
+
         for i in xccyData:
             instruments.append(self.constantNotionalXccyRateHelper(
                 i, collateralHandle, isFxBaseCurrencyCollateralCurrency,
@@ -140,7 +135,7 @@ class CommonVars(object):
         leg.withSpreads(basis)
         leg = leg.makeLeg()
         lastPaymentDate = leg[-1].date()
-        # leg.append(SimpleCashFlow(notional, lastPaymentDate))
+
         l = Leg()
         for i in leg:
             l.append(i)
@@ -168,8 +163,9 @@ class CommonVars(object):
             Swap(LegVector(1, baseCcyLeg), BoolVector(1, not payer)))
 
         quoteCcyLeg = self.constantNotionalLeg(
-            self.legSchedule(Period(q.n, q.units),
-                             self.quoteCcyIdx), self.quoteCcyIdx,
+            self.legSchedule(
+                Period(q.n, q.units),
+                self.quoteCcyIdx), self.quoteCcyIdx,
             quoteCcyLegNotional, quoteCcyLegBasis)
         legs.append(
             Swap(LegVector(1, quoteCcyLeg), BoolVector(1, payer)))
@@ -212,7 +208,8 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             isBasisOnFxBaseCurrencyLeg)
 
     def testConstNotionalBasisSwapsWithCollateralAndBasisInQuoteCcy(self):
-        TEST_MESSAGE("Testing constant notional basis swaps with collateral and basis in quote ccy...")
+        TEST_MESSAGE(
+            "Testing constant notional basis swaps with collateral and basis in quote ccy...")
 
         isFxBaseCurrencyCollateralCurrency = false
         isBasisOnFxBaseCurrencyLeg = false
@@ -248,7 +245,8 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             isFxBaseCurrencyLegResettable)
 
     def testResettingBasisSwapsWithCollateralAndBasisInBaseCcy(self):
-        TEST_MESSAGE("Testing resetting basis swaps with collateral and basis in base ccy...")
+        TEST_MESSAGE(
+            "Testing resetting basis swaps with collateral and basis in base ccy...")
 
         isFxBaseCurrencyCollateralCurrency = true
         isFxBaseCurrencyLegResettable = true
@@ -260,7 +258,8 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             isFxBaseCurrencyLegResettable)
 
     def testResettingBasisSwapsWithCollateralAndBasisInQuoteCcy(self):
-        TEST_MESSAGE("Testing resetting basis swaps with collateral and basis in quote ccy...")
+        TEST_MESSAGE(
+            "Testing resetting basis swaps with collateral and basis in quote ccy...")
 
         isFxBaseCurrencyCollateralCurrency = false
         isFxBaseCurrencyLegResettable = false
@@ -280,11 +279,6 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
         data = [XccyTestDatum(1, Months, 10.0)]
         collateralHandle = YieldTermStructureHandle()
 
-        # BOOST_CHECK_THROW(
-        # resettingInstruments =
-        # vars.buildConstantNotionalXccyRateHelpers(data, collateralHandle, true, true),
-        # Error)
-
         self.assertRaises(
             RuntimeError,
             vars.buildConstantNotionalXccyRateHelpers,
@@ -303,9 +297,9 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             vars.basisData, collateralHandle,
             isFxBaseCurrencyCollateralCurrency,
             isBasisOnFxBaseCurrencyLeg)
-        # foreignCcyCurve= PiecewiseYieldCurve<Discount, LogLinear>
+
         foreignCcyCurve = PiecewiseLogLinearDiscount(
-            vars.settlement, instruments, vars.dayCount,LogLinear())
+            vars.settlement, instruments, vars.dayCount, LogLinear())
         foreignCcyCurve.enableExtrapolation()
         foreignCcyHandle = YieldTermStructureHandle(foreignCcyCurve)
         foreignCcyLegEngine = DiscountingSwapEngine(foreignCcyHandle)
@@ -352,12 +346,10 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             isFxBaseCurrencyCollateralCurrency,
             isBasisOnFxBaseCurrencyLeg)
 
-        # resettingCurve= PiecewiseYieldCurve<Discount, LogLinear>(vars.settlement, resettingInstruments, vars.dayCount)
         resettingCurve = PiecewiseLogLinearDiscount(
             vars.settlement, resettingInstruments, vars.dayCount, LogLinear())
         resettingCurve.enableExtrapolation()
 
-        # constNotionalCurve= PiecewiseYieldCurve<Discount, LogLinear>(vars.settlement, constNotionalInstruments, vars.dayCount)
         constNotionalCurve = PiecewiseLogLinearDiscount(
             vars.settlement, constNotionalInstruments, vars.dayCount, LogLinear())
         constNotionalCurve.enableExtrapolation()
@@ -372,9 +364,5 @@ class CrossCurrencyRateHelpersTest(unittest.TestCase):
             constNotionalZero = constNotionalCurve.zeroRate(
                 maturity, vars.dayCount, Continuous)
 
-            # The difference between resetting and constant notional curves
-            # is not expected to be substantial. With the current setup it should
-            # amount to only a few basis points - hence the tolerance level was
-            # set at 5 bps.
             self.assertFalse(
                 abs(resettingZero.rate() - constNotionalZero.rate()) > tolerance)

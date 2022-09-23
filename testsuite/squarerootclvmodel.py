@@ -1,10 +1,14 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, sqrt
+
+from QuantLib import *
 from scipy.stats import ncx2
 
+from utilities import *
+
 chi_squared_type = ncx2
+
+SizeVector = BigNaturalVector
 
 
 class SquareRootCLVCalibrationFunction(object):
@@ -22,11 +26,9 @@ class SquareRootCLVCalibrationFunction(object):
         self.bsProcess_ = bsProcess
         self.refVols_ = refVols
         self.nScenarios_ = nScenarios
-        # c=DateSet(resetDates.begin(), resetDates.end())
-        # c.insert(maturityDates.begin(), maturityDates.end())
+
         self.calibrationDates_ = DateVector()
-        # self.calibrationDates_.insert(
-        #     calibrationDates_.begin(), c.begin(), c.end())
+
         for d in resetDates:
             self.calibrationDates_.append(d)
         for d in maturityDates:
@@ -54,7 +56,6 @@ class SquareRootCLVCalibrationFunction(object):
         spot = QuoteHandle(SimpleQuote(
             self.bsProcess_.x0()))
 
-        # fwdEngine=ForwardVanillaEngine<AnalyticEuropeanEngine>
         fwdEngine = ForwardEuropeanEngine(
             GeneralizedBlackScholesProcess(
                 spot, qTS, rTS,
@@ -69,8 +70,6 @@ class SquareRootCLVCalibrationFunction(object):
             self.calibrationDates_,
             14, 1 - 1e-14, 1e-14)
 
-        # gSqrt = clvSqrtModel.g()
-
         retVal = Array(len(self.resetDates_) * len(self.strikes_))
 
         for i in range(len(self.resetDates_)):
@@ -83,26 +82,20 @@ class SquareRootCLVCalibrationFunction(object):
             df = 4 * theta * kappa / (sigma * sigma)
             ncp = 4 * kappa * exp(-kappa * t0) / (sigma * sigma * (1 - exp(-kappa * t0))) * x0
 
-            # typedef boost.math.non_central_chi_squared_distribution<Real> chi_squared_type
-
             dist = chi_squared_type(df, ncp)
 
             ncp1 = 4 * kappa * exp(-kappa * (t1 - t0)) / (sigma * sigma * (1 - exp(-kappa * (t1 - t0))))
 
-            # LowDiscrepancy.ursg_type ursg = LowDiscrepancy.ursg_type(2, 1235UL)
             ursg = SobolRsg(2, 1235)
 
-            # vector<GeneralStatistics> stats(strikes_.size())
             stats = [GeneralStatistics() for i in range(len(self.strikes_))]
 
             for j in range(self.nScenarios_):
                 path = ursg.nextSequence().value()
 
-                # x1 = boost.math.quantile(dist, path[0])
                 x1 = dist.ppf(path[0])
                 u1 = sigma * sigma * (1 - exp(-kappa * t0)) / (4 * kappa) * x1
 
-                # x2 = boost.math.quantile(chi_squared_type(df, ncp1 * u1), path[1])
                 x2 = chi_squared_type(df, ncp1 * u1).ppf(path[1])
                 u2 = sigma * sigma * (1 - exp(-kappa * (t1 - t0))) / (4 * kappa) * x2
                 X2 = u2 * 4 * kappa / (sigma * sigma * (1 - exp(-kappa * t1)))
@@ -151,7 +144,6 @@ class NonZeroConstraint(object):
         return sigma >= 0.001 and kappa > 1e-6 and theta > 0.001 and x0 > 1e-4
 
     def upperBound(self, params):
-        # upper=[ 1.0, 1.0, 1.0, 2.0 ]
         upper = Array(4)
         upper[0] = 1.0
         upper[1] = 1.0
@@ -161,7 +153,6 @@ class NonZeroConstraint(object):
         return upper
 
     def lowerBound(self, params):
-        # lower=[ 0.001, 0.001, 0.001, 1e-4 ]
         lower = Array(4)
         lower[0] = 0.001
         lower[1] = .001
@@ -221,7 +212,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
         df = 4 * theta * kappa / (sigma * sigma)
         ncp = 4 * kappa * exp(-kappa * maturity) / (sigma * sigma * (1 - exp(-kappa * maturity))) * sqrtProcess.x0()
 
-        # typedef boost.math.non_central_chi_squared_distribution<Real> chi_squared_type
         dist = chi_squared_type(df, ncp)
 
         strikes = [50, 75, 100, 125, 150, 200]
@@ -233,10 +223,8 @@ class SquareRootCLVModelTest(unittest.TestCase):
                 sqrt(volTS.blackVariance(maturity, strike)),
                 rTS.discount(maturity)).value()
 
-            # clvModelPayoff=CLVModelPayoff (optionType, strike, g)
             clvModelPayoff = CustomCLVModelPayoff(g, optionType, strike)
 
-            # f = lambda xi:clvModelPayoff(xi) * boost.math.pdf(dist, xi)
             f = lambda xi: clvModelPayoff(xi) * dist.pdf(xi)
 
             calculated = GaussLobattoIntegral(1000, 1e-6)(
@@ -266,7 +254,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
         rTS = YieldTermStructureHandle(flatRate(r, dc))
         qTS = YieldTermStructureHandle(flatRate(q, dc))
 
-        # SABR
         beta = 0.95
         alpha = 0.2
         rho = -0.9
@@ -285,7 +272,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
             calibrationDates.append(
                 calibrationDates.back() + Period(1, Weeks))
 
-        # sqrt process
         kappa = 1.0
         theta = 0.09
         sigma = 0.2
@@ -295,8 +281,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
         model = SquareRootCLVModel(
             bsProcess, sqrtProcess, calibrationDates, 14, 1 - 1e-10, 1e-10)
-
-        # ext.function<Real(Time, Real)> g = model.g()
 
         strikes = [80, 100, 120]
         offsets = [92, 182, 183, 184, 185, 186, 365]
@@ -320,7 +304,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
                     rTS.discount(m)).value()
 
                 clvModelPayoff = CustomCLVModelPayoff(
-                    # [&](x) { return g(t, x) },
                     lambda x: model.g(t, x),
                     optionType, strike)
 
@@ -336,7 +319,7 @@ class SquareRootCLVModelTest(unittest.TestCase):
                     abs(expected) > 0.01 and
                     abs((calculated - expected) / calculated) > tol)
 
-    @unittest.skip("VERY VERY SLOW")
+    @unittest.skip("testForwardSkew: VERY VERY SLOW")
     def testForwardSkew(self):
         TEST_MESSAGE(
             "Testing forward skew dynamics with square-root kernel process...")
@@ -349,7 +332,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
         dc = Actual365Fixed()
 
-        # Heston model is used to generate an arbitrage free volatility surface
         s0 = 100
         r = 0.1
         q = 0.05
@@ -390,8 +372,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
         while calibrationDates.back() < endDate:
             calibrationDates.append(calibrationDates.back() + Period(3, Months))
 
-        # clvCalibrationDates = DateSet(
-        #     calibrationDates.begin(), calibrationDates.end())
         clvCalibrationDates = DateSet()
         for d in calibrationDates:
             clvCalibrationDates.insert(d)
@@ -411,20 +391,16 @@ class SquareRootCLVModelTest(unittest.TestCase):
             dateVec,
             14, 1 - 1e-14, 1e-14)
 
-        # ext.function<Real(Time, Real)> gSqrt = clvSqrtModel.g()
-
         vol = SimpleQuote(0.1)
 
-        # fwdEngine=ForwardVanillaEngine<AnalyticEuropeanEngine >(
         fwdEngine = ForwardEuropeanEngine(
             GeneralizedBlackScholesProcess(
                 spot, qTS, rTS,
                 BlackVolTermStructureHandle(
                     flatVol(todaysDate, vol, dc))))
 
-        # forward skew of the Heston-SLV model
         mandatoryTimes = DoubleVector()
-        # mandatoryTimes.reserve(calibrationDates.size())
+
         for calibrationDate in calibrationDates:
             mandatoryTimes.append(
                 dc.yearFraction(todaysDate, calibrationDate))
@@ -453,9 +429,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
         nScenarios = 20000
         refVols = Array(len(resetIndices) * len(strikes))
 
-        # finite difference calibration of Heston SLV model
-
-        # define Heston Stochastic Local model
         eta = 0.25
         corr = -0.0
 
@@ -476,26 +449,16 @@ class SquareRootCLVModelTest(unittest.TestCase):
         leverageFctFDM = HestonSLVFDMModel(
             localVol, hestonModel4slv, endDate, logParams).leverageFunction()
 
-        #  calibrating to forward volatility dynamics
-
         fdmSlvProcess = HestonSLVProcess(
             hestonProcess4slv, leverageFctFDM)
-
-        # vector<vector<GeneralStatistics> > slvStats(
-        #     len(calibrationDates) - 2,
-        #     vector<GeneralStatistics>(len(strikes)))
 
         slvStats = []
         for i in range(len(calibrationDates) - 2):
             slvStats.append(
                 [GeneralStatistics() for j in range(len(strikes))])
 
-        # typedef SobolBrownianBridgeRsg rsg_type
-        # typedef MultiPathGenerator<rsg_type>.sample_type sample_type
-
         factors = fdmSlvProcess.factors()
 
-        # pathGen=MultiPathGenerator<rsg_type>(
         pathGen = BrownianBridgeSobolMultiPathGenerator(
             fdmSlvProcess, grid, SobolBrownianBridgeRsg(factors, len(grid) - 1), false)
 
@@ -536,7 +499,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
         costFunction = CustomCostFunction(
             SquareRootCLVCalibrationFunction(
-                # Array(strikes, strikes + len(strikes)),
                 strikes,
                 resetDates,
                 maturityDates,
@@ -555,13 +517,6 @@ class SquareRootCLVModelTest(unittest.TestCase):
         params[1] = sKappa
         params[2] = sSigma
         params[3] = sX0
-
-        #    Optimization would take too long
-        #
-        #    Problem prob(costFunction, nonZeroConstraint, params)
-        #
-        #    Simplex simplex(0.05)
-        #    simplex.minimize(prob, EndCriteria(400, 40, 1.0e-8, 1.0e-8, 1.0e-8))
 
         tol = 0.5
         costValues = costFunction.values(params)
@@ -585,8 +540,9 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
         atmVol = vanillaATMOption.impliedVolatility(
             vanillaATMOption.NPV(),
-            GeneralizedBlackScholesProcess(spot, qTS, rTS,
-                                           BlackVolTermStructureHandle(flatVol(sqrt(theta), dc))))
+            GeneralizedBlackScholesProcess(
+                spot, qTS, rTS,
+                BlackVolTermStructureHandle(flatVol(sqrt(theta), dc))))
 
         analyticEngine = AnalyticDoubleBarrierBinaryEngine(
             GeneralizedBlackScholesProcess(
@@ -624,10 +580,8 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
         bGrid = TimeGrid(maturityTime, tSteps)
 
-        # PseudoRandom.ursg_type ursg = PseudoRandom.ursg_type(tSteps, 1235UL)
         ursg = MersenneTwisterUniformRsg(tSteps, 1235)
 
-        # vector<GeneralStatistics> stats(n)
         stats = [GeneralStatistics() for i in range(n)]
 
         df = 4 * sTheta * sKappa / (sSigma * sSigma)
@@ -645,10 +599,8 @@ class SquareRootCLVModelTest(unittest.TestCase):
 
                 ncp = 4 * sKappa * exp(-sKappa * (t1 - t0)) / (sSigma * sSigma * (1 - exp(-sKappa * (t1 - t0)))) * x
 
-                # boost.math.non_central_chi_squared_distribution<Real>  dist(df, ncp)
                 dist = ncx2(df, ncp)
 
-                # u = boost.math.quantile(dist, path[j])
                 u = dist.ppf(path[j])
 
                 x = sSigma * sSigma * (1 - exp(-sKappa * (t1 - t0))) / (4 * sKappa) * u

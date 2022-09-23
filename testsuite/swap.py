@@ -1,12 +1,13 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import log
+
+from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
-    # utilities
     def __init__(self):
         self.type = Swap.Payer
         self.settlementDays = 2
@@ -57,7 +58,8 @@ class CommonVars(object):
 class SwapTest(unittest.TestCase):
 
     def testFairRate(self):
-        TEST_MESSAGE("Testing vanilla-swap calculation of fair fixed rate...")
+        TEST_MESSAGE(
+            "Testing vanilla-swap calculation of fair fixed rate...")
 
         vars = CommonVars()
 
@@ -71,8 +73,9 @@ class SwapTest(unittest.TestCase):
                 self.assertFalse(abs(swap.NPV()) > 1.0e-10)
 
     def testFairSpread(self):
-        TEST_MESSAGE("Testing vanilla-swap calculation of "
-                     "fair floating spread...")
+        TEST_MESSAGE(
+            "Testing vanilla-swap calculation of "
+            "fair floating spread...")
 
         vars = CommonVars()
 
@@ -86,7 +89,8 @@ class SwapTest(unittest.TestCase):
                 self.assertFalse(abs(swap.NPV()) > 1.0e-10)
 
     def testRateDependency(self):
-        TEST_MESSAGE("Testing vanilla-swap dependency on fixed rate...")
+        TEST_MESSAGE(
+            "Testing vanilla-swap dependency on fixed rate...")
 
         vars = CommonVars()
 
@@ -96,15 +100,11 @@ class SwapTest(unittest.TestCase):
 
         for length in lengths:
             for spread in spreads:
-                # store the results for different rates...
                 swap_values = DoubleVector()
                 for rate in rates:
                     swap = vars.makeSwap(length, rate, spread)
                     swap_values.append(swap.NPV())
 
-                # and check that they go the right way
-                # it = adjacent_find(swap_values.begin(), swap_values.end(), less<Real>())
-                # self.assertFalse (it != swap_values.end())
                 it = 1
                 while swap_values[it - 1] >= swap_values[it]:
                     it += 1
@@ -113,7 +113,8 @@ class SwapTest(unittest.TestCase):
                 self.assertFalse(it != len(swap_values) - 1)
 
     def testSpreadDependency(self):
-        TEST_MESSAGE("Testing vanilla-swap dependency on floating spread...")
+        TEST_MESSAGE(
+            "Testing vanilla-swap dependency on floating spread...")
 
         vars = CommonVars()
 
@@ -124,15 +125,11 @@ class SwapTest(unittest.TestCase):
 
         for length in lengths:
             for j in rates:
-                # store the results for different spreads...
                 swap_values = DoubleVector()
                 for spread in spreads:
                     swap = vars.makeSwap(length, j, spread)
                     swap_values.append(swap.NPV())
 
-                # and check that they go the right way
-                # it = adjacent_find(swap_values.begin(), swap_values.end(), greater<Real>())
-                # self.assertFalse (it != swap_values.end())
                 it = 1
                 while swap_values[it - 1] <= swap_values[it]:
                     it += 1
@@ -141,13 +138,10 @@ class SwapTest(unittest.TestCase):
                 self.assertFalse(it != len(swap_values) - 1)
 
     def testInArrears(self):
-        TEST_MESSAGE("Testing in-arrears swap calculation...")
+        TEST_MESSAGE(
+            "Testing in-arrears swap calculation...")
 
         vars = CommonVars()
-
-        # See Hull, 4th ed., page 550
-        # Note: the calculation in the book is wrong (work out the
-        # adjustment and you'll get 0.05 + 0.000115 T1)
 
         maturity = vars.today + Period(5, Years)
         calendar = NullCalendar()
@@ -203,7 +197,8 @@ class SwapTest(unittest.TestCase):
         self.assertFalse(abs(swap.NPV() - storedValue) > tolerance)
 
     def testCachedValue(self):
-        TEST_MESSAGE("Testing vanilla-swap calculation against cached value...")
+        TEST_MESSAGE(
+            "Testing vanilla-swap calculation against cached value...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
@@ -225,9 +220,10 @@ class SwapTest(unittest.TestCase):
         self.assertFalse(abs(swap.NPV() - cachedNPV) > 1.0e-11)
 
     def testThirdWednesdayAdjustment(self):
-        TEST_MESSAGE("Testing third-Wednesday adjustment...")
+        TEST_MESSAGE(
+            "Testing third-Wednesday adjustment...")
 
-        today = Date(16, September, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         vars = CommonVars()
@@ -236,7 +232,7 @@ class SwapTest(unittest.TestCase):
             1, 0.0, -0.001, DateGeneration.ThirdWednesdayInclusive)
 
         self.assertFalse(
-            swap.floatingSchedule().startDate() != Date(16, September, 2015))
+            swap.floatingSchedule().startDate() != knownGoodDefault)
 
         self.assertFalse(
             swap.floatingSchedule().endDate() != Date(21, September, 2016))

@@ -1,8 +1,10 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, cosh, sin, cos
+
+from QuantLib import *
 from scipy.stats import ncx2
+
+from utilities import *
 
 
 def inv_exp(x):
@@ -30,20 +32,18 @@ def x_inv_cosh(x):
 
 
 def x_x_nonCentralChiSquared(x):
-    # return x * x * boost.math.pdf(
-    #     boost.math.non_central_chi_squared_distribution < Real > (4.0, 1.0), x)
     return x * x * ncx2(4.0, 1.0).pdf(x)
 
 
 def x_sin_exp_nonCentralChiSquared(x):
-    # return x * sin(0.1 * x) * exp(0.3 * x) * boost.math.pdf(
-    #     boost.math.non_central_chi_squared_distribution < Real > (1.0, 1.0), x)
     return x * sin(0.1 * x) * exp(0.3 * x) * ncx2(1.0, 1.0).pdf(x)
 
 
 class GaussianQuadraturesTest(unittest.TestCase):
+
     def testJacobi(self):
-        TEST_MESSAGE("Testing Gauss-Jacobi integration...")
+        TEST_MESSAGE(
+            "Testing Gauss-Jacobi integration...")
 
         self._testSingleJacobi(GaussLegendreIntegration(16))
         self._testSingleJacobi(GaussChebyshevIntegration(130))
@@ -51,7 +51,8 @@ class GaussianQuadraturesTest(unittest.TestCase):
         self._testSingleJacobi(GaussGegenbauerIntegration(50, 0.55))
 
     def testLaguerre(self):
-        TEST_MESSAGE("Testing Gauss-Laguerre integration...")
+        TEST_MESSAGE(
+            "Testing Gauss-Laguerre integration...")
 
         self._testSingleLaguerre(GaussLaguerreIntegration(16))
         self._testSingleLaguerre(GaussLaguerreIntegration(150, 0.01))
@@ -59,20 +60,23 @@ class GaussianQuadraturesTest(unittest.TestCase):
         self._testSingle(GaussLaguerreIntegration(32, 0.9), "f(x) = x*exp(-x)", x_inv_exp, 1.0)
 
     def testHermite(self):
-        TEST_MESSAGE("Testing Gauss-Hermite integration...")
+        TEST_MESSAGE(
+            "Testing Gauss-Hermite integration...")
 
         self._testSingle(GaussHermiteIntegration(16), "f(x) = Gaussian(x)", NormalDistribution(), 1.0)
         self._testSingle(GaussHermiteIntegration(16, 0.5), "f(x) = x*Gaussian(x)", x_normaldistribution, 0.0)
         self._testSingle(GaussHermiteIntegration(64, 0.9), "f(x) = x*x*Gaussian(x)", x_x_normaldistribution, 1.0)
 
     def testHyperbolic(self):
-        TEST_MESSAGE("Testing Gauss hyperbolic integration...")
+        TEST_MESSAGE(
+            "Testing Gauss hyperbolic integration...")
 
         self._testSingle(GaussHyperbolicIntegration(16), "f(x) = 1/cosh(x)", inv_cosh, M_PI)
         self._testSingle(GaussHyperbolicIntegration(16), "f(x) = x/cosh(x)", x_inv_cosh, 0.0)
 
     def testTabulated(self):
-        TEST_MESSAGE("Testing tabulated Gauss-Laguerre integration...")
+        TEST_MESSAGE(
+            "Testing tabulated Gauss-Laguerre integration...")
 
         self._testSingleTabulated(lambda x: 1.0, "f(x) = 1", 2.0, 1.0e-13)
         self._testSingleTabulated(lambda x: x, "f(x) = x", 0.0, 1.0e-13)
@@ -97,14 +101,6 @@ class GaussianQuadraturesTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Gauss non-central chi-squared sum of nodes...")
 
-        # Walter Gautschi, How and How not to check Gaussian Quadrature Formulae
-        # https:#www.cs.purdue.edu/homes/wxg/selected_works/section_08/084.pdf
-
-        # Expected results have been calculated with a multi precision library
-        # following the description of test #4 in the paper above.
-        # Using QuantLib's own determinant function will not work here
-        # as it supports only double precision.
-
         expected = [
             47.53491786730293,
             70.6103295419633383,
@@ -122,20 +118,22 @@ class GaussianQuadraturesTest(unittest.TestCase):
         for n in range(4, 10):
             g = GaussianQuadrature(n, orthPoly)
             x = g.x()
-            # calculated = accumulate(x.begin(), x.end(), 0.0)
+
             calculated = 0.0
             for i in x:
                 calculated += i
 
             self.assertFalse(abs(calculated - expected[n - 4]) > tol)
 
-    @unittest.skip('skip testMomentBasedGaussianPolynomial')
+    @unittest.skip("testMomentBasedGaussianPolynomial")
     def testMomentBasedGaussianPolynomial(self):
-        pass
+        TEST_MESSAGE(
+            "Testing moment-based Gaussian polynomials...")
 
-    @unittest.skip('can not create GaussianQuadrature here')
+    @unittest.skip("testGaussLaguerreCosinePolynomial")
     def testGaussLaguerreCosinePolynomial(self):
-        TEST_MESSAGE("Testing Gauss-Laguerre-Cosine quadrature...")
+        TEST_MESSAGE(
+            "Testing Gauss-Laguerre-Cosine quadrature...")
 
         quadCosine = GaussianQuadrature(16, GaussLaguerreCosineRealPolynomial(0.2))
 

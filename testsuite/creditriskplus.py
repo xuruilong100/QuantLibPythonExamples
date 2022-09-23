@@ -1,17 +1,19 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
+
+SizeVector = BigNaturalVector
 
 
 class CreditRiskPlusTest(unittest.TestCase):
+
     def testReferenceValues(self):
         TEST_MESSAGE(
             "Testing extended credit risk plus model against reference values...")
 
         tol = 1E-8
-
-        # /* Reference Values are taken from [1] Integrating Correlations, Risk,
-        # July 1999, table A, table B and figure 1 */
 
         sector1Exposure = DoubleVector(1000, 1.0)
         sector1Pd = DoubleVector(1000, 0.04)
@@ -60,11 +62,5 @@ class CreditRiskPlusTest(unittest.TestCase):
         self.assertFalse(abs(cr.exposure() - 3000.0) > tol)
         self.assertFalse(abs(cr.expectedLoss() - 80.0) > tol)
         self.assertFalse(abs(cr.unexpectedLoss() - 53.1) > 0.01)
-
-        # the overall relative default variance in the paper seems generously rounded,
-        # but since EL and UL is matching closely and the former is retrieved
-        # as a simple expression in the latter, we do not suspect a problem in our
-        # calculation
-
         self.assertFalse(abs(cr.relativeDefaultVariance() - 0.65 * 0.65) > 0.001)
         self.assertFalse(abs(cr.lossQuantile(0.99) - 250) > 0.5)

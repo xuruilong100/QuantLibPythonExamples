@@ -1,11 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class FastFourierTransformTest(unittest.TestCase):
+
     def testSimple(self):
-        TEST_MESSAGE("Testing complex direct FFT...")
+        TEST_MESSAGE(
+            "Testing complex direct FFT...")
         tmp = [
             complex(0, 0), complex(1, 1), complex(3, 3), complex(4, 4),
             complex(4, 4), complex(3, 3), complex(1, 1), complex(0, 0)]
@@ -25,7 +29,8 @@ class FastFourierTransformTest(unittest.TestCase):
                 (abs(b[i].imag - expected[i].imag) > 1.0e-2))
 
     def testInverse(self):
-        TEST_MESSAGE("Testing convolution via inverse FFT...")
+        TEST_MESSAGE(
+            "Testing convolution via inverse FFT...")
 
         x = ComplexVector(3)
         x[0] = complex(1)
@@ -45,17 +50,14 @@ class FastFourierTransformTest(unittest.TestCase):
 
         ft = fft.inverse_transform(tmp)
 
-        # 0
         calculated = ft[0].real / nFrq
         expected = x[0] * x[0] + x[1] * x[1] + x[2] * x[2]
         self.assertFalse(abs(calculated - expected) > 1.0e-10)
 
-        # 1
         calculated = ft[1].real / nFrq
         expected = x[0] * x[1] + x[1] * x[2]
         self.assertFalse(abs(calculated - expected) > 1.0e-10)
 
-        # 2
         calculated = ft[2].real / nFrq
         expected = x[0] * x[2]
         self.assertFalse(abs(calculated - expected) > 1.0e-10)

@@ -70,14 +70,14 @@ class InterestRateIndex : public Index {
 %shared_ptr(BMAIndex)
 class BMAIndex : public InterestRateIndex {
   public:
-    explicit BMAIndex(
+    BMAIndex(
         const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
 
     bool isValidFixingDate(const Date& fixingDate) const;
     Handle<YieldTermStructure> forwardingTermStructure() const;
     Date maturityDate(const Date& valueDate) const;
-    Schedule fixingSchedule(const Date& start,
-                            const Date& end);
+    Schedule fixingSchedule(
+        const Date& start, const Date& end);
 };
 
 %shared_ptr(IborIndex)
@@ -455,18 +455,22 @@ class ZeroInflationIndex : public InflationIndex {
         const Handle<ZeroInflationTermStructure>& h) const;
 };
 
+%template(ZeroInflationIndexHandle) Handle<ZeroInflationIndex>;
+%template(RelinkableZeroInflationIndexHandle) RelinkableHandle<ZeroInflationIndex>;
+
 %shared_ptr(YoYInflationIndex)
 class YoYInflationIndex : public InflationIndex {
   public:
-    YoYInflationIndex(const std::string& familyName,
-                      const Region& region,
-                      bool revised,
-                      bool interpolated,
-                      bool ratio,
-                      Frequency frequency,
-                      const Period& availabilityLag,
-                      const Currency& currency,
-                      const Handle<YoYInflationTermStructure>& ts = Handle<YoYInflationTermStructure>());
+    YoYInflationIndex(
+        const std::string& familyName,
+        const Region& region,
+        bool revised,
+        bool interpolated,
+        bool ratio,
+        Frequency frequency,
+        const Period& availabilityLag,
+        const Currency& currency,
+        const Handle<YoYInflationTermStructure>& ts = Handle<YoYInflationTermStructure>());
     bool ratio() const;
     Handle<YoYInflationTermStructure> yoyInflationTermStructure() const;
     ext::shared_ptr<YoYInflationIndex> clone(
@@ -521,10 +525,11 @@ export_yii_instance(YYZACPIr);
 %shared_ptr(AUCPI)
 class AUCPI : public ZeroInflationIndex {
   public:
-    AUCPI(Frequency frequency,
-          bool revised,
-          bool interpolated,
-          const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());
+    AUCPI(
+        Frequency frequency,
+        bool revised,
+        bool interpolated,
+        const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());
 };
 
 %shared_ptr(OvernightIndexedSwapIndex)

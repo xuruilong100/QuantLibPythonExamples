@@ -9,70 +9,70 @@
 
 namespace QuantLib {
 
-class ChinaFixingRepo;
+    class ChinaFixingRepo;
 
-class ChinaFixingRepoSwap : public Swap {
-  public:
-    ChinaFixingRepoSwap(Type type,
-                        Real nominal,
-                        const Schedule& schedule,
-                        Rate fixedRate,
-                        DayCounter fixedDC,
-                        ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo,
-                        Real gearing = 1.0,
-                        Spread spread = 0.0,
-                        Natural paymentLag = 0,
-                        BusinessDayConvention paymentAdjustment = ModifiedFollowing,
-                        const Calendar& paymentCalendar = China(China::IB));
+    class ChinaFixingRepoSwap : public Swap {
+      public:
+        ChinaFixingRepoSwap(Type type,
+                            Real nominal,
+                            const Schedule& schedule,
+                            Rate fixedRate,
+                            DayCounter fixedDC,
+                            ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo,
+                            Real gearing = 1.0,
+                            Spread spread = 0.0,
+                            Natural paymentLag = 0,
+                            BusinessDayConvention paymentAdjustment = ModifiedFollowing,
+                            const Calendar& paymentCalendar = China(China::IB));
 
-    Type type() const { return type_; }
-    Real nominal() const {
-        QL_REQUIRE(nominal_ != Null<Real>(), "no notional given");
-        return nominal_;
-    }
+        Type type() const { return type_; }
+        Real nominal() const {
+            QL_REQUIRE(nominal_ != Null<Real>(), "no notional given");
+            return nominal_;
+        }
 
-    Frequency paymentFrequency() { return paymentFrequency_; }
+        Frequency paymentFrequency() { return paymentFrequency_; }
 
-    const Schedule& schedule() const { return schedule_; }
+        const Schedule& schedule() const { return schedule_; }
 
-    Rate fixedRate() const { return fixedRate_; }
-    const DayCounter& dayCount() { return fixedDC_; }
-    const ext::shared_ptr<ChinaFixingRepo>& chinaFixingRepo() { return chinaFixingRepo_; }
-    Real gearing() const { return gearing_; }
-    Spread spread() const { return spread_; }
-    BusinessDayConvention paymentConvention() const { return paymentConvention_; }
+        Rate fixedRate() const { return fixedRate_; }
+        const DayCounter& dayCount() { return fixedDC_; }
+        const ext::shared_ptr<ChinaFixingRepo>& chinaFixingRepo() { return chinaFixingRepo_; }
+        Real gearing() const { return gearing_; }
+        Spread spread() const { return spread_; }
+        BusinessDayConvention paymentConvention() const { return paymentConvention_; }
 
-    const Leg& fixedLeg() const { return legs_[0]; }
-    const Leg& floatingLeg() const { return legs_[1]; }
+        const Leg& fixedLeg() const { return legs_[0]; }
+        const Leg& floatingLeg() const { return legs_[1]; }
 
-    Real fixedLegBPS() const;
-    Real fixedLegNPV() const;
-    Real fairRate() const;
+        Real fixedLegBPS() const;
+        Real fixedLegNPV() const;
+        Real fairRate() const;
 
-    Real floatingLegBPS() const;
-    Real floatingLegNPV() const;
-    Spread fairSpread() const;
+        Real floatingLegBPS() const;
+        Real floatingLegNPV() const;
+        Spread fairSpread() const;
 
-  private:
-    void initialize(const Schedule& schedule);
-    Type type_;
-    Real nominal_;
+      private:
+        void initialize(const Schedule& schedule);
+        Type type_;
+        Real nominal_;
 
-    Frequency paymentFrequency_;
-    Calendar paymentCalendar_;
-    BusinessDayConvention paymentConvention_;
-    Natural paymentLag_;
+        Frequency paymentFrequency_;
+        Calendar paymentCalendar_;
+        BusinessDayConvention paymentConvention_;
+        Natural paymentLag_;
 
-    Schedule schedule_;
+        Schedule schedule_;
 
-    Rate fixedRate_;
-    DayCounter fixedDC_;
+        Rate fixedRate_;
+        DayCounter fixedDC_;
 
-    ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo_;
-    Real gearing_;
-    Spread spread_;
-};
+        ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo_;
+        Real gearing_;
+        Spread spread_;
+    };
 
-}    // namespace QuantLib
+} // namespace QuantLib
 
-#endif    // ChinaFixingRepoSwap_HPP
+#endif // ChinaFixingRepoSwap_HPP

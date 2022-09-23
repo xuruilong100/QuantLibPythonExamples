@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import floor
+
+from QuantLib import *
+
+from utilities import *
 
 
 class DiscreteAverageData(object):
@@ -72,13 +74,39 @@ class VecerData(object):
         self.tolerance = tolerance
 
 
+class DiscreteAverageDataTermStructure(object):
+    def __init__(self, type,
+                 underlying,
+                 strike,
+                 b,
+                 riskFreeRate,
+                 first,
+                 expiry,
+                 fixings,
+                 volatility,
+                 slope,
+                 result):
+        self.type = type
+        self.underlying = underlying
+        self.strike = strike
+        self.b = b
+        self.riskFreeRate = riskFreeRate
+        self.first = first
+        self.expiry = expiry
+        self.fixings = fixings
+        self.volatility = volatility
+        self.slope = slope
+        self.result = result
+
+
 class AsianOptionTest(unittest.TestCase):
+
     def testAnalyticContinuousGeometricAveragePrice(self):
         TEST_MESSAGE(
             "Testing analytic continuous geometric average-price Asians...")
-        # data from "Option Pricing Formulas", Haug, pag.96-97
+
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(80.0)
@@ -114,7 +142,6 @@ class AsianOptionTest(unittest.TestCase):
         self.assertFalse(
             abs(calculated - expected) > tolerance)
 
-        # trying to approximate the continuous version with the discrete version
         runningAccumulator = 1.0
         pastFixings = 0
         fixingDates = DateVector(exerciseDate - today + 1)
@@ -156,7 +183,7 @@ class AsianOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -184,14 +211,11 @@ class AsianOptionTest(unittest.TestCase):
                     pastFixings = NullSize()
                     runningAverage = NullReal()
 
-                    for l in range(len(underlyings)):
-                        for m in range(len(qRates)):
-                            for n in range(len(rRates)):
-                                for p in range(len(vols)):
-                                    u = underlyings[l]
-                                    q = qRates[m]
-                                    r = rRates[n]
-                                    v = vols[p]
+                    for u in underlyings:
+                        for q in qRates:
+                            for r in rRates:
+                                for v in vols:
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -217,7 +241,6 @@ class AsianOptionTest(unittest.TestCase):
                                         expected["delta"] = (value_p - value_m) / (2 * du)
                                         expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                        # perturb rates and get rho and dividend rho
                                         dr = r * 1.0e-4
                                         rRate.setValue(r + dr)
                                         value_p = option.NPV()
@@ -234,7 +257,6 @@ class AsianOptionTest(unittest.TestCase):
                                         qRate.setValue(q)
                                         expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                        # perturb volatility and get vega
                                         dv = v * 1.0e-4
                                         vol.setValue(v + dv)
                                         value_p = option.NPV()
@@ -243,7 +265,6 @@ class AsianOptionTest(unittest.TestCase):
                                         vol.setValue(v)
                                         expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                        # perturb date and get theta
                                         dT = dc.yearFraction(today - Period(1, Days), today + Period(1, Days))
                                         Settings.instance().evaluationDate = today - Period(1, Days)
                                         value_m = option.NPV()
@@ -261,31 +282,25 @@ class AsianOptionTest(unittest.TestCase):
                                             self.assertFalse(error > tol)
 
     def testAnalyticContinuousGeometricAveragePriceHeston(self):
-        TEST_MESSAGE("Testing analytic continuous geometric Asians under Heston...")
-        # data from "Pricing of Geometric Asian Options under Heston's Stochastic
-        # Volatility Model", Kim & Wee, Quantitative Finance, 14:10, 1795-1809, 2011
+        TEST_MESSAGE(
+            "Testing analytic continuous geometric Asians under Heston...")
 
-        # 73, 348 and 1095 are 0.2, 1.5 and 3.0 years respectively in Actual365Fixed
         days = [73, 73, 73, 73, 73, 548, 548, 548, 548, 548, 1095, 1095, 1095, 1095, 1095]
         strikes = [
             90.0, 95.0, 100.0, 105.0, 110.0, 90.0, 95.0, 100.0, 105.0, 110.0, 90.0, 95.0,
             100.0, 105.0, 110.0]
 
-        # Prices from Table 1 (params obey Feller condition)
         prices = [
             10.6571, 6.5871, 3.4478, 1.4552, 0.4724, 16.5030, 13.7625, 11.3374, 9.2245,
             7.4122, 20.5102, 18.3060, 16.2895, 14.4531, 12.7882]
 
-        # Prices from Table 4 (params do not obey Feller condition)
         prices_2 = [
             10.6425, 6.4362, 3.1578, 1.1936, 0.3609, 14.9955, 11.6707, 8.7767, 6.3818,
             4.5118, 18.1219, 15.2009, 12.5707, 10.2539, 8.2611]
 
-        # 0.2 and 3.0 match to 1e-4. Unfortunatly 1.5 corresponds to 547.5 days, 547 and 548
-        # bound the expected answer but are both out by ~5e-3
         tolerance = 1.0e-2
         dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
         typeOpt = Option.Call
         averageType = Average.Geometric
@@ -353,7 +368,7 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing analytic discrete geometric average-price Asians...")
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -402,14 +417,13 @@ class AsianOptionTest(unittest.TestCase):
     def testAnalyticDiscreteGeometricAveragePriceHeston(self):
         TEST_MESSAGE(
             "Testing analytic discrete geometric average-price Asians under Heston...")
-        # 30-day options need wider tolerance due to uncertainty around what "weekly
-        # fixing" dates mean over a 30-day month!
+
         tol = [
             3.0e-2, 2.0e-2, 2.0e-2, 2.0e-2, 3.0e-2, 4.0e-2, 8.0e-2, 1.0e-2,
             2.0e-2, 3.0e-2, 3.0e-2, 4.0e-2, 2.0e-2, 1.0e-2, 1.0e-2, 2.0e-2,
             3.0e-2, 4.0e-2]
         dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100.0))
@@ -437,7 +451,7 @@ class AsianOptionTest(unittest.TestCase):
             "Testing analytic discrete geometric average-strike Asians...")
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -485,7 +499,7 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete geometric average-price Asians...")
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -536,14 +550,13 @@ class AsianOptionTest(unittest.TestCase):
     def testMCDiscreteGeometricAveragePriceHeston(self):
         TEST_MESSAGE(
             "Testing MC discrete geometric average-price Asians under Heston...")
-        # 30-day options need wider tolerance due to uncertainty around what "weekly
-        # fixing" dates mean over a 30-day month!
+
         tol = [
             4.0e-2, 2.0e-2, 2.0e-2, 4.0e-2, 8.0e-2, 2.0e-1,
             1.0e-1, 4.0e-2, 3.0e-2, 2.0e-2, 9.0e-2, 2.0e-1,
             2.0e-2, 1.0e-2, 2.0e-2, 2.0e-2, 7.0e-2, 2.0e-1]
         dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100.0))
@@ -573,9 +586,6 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete arithmetic average-price Asians...")
 
-        # data from "Asian Option", Levy, 1997
-        # in "Exotic Options: The State of the Art",
-        # edited by Clewlow, Strickland
         cases4 = [
             DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.3942835683),
             DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.5852442983),
@@ -609,7 +619,7 @@ class AsianOptionTest(unittest.TestCase):
             DiscreteAverageData(Option.Put, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 2.89703362437)]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -670,15 +680,16 @@ class AsianOptionTest(unittest.TestCase):
                 self.assertFalse(
                     abs(calculated - expected) > tolerance)
 
+            engine = TurnbullWakemanAsianEngine(stochProcess)
+            option.setPricingEngine(engine)
+            calculated = option.NPV()
+            tolerance = 3.0e-2
+            self.assertFalse(abs(calculated - expected) > tolerance)
+
     def testMCDiscreteArithmeticAveragePriceHeston(self):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete arithmetic average-price Asians in Heston model...")
-        # data from "A numerical method to price exotic path-dependent
-        # options on an underlying described by the Heston stochastic
-        # volatility model", Ballestra, Pacelli and Zirilli, Journal
-        # of Banking & Finance, 2007 (section 4 - Numerical Results)
-        #
-        # nb. for Heston, the volatility param below is ignored
+
         cases = [
             DiscreteAverageData(Option.Call, 120.0, 100.0, 0.0, 0.05, 1.0 / 12.0, 11.0 / 12.0, 12, 0.1, False, 22.50)]
         vol = 0.3
@@ -689,7 +700,7 @@ class AsianOptionTest(unittest.TestCase):
         rho = -0.5
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -739,12 +750,11 @@ class AsianOptionTest(unittest.TestCase):
 
             calculated = option.NPV()
             expected = cases[l].result
-            # Bounds given in paper, "22.48 to 22.52"
+
             tolerance = 5.0e-2
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
 
-            # Also test the control variate version of the pricer
             engine2 = MakeMCLDDiscreteArithmeticAPHestonEngine(hestonProcess)
             engine2.withSeed(42)
             engine2.withSteps(48)
@@ -758,14 +768,6 @@ class AsianOptionTest(unittest.TestCase):
             tolerance = 3.00e-2
             self.assertFalse(
                 abs(calculated - expected) > tolerance)
-
-        # An additional dataset using the Heston parameters coming from "General lower
-        # bounds for arithmetic Asian option prices", Applied Mathematical Finance 15(2)
-        # 123-149 (2008), by Albrecher, H., Mayer, P., and Schoutens, W. The numerical
-        # accuracy of prices given in Table 6 is low, but higher accuracy prices for the
-        # same parameters and options are reported by in "Pricing bounds and approximations
-        # for discrete arithmetic Asian options under time-changed Levy processes" by Zeng,
-        # P.P., and Kwok Y.K. (2013) in Table 4.
 
         strikes = [60.0, 80.0, 100.0, 120.0, 140.0]
         prices = [42.5990, 29.3698, 18.2360, 10.0565, 4.9609]
@@ -830,10 +832,6 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Monte Carlo discrete arithmetic average-strike Asians...")
 
-        # data from "Asian Option", Levy, 1997
-        # in "Exotic Options: The State of the Art",
-        # edited by Clewlow, Strickland
-
         cases5 = [
             DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 2, 0.13, True, 1.51917595129),
             DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0 / 12.0, 4, 0.13, True, 1.67940165674),
@@ -867,7 +865,7 @@ class AsianOptionTest(unittest.TestCase):
             DiscreteAverageData(Option.Call, 90.0, 87.0, 0.06, 0.025, 3.0 / 12.0, 11.0 / 12.0, 1000, 0.13, True, 1.81145760308)]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -948,7 +946,7 @@ class AsianOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -984,14 +982,11 @@ class AsianOptionTest(unittest.TestCase):
                         fixingDates, payoff, maturity)
                     option.setPricingEngine(engine)
 
-                    for l in range(len(underlyings)):
-                        for m in range(len(qRates)):
-                            for n in range(len(rRates)):
-                                for p in range(len(vols)):
-                                    u = underlyings[l]
-                                    q = qRates[m]
-                                    r = rRates[n]
-                                    v = vols[p]
+                    for u in underlyings:
+                        for q in qRates:
+                            for r in rRates:
+                                for v in vols:
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -1011,7 +1006,6 @@ class AsianOptionTest(unittest.TestCase):
                                         expected["delta"] = (value_p - value_m) / (2 * du)
                                         expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                        # perturb rates and get rho and dividend rho
                                         dr = r * 1.0e-4
                                         rRate.setValue(r + dr)
                                         value_p = option.NPV()
@@ -1028,7 +1022,6 @@ class AsianOptionTest(unittest.TestCase):
                                         qRate.setValue(q)
                                         expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                        # perturb volatility and get vega
                                         dv = v * 1.0e-4
                                         vol.setValue(v + dv)
                                         value_p = option.NPV()
@@ -1037,7 +1030,6 @@ class AsianOptionTest(unittest.TestCase):
                                         vol.setValue(v)
                                         expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                        # perturb date and get theta
                                         dT = dc.yearFraction(today - Period(1, Days), today + Period(1, Days))
                                         Settings.instance().evaluationDate = today - Period(1, Days)
                                         value_m = option.NPV()
@@ -1058,7 +1050,7 @@ class AsianOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing use of past fixings in Asian options...")
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(100.0)
@@ -1078,7 +1070,6 @@ class AsianOptionTest(unittest.TestCase):
             YieldTermStructureHandle(rTS),
             BlackVolTermStructureHandle(volTS))
 
-        # MC arithmetic average-price
         runningSum = 0.0
         pastFixings = 0
         fixingDates1 = DateVector()
@@ -1111,8 +1102,6 @@ class AsianOptionTest(unittest.TestCase):
 
         self.assertFalse(close(price1, price2))
 
-        # Test past-fixings-as-a-vector interface
-
         allPastFixings = [spot.value() * 0.8, spot.value() * 0.8]
 
         option1a = DiscreteAveragingAsianOption(Average.Arithmetic, fixingDates1,
@@ -1131,8 +1120,6 @@ class AsianOptionTest(unittest.TestCase):
 
         self.assertFalse(abs(price2 - price2a) > 1e-8)
 
-        # MC arithmetic average-strike
-
         engine = MakeMCLDDiscreteArithmeticASEngine(stochProcess)
         engine.withSamples(2047)
         engine = engine.makeEngine()
@@ -1144,8 +1131,6 @@ class AsianOptionTest(unittest.TestCase):
         price2 = option2.NPV()
 
         self.assertFalse(close(price1, price2))
-
-        # analytic geometric average-price
 
         runningProduct = 1.0
         pastFixings = 0
@@ -1173,7 +1158,6 @@ class AsianOptionTest(unittest.TestCase):
         price4 = option4.NPV()
 
         self.assertFalse(close(price3, price4))
-        # MC geometric average-price
 
         engine = MakeMCLDDiscreteGeometricAPEngine(stochProcess)
         engine.withSamples(2047)
@@ -1187,15 +1171,217 @@ class AsianOptionTest(unittest.TestCase):
 
         self.assertFalse(close(price3, price4))
 
-    @unittest.skip("not implemented")
+    def testPastFixingsModelDependency(self):
+
+        TEST_MESSAGE(
+            "Testing use of past fixings in Asian options where model dependency is flagged...")
+
+        dc = Actual360()
+        today = Settings.instance().evaluationDate
+
+        spot = SimpleQuote(100.0)
+        qRate = SimpleQuote(0.03)
+        qTS = flatRate(today, qRate, dc)
+        rRate = SimpleQuote(0.06)
+        rTS = flatRate(today, rRate, dc)
+        vol = SimpleQuote(0.20)
+        volTS = flatVol(today, vol, dc)
+
+        call_payoff = PlainVanillaPayoff(Option.Call, 20.0)
+        put_payoff = PlainVanillaPayoff(Option.Put, 20.0)
+
+        fixingDates = [
+            today - Period(6, Weeks), today - Period(2, Weeks), today + Period(2, Weeks),
+            today + Period(6, Weeks)]
+
+        exercise = EuropeanExercise(today + Period(6, Weeks))
+
+        stochProcess = BlackScholesMertonProcess(
+            QuoteHandle(spot), YieldTermStructureHandle(qTS),
+            YieldTermStructureHandle(rTS),
+            BlackVolTermStructureHandle(volTS))
+
+        engine = TurnbullWakemanAsianEngine(stochProcess)
+
+        allPastFixings = [spot.value(), spot.value()]
+
+        call_option = DiscreteAveragingAsianOption(
+            Average.Arithmetic, fixingDates, call_payoff, exercise, allPastFixings)
+        put_option = DiscreteAveragingAsianOption(
+            Average.Arithmetic, fixingDates, put_payoff, exercise, allPastFixings)
+
+        call_option.setPricingEngine(engine)
+        put_option.setPricingEngine(engine)
+
+        expected_call_option_npv = rTS.discount(exercise.lastDate()) * \
+                                   ((100.0 + 100.0 + 100.0 * qTS.discount(fixingDates[2]) / rTS.discount(fixingDates[2]) +
+                                     100.0 * qTS.discount(fixingDates[3]) / rTS.discount(fixingDates[3])) /
+                                    len(fixingDates) - call_payoff.strike())
+
+        self.assertEqual(call_option.NPV(), expected_call_option_npv)
+        self.assertEqual(put_option.NPV(), 0.0)
+
+        dS = 0.001
+        callPrice = call_option.NPV()
+        putPrice = put_option.NPV()
+        callDelta = call_option.delta()
+        callGamma = call_option.gamma()
+        putDelta = put_option.delta()
+        putGamma = put_option.gamma()
+
+        spotUp = SimpleQuote(100.0 + dS)
+        spotDown = SimpleQuote(100.0 - dS)
+
+        stochProcessUp = BlackScholesMertonProcess(
+            QuoteHandle(spotUp), YieldTermStructureHandle(qTS),
+            YieldTermStructureHandle(rTS),
+            BlackVolTermStructureHandle(volTS))
+
+        stochProcessDown = BlackScholesMertonProcess(
+            QuoteHandle(spotDown), YieldTermStructureHandle(qTS),
+            YieldTermStructureHandle(rTS),
+            BlackVolTermStructureHandle(volTS))
+
+        engineUp = TurnbullWakemanAsianEngine(stochProcessUp)
+
+        engineDown = TurnbullWakemanAsianEngine(stochProcessDown)
+
+        call_option.setPricingEngine(engineUp)
+        callCalculatedUp = call_option.NPV()
+        put_option.setPricingEngine(engineUp)
+        putCalculatedUp = put_option.NPV()
+
+        call_option.setPricingEngine(engineDown)
+        callCalculatedDown = call_option.NPV()
+        put_option.setPricingEngine(engineDown)
+        putCalculatedDown = put_option.NPV()
+
+        callDeltaBump = (callCalculatedUp - callCalculatedDown) / (2 * dS)
+        callGammaBump = (callCalculatedUp + callCalculatedDown - 2 * callPrice) / (dS * dS)
+
+        putDeltaBump = (putCalculatedUp - putCalculatedDown) / (2 * dS)
+        putGammaBump = (putCalculatedUp + putCalculatedDown - 2 * putPrice) / (dS * dS)
+
+        tolerance = 1.0e-8
+        self.assertFalse(abs(callDeltaBump - callDelta) > tolerance)
+        self.assertFalse(abs(callGammaBump - callGamma) > tolerance)
+        self.assertFalse(abs(putDeltaBump - putDelta) > tolerance)
+        self.assertFalse(abs(putGammaBump - putGamma) > tolerance)
+
     def testAllFixingsInThePast(self):
+
         TEST_MESSAGE(
             "Testing Asian options with all fixing dates in the past...")
+
+        dc = Actual360()
+        today = Settings.instance().evaluationDate
+
+        spot = SimpleQuote(100.0)
+        qRate = SimpleQuote(0.005)
+        qTS = flatRate(qRate, dc)
+        rRate = SimpleQuote(0.01)
+        rTS = flatRate(rRate, dc)
+        vol = SimpleQuote(0.20)
+        volTS = flatVol(vol, dc)
+
+        stochProcess = BlackScholesMertonProcess(
+            QuoteHandle(spot), YieldTermStructureHandle(qTS),
+            YieldTermStructureHandle(rTS),
+            BlackVolTermStructureHandle(volTS))
+
+        exerciseDate = today + Period(2, Weeks)
+        start = exerciseDate - Period(1, Years)
+        fixingDates = []
+        for i in range(12):
+            fixingDates.append(start + Period(i, Months))
+        pastFixings = 12
+
+        payoff = PlainVanillaPayoff(Option.Put, 100.0)
+        exercise = EuropeanExercise(exerciseDate)
+
+        runningSum = pastFixings * spot.value()
+
+        option1 = DiscreteAveragingAsianOption(
+            Average.Arithmetic, runningSum, pastFixings, fixingDates,
+            payoff, exercise)
+        eng = MakeMCLDDiscreteArithmeticAPEngine(stochProcess)
+        eng.withSamples(2047)
+        eng = eng.makeEngine()
+        option1.setPricingEngine(eng)
+
+        option2 = DiscreteAveragingAsianOption(
+            Average.Arithmetic, runningSum, pastFixings, fixingDates,
+            payoff, exercise)
+        eng = MakeMCLDDiscreteArithmeticASEngine(stochProcess)
+        eng.withSamples(2047)
+        eng = eng.makeEngine()
+        option2.setPricingEngine(eng)
+
+        runningProduct = pow(spot.value(), pastFixings)
+
+        option3 = DiscreteAveragingAsianOption(
+            Average.Geometric, runningProduct, pastFixings,
+            fixingDates, payoff, exercise)
+        eng = MakeMCLDDiscreteGeometricAPEngine(stochProcess)
+        eng.withSamples(2047)
+        eng = eng.makeEngine()
+        option3.setPricingEngine(eng)
+
+        raised = false
+        try:
+            option1.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
+
+        raised = false
+        try:
+            option1.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
+
+        raised = false
+        try:
+            option2.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
+
+        backup = SavedSettings()
+
+        Settings.instance().evaluationDate = fixingDates[-1]
+
+        raised = false
+        try:
+            option1.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
+
+        raised = false
+        try:
+            option1.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
+
+        raised = false
+        try:
+            option2.NPV()
+        except Exception as e:
+            raised = true
+
+        self.assertFalse(not raised)
 
     def testLevyEngine(self):
         TEST_MESSAGE(
             "Testing Levy engine for Asians options...")
-        # data from Haug, "Option Pricing Formulas", p.99-100
 
         cases = [
             ContinuousAverageData(Option.Call, 6.80, 6.80, 6.90, 0.09, 0.07, 0.14, 180, 0, 0.0944),
@@ -1220,7 +1406,7 @@ class AsianOptionTest(unittest.TestCase):
             ContinuousAverageData(Option.Call, 100.0, 100.0, 105.0, 0.05, 0.1, 0.35, 270, 180, 0.1552)]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         for l in range(len(cases)):
@@ -1253,7 +1439,8 @@ class AsianOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testVecerEngine(self):
-        TEST_MESSAGE("Testing Vecer engine for Asian options...")
+        TEST_MESSAGE(
+            "Testing Vecer engine for Asian options...")
 
         cases = [
             VecerData(1.9, 0.05, 0.5, 2.0, 1, 0.193174, 1.0e-5),
@@ -1265,7 +1452,7 @@ class AsianOptionTest(unittest.TestCase):
             VecerData(2.0, 0.05, 0.5, 2.0, 2, 0.350095, 2.0e-4)]
 
         dayCounter = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
         typeOpt = Option.Call
         q = YieldTermStructureHandle(flatRate(today, 0.0, dayCounter))
@@ -1295,116 +1482,20 @@ class AsianOptionTest(unittest.TestCase):
                 error > cases[i].tolerance,
                 "Failed to reproduce expected NPV")
 
-    def _testDiscreteGeometricAveragePriceHeston(self,
-                                                 engine,
-                                                 tol):
-        # data from "A Recursive Method for Discretely Monitored Geometric Asian Option
-        # Prices", Kim, Kim, Kim & Wee, Bull. Korean Math. Soc. 53, 733-749, 2016
-        days = [30, 91, 182, 365, 730, 1095, 30, 91, 182, 365, 730, 1095, 30,
-                91, 182, 365, 730, 1095]
-        strikes = [90, 90, 90, 90, 90, 90, 100, 100, 100, 100, 100, 100, 110,
-                   110, 110, 110, 110, 110]
-        # Prices from Tables 1, 2 and 3
-        prices = [10.2732, 10.9554, 11.9916, 13.6950, 16.1773, 18.0146, 2.4389,
-                  3.7881, 5.2132, 7.2243, 9.9948, 12.0639, 0.1012, 0.5949, 1.4444,
-                  2.9479, 5.3531, 7.3315]
-        dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)
-        Settings.instance().evaluationDate = today
-        spot = QuoteHandle(SimpleQuote(100.0))
-        qRate = SimpleQuote(0.0)
-        rRate = SimpleQuote(0.05)
-        v0 = 0.09
-        typeOpt = Option.Call
-        averageType = Average.Geometric
-
-        runningAccumulator = 1.0
-        pastFixings = 0
-
-        for i in range(len(strikes)):
-
-            strike = strikes[i]
-            day = days[i]
-            expected = prices[i]
-            tolerance = tol[i]
-
-            futureFixings = int(floor(day / 7.0))
-            fixingDates = DateVector(futureFixings)
-            expiryDate = today + Period(day, Days)
-            for j in range(futureFixings - 1, -1, -1):
-                fixingDates[j] = expiryDate - Period(j * 7, Days)
-
-            europeanExercise = EuropeanExercise(expiryDate)
-            payoff = PlainVanillaPayoff(typeOpt, strike)
-            option = DiscreteAveragingAsianOption(
-                averageType, runningAccumulator, pastFixings,
-                fixingDates, payoff, europeanExercise)
-            option.setPricingEngine(engine)
-            calculated = option.NPV()
-            self.assertFalse(
-                abs(calculated - expected) > tolerance)
-
     def testDiscreteGeometricAveragePriceHestonPastFixings(self):
         TEST_MESSAGE(
             "Testing Analytic vs MC for seasoned discrete geometric Asians under Heston...")
-
-        # 30-day options need wider tolerance due to uncertainty around what "weekly
-        # fixing" dates mean over a 30-day month!
 
         days = [30, 90, 180, 360, 720]
         strikes = [90, 100, 110]
 
         tol = [
-            [[0.04,  # strike=90, days=30, k=0
-              0.04,  # strike=90, days=30, k=1
-              ],
-             [0.04,  # strike=90, days=90, k=0
-              0.04,  # strike=90, days=90, k=1
-              ],
-             [0.04,  # strike=90, days=180, k=0
-              0.04,  # strike=90, days=180, k=1
-              ],
-             [0.05,  # strike=90, days=360, k=0
-              0.04,  # strike=90, days=360, k=1
-              ],
-             [0.04,  # strike=90, days=720, k=0
-              0.04,  # strike=90, days=720, k=1
-              ]],
-
-            [[0.04,  # strike=100, days=30, k=0
-              0.04,  # strike=100, days=30, k=1
-              ],
-             [0.04,  # strike=100, days=90, k=0
-              0.04,  # strike=100, days=90, k=1
-              ],
-             [0.04,  # strike=100, days=180, k=0
-              0.04,  # strike=100, days=180, k=1
-              ],
-             [0.06,  # strike=100, days=360, k=0
-              0.06,  # strike=100, days=360, k=1
-              ],
-             [0.06,  # strike=100, days=720, k=0
-              0.05,  # strike=100, days=720, k=1
-              ]],
-
-            [[0.04,  # strike=110, days=30, k=0
-              0.04,  # strike=110, days=30, k=1
-              ],
-             [0.04,  # strike=110, days=90, k=0
-              0.04,  # strike=110, days=90, k=1
-              ],
-             [0.04,  # strike=110, days=180, k=0
-              0.04,  # strike=110, days=180, k=1
-              ],
-             [0.05,  # strike=110, days=360, k=0
-              0.04,  # strike=110, days=360, k=1
-              ],
-             [0.06,  # strike=110, days=720, k=0
-              0.05,  # strike=110, days=720, k=1
-              ]]]
+            [[0.04, 0.04, ], [0.04, 0.04, ], [0.04, 0.04, ], [0.05, 0.04, ], [0.04, 0.04, ]],
+            [[0.04, 0.04, ], [0.04, 0.04, ], [0.04, 0.04, ], [0.06, 0.06, ], [0.06, 0.05, ]],
+            [[0.04, 0.04, ], [0.04, 0.04, ], [0.04, 0.04, ], [0.05, 0.04, ], [0.06, 0.05, ]]]
 
         dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = QuoteHandle(SimpleQuote(100))
@@ -1471,3 +1562,175 @@ class AsianOptionTest(unittest.TestCase):
                     tolerance = tol[strike_index][day_index][k]
 
                     self.assertFalse(abs(analyticPrice - mcPrice) > tolerance)
+
+    def testTurnbullWakemanAsianEngine(self):
+        TEST_MESSAGE(
+            "Testing Turnbull-Wakeman engine for discrete-time arithmetic average-rate "
+            "Asians options with term structure support...")
+
+        cases = [
+            DiscreteAverageDataTermStructure(Option.Call, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 19.5152),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 19.5063),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 19.5885),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 0.0090),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 0.0001),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 80, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 0.0823),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 10.1437),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 9.8313),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 10.7062),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 0.3906),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 0.0782),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 90, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 0.9531),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 3.2700),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 2.2819),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 4.3370),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 3.2700),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 2.2819),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 100, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 4.3370),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 0.5515),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 0.1314),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 1.2429),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 10.3046),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 9.8845),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 110, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 10.9960),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 0.0479),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 0.0016),
+            DiscreteAverageDataTermStructure(Option.Call, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 0.2547),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "flat", 19.5541),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "up", 19.5078),
+            DiscreteAverageDataTermStructure(Option.Put, 100, 120, 0, 0.05, 1.0 / 52, 0.5, 26, 0.2, "down", 19.7609)]
+
+        dc = Actual360()
+        today = Settings.instance().evaluationDate
+
+        for l in cases:
+            dt = (l.expiry - l.first) / (l.fixings - 1)
+            fixingDates = DateVector(l.fixings)
+            fixingDates[0] = today + timeToDays(l.first, 360)
+
+            for i in range(1, l.fixings):
+                fixingDates[i] = today + timeToDays(i * dt + l.first, 360)
+
+            spot = SimpleQuote(l.underlying)
+            qTS = flatRate(today, l.b + l.riskFreeRate, dc)
+            rTS = flatRate(today, l.riskFreeRate, dc)
+
+            volSlope = 0.005
+            volTS = None
+            if l.slope == "flat":
+                volTS = flatVol(today, l.volatility, dc)
+            elif l.slope == "up":
+                volatilities = DoubleVector(l.fixings)
+                for i in range(l.fixings):
+                    volatilities[i] = l.volatility - (l.fixings - 1) * volSlope + i * volSlope
+                volTS = BlackVarianceCurve(today, fixingDates, volatilities, dc, true)
+            elif l.slope == "down":
+                volatilities = DoubleVector(l.fixings)
+                for i in range(l.fixings):
+                    volatilities[i] = l.volatility + (l.fixings - 1) * volSlope - i * volSlope
+                volTS = BlackVarianceCurve(today, fixingDates, volatilities, dc, false)
+
+            averageType = Average.Arithmetic
+            payoff = PlainVanillaPayoff(l.type, l.strike)
+            maturity = today + timeToDays(l.expiry, 360)
+            exercise = EuropeanExercise(maturity)
+            stochProcess = BlackScholesMertonProcess(
+                QuoteHandle(spot), YieldTermStructureHandle(qTS),
+                YieldTermStructureHandle(rTS),
+                BlackVolTermStructureHandle(volTS))
+
+            engine = TurnbullWakemanAsianEngine(stochProcess)
+
+            option = DiscreteAveragingAsianOption(
+                averageType, 0, 0, fixingDates, payoff, exercise)
+            option.setPricingEngine(engine)
+
+            calculated = option.NPV()
+            expected = l.result
+            tolerance = 2.5e-3
+            error = abs(expected - calculated)
+            self.assertFalse(error > tolerance)
+
+            dS = 0.001
+            delta = option.delta()
+            gamma = option.gamma()
+
+            spotUp = SimpleQuote(l.underlying + dS)
+            spotDown = SimpleQuote(l.underlying - dS)
+
+            stochProcessUp = BlackScholesMertonProcess(
+                QuoteHandle(spotUp), YieldTermStructureHandle(qTS),
+                YieldTermStructureHandle(rTS),
+                BlackVolTermStructureHandle(volTS))
+            stochProcessDown = BlackScholesMertonProcess(
+                QuoteHandle(spotDown), YieldTermStructureHandle(qTS),
+                YieldTermStructureHandle(rTS), BlackVolTermStructureHandle(volTS))
+            engineUp = TurnbullWakemanAsianEngine(stochProcessUp)
+            engineDown = TurnbullWakemanAsianEngine(stochProcessDown)
+
+            option.setPricingEngine(engineUp)
+            calculatedUp = option.NPV()
+
+            option.setPricingEngine(engineDown)
+            calculatedDown = option.NPV()
+
+            deltaBump = (calculatedUp - calculatedDown) / (2 * dS)
+            gammaBump = (calculatedUp + calculatedDown - 2 * calculated) / (dS * dS)
+
+            tolerance = 1.0e-6
+            deltaError = abs(deltaBump - delta)
+            self.assertFalse(deltaError > tolerance)
+
+            gammaError = abs(gammaBump - gamma)
+            self.assertFalse(gammaError > tolerance)
+
+    def _testDiscreteGeometricAveragePriceHeston(self,
+                                                 engine,
+                                                 tol):
+
+        days = [
+            30, 91, 182, 365, 730, 1095, 30, 91, 182, 365, 730, 1095, 30,
+            91, 182, 365, 730, 1095]
+        strikes = [
+            90, 90, 90, 90, 90, 90, 100, 100, 100, 100, 100, 100, 110,
+            110, 110, 110, 110, 110]
+
+        prices = [
+            10.2732, 10.9554, 11.9916, 13.6950, 16.1773, 18.0146, 2.4389,
+            3.7881, 5.2132, 7.2243, 9.9948, 12.0639, 0.1012, 0.5949, 1.4444,
+            2.9479, 5.3531, 7.3315]
+        dc = Actual365Fixed()
+        today = knownGoodDefault
+        Settings.instance().evaluationDate = today
+        spot = QuoteHandle(SimpleQuote(100.0))
+        qRate = SimpleQuote(0.0)
+        rRate = SimpleQuote(0.05)
+        v0 = 0.09
+        typeOpt = Option.Call
+        averageType = Average.Geometric
+
+        runningAccumulator = 1.0
+        pastFixings = 0
+
+        for i in range(len(strikes)):
+
+            strike = strikes[i]
+            day = days[i]
+            expected = prices[i]
+            tolerance = tol[i]
+
+            futureFixings = int(floor(day / 7.0))
+            fixingDates = DateVector(futureFixings)
+            expiryDate = today + Period(day, Days)
+            for j in range(futureFixings - 1, -1, -1):
+                fixingDates[j] = expiryDate - Period(j * 7, Days)
+
+            europeanExercise = EuropeanExercise(expiryDate)
+            payoff = PlainVanillaPayoff(typeOpt, strike)
+            option = DiscreteAveragingAsianOption(
+                averageType, runningAccumulator, pastFixings,
+                fixingDates, payoff, europeanExercise)
+            option.setPricingEngine(engine)
+            calculated = option.NPV()
+            self.assertFalse(
+                abs(calculated - expected) > tolerance)

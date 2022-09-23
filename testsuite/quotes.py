@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 def add10(x):
@@ -30,7 +32,8 @@ def sub(x, y):
 class QuoteTest(unittest.TestCase):
 
     def testObservable(self):
-        TEST_MESSAGE("Testing observability of quotes...")
+        TEST_MESSAGE(
+            "Testing observability of quotes...")
 
         me = SimpleQuote(0.0)
         f = Flag()
@@ -40,7 +43,8 @@ class QuoteTest(unittest.TestCase):
         self.assertFalse(not f.isUp())
 
     def testObservableHandle(self):
-        TEST_MESSAGE("Testing observability of quote handles...")
+        TEST_MESSAGE(
+            "Testing observability of quote handles...")
 
         me1 = SimpleQuote(0.0)
         h = RelinkableQuoteHandle(me1)
@@ -56,7 +60,8 @@ class QuoteTest(unittest.TestCase):
         self.assertFalse(not f.isUp())
 
     def testDerived(self):
-        TEST_MESSAGE("Testing derived quotes...")
+        TEST_MESSAGE(
+            "Testing derived quotes...")
 
         funcs = [add10, mul10, sub10]
 
@@ -70,7 +75,8 @@ class QuoteTest(unittest.TestCase):
             self.assertFalse(abs(x - y) > 1.0e-10)
 
     def testComposite(self):
-        TEST_MESSAGE("Testing composite quotes...")
+        TEST_MESSAGE(
+            "Testing composite quotes...")
 
         funcs = [add, mul, sub]
 
@@ -103,20 +109,18 @@ class QuoteTest(unittest.TestCase):
         forwardValueQuote = ForwardValueQuote(euribor, fixingDate)
         forwardValue = forwardValueQuote.value()
         expectedForwardValue = euribor.fixing(fixingDate, true)
-        # we test if the forward value given by the quote is consistent
-        # with the one directly given by the index
+
         self.assertFalse(abs(forwardValue - expectedForwardValue) > 1.0e-15)
-        # then we test the observer/observable chain
+
         f = Flag()
         f.registerWith(forwardValueQuote)
         forwardQuote.setValue(0.04)
         self.assertFalse(not f.isUp())
 
-        # and we retest if the values are still matching
         forwardValue = forwardValueQuote.value()
         expectedForwardValue = euribor.fixing(fixingDate, true)
         self.assertFalse(abs(forwardValue - expectedForwardValue) > 1.0e-15)
-        # we test the ImpliedStdevQuote class
+
         f.unregisterWith(forwardValueQuote)
         f.lower()
         price = 0.02
@@ -135,7 +139,7 @@ class QuoteTest(unittest.TestCase):
             forwardQuote.value(), price,
             1.0, 0.0, guess, 1.0e-6)
         self.assertFalse(abs(impliedStdev - expectedImpliedStdev) > 1.0e-15)
-        # then we test the observer/observable chain
+
         quote = impliedStdevQuote
         f.registerWith(quote)
         forwardQuote.setValue(0.05)

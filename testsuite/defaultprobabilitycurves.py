@@ -1,10 +1,11 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp
 
+from QuantLib import *
 
-# Used to check that the exception message contains the expected message string, expMsg.
+from utilities import *
+
+
 class ExpErrorPred(object):
 
     def __init__(self, msg):
@@ -22,7 +23,8 @@ class ExpErrorPred(object):
 class DefaultProbabilityCurveTest(unittest.TestCase):
 
     def testDefaultProbability(self):
-        TEST_MESSAGE("Testing default-probability structure...")
+        TEST_MESSAGE(
+            "Testing default-probability structure...")
 
         hazardRate = 0.0100
         hazardRateQuote = QuoteHandle(SimpleQuote(hazardRate))
@@ -65,7 +67,8 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
             self.assertFalse(abs(timeProbability - dateProbability) > tolerance)
 
     def testFlatHazardRate(self):
-        TEST_MESSAGE("Testing flat hazard rate...")
+        TEST_MESSAGE(
+            "Testing flat hazard rate...")
 
         hazardRate = 0.0100
         hazardRateQuote = QuoteHandle(
@@ -91,35 +94,36 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
             self.assertFalse(abs(probability - computedProbability) > tolerance)
 
     def testFlatHazardConsistency(self):
-        TEST_MESSAGE("Testing piecewise-flat hazard-rate consistency...")
-        # testBootstrapFromSpread<HazardRate, BackwardFlat>()
-        # testBootstrapFromUpfront<HazardRate, BackwardFlat>()
+        TEST_MESSAGE(
+            "Testing piecewise-flat hazard-rate consistency...")
+
         self._testBootstrapFromSpread(PiecewiseBackwardFlatHazard, BackwardFlat())
         self._testBootstrapFromUpfront(PiecewiseBackwardFlatHazard, BackwardFlat())
 
     def testFlatDensityConsistency(self):
-        TEST_MESSAGE("Testing piecewise-flat default-density consistency...")
-        # testBootstrapFromSpread<DefaultDensity, BackwardFlat>()
-        # testBootstrapFromUpfront<DefaultDensity, BackwardFlat>()
+        TEST_MESSAGE(
+            "Testing piecewise-flat default-density consistency...")
+
         self._testBootstrapFromSpread(PiecewiseBackwardFlatDefault, BackwardFlat())
         self._testBootstrapFromUpfront(PiecewiseBackwardFlatDefault, BackwardFlat())
 
     def testLinearDensityConsistency(self):
-        TEST_MESSAGE("Testing piecewise-linear default-density consistency...")
-        # testBootstrapFromSpread<DefaultDensity, Linear>()
-        # testBootstrapFromUpfront<DefaultDensity, Linear>()
+        TEST_MESSAGE(
+            "Testing piecewise-linear default-density consistency...")
+
         self._testBootstrapFromSpread(PiecewiseLinearDefault, Linear())
         self._testBootstrapFromUpfront(PiecewiseLinearDefault, Linear())
 
     def testLogLinearSurvivalConsistency(self):
-        TEST_MESSAGE("Testing log-linear survival-probability consistency...")
-        # testBootstrapFromSpread<SurvivalProbability, LogLinear>()
-        # testBootstrapFromUpfront<SurvivalProbability, LogLinear>()
+        TEST_MESSAGE(
+            "Testing log-linear survival-probability consistency...")
+
         self._testBootstrapFromSpread(PiecewiseLogLinearSurvival, LogLinear())
         self._testBootstrapFromUpfront(PiecewiseLogLinearSurvival, LogLinear())
 
     def testSingleInstrumentBootstrap(self):
-        TEST_MESSAGE("Testing single-instrument curve bootstrap...")
+        TEST_MESSAGE(
+            "Testing single-instrument curve bootstrap...")
 
         calendar = TARGET()
 
@@ -149,27 +153,26 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
             dayCounter, recoveryRate,
             discountCurve)
 
-        # defaultCurve=PiecewiseDefaultCurve<HazardRate, BackwardFlat> (
         defaultCurve = PiecewiseBackwardFlatHazard(
             today, helpers, dayCounter, BackwardFlat())
         defaultCurve.recalculate()
 
     def testUpfrontBootstrap(self):
-        TEST_MESSAGE("Testing bootstrap on upfront quotes...")
+        TEST_MESSAGE(
+            "Testing bootstrap on upfront quotes...")
 
         backup = SavedSettings()
-        # not taken into account, this would prevent the upfront from being used
-        Settings.instance().includeTodaysCashFlows = False
 
-        # testBootstrapFromUpfront<HazardRate, BackwardFlat>()
+        Settings.instance().setIncludeTodaysCashFlows(False)
+
         self._testBootstrapFromUpfront(PiecewiseBackwardFlatHazard, BackwardFlat())
 
-        # also ensure that we didn't override the flag permanently
         flag = Settings.instance().includeTodaysCashFlows
         self.assertFalse(flag != false)
 
     def testIterativeBootstrapRetries(self):
-        TEST_MESSAGE("Testing iterative bootstrap with retries...")
+        TEST_MESSAGE(
+            "Testing iterative bootstrap with retries...")
 
         backup = SavedSettings()
 
@@ -177,7 +180,6 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
         Settings.instance().evaluationDate = asof
         tsDayCounter = Actual365Fixed()
 
-        # USD discount curve built out of FedFunds OIS swaps.
         usdCurveDates = [
             Date(1, Apr, 2020),
             Date(2, Apr, 2020),
@@ -235,11 +237,10 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
             0.839314063]
 
         usdYts = YieldTermStructureHandle(
-            # InterpolatedDiscountCurve<LogLinear>
+
             DiscountCurve(
                 usdCurveDates, usdCurveDfs, tsDayCounter))
 
-        # CDS spreads
         cdsSpreads = [
             (Period(6, Months), 2.957980250),
             (Period(1, Years), 3.076933100),
@@ -249,7 +250,6 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
             (Period(5, Years), 2.713474100)]
         recoveryRate = 0.035
 
-        # Conventions
         settlementDays = 1
         calendar = WeekendsOnly()
         frequency = Quarterly
@@ -258,7 +258,6 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
         dayCounter = Actual360()
         lastPeriodDayCounter = Actual360(true)
 
-        # Create the CDS spread helpers.
         instruments = []
         for it in cdsSpreads:
             instruments.append(
@@ -268,41 +267,30 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
                     recoveryRate, usdYts, true, true, Date(),
                     lastPeriodDayCounter))
 
-        # Create the default curve with the default IterativeBootstrap.
-        # SPCurve= PiecewiseDefaultCurve<SurvivalProbability, LogLinear, IterativeBootstrap>
         SPCurve = PiecewiseLogLinearSurvival
         dpts = SPCurve(asof, instruments, tsDayCounter, LogLinear())
 
-        # Check that the default curve throws by requesting a default probability.
         testDate = Date(21, Dec, 2020)
-        # BOOST_CHECK_EXCEPTION(dpts.survivalProbability(testDate), Error,
-        #     ExpErrorPred("1st iteration: failed at 1st alive instrument"))
+
         self.assertRaises(RuntimeError, dpts.survivalProbability, testDate)
 
-        # Create the default curve with an IterativeBootstrap allowing for 4 retries.
-        # Use a maxFactor value of 1.0 so that we still use the previous survival probability at each pillar. In other
-        # words, the survival probability cannot increase with time so best max at current pillar is the previous 
-        # pillar's value - there is no point increasing it on a retry.
         ib = IterativeBootstrap(NullReal(), NullReal(), NullReal(), 5, 1.0, 10.0)
         dpts = SPCurve(asof, instruments, tsDayCounter, LogLinear(), ib)
 
-        # Check that the default curve still throws. It throws at the third pillar because the survival probability is 
-        # too low at the second pillar.
-        # BOOST_CHECK_EXCEPTION(dpts.survivalProbability(testDate), Error,
-        #     ExpErrorPred("1st iteration: failed at 3rd alive instrument"))
         self.assertRaises(RuntimeError, dpts.survivalProbability, testDate)
 
-        # Create the default curve with an IterativeBootstrap that allows for 4 retries and does not throw.
         ibNoThrow = IterativeBootstrap(NullReal(), NullReal(), NullReal(), 5, 1.0, 10.0, true, 2)
         dpts = SPCurve(asof, instruments, tsDayCounter, LogLinear(), ibNoThrow)
-        # BOOST_CHECK_NO_THROW(dpts.survivalProbability(testDate))
+
         try:
             dpts.survivalProbability(testDate)
         except Exception as e:
             NO_THROW = false
             self.assertTrue(NO_THROW)
 
-    def _testBootstrapFromSpread(self, PDC, I):
+    def _testBootstrapFromSpread(self,
+                                 PDC,
+                                 I):
 
         calendar = TARGET()
 
@@ -341,7 +329,6 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
         notional = 1.0
         tolerance = 1.0e-6
 
-        # ensure apple-to-apple comparison
         backup = SavedSettings()
         Settings.instance().includeTodaysCashFlows = true
 
@@ -363,12 +350,13 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
                     piecewiseCurve, recoveryRate,
                     discountCurve))
 
-            # test
             inputRate = quote[i]
             computedRate = cds.fairSpread()
             self.assertFalse(abs(inputRate - computedRate) > tolerance)
 
-    def _testBootstrapFromUpfront(self, PDC, I):
+    def _testBootstrapFromUpfront(self,
+                                  PDC,
+                                  I):
 
         calendar = TARGET()
 
@@ -413,7 +401,7 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
         tolerance = 1.0e-6
 
         backup = SavedSettings()
-        # ensure apple-to-apple comparison
+
         Settings.instance().includeTodaysCashFlows = true
 
         for i in range(len(n)):
@@ -440,7 +428,6 @@ class DefaultProbabilityCurveTest(unittest.TestCase):
                     piecewiseCurve, recoveryRate,
                     discountCurve, true))
 
-            # test
             inputUpfront = quote[i]
             computedUpfront = cds.fairUpfront()
             self.assertFalse(abs(inputUpfront - computedUpfront) > tolerance)

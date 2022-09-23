@@ -1,13 +1,16 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import log, sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 class NormalCLVModelTest(unittest.TestCase):
 
     def testBSCumlativeDistributionFunction(self):
-        TEST_MESSAGE("Testing Black-Scholes cumulative distribution function with constant volatility...")
+        TEST_MESSAGE(
+            "Testing Black-Scholes cumulative distribution function with constant volatility...")
 
         backup = SavedSettings()
 
@@ -28,24 +31,22 @@ class NormalCLVModelTest(unittest.TestCase):
 
         bsProcess = GeneralizedBlackScholesProcess(
             spot, qTS, rTS, volTS)
-        # ouProcess=OrnsteinUhlenbeckProcess()
 
         m = NormalCLVModel(
-            bsProcess,
-            # ouProcess,
-            DateVector(), 5)
+            bsProcess, DateVector(), 5)
         rndCalculator = BSMRNDCalculator(bsProcess)
 
         tol = 1e5 * QL_EPSILON
         t = dc.yearFraction(today, maturity)
-        for x in range(10, 400, 10):  # (x = 10 x < 400 x += 10) {
+        for x in range(10, 400, 10):
             calculated = m.cdf(maturity, x)
             expected = rndCalculator.cdf(log(x), t)
 
             self.assertFalse(abs(calculated - expected) > tol)
 
     def testHestonCumlativeDistributionFunction(self):
-        TEST_MESSAGE("Testing Heston cumulative distribution function...")
+        TEST_MESSAGE(
+            "Testing Heston cumulative distribution function...")
 
         backup = SavedSettings()
 
@@ -77,14 +78,13 @@ class NormalCLVModelTest(unittest.TestCase):
         m = NormalCLVModel(
             GeneralizedBlackScholesProcess(
                 spot, qTS, rTS, hestonVolTS),
-            # OrnsteinUhlenbeckProcess(),
             DateVector(), 5)
 
         rndCalculator = HestonRNDCalculator(process)
 
         tol = 1e-6
         t = dc.yearFraction(today, maturity)
-        for x in range(10, 400, 25):  # (x = 10 x < 400 x += 25) {
+        for x in range(10, 400, 25):
             calculated = m.cdf(maturity, x)
             expected = rndCalculator.cdf(log(x), t)
 
@@ -96,22 +96,15 @@ class NormalCLVModelTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        # example taken from:
-        # A. Grzelak, 2015, The CLV Framework -
-        # A Fresh Look at Efficient Pricing with Smile
-        # http:#papers.ssrn.com/sol3/papers.cfm?abstract_id=2747541
-
         dc = Actual360()
         today = Date(22, June, 2016)
         Settings.instance().evaluationDate = today
 
-        # SABR
         beta = 0.5
         alpha = 0.2
         rho = -0.9
         gamma = 0.2
 
-        # Ornstein-Uhlenbeck
         speed = 1.3
         level = 0.1
         vol = 0.25
@@ -144,18 +137,15 @@ class NormalCLVModelTest(unittest.TestCase):
 
         m = NormalCLVModel(bsProcess, ouProcess, maturityDates, 4)
 
-        # test collocation points in x_ij
         maturities = [maturityDates[0], maturityDates[2], maturityDates[4]]
 
-        x = [
-            [1.070, 0.984, 0.903, 0.817],
-            [0.879, 0.668, 0.472, 0.261],
-            [0.528, 0.282, 0.052, -0.194]]
+        x = [[1.070, 0.984, 0.903, 0.817],
+             [0.879, 0.668, 0.472, 0.261],
+             [0.528, 0.282, 0.052, -0.194]]
 
-        s = [
-            [1.104, 1.035, 0.969, 0.895],
-            [1.328, 1.122, 0.911, 0.668],
-            [1.657, 1.283, 0.854, 0.339]]
+        s = [[1.104, 1.035, 0.969, 0.895],
+             [1.328, 1.122, 0.911, 0.668],
+             [1.657, 1.283, 0.854, 0.339]]
 
         c = [2.3344, 0.7420, -0.7420, -2.3344]
 
@@ -180,7 +170,8 @@ class NormalCLVModelTest(unittest.TestCase):
                 self.assertFalse(abs(calculatedG - expectedS) > tol)
 
     def testMonteCarloBSOptionPricing(self):
-        TEST_MESSAGE("Testing Monte Carlo BS option pricing...")
+        TEST_MESSAGE(
+            "Testing Monte Carlo BS option pricing...")
 
         backup = SavedSettings()
 
@@ -194,7 +185,6 @@ class NormalCLVModelTest(unittest.TestCase):
         payoff = PlainVanillaPayoff(Option.Call, strike)
         exercise = EuropeanExercise(maturity)
 
-        # Ornstein-Uhlenbeck
         speed = 2.3
         level = 100
         sigma = 0.35
@@ -221,7 +211,7 @@ class NormalCLVModelTest(unittest.TestCase):
         m = NormalCLVModel(bsProcess, ouProcess, maturities, 8)
 
         nSims = 32767
-        # LowDiscrepancy.rsg_type ld = LowDiscrepancy.make_sequence_generator(1, 23455)
+
         ld = InvCumulativeSobolGaussianRsg(SobolRsg(1, 23455))
 
         stat = RiskStatistics()
@@ -264,10 +254,6 @@ class NormalCLVModelTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        # The comparison of Black-Scholes and normal CLV prices is derived
-        # from figure 8.8 in Iain J. Clark's book,
-        # Foreign Exchange Option Pricing: A Practitioner’s Guide
-
         dc = ActualActual(ActualActual.ISDA)
         todaysDate = Date(5, Aug, 2016)
         maturityDate = todaysDate + Period(1, Years)
@@ -280,7 +266,6 @@ class NormalCLVModelTest(unittest.TestCase):
         r = 0.02
         q = 0.01
 
-        # parameter of the "calibrated" Heston model
         kappa = 1.0
         theta = 0.06
         rho = -0.8
@@ -301,7 +286,6 @@ class NormalCLVModelTest(unittest.TestCase):
         bsProcess = GeneralizedBlackScholesProcess(
             spot, qTS, rTS, vTS)
 
-        # Ornstein-Uhlenbeck
         speed = -0.80
         level = 100
         sigmaOU = 0.15
@@ -366,7 +350,7 @@ class NormalCLVModelTest(unittest.TestCase):
             ouProcess, grid, SobolBrownianBridgeRsg(factors, tSteps), false)
 
         nSims = 100000
-        # vector<GeneralStatistics> stats(n)
+
         stats = [GeneralStatistics() for i in range(n)]
         df = rTS.discount(maturityDate)
 

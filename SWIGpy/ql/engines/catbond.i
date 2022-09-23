@@ -40,7 +40,7 @@ using QuantLib::ProportionalNotionalRisk;
 using QuantLib::MonteCarloCatBondEngine;
 %}
 
-%template(PathPair) std::pair<bool, std::vector<std::pair<Date, Real>>>;
+%template(BoolDateDoublePairVectorPair) std::pair<bool, std::vector<std::pair<Date, Real>>>;
 
 %shared_ptr(CatSimulation)
 class CatSimulation {
@@ -61,19 +61,19 @@ class EventSetSimulation : public CatSimulation {
   public:
 	%extend {
 		EventSetSimulation(
-			const std::vector<std::pair<Date, Real>>& events,
-			Date eventsStart,
-			Date eventsEnd,
-			Date start,
-			Date end) {
-				ext::shared_ptr<std::vector<std::pair<Date, Real>>> eventsPtr(
-					new std::vector<std::pair<Date, Real>>(events));
-				return new EventSetSimulation(
-					eventsPtr,
-					eventsStart,
-					eventsEnd,
-					start,
-					end);
+        const std::vector<std::pair<Date, Real>>& events,
+        Date eventsStart,
+        Date eventsEnd,
+        Date start,
+        Date end) {
+            ext::shared_ptr<std::vector<std::pair<Date, Real>>> eventsPtr(
+					      new std::vector<std::pair<Date, Real>>(events));
+            return new EventSetSimulation(
+              eventsPtr,
+              eventsStart,
+              eventsEnd,
+              start,
+              end);
 			}
 	}
 };
@@ -81,12 +81,13 @@ class EventSetSimulation : public CatSimulation {
 %shared_ptr(BetaRiskSimulation)
 class BetaRiskSimulation : public CatSimulation {
   public:
-    BetaRiskSimulation(Date start,
-                       Date end,
-                       Real maxLoss,
-                       Real lambda,
-                       Real alpha,
-                       Real beta);
+    BetaRiskSimulation(
+        Date start,
+        Date end,
+        Real maxLoss,
+        Real lambda,
+        Real alpha,
+        Real beta);
     Real generateBeta();
 };
 
@@ -96,7 +97,8 @@ class CatRisk {
     CatRisk();
   public:
     ext::shared_ptr<CatSimulation> newSimulation(
-        const Date& start, const Date& end) const;
+        const Date& start, 
+        const Date& end) const;
 };
 
 %shared_ptr(EventSet)
@@ -107,12 +109,12 @@ class EventSet : public CatRisk {
 			const std::vector<std::pair<Date, Real>>& events,
 			Date eventsStart,
 			Date eventsEnd) {
-				ext::shared_ptr<std::vector<std::pair<Date, Real>>> eventsPtr(
-					new std::vector<std::pair<Date, Real>>(events));
-				return new EventSet(
-					eventsPtr,
-					eventsStart,
-					eventsEnd);
+          ext::shared_ptr<std::vector<std::pair<Date, Real>>> eventsPtr(
+              new std::vector<std::pair<Date, Real>>(events));
+          return new EventSet(
+              eventsPtr,
+              eventsStart,
+              eventsEnd);
 			}
 	}
 };
@@ -120,10 +122,11 @@ class EventSet : public CatRisk {
 %shared_ptr(BetaRisk)
 class BetaRisk : public CatRisk {
   public:
-    BetaRisk(Real maxLoss,
-             Real years,
-             Real mean,
-             Real stdDev);
+    BetaRisk(
+        Real maxLoss,
+        Real years,
+        Real mean,
+        Real stdDev);
 };
 
 %shared_ptr(EventPaymentOffset)
@@ -145,7 +148,7 @@ class NotionalPath {
     NotionalPath();
     Rate notionalRate(const Date& date) const;
     void reset();
-    void addReduction(const Date &date, Rate newRate);
+    void addReduction(const Date& date, Rate newRate);
     Real loss();
 };
 
@@ -155,7 +158,7 @@ class NotionalRisk {
     NotionalRisk();
   public:
     void updatePath(
-        const std::vector<std::pair<Date, Real> >& events,
+        const std::vector<std::pair<Date, Real>>& events,
         NotionalPath& path) const;
 };
 

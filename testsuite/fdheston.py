@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class HestonTestData(object):
@@ -41,16 +43,18 @@ class NewBarrierOptionData(object):
         self.rebate = rebate
         self.optType = optType
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
 
 
 class FdHestonTest(unittest.TestCase):
+
     def testFdmHestonVarianceMesher(self):
-        TEST_MESSAGE("Testing FDM Heston variance mesher...")
+        TEST_MESSAGE(
+            "Testing FDM Heston variance mesher...")
 
         backup = SavedSettings()
 
@@ -155,14 +159,12 @@ class FdHestonTest(unittest.TestCase):
         self.assertFalse(abs(barrierOption.gamma() - gammaExpected) > tol)
 
     def testFdmHestonBarrierVsBlackScholes(self):
-        TEST_MESSAGE("Testing FDM with barrier option in Heston model...")
+        TEST_MESSAGE(
+            "Testing FDM with barrier option in Heston model...")
 
         backup = SavedSettings()
 
         values = [
-            # The data below are from
-            # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
-            #            barrierType, barrier, rebate,         type, strike,     s,    q,    r,    t,    v
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 90, 100.0, 0.04, 0.08, 0.50, 0.25),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 100, 100.0, 0.00, 0.08, 1.00, 0.30),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 110, 100.0, 0.04, 0.08, 0.50, 0.25),
@@ -288,7 +290,8 @@ class FdHestonTest(unittest.TestCase):
             self.assertFalse(abs(calculatedHE - expected) / expected > tol)
 
     def testFdmHestonAmerican(self):
-        TEST_MESSAGE("Testing FDM with American option in Heston model...")
+        TEST_MESSAGE(
+            "Testing FDM with American option in Heston model...")
 
         backup = SavedSettings()
 
@@ -323,12 +326,8 @@ class FdHestonTest(unittest.TestCase):
         self.assertFalse(abs(option.gamma() - gammaExpected) > tol)
 
     def testFdmHestonIkonenToivanen(self):
-        TEST_MESSAGE("Testing FDM Heston for Ikonen and Toivanen tests...")
-
-        # check prices of american puts as given in:
-        # From Efficient numerical methods for pricing American options under 
-        # stochastic volatility, Samuli Ikonen, Jari Toivanen, 
-        # http://users.jyu.fi/~tene/papers/reportB12-05.pdf
+        TEST_MESSAGE(
+            "Testing FDM Heston for Ikonen and Toivanen tests...")
 
         backup = SavedSettings()
 
@@ -403,11 +402,9 @@ class FdHestonTest(unittest.TestCase):
         self.assertFalse(abs(option.gamma() - gammaExpected) > gammaTol)
 
     def testFdmHestonConvergence(self):
-        # convergence tests based on
-        # ADI finite difference schemes for option pricing in the
-        # Heston model with correlation, K.J. in t'Hout and S. Foulon
 
-        TEST_MESSAGE("Testing FDM Heston convergence...")
+        TEST_MESSAGE(
+            "Testing FDM Heston convergence...")
 
         backup = SavedSettings()
 
@@ -468,7 +465,8 @@ class FdHestonTest(unittest.TestCase):
                             abs(expected - calculated) > 0.002)
 
     def testFdmHestonBlackScholes(self):
-        TEST_MESSAGE("Testing FDM Heston with Black Scholes model...")
+        TEST_MESSAGE(
+            "Testing FDM Heston with Black Scholes model...")
 
         backup = SavedSettings()
 
@@ -501,7 +499,6 @@ class FdHestonTest(unittest.TestCase):
             hestonProcess = HestonProcess(
                 rTS, qTS, s0, 0.0625, 1, 0.0625, 0.0001, 0.0)
 
-            # Hundsdorfer scheme
             option.setPricingEngine(
                 FdHestonVanillaEngine(
                     HestonModel(hestonProcess),
@@ -510,7 +507,6 @@ class FdHestonTest(unittest.TestCase):
             calculated = option.NPV()
             self.assertFalse(abs(calculated - expected) > tol)
 
-            # Explicit scheme
             option.setPricingEngine(
                 FdHestonVanillaEngine(
                     HestonModel(hestonProcess),
@@ -521,7 +517,8 @@ class FdHestonTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected) > tol)
 
     def testFdmHestonIntradayPricing(self):
-        TEST_MESSAGE("Testing FDM Heston intraday pricing ...")
+        TEST_MESSAGE(
+            "Testing FDM Heston intraday pricing ...")
         backup = SavedSettings()
 
         optType = Option.Put
@@ -571,7 +568,8 @@ class FdHestonTest(unittest.TestCase):
                 abs(gammaCalculated - gammaExpected[i]) > 1e-4)
 
     def testMethodOfLinesAndCN(self):
-        TEST_MESSAGE("Testing method of lines to solve Heston PDEs...")
+        TEST_MESSAGE(
+            "Testing method of lines to solve Heston PDEs...")
 
         backup = SavedSettings()
 

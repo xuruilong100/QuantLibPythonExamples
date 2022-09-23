@@ -37,7 +37,7 @@ class SafeConvexMonotone {
     static const Size requiredPoints = 2;
     static const Size dataSizeAdjustment = 1;
 
-    explicit SafeConvexMonotone(
+    SafeConvexMonotone(
         Real quadraticity = 0.3,
         Real monotonicity = 0.7,
         bool forcePositive = true) :
@@ -370,7 +370,7 @@ class SafeBackwardFlat {
 
 class SafeConvexMonotone {
   public:
-    explicit SafeConvexMonotone(
+    SafeConvexMonotone(
         Real quadraticity = 0.3,
         Real monotonicity = 0.7,
         bool forcePositive = true);

@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class FSquared(object):
@@ -14,7 +16,8 @@ class FSquared(object):
 class SampledCurveTest(unittest.TestCase):
 
     def testConstruction(self):
-        TEST_MESSAGE("Testing sampled curve construction...")
+        TEST_MESSAGE(
+            "Testing sampled curve construction...")
 
         curve = SampledCurve(BoundedGrid(-10.0, 10.0, 100))
         f2 = FSquared()

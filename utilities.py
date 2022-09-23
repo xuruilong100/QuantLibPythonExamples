@@ -1,10 +1,13 @@
-from QuantLib import Period, Days
+from QuantLib import Period, Days, Date, Sep, Settings
 
 TEST_MESSAGE = print
 
 true = True
 false = False
 skipSlowTest = True
+knownGoodDefault = Date(16, Sep, 2015)
+
+Settings.instance().evaluationDate = knownGoodDefault
 
 
 def timeToDays(t,

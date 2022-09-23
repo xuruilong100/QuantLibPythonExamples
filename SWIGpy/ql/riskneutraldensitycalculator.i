@@ -28,14 +28,17 @@ class RiskNeutralDensityCalculator {
 %shared_ptr(BSMRNDCalculator)
 class BSMRNDCalculator : public RiskNeutralDensityCalculator {
   public:
-    explicit BSMRNDCalculator(
+    BSMRNDCalculator(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
 %shared_ptr(CEVRNDCalculator)
 class CEVRNDCalculator : public RiskNeutralDensityCalculator {
   public:
-    CEVRNDCalculator(Real f0, Real alpha, Real beta);
+    CEVRNDCalculator(
+        Real f0,
+        Real alpha, 
+        Real beta);
 
     Real massAtZero(Time t) const;
 };
@@ -43,7 +46,7 @@ class CEVRNDCalculator : public RiskNeutralDensityCalculator {
 %shared_ptr(GBSMRNDCalculator)
 class GBSMRNDCalculator : public RiskNeutralDensityCalculator {
 public:
-    explicit GBSMRNDCalculator(
+    GBSMRNDCalculator(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 
@@ -52,7 +55,7 @@ class HestonRNDCalculator : public RiskNeutralDensityCalculator {
 public:
     HestonRNDCalculator(
         ext::shared_ptr<HestonProcess> hestonProcess,
-        Real integrationEps= 1e-6,
+        Real integrationEps = 1e-6,
         Size maxIntegrationIterations = 10000ul);
 };
 
@@ -94,7 +97,6 @@ class LocalVolRNDCalculator : public RiskNeutralDensityCalculator {
             }
     }
 
-    //ext::shared_ptr<TimeGrid> timeGrid() const;
     ext::shared_ptr<Fdm1dMesher> mesher(Time t) const;
     std::vector<Size> rescaleTimeSteps() const;
 };
@@ -103,7 +105,10 @@ class LocalVolRNDCalculator : public RiskNeutralDensityCalculator {
 class SquareRootProcessRNDCalculator : public RiskNeutralDensityCalculator {
   public:
     SquareRootProcessRNDCalculator(
-        Real v0, Real kappa, Real theta, Real sigma);
+        Real v0, 
+        Real kappa, 
+        Real theta,
+        Real sigma);
 
     Real stationary_pdf(Real v) const;
     Real stationary_cdf(Real v) const;

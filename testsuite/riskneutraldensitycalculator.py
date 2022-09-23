@@ -1,8 +1,10 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, sqrt, log, pow
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class SquareRootProcessParams(object):
@@ -16,13 +18,17 @@ class SquareRootProcessParams(object):
         self.theta = theta
         self.sigma = sigma
 
-# see Svetlana Borovkova, Ferry J. Permana
-# Implied volatility in oil markets
-# http://www.researchgate.net/publication/46493859_Implied_volatility_in_oil_markets
+
 class DumasParametricVolSurface(object):
     def __init__(self,
-                 b1, b2, b3, b4, b5,
-                 spot, rTS, qTS):
+                 b1,
+                 b2,
+                 b3,
+                 b4,
+                 b5,
+                 spot,
+                 rTS,
+                 qTS):
         self.b1_ = b1
         self.b2_ = b2
         self.b3_ = b3
@@ -45,11 +51,10 @@ class DumasParametricVolSurface(object):
         return v
 
 
-def adaptiveTimeGrid(
-        maxStepsPerYear,
-        minStepsPerYear,
-        decay,
-        endTime):
+def adaptiveTimeGrid(maxStepsPerYear,
+                     minStepsPerYear,
+                     decay,
+                     endTime):
     maxDt = 1.0 / maxStepsPerYear
     minDt = 1.0 / minStepsPerYear
 
@@ -64,11 +69,10 @@ def adaptiveTimeGrid(
 
 
 class ProbWeightedPayoff(object):
-    def __init__(
-            self,
-            t,
-            payoff,
-            calc):
+    def __init__(self,
+                 t,
+                 payoff,
+                 calc):
         self.t_ = t
         self.payoff_ = payoff
         self.calc_ = calc
@@ -78,8 +82,10 @@ class ProbWeightedPayoff(object):
 
 
 class RiskNeutralDensityCalculatorTest(unittest.TestCase):
+
     def testDensityAgainstOptionPrices(self):
-        TEST_MESSAGE("Testing density against option prices...")
+        TEST_MESSAGE(
+            "Testing density against option prices...")
 
         backup = SavedSettings()
 
@@ -137,7 +143,8 @@ class RiskNeutralDensityCalculatorTest(unittest.TestCase):
                 self.assertFalse(abs(calculatedPDF - expectedPDF) > tol)
 
     def testBSMagainstHestonRND(self):
-        TEST_MESSAGE("Testing Black-Scholes-Merton and Heston densities...")
+        TEST_MESSAGE(
+            "Testing Black-Scholes-Merton and Heston densities...")
 
         backup = SavedSettings()
 
@@ -336,7 +343,8 @@ class RiskNeutralDensityCalculatorTest(unittest.TestCase):
                 self.assertFalse(absDiff > 0.5 * atol)
 
     def testSquareRootProcessRND(self):
-        TEST_MESSAGE("Testing probability density for a square root process...")
+        TEST_MESSAGE(
+            "Testing probability density for a square root process...")
 
         params = [
             SquareRootProcessParams(0.17, 1.0, 0.09, 0.5),
@@ -407,7 +415,6 @@ class RiskNeutralDensityCalculatorTest(unittest.TestCase):
             ax = 15.0 * sqrt(t) * alpha * pow(f0, beta)
 
             calculated = GaussLobattoIntegral(1000, 1e-8)(
-                # [&](Real _x) { return calculator.pdf(_x, t) },
                 lambda x: calculator.pdf(x, t),
                 max(QL_EPSILON, f0 - ax), f0 + ax) + calculator.massAtZero(t)
 
@@ -448,7 +455,6 @@ class RiskNeutralDensityCalculatorTest(unittest.TestCase):
         maturityDate = todaysDate + Period(3, Months)
         maturity = dc.yearFraction(todaysDate, maturityDate)
 
-        # use Heston model to create volatility surface with skew
         r = 0.08
         q = 0.03
         s0 = 100

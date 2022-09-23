@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class LookbackOptionData(object):
@@ -20,40 +22,35 @@ class LookbackOptionData(object):
         self.typeOpt = typeOpt
         self.strike = strike
         self.minmax = minmax
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        # Partial-time lookback options:
-        self.l = l  # level above/below actual extremum
-        self.t1 = t1  # time to start of lookback period
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+
+        self.l = l
+        self.t1 = t1
+        self.result = result
+        self.tol = tol
 
 
 class LookbackOptionTest(unittest.TestCase):
+
     def testAnalyticContinuousFloatingLookback(self):
         TEST_MESSAGE(
             "Testing analytic continuous floating-strike lookback options...")
 
         values = [
-            # data from "Option Pricing Formulas", Haug, 1998, pg.61-62
-            # type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 0, 100, 120.0, 0.06, 0.10, 0.50, 0.30, 0, 0, 25.3533, 1.0e-4),
-            # data from "Connecting discrete and continuous path-dependent options",
-            # Broadie, Glasserman & Kou, 1999, pg.70-74
-            # type,             strike, minmax, s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 0, 100, 100.0, 0.00, 0.05, 1.00, 0.30, 0, 0, 23.7884, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 100, 100.0, 0.00, 0.05, 0.20, 0.30, 0, 0, 10.7190, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 100, 110.0, 0.00, 0.05, 0.20, 0.30, 0, 0, 14.4597, 1.0e-4),
             LookbackOptionData(Option.Put, 0, 100, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 15.3526, 1.0e-4),
             LookbackOptionData(Option.Put, 0, 110, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 16.8468, 1.0e-4),
-            LookbackOptionData(Option.Put, 0, 120, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 21.0645, 1.0e-4),
-        ]
+            LookbackOptionData(Option.Put, 0, 120, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 21.0645, 1.0e-4), ]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -95,8 +92,6 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous fixed-strike lookback options...")
 
         values = [
-            # data from "Option Pricing Formulas", Haug, 1998, pg.63-64
-            #type,            strike, minmax,  s,     q,    r,    t,    v,    l, t1, result,  tol
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.10, 0, 0, 13.2687, 1.0e-4),
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.20, 0, 0, 18.9263, 1.0e-4),
             LookbackOptionData(Option.Call, 95, 100, 100.0, 0.00, 0.10, 0.50, 0.30, 0, 0, 24.9857, 1.0e-4),
@@ -132,11 +127,10 @@ class LookbackOptionTest(unittest.TestCase):
             LookbackOptionData(Option.Put, 100, 100, 100.0, 0.00, 0.10, 1.00, 0.30, 0, 0, 16.3889, 1.0e-4),
             LookbackOptionData(Option.Put, 105, 100, 100.0, 0.00, 0.10, 1.00, 0.10, 0, 0, 8.3321, 1.0e-4),
             LookbackOptionData(Option.Put, 105, 100, 100.0, 0.00, 0.10, 1.00, 0.20, 0, 0, 14.6536, 1.0e-4),
-            LookbackOptionData(Option.Put, 105, 100, 100.0, 0.00, 0.10, 1.00, 0.30, 0, 0, 20.9130, 1.0e-4)
-        ]
+            LookbackOptionData(Option.Put, 105, 100, 100.0, 0.00, 0.10, 1.00, 0.30, 0, 0, 20.9130, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -178,8 +172,6 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous partial floating-strike lookback options...")
 
         values = [
-            # data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.146
-            #type,         strike, minmax, s,    q,    r,    t,    v,    l,  t1,     result,   tol
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.25, 8.6524, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.5, 9.2128, 1.0e-4),
             LookbackOptionData(Option.Call, 0, 90, 90, 0, 0.06, 1, 0.1, 1, 0.75, 9.5567, 1.0e-4),
@@ -215,11 +207,10 @@ class LookbackOptionTest(unittest.TestCase):
             LookbackOptionData(Option.Put, 0, 90, 90, 0, 0.06, 1, 0.3, 1, 0.75, 18.4071, 1.0e-4),
             LookbackOptionData(Option.Put, 0, 110, 110, 0, 0.06, 1, 0.3, 1, 0.25, 16.4657, 1.0e-4),
             LookbackOptionData(Option.Put, 0, 110, 110, 0, 0.06, 1, 0.3, 1, 0.5, 19.7383, 1.0e-4),
-            LookbackOptionData(Option.Put, 0, 110, 110, 0, 0.06, 1, 0.3, 1, 0.75, 22.4976, 1.0e-4)
-        ]
+            LookbackOptionData(Option.Put, 0, 110, 110, 0, 0.06, 1, 0.3, 1, 0.75, 22.4976, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -263,8 +254,6 @@ class LookbackOptionTest(unittest.TestCase):
             "Testing analytic continuous fixed-strike lookback options...")
 
         values = [
-            # data from "Option Pricing Formulas, Second Edition", Haug, 2006, pg.148
-            #type,         strike, minmax, s,    q,    r,    t,    v, l,   t1,  result,   tol
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.25, 20.2845, 1.0e-4),
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.5, 19.6239, 1.0e-4),
             LookbackOptionData(Option.Call, 90, 0, 100, 0, 0.06, 1, 0.1, 0, 0.75, 18.6244, 1.0e-4),
@@ -300,11 +289,10 @@ class LookbackOptionTest(unittest.TestCase):
             LookbackOptionData(Option.Put, 90, 0, 100, 0, 0.06, 1, 0.3, 0, 0.75, 7.9267, 1.0e-4),
             LookbackOptionData(Option.Put, 110, 0, 100, 0, 0.06, 1, 0.3, 0, 0.25, 25.2112, 1.0e-4),
             LookbackOptionData(Option.Put, 110, 0, 100, 0, 0.06, 1, 0.3, 0, 0.5, 22.8217, 1.0e-4),
-            LookbackOptionData(Option.Put, 110, 0, 100, 0, 0.06, 1, 0.3, 0, 0.75, 20.0566, 1.0e-4)
-        ]
+            LookbackOptionData(Option.Put, 110, 0, 100, 0, 0.06, 1, 0.3, 0, 0.75, 20.0566, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -346,12 +334,13 @@ class LookbackOptionTest(unittest.TestCase):
             self.assertFalse(error > value.tol)
 
     def testMonteCarloLookback(self):
-        TEST_MESSAGE("Testing Monte Carlo engines for lookback options...")
+        TEST_MESSAGE(
+            "Testing Monte Carlo engines for lookback options...")
 
         tolerance = 0.1
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         strike = 90
         t = 1
@@ -384,8 +373,6 @@ class LookbackOptionTest(unittest.TestCase):
         for ty in types:
             payoff = PlainVanillaPayoff(ty, strike)
 
-            # Partial Fixed
-
             lookbackStart = today + timeToDays(t1)
             partialFixedLookback = ContinuousPartialFixedLookbackOption(
                 lookbackStart,
@@ -409,8 +396,6 @@ class LookbackOptionTest(unittest.TestCase):
             diff = abs(analytical - monteCarlo)
 
             self.assertFalse(diff > tolerance)
-
-            # Fixed
 
             minMax = 100
 
@@ -436,8 +421,6 @@ class LookbackOptionTest(unittest.TestCase):
             diff = abs(analytical - monteCarlo)
 
             self.assertFalse(diff > tolerance)
-
-            # Partial Floating
 
             lmd = 1
             lookbackEnd = today + timeToDays(t1)
@@ -468,8 +451,6 @@ class LookbackOptionTest(unittest.TestCase):
             diff = abs(analytical - monteCarlo)
 
             self.assertFalse(diff > tolerance)
-
-            # Floating
 
             floating = ContinuousFloatingLookbackOption(
                 minMax,

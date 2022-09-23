@@ -27,12 +27,16 @@ using QuantLib::FdmBlackScholesMultiStrikeMesher;
 class Concentrating1dMesher : public Fdm1dMesher {
   public:
     Concentrating1dMesher(
-        Real start, Real end, Size size,
+        Real start, 
+        Real end,
+        Size size,
         const std::pair<Real, Real>& cPoints = (std::pair<Real, Real>(Null<Real>(), Null<Real>())),
         const bool requireCPoint = false);
 
     Concentrating1dMesher(
-        Real start, Real end, Size size,
+        Real start,
+        Real end, 
+        Size size,
         const std::vector<ext::tuple<Real, Real, bool>>& cPoints,
         Real tol = 1e-8);
 };
@@ -41,8 +45,11 @@ class Concentrating1dMesher : public Fdm1dMesher {
 class ExponentialJump1dMesher : public Fdm1dMesher {
    public:
      ExponentialJump1dMesher(
-        Size steps, Real beta, Real jumpIntensity,
-        Real eta, Real eps = 1e-3);
+        Size steps, 
+        Real beta, 
+        Real jumpIntensity,
+        Real eta, 
+        Real eps = 1e-3);
     Real jumpSizeDensity(Real x) const;
     Real jumpSizeDensity(Real x, Time t) const;
     Real jumpSizeDistribution(Real x) const;
@@ -91,7 +98,9 @@ class FdmCEV1dMesher : public Fdm1dMesher {
     %feature("kwargs") FdmCEV1dMesher;
     FdmCEV1dMesher(
         Size size,
-        Real f0, Real alpha, Real beta,
+        Real f0, 
+        Real alpha, 
+        Real beta,
         Time maturity,
         Real eps = 0.0001,
         Real scaleFactor = 1.5,
@@ -150,7 +159,7 @@ class Glued1dMesher : public Fdm1dMesher {
 %shared_ptr(Predefined1dMesher)
 class Predefined1dMesher : public Fdm1dMesher {
   public:
-    explicit Predefined1dMesher(
+    Predefined1dMesher(
         const std::vector<Real>& x);
 };
 

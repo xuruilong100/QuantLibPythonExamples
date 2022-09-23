@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, isnan
+
+from QuantLib import *
+
+from utilities import *
 
 
 def inner_product(x, y, v):
@@ -27,8 +29,10 @@ N = 3
 
 
 class MatricesTest(unittest.TestCase):
+
     def testEigenvectors(self):
-        TEST_MESSAGE("Testing eigenvalues and eigenvectors calculation...")
+        TEST_MESSAGE(
+            "Testing eigenvalues and eigenvectors calculation...")
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
         I = Matrix(N, N)
@@ -76,21 +80,19 @@ class MatricesTest(unittest.TestCase):
                 v = Array(N)
                 for j in range(N):
                     v[j] = eigenVectors[j][i]
-                # check definition
                 a = M * v
                 b = eigenValues[i] * v
                 self.assertFalse(normArray(a - b) > 1.0e-15)
-                # check decreasing ordering
                 self.assertFalse(eigenValues[i] >= minHolder)
                 minHolder = eigenValues[i]
 
-            # check normalization
             m = eigenVectors * transpose(eigenVectors)
             n = normMatrix(m - I)
             self.assertFalse(normMatrix(m - I) > 1.0e-15)
 
     def testSqrt(self):
-        TEST_MESSAGE("Testing matricial square root...")
+        TEST_MESSAGE(
+            "Testing matricial square root...")
         M1 = Matrix(N, N)
 
         M1[0][0] = 1.0
@@ -110,11 +112,11 @@ class MatricesTest(unittest.TestCase):
         self.assertFalse(error > tolerance)
 
     def testHighamSqrt(self):
-        TEST_MESSAGE("Testing Higham matricial square root...")
+        TEST_MESSAGE(
+            "Testing Higham matricial square root...")
         M5 = Matrix(4, 4)
         M6 = Matrix(4, 4)
 
-        # from Higham - nearest correlation matrix
         M5[0][0] = 2
         M5[0][1] = -1
         M5[0][2] = 0.0
@@ -132,7 +134,6 @@ class MatricesTest(unittest.TestCase):
         M5[3][2] = M5[2][3]
         M5[3][3] = 2
 
-        # from Higham - nearest correlation matrix to M5
         M6[0][0] = 1
         M6[0][1] = -0.8084124981
         M6[0][2] = 0.1915875019
@@ -157,7 +158,8 @@ class MatricesTest(unittest.TestCase):
         self.assertFalse(error > tolerance)
 
     def testSVD(self):
-        TEST_MESSAGE("Testing singular value decomposition...")
+        TEST_MESSAGE(
+            "Testing singular value decomposition...")
 
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
@@ -225,21 +227,15 @@ class MatricesTest(unittest.TestCase):
         testMatrices = [M1, M2, M3, M4]
 
         for A in testMatrices:
-            # m >= n required (rows >= columns)
             svd = SVD(A)
-            # U is m x n
             U = svd.U()
-            # s is n long
             s = svd.singularValues()
-            # S is n x n
             S = svd.S()
-            # V is n x n
             V = svd.V()
 
             for i in range(S.rows()):
                 self.assertFalse(S[i][i] != s[i])
 
-            # tests
             U_Utranspose = transpose(U) * U
             self.assertFalse(normMatrix(U_Utranspose - I) > tol)
 
@@ -250,7 +246,8 @@ class MatricesTest(unittest.TestCase):
             self.assertFalse(normMatrix(A_reconstructed - A) > tol)
 
     def testQRDecomposition(self):
-        TEST_MESSAGE("Testing QR decomposition...")
+        TEST_MESSAGE(
+            "Testing QR decomposition...")
 
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
@@ -289,8 +286,6 @@ class MatricesTest(unittest.TestCase):
         I[2][1] = 0.0
         I[2][2] = 1.0
 
-        # setup
-
         M3[0][0] = 1
         M3[0][1] = 2
         M3[0][2] = 3
@@ -317,7 +312,6 @@ class MatricesTest(unittest.TestCase):
         M4[3][1] = 0
         M4[3][2] = 1.05
 
-        # from Higham - nearest correlation matrix
         M5[0][0] = 2
         M5[0][1] = -1
         M5[0][2] = 0.0
@@ -348,7 +342,6 @@ class MatricesTest(unittest.TestCase):
 
             P = Matrix(A.columns(), A.columns(), 0.0)
 
-            # reverse column pivoting
             for i in range(P.columns()):
                 P[ipvt[i]][i] = 1.0
 
@@ -360,7 +353,8 @@ class MatricesTest(unittest.TestCase):
             self.assertFalse(normMatrix(Q * R - A) > tol)
 
     def testQRSolve(self):
-        TEST_MESSAGE("Testing QR solve...")
+        TEST_MESSAGE(
+            "Testing QR solve...")
 
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
@@ -401,8 +395,6 @@ class MatricesTest(unittest.TestCase):
         I[2][1] = 0.0
         I[2][2] = 1.0
 
-        # setup
-
         M3[0][0] = 1
         M3[0][1] = 2
         M3[0][2] = 3
@@ -429,7 +421,6 @@ class MatricesTest(unittest.TestCase):
         M4[3][1] = 0
         M4[3][2] = 1.05
 
-        # from Higham - nearest correlation matrix
         M5[0][0] = 2
         M5[0][1] = -1
         M5[0][2] = 0.0
@@ -447,7 +438,6 @@ class MatricesTest(unittest.TestCase):
         M5[3][2] = M5[2][3]
         M5[3][3] = 2
 
-        # from Higham - nearest correlation matrix to M5
         M6[0][0] = 1
         M6[0][1] = -0.8084124981
         M6[0][2] = 0.1915875019
@@ -498,7 +488,6 @@ class MatricesTest(unittest.TestCase):
                 if A.columns() >= A.rows():
                     self.assertFalse(normArray(A * x - b) > tol)
                 else:
-                    # use the SVD to calculate the reference values
                     n = A.columns()
                     xr = Array(n, 0.0)
 
@@ -521,7 +510,8 @@ class MatricesTest(unittest.TestCase):
                     self.assertFalse(normArray(xr - x) > tol)
 
     def testInverse(self):
-        TEST_MESSAGE("Testing LU inverse calculation...")
+        TEST_MESSAGE(
+            "Testing LU inverse calculation...")
 
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
@@ -558,7 +548,6 @@ class MatricesTest(unittest.TestCase):
         I[2][1] = 0.0
         I[2][2] = 1.0
 
-        # from Higham - nearest correlation matrix
         M5[0][0] = 2
         M5[0][1] = -1
         M5[0][2] = 0.0
@@ -593,7 +582,8 @@ class MatricesTest(unittest.TestCase):
             self.assertFalse(normMatrix(I2 - identity) > tol)
 
     def testDeterminant(self):
-        TEST_MESSAGE("Testing LU determinant calculation...")
+        TEST_MESSAGE(
+            "Testing LU determinant calculation...")
 
         M1 = Matrix(N, N)
         M2 = Matrix(N, N)
@@ -631,7 +621,6 @@ class MatricesTest(unittest.TestCase):
         I[2][1] = 0.0
         I[2][2] = 1.0
 
-        # from Higham - nearest correlation matrix
         M5[0][0] = 2
         M5[0][1] = -1
         M5[0][2] = 0.0
@@ -649,7 +638,6 @@ class MatricesTest(unittest.TestCase):
         M5[3][2] = M5[2][3]
         M5[3][3] = 2
 
-        # from Higham - nearest correlation matrix to M5
         M6[0][0] = 1
         M6[0][1] = -0.8084124981
         M6[0][2] = 0.1915875019
@@ -670,7 +658,6 @@ class MatricesTest(unittest.TestCase):
         tol = 1e-10
 
         testMatrices = [M1, M2, M5, M6, I]
-        # expected results calculated with octave
         expected = [0.044, -0.012, 5.0, 5.7621e-11, 1.0]
 
         for j in range(len(testMatrices)):
@@ -685,9 +672,7 @@ class MatricesTest(unittest.TestCase):
                     m[r][c] = rng.next().value()
 
             if (j % 3) == 0:
-                # every third matrix is a singular matrix
                 row = int(3 * rng.next().value())
-                # fill(m.row_begin(row), m.row_end(row), 0.0)
                 for i in range(m.columns()):
                     m[row][i] = 0.0
 
@@ -707,7 +692,8 @@ class MatricesTest(unittest.TestCase):
             self.assertFalse(abs(expected - calculated) > tol)
 
     def testOrthogonalProjection(self):
-        TEST_MESSAGE("Testing orthogonal projections...")
+        TEST_MESSAGE(
+            "Testing orthogonal projections...")
 
         dimension = 1000
         numberVectors = 50
@@ -735,7 +721,6 @@ class MatricesTest(unittest.TestCase):
         validVec = projector.validVectors()
 
         for i in range(numberVectors):
-            # check output vector i is orthogonal to all other vectors
 
             if validVec[i]:
                 for j in range(numberVectors):
@@ -760,13 +745,8 @@ class MatricesTest(unittest.TestCase):
         self.assertFalse(numberFailures > 0 or failuresTwo > 0)
 
     def testCholeskyDecomposition(self):
-        TEST_MESSAGE("Testing Cholesky Decomposition...")
-
-        # This test case fails prior to release 1.8
-
-        # The eigenvalues of this matrix are
-        # 0.0438523 0.0187376 0.000245617 0.000127656 8.35899e-05 6.14215e-05
-        # 1.94241e-05 1.14417e-06 9.79481e-18 1.31141e-18 5.81155e-19
+        TEST_MESSAGE(
+            "Testing Cholesky Decomposition...")
 
         tmp = [
             [6.4e-05, 5.28e-05, 2.28e-05, 0.00032, 0.00036, 6.4e-05, 6.3968010664e-06, 7.2e-05, 7.19460269899e-06, 1.2e-05, 1.19970004999e-06],
@@ -793,18 +773,17 @@ class MatricesTest(unittest.TestCase):
         for i in range(11):
             for j in range(11):
                 self.assertFalse(isnan(m2[i][j]))
-                # this does not detect nan values
                 self.assertFalse(abs(m[i][j] - m2[i][j]) > tol)
 
     def testMoorePenroseInverse(self):
-        TEST_MESSAGE("Testing Moore-Penrose inverse...")
+        TEST_MESSAGE(
+            "Testing Moore-Penrose inverse...")
 
-        # this is taken from
-        # http:#de.mathworks.com/help/matlab/ref/pinv.html
-        tmp = [[64, 2, 3, 61, 60, 6], [9, 55, 54, 12, 13, 51],
-               [17, 47, 46, 20, 21, 43], [40, 26, 27, 37, 36, 30],
-               [32, 34, 35, 29, 28, 38], [41, 23, 22, 44, 45, 19],
-               [49, 15, 14, 52, 53, 11], [8, 58, 59, 5, 4, 62]]
+        tmp = [
+            [64, 2, 3, 61, 60, 6], [9, 55, 54, 12, 13, 51],
+            [17, 47, 46, 20, 21, 43], [40, 26, 27, 37, 36, 30],
+            [32, 34, 35, 29, 28, 38], [41, 23, 22, 44, 45, 19],
+            [49, 15, 14, 52, 53, 11], [8, 58, 59, 5, 4, 62]]
         A = Matrix(8, 6)
         for i in range(8):
             for j in range(6):
@@ -827,14 +806,17 @@ class MatricesTest(unittest.TestCase):
         for i in range(6):
             self.assertFalse(abs(y[i] - 260.0) > tol2)
 
-    @unittest.skip('skip testIterativeSolvers')
+    @unittest.skip("testIterativeSolvers")
     def testIterativeSolvers(self):
-        pass
+        TEST_MESSAGE(
+            "Testing iterative solvers...")
 
-    @unittest.skip('skip testInitializers')
+    @unittest.skip("testInitializers")
     def testInitializers(self):
-        pass
+        TEST_MESSAGE(
+            "Testing matrix initializers...")
 
-    @unittest.skip('skip testInitializers')
+    @unittest.skip("testInitializers")
     def testSparseMatrixMemory(self):
-        pass
+        TEST_MESSAGE(
+            "Testing sparse matrix memory layout...")

@@ -1,23 +1,25 @@
 import unittest
-from utilities import *
-from QuantLib import *
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class EngineType(object):
-    Analytic = 'Analytic'
-    JR = 'JR'
-    CRR = 'CRR'
-    EQP = 'EQP'
-    TGEO = 'TGEO'
-    TIAN = 'TIAN'
-    LR = 'LR'
-    JOSHI = 'JOSHI'
-    FiniteDifferences = 'FiniteDifferences'
-    Integral = 'Integral'
-    PseudoMonteCarlo = 'PseudoMonteCarlo'
-    QuasiMonteCarlo = 'QuasiMonteCarlo'
-    FFT = 'FFT'
+    Analytic = "Analytic"
+    JR = "JR"
+    CRR = "CRR"
+    EQP = "EQP"
+    TGEO = "TGEO"
+    TIAN = "TIAN"
+    LR = "LR"
+    JOSHI = "JOSHI"
+    FiniteDifferences = "FiniteDifferences"
+    Integral = "Integral"
+    PseudoMonteCarlo = "PseudoMonteCarlo"
+    QuasiMonteCarlo = "QuasiMonteCarlo"
+    FFT = "FFT"
 
 
 def makeProcess(u,
@@ -44,50 +46,46 @@ def makeOption(payoff,
 
     engine = None
 
-    if engineType == 'Analytic':
+    if engineType == "Analytic":
         engine = AnalyticEuropeanEngine(stochProcess)
-    elif engineType == 'JR':
+    elif engineType == "JR":
         engine = BinomialJRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'CRR':
+    elif engineType == "CRR":
         engine = BinomialCRRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'EQP':
+    elif engineType == "EQP":
         engine = BinomialEQPVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'TGEO':
+    elif engineType == "TGEO":
         engine = BinomialTrigeorgisVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'TIAN':
+    elif engineType == "TIAN":
         engine = BinomialTianVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'LR':
+    elif engineType == "LR":
         engine = BinomialLRVanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'JOSHI':
+    elif engineType == "JOSHI":
         engine = BinomialJ4VanillaEngine(
             stochProcess, binomialSteps)
-    elif engineType == 'FiniteDifferences':
+    elif engineType == "FiniteDifferences":
         engine = FdBlackScholesVanillaEngine(
             stochProcess, binomialSteps, samples)
-
-    elif engineType == 'Integral':
+    elif engineType == "Integral":
         engine = IntegralEngine(stochProcess)
-
-    elif engineType == 'PseudoMonteCarlo':
+    elif engineType == "PseudoMonteCarlo":
         engine = MakeMCPREuropeanEngine(stochProcess)
         engine.withSteps(1)
         engine.withSamples(samples)
         engine.withSeed(42)
         engine = engine.makeEngine()
-
-    elif engineType == 'QuasiMonteCarlo':
+    elif engineType == "QuasiMonteCarlo":
         engine = MakeMCLDEuropeanEngine(stochProcess)
         engine.withSteps(1)
         engine.withSamples(samples)
         engine = engine.makeEngine()
-
-    elif engineType == 'FFT':
+    elif engineType == "FFT":
         engine = FFTVanillaEngine(stochProcess)
 
     option = EuropeanOption(payoff, exercise)
@@ -109,113 +107,29 @@ class EuropeanOptionData(object):
                  tol):
         self.typeOpt = typeOpt
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class EuropeanOptionTest(unittest.TestCase):
-    def _testEngineConsistency(self,
-                               engine,
-                               binomialSteps,
-                               samples,
-                               tolerance,
-                               testGreeks=False):
-
-        # test options
-        types = [Option.Call, Option.Put]
-        strikes = [75.0, 100.0, 125.0]
-        lengths = [1]
-
-        # test data
-        underlyings = [100.0]
-        qRates = [0.00, 0.05]
-        rRates = [0.01, 0.05, 0.15]
-        vols = [0.11, 0.50, 1.20]
-
-        dc = Actual360()
-        today = Date.todaysDate()
-
-        spot = SimpleQuote(0.0)
-        qRate = SimpleQuote(0.0)
-        qTS = flatRate(today, qRate, dc)
-        rRate = SimpleQuote(0.0)
-        rTS = flatRate(today, rRate, dc)
-        vol = SimpleQuote(0.0)
-        volTS = flatVol(today, vol, dc)
-
-        for i in range(len(types)):
-            for j in range(len(strikes)):
-                for k in range(len(lengths)):
-                    exDate = today + Period(360 * lengths[k], Days)
-                    exercise = EuropeanExercise(exDate)
-                    payoff = PlainVanillaPayoff(types[i], strikes[j])
-                    # reference option
-                    refOption = makeOption(
-                        payoff, exercise, spot, qTS, rTS, volTS,
-                        EngineType.Analytic, NullSize(), NullSize())
-                    # option to check
-                    option = makeOption(
-                        payoff, exercise, spot, qTS, rTS, volTS,
-                        engine, binomialSteps, samples)
-                    for l in range(len(underlyings)):
-                        for m in range(len(qRates)):
-                            for n in range(len(rRates)):
-                                for p in range(len(vols)):
-
-                                    u = underlyings[l]
-                                    q = qRates[m]
-                                    r = rRates[n]
-                                    v = vols[p]
-                                    spot.setValue(u)
-                                    qRate.setValue(q)
-                                    rRate.setValue(r)
-                                    vol.setValue(v)
-
-                                    expected = dict()
-                                    calculated = dict()
-
-                                    # FLOATING_POINT_EXCEPTION
-                                    expected["value"] = refOption.NPV()
-                                    calculated["value"] = option.NPV()
-
-                                    if testGreeks and option.NPV() > spot.value() * 1.0e-5:
-                                        expected["delta"] = refOption.delta()
-                                        expected["gamma"] = refOption.gamma()
-                                        expected["theta"] = refOption.theta()
-                                        calculated["delta"] = option.delta()
-                                        calculated["gamma"] = option.gamma()
-                                        calculated["theta"] = option.theta()
-
-                                    for greek in calculated.keys():
-                                        expct = expected[greek]
-                                        calcl = calculated[greek]
-                                        tol = tolerance[greek]
-                                        error = relativeError(expct, calcl, u)
-
-                                        self.assertFalse(error > tol)
 
     def testValues(self):
-        TEST_MESSAGE("Testing European option values...")
+        TEST_MESSAGE(
+            "Testing European option values...")
         backup = SavedSettings()
 
-        # The data below are from
-        # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-
         values = [
-            # pag 2-8
-            # type, strike,   spot,    q,    r,    t,  vol,   value,    tol
             EuropeanOptionData(Option.Call, 65.00, 60.00, 0.00, 0.08, 0.25, 0.30, 2.1334, 1.0e-4),
             EuropeanOptionData(Option.Put, 95.00, 100.00, 0.05, 0.10, 0.50, 0.20, 2.4648, 1.0e-4),
             EuropeanOptionData(Option.Put, 19.00, 19.00, 0.10, 0.10, 0.75, 0.28, 1.7011, 1.0e-4),
             EuropeanOptionData(Option.Call, 19.00, 19.00, 0.10, 0.10, 0.75, 0.28, 1.7011, 1.0e-4),
             EuropeanOptionData(Option.Call, 1.60, 1.56, 0.08, 0.06, 0.50, 0.12, 0.0291, 1.0e-4),
             EuropeanOptionData(Option.Put, 70.00, 75.00, 0.05, 0.10, 0.50, 0.35, 4.0870, 1.0e-4),
-            # pag 24
             EuropeanOptionData(Option.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0205, 1.0e-4),
             EuropeanOptionData(Option.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8734, 1.0e-4),
             EuropeanOptionData(Option.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 9.9413, 1.0e-4),
@@ -252,11 +166,10 @@ class EuropeanOptionTest(unittest.TestCase):
             EuropeanOptionData(Option.Put, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
             EuropeanOptionData(Option.Put, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.3679, 1.0e-4),
             EuropeanOptionData(Option.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.7963, 1.0e-4),
-            # pag 27
             EuropeanOptionData(Option.Call, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.0975, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -266,16 +179,16 @@ class EuropeanOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = flatVol(today, vol, dc)
 
-        for i in range(len(values)):
+        for value in values:
             payoff = PlainVanillaPayoff(
-                values[i].typeOpt, values[i].strike)
-            exDate = today + timeToDays(values[i].t)
+                value.typeOpt, value.strike)
+            exDate = today + timeToDays(value.t)
             exercise = EuropeanExercise(exDate)
 
-            spot.setValue(values[i].s)
-            qRate.setValue(values[i].q)
-            rRate.setValue(values[i].r)
-            vol.setValue(values[i].v)
+            spot.setValue(value.s)
+            qRate.setValue(value.q)
+            rRate.setValue(value.r)
+            vol.setValue(value.v)
 
             stochProcess = BlackScholesMertonProcess(
                 QuoteHandle(spot),
@@ -289,50 +202,39 @@ class EuropeanOptionTest(unittest.TestCase):
             option.setPricingEngine(engine)
 
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
-            tolerance = values[i].tol
+            error = abs(calculated - value.result)
+            tolerance = value.tol
 
             self.assertFalse(error > tolerance)
 
             engine = FdBlackScholesVanillaEngine(stochProcess, 200, 400)
             option.setPricingEngine(engine)
             calculated = option.NPV()
-            error = abs(calculated - values[i].result)
+            error = abs(calculated - value.result)
             tolerance = 1.0e-3
 
             self.assertFalse(error > tolerance)
 
     def testGreekValues(self):
-        TEST_MESSAGE("Testing European option greek values...")
+        TEST_MESSAGE(
+            "Testing European option greek values...")
         backup = SavedSettings()
-        # The data below are from
-        # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-        # pag 11-16
 
         values = [
-            # type, strike,   spot,    q,    r,        t,  vol,  value
-            # delta
             EuropeanOptionData(Option.Call, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, 0.5946, 0),
             EuropeanOptionData(Option.Put, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0),
-            # elasticity
             EuropeanOptionData(Option.Put, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0),
-            # gamma
             EuropeanOptionData(Option.Call, 60.00, 55.00, 0.00, 0.10, 0.750000, 0.30, 0.0278, 0),
             EuropeanOptionData(Option.Put, 60.00, 55.00, 0.00, 0.10, 0.750000, 0.30, 0.0278, 0),
-            # vega
             EuropeanOptionData(Option.Call, 60.00, 55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0),
             EuropeanOptionData(Option.Put, 60.00, 55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0),
-            # theta
             EuropeanOptionData(Option.Put, 405.00, 430.00, 0.05, 0.07, 1.0 / 12.0, 0.20, -31.1924, 0),
-            # theta per day
             EuropeanOptionData(Option.Put, 405.00, 430.00, 0.05, 0.07, 1.0 / 12.0, 0.20, -0.0855, 0),
-            # rho
             EuropeanOptionData(Option.Call, 75.00, 72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0),
-            # dividendRho
             EuropeanOptionData(Option.Put, 490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -531,7 +433,7 @@ class EuropeanOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -542,22 +444,22 @@ class EuropeanOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for i in range(len(types)):
-            for j in range(len(strikes)):
-                for k in range(len(residualTimes)):
-                    exDate = today + timeToDays(residualTimes[k])
+        for ty in types:
+            for strike in strikes:
+                for residualTime in residualTimes:
+                    exDate = today + timeToDays(residualTime)
                     exercise = EuropeanExercise(exDate)
                     payoff = None
                     for kk in range(4):
-                        # option to check
+
                         if kk == 0:
-                            payoff = PlainVanillaPayoff(types[i], strikes[j])
+                            payoff = PlainVanillaPayoff(ty, strike)
                         elif kk == 1:
-                            payoff = CashOrNothingPayoff(types[i], strikes[j], 100.0)
+                            payoff = CashOrNothingPayoff(ty, strike, 100.0)
                         elif kk == 2:
-                            payoff = AssetOrNothingPayoff(types[i], strikes[j])
+                            payoff = AssetOrNothingPayoff(ty, strike)
                         elif kk == 3:
-                            payoff = GapPayoff(types[i], strikes[j], 100.0)
+                            payoff = GapPayoff(ty, strike, 100.0)
 
                         stochProcess = BlackScholesMertonProcess(
                             QuoteHandle(spot), qTS, rTS, volTS)
@@ -567,15 +469,11 @@ class EuropeanOptionTest(unittest.TestCase):
                         option = EuropeanOption(payoff, exercise)
                         option.setPricingEngine(engine)
 
-                        for l in range(len(underlyings)):
-                            for m in range(len(qRates)):
-                                for n in range(len(rRates)):
-                                    for p in range(len(vols)):
+                        for u in underlyings:
+                            for q in qRates:
+                                for r in rRates:
+                                    for v in vols:
 
-                                        u = underlyings[l]
-                                        q = qRates[m]
-                                        r = rRates[n]
-                                        v = vols[p]
                                         spot.setValue(u)
                                         qRate.setValue(q)
                                         rRate.setValue(r)
@@ -590,7 +488,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                         calculated["vega"] = option.vega()
 
                                         if value > spot.value() * 1.0e-5:
-                                            # perturb spot and get delta and gamma
 
                                             du = u * 1.0e-4
                                             spot.setValue(u + du)
@@ -603,7 +500,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                             expected["delta"] = (value_p - value_m) / (2 * du)
                                             expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                            # perturb rates and get rho and dividend rho
                                             dr = r * 1.0e-4
                                             rRate.setValue(r + dr)
                                             value_p = option.NPV()
@@ -620,7 +516,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                             qRate.setValue(q)
                                             expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                            # perturb volatility and get vega
                                             dv = v * 1.0e-4
                                             vol.setValue(v + dv)
                                             value_p = option.NPV()
@@ -629,7 +524,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                             vol.setValue(v)
                                             expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                            # perturb date and get theta
                                             dT = dc.yearFraction(today - 1, today + 1)
                                             Settings.instance().evaluationDate = today - 1
                                             value_m = option.NPV()
@@ -638,7 +532,6 @@ class EuropeanOptionTest(unittest.TestCase):
                                             Settings.instance().evaluationDate = today
                                             expected["theta"] = (value_p - value_m) / dT
 
-                                            # compare
                                             for greek in calculated.keys():
                                                 expct = expected[greek]
                                                 calcl = calculated[greek]
@@ -655,19 +548,17 @@ class EuropeanOptionTest(unittest.TestCase):
         maxEvaluations = 100
         tolerance = 1.0e-6
 
-        # test options
         types = [Option.Call, Option.Put]
         strikes = [90.0, 99.5, 100.0, 100.5, 110.0]
         lengths = [36, 180, 360, 1080]
 
-        # test data
         underlyings = [90.0, 95.0, 99.9, 100.0, 100.1, 105.0, 110.0]
         qRates = [0.01, 0.05, 0.10]
         rRates = [0.01, 0.05, 0.10]
         vols = [0.01, 0.20, 0.30, 0.70, 0.90]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -677,26 +568,23 @@ class EuropeanOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = flatVol(today, vol, dc)
 
-        for i in range(len(types)):
-            for j in range(len(strikes)):
-                for k in range(len(lengths)):
-                    # option to check
-                    exDate = today + Period(lengths[k], Days)
+        for ty in types:
+            for strike in strikes:
+                for length in lengths:
+
+                    exDate = today + Period(length, Days)
                     exercise = EuropeanExercise(exDate)
-                    payoff = PlainVanillaPayoff(types[i], strikes[j])
+                    payoff = PlainVanillaPayoff(ty, strike)
                     option = makeOption(
                         payoff, exercise, spot, qTS, rTS, volTS,
                         EngineType.Analytic, NullSize(), NullSize())
                     process = makeProcess(spot, qTS, rTS, volTS)
 
-                    for l in range(len(underlyings)):
-                        for m in range(len(qRates)):
-                            for n in range(len(rRates)):
-                                for p in range(len(vols)):
-                                    u = underlyings[l]
-                                    q = qRates[m]
-                                    r = rRates[n]
-                                    v = vols[p]
+                    for u in underlyings:
+                        for q in qRates:
+                            for r in rRates:
+                                for v in vols:
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -706,18 +594,16 @@ class EuropeanOptionTest(unittest.TestCase):
                                     implVol = 0.0
 
                                     if value != 0.0:
-                                        # shift guess somehow
+
                                         vol.setValue(v * 0.5)
                                         if abs(value - option.NPV()) <= 1.0e-12:
-                                            # flat price vs vol --- pointless (and
-                                            # numerically unstable) to solve
                                             continue
                                         try:
                                             implVol = option.impliedVolatility(
                                                 value, process,
                                                 tolerance, maxEvaluations)
                                         except Exception:
-                                            self.fail('implied vol calculation failed.')
+                                            self.fail("implied vol calculation failed.")
 
                                     if abs(implVol - v) > tolerance:
                                         vol.setValue(implVol)
@@ -734,7 +620,7 @@ class EuropeanOptionTest(unittest.TestCase):
         tolerance = 1.0e-6
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(100.0)
         underlying = QuoteHandle(spot)
@@ -751,15 +637,11 @@ class EuropeanOptionTest(unittest.TestCase):
         process = BlackScholesMertonProcess(underlying, qTS, rTS, volTS)
         engine = AnalyticEuropeanEngine(process)
 
-        # link to the same stochastic process, which shouldn't be changed
-        # by calling methods of either option
-
         option1 = EuropeanOption(payoff, exercise)
         option1.setPricingEngine(engine)
         option2 = EuropeanOption(payoff, exercise)
         option2.setPricingEngine(engine)
 
-        # test
         refValue = option2.NPV()
 
         f = Flag()
@@ -939,7 +821,7 @@ class EuropeanOptionTest(unittest.TestCase):
 
         engine = EngineType.QuasiMonteCarlo
         steps = NullSize()
-        samples = 4095  # 2^12 - 1
+        samples = 4095
         relativeTol = dict()
         relativeTol["value"] = 0.01
         self._testEngineConsistency(
@@ -999,8 +881,9 @@ class EuropeanOptionTest(unittest.TestCase):
 
         s0 = SimpleQuote(4500.00)
 
-        tmp = [100, 500, 2000, 3400, 3600, 3800, 4000, 4200, 4400, 4500,
-               4600, 4800, 5000, 5200, 5400, 5600, 7500, 10000, 20000, 30000]
+        tmp = [
+            100, 500, 2000, 3400, 3600, 3800, 4000, 4200, 4400, 4500,
+            4600, 4800, 5000, 5200, 5400, 5600, 7500, 10000, 20000, 30000]
         strikes = tmp
 
         v = [1.015873, 1.015873, 1.015873, 0.89729, 0.796493, 0.730914, 0.631335, 0.568895,
@@ -1032,7 +915,6 @@ class EuropeanOptionTest(unittest.TestCase):
 
         volTS = BlackVarianceSurface(
             settlementDate, calendar,
-            # std.vector<Date>(dates.begin() + 1, dates.end()),
             dates[1:],
             strikes, blackVolMatrix,
             dayCounter)
@@ -1041,9 +923,9 @@ class EuropeanOptionTest(unittest.TestCase):
         process = makeProcess(s0, qTS, rTS, volTS)
 
         schemeDescs = {
-            'Douglas': FdmSchemeDesc.Douglas(),
-            'Crank-Nicolson': FdmSchemeDesc.CrankNicolson(),
-            'Mod. Craig-Sneyd': FdmSchemeDesc.ModifiedCraigSneyd()}
+            "Douglas": FdmSchemeDesc.Douglas(),
+            "Crank-Nicolson": FdmSchemeDesc.CrankNicolson(),
+            "Mod. Craig-Sneyd": FdmSchemeDesc.ModifiedCraigSneyd()}
 
         for i in range(2, len(dates), 2):
             for j in range(3, len(dates) - 5, 5):
@@ -1066,12 +948,9 @@ class EuropeanOptionTest(unittest.TestCase):
                 calculatedDelta = option.delta()
                 calculatedGamma = option.gamma()
 
-                # check implied pricing first
                 self.assertFalse(abs(expectedNPV - calculatedNPV) > tol * expectedNPV)
                 self.assertFalse(abs(expectedDelta - calculatedDelta) > tol * expectedDelta)
                 self.assertFalse(abs(expectedGamma - calculatedGamma) > tol * expectedGamma)
-                # check local vol pricing
-                # delta/gamma are not the same by definition (model implied greeks)
 
                 for k in schemeDescs.keys():
                     option.setPricingEngine(
@@ -1089,7 +968,7 @@ class EuropeanOptionTest(unittest.TestCase):
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(1000.0)
         qRate = SimpleQuote(0.01)
@@ -1120,9 +999,8 @@ class EuropeanOptionTest(unittest.TestCase):
         option.setPricingEngine(engineMultiCurve)
         npvMultiCurve = option.NPV()
 
-        # check that NPV is the same regardless of engine interface
         self.assertEqual(npvSingleCurve, npvMultiCurve)
-        # check that NPV changes if discount rate is changed
+
         discRate.setValue(0.023)
         npvMultiCurve = option.NPV()
         self.assertNotEqual(npvSingleCurve, npvMultiCurve)
@@ -1148,7 +1026,6 @@ class EuropeanOptionTest(unittest.TestCase):
 
         analytic = AnalyticEuropeanEngine(process)
 
-        # Crank-Nicolson and Douglas scheme are the same in one dimension
         douglas = FdBlackScholesVanillaEngine(
             process, 15, 100, 0, FdmSchemeDesc.Douglas())
 
@@ -1226,7 +1103,6 @@ class EuropeanOptionTest(unittest.TestCase):
             diff = abs(expectedDiv - calculated)
             self.assertFalse(diff > tol)
 
-        # make sure that Douglas and Crank-Nicolson are giving the same result
         idxDouglas = 0
         for i in engines.keys():
             if i != "Douglas":
@@ -1308,7 +1184,7 @@ class EuropeanOptionTest(unittest.TestCase):
         v = 0.2
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(u)
@@ -1354,3 +1230,76 @@ class EuropeanOptionTest(unittest.TestCase):
         error = abs(expected - calculated)
 
         self.assertFalse(error > tolerance)
+
+    def _testEngineConsistency(self,
+                               engine,
+                               binomialSteps,
+                               samples,
+                               tolerance,
+                               testGreeks=False):
+
+        types = [Option.Call, Option.Put]
+        strikes = [75.0, 100.0, 125.0]
+        lengths = [1]
+
+        underlyings = [100.0]
+        qRates = [0.00, 0.05]
+        rRates = [0.01, 0.05, 0.15]
+        vols = [0.11, 0.50, 1.20]
+
+        dc = Actual360()
+        today = knownGoodDefault
+
+        spot = SimpleQuote(0.0)
+        qRate = SimpleQuote(0.0)
+        qTS = flatRate(today, qRate, dc)
+        rRate = SimpleQuote(0.0)
+        rTS = flatRate(today, rRate, dc)
+        vol = SimpleQuote(0.0)
+        volTS = flatVol(today, vol, dc)
+
+        for ty in types:
+            for strike in strikes:
+                for length in lengths:
+                    exDate = today + Period(360 * length, Days)
+                    exercise = EuropeanExercise(exDate)
+                    payoff = PlainVanillaPayoff(ty, strike)
+
+                    refOption = makeOption(
+                        payoff, exercise, spot, qTS, rTS, volTS,
+                        EngineType.Analytic, NullSize(), NullSize())
+
+                    option = makeOption(
+                        payoff, exercise, spot, qTS, rTS, volTS,
+                        engine, binomialSteps, samples)
+                    for u in underlyings:
+                        for q in qRates:
+                            for r in rRates:
+                                for v in vols:
+
+                                    spot.setValue(u)
+                                    qRate.setValue(q)
+                                    rRate.setValue(r)
+                                    vol.setValue(v)
+
+                                    expected = dict()
+                                    calculated = dict()
+
+                                    expected["value"] = refOption.NPV()
+                                    calculated["value"] = option.NPV()
+
+                                    if testGreeks and option.NPV() > spot.value() * 1.0e-5:
+                                        expected["delta"] = refOption.delta()
+                                        expected["gamma"] = refOption.gamma()
+                                        expected["theta"] = refOption.theta()
+                                        calculated["delta"] = option.delta()
+                                        calculated["gamma"] = option.gamma()
+                                        calculated["theta"] = option.theta()
+
+                                    for greek in calculated.keys():
+                                        expct = expected[greek]
+                                        calcl = calculated[greek]
+                                        tol = tolerance[greek]
+                                        error = relativeError(expct, calcl, u)
+
+                                        self.assertFalse(error > tol)

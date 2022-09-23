@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class InstrumentTest(unittest.TestCase):
 
     def testObservable(self):
-        TEST_MESSAGE("Testing observability of instruments...")
+        TEST_MESSAGE(
+            "Testing observability of instruments...")
 
         me1 = SimpleQuote(0.0)
         h = RelinkableQuoteHandle(me1)
@@ -41,7 +44,7 @@ class InstrumentTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         dc = Actual360()
 
         payoff = PlainVanillaPayoff(Option.Call, 100.0)

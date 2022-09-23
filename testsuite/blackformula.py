@@ -1,13 +1,17 @@
-import numpy as np
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, exp
+
+import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class BlackFormulaTest(unittest.TestCase):
+
     def testBachelierImpliedVol(self):
-        TEST_MESSAGE("Testing Bachelier implied vol...")
+        TEST_MESSAGE(
+            "Testing Bachelier implied vol...")
 
         forward = 1.0
         bpvol = 0.01
@@ -27,7 +31,8 @@ class BlackFormulaTest(unittest.TestCase):
             self.assertFalse(abs(bpvol - impliedBpVol) > 1.0e-12)
 
     def testChambersImpliedVol(self):
-        TEST_MESSAGE("Testing Chambers-Nawalkha implied vol approximation...")
+        TEST_MESSAGE(
+            "Testing Chambers-Nawalkha implied vol approximation...")
 
         types = [Option.Call, Option.Put]
         displacements = [0.0000, 0.0010, 0.0050, 0.0100, 0.0200]
@@ -94,12 +99,8 @@ class BlackFormulaTest(unittest.TestCase):
                 self.assertFalse(error > tol)
 
     def testRadoicicStefanicaLowerBound(self):
-        TEST_MESSAGE("Testing Radoicic-Stefanica lower bound...")
-
-        # testing lower bound plot figure 3.1 from
-        # "Tighter Bounds for Implied Volatility",
-        # J. Gatheral, I. Matic, R. Radoicic, D. Stefanica
-        # https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2922742
+        TEST_MESSAGE(
+            "Testing Radoicic-Stefanica lower bound...")
 
         forward = 1.0
         k = 1.2
@@ -115,8 +116,9 @@ class BlackFormulaTest(unittest.TestCase):
             self.assertFalse(c > 1e-6 and error < 0.0)
 
     def testImpliedVolAdaptiveSuccessiveOverRelaxation(self):
-        TEST_MESSAGE("Testing implied volatility calculation via "
-                     "adaptive successive over-relaxation...")
+        TEST_MESSAGE(
+            "Testing implied volatility calculation via "
+            "adaptive successive over-relaxation...")
 
         backup = SavedSettings()
 
@@ -160,7 +162,8 @@ class BlackFormulaTest(unittest.TestCase):
                     self.assertFalse(error > 10 * tol)
 
     def testBlackFormulaForwardDerivative(self):
-        TEST_MESSAGE("Testing forward derivative of the Black formula...")
+        TEST_MESSAGE(
+            "Testing forward derivative of the Black formula...")
 
         strikes = [0.1, 0.5, 1.0, 2.0, 3.0]
         vol = 0.1
@@ -168,8 +171,9 @@ class BlackFormulaTest(unittest.TestCase):
         self._assertBlackFormulaForwardDerivative(Option.Put, strikes, vol)
 
     def testBlackFormulaForwardDerivativeWithZeroStrike(self):
-        TEST_MESSAGE("Testing forward derivative of the Black formula "
-                     "with zero strike...")
+        TEST_MESSAGE(
+            "Testing forward derivative of the Black formula "
+            "with zero strike...")
 
         strikes = [0.0]
         vol = 0.1
@@ -177,8 +181,9 @@ class BlackFormulaTest(unittest.TestCase):
         self._assertBlackFormulaForwardDerivative(Option.Put, strikes, vol)
 
     def testBlackFormulaForwardDerivativeWithZeroVolatility(self):
-        TEST_MESSAGE("Testing forward derivative of the Black formula "
-                     "with zero volatility...")
+        TEST_MESSAGE(
+            "Testing forward derivative of the Black formula "
+            "with zero volatility...")
 
         strikes = [0.1, 0.5, 1.0, 2.0, 3.0]
         vol = 0.0
@@ -186,8 +191,9 @@ class BlackFormulaTest(unittest.TestCase):
         self._assertBlackFormulaForwardDerivative(Option.Put, strikes, vol)
 
     def testBachelierBlackFormulaForwardDerivative(self):
-        TEST_MESSAGE("Testing forward derivative of the "
-                     "Bachelier Black formula...")
+        TEST_MESSAGE(
+            "Testing forward derivative of the "
+            "Bachelier Black formula...")
 
         strikes = [-3.0, -2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0, 3.0]
         vol = 0.001
@@ -195,8 +201,9 @@ class BlackFormulaTest(unittest.TestCase):
         self._assertBachelierBlackFormulaForwardDerivative(Option.Put, strikes, vol)
 
     def testBachelierBlackFormulaForwardDerivativeWithZeroVolatility(self):
-        TEST_MESSAGE("Testing forward derivative of the Bachelier Black formula "
-                     "with zero volatility...")
+        TEST_MESSAGE(
+            "Testing forward derivative of the Bachelier Black formula "
+            "with zero volatility...")
 
         strikes = [-3.0, -2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0, 3.0]
         vol = 0.0
@@ -228,10 +235,6 @@ class BlackFormulaTest(unittest.TestCase):
                 optionType, strike, forward + bump, stdDev, discount, displacement)
             deltaApprox = (bumpedPremium - basePremium) / bump
 
-            # Based on the Mean Value Theorem, the below inequality
-            # should hold for any function that is monotonic in the
-            # area of the bump.
-
             success = (max(delta, bumpedDelta) + epsilon > deltaApprox) and \
                       (deltaApprox > min(delta, bumpedDelta) - epsilon)
 
@@ -260,10 +263,6 @@ class BlackFormulaTest(unittest.TestCase):
             bumpedPremium = bachelierBlackFormula(
                 optionType, strike, forward + bump, stdDev, discount)
             deltaApprox = (bumpedPremium - basePremium) / bump
-
-            # Based on the Mean Value Theorem, the below inequality
-            # should hold for any function that is monotonic in the
-            # area of the bump.
 
             success = (max(delta, bumpedDelta) + epsilon > deltaApprox) and \
                       (deltaApprox > min(delta, bumpedDelta) - epsilon)

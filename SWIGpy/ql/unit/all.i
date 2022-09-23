@@ -49,11 +49,12 @@ class UnitOfMeasureConversion {
         Direct,
         Derived
     };
-    UnitOfMeasureConversion() = default;
-    UnitOfMeasureConversion(const CommodityType& commodityType,
-                            const UnitOfMeasure& source,
-                            const UnitOfMeasure& target,
-                            Real conversionFactor);
+    UnitOfMeasureConversion();
+    UnitOfMeasureConversion(
+        const CommodityType& commodityType,
+        const UnitOfMeasure& source,
+        const UnitOfMeasure& target,
+        Real conversionFactor);
     const UnitOfMeasure& source() const;
     const UnitOfMeasure& target() const;
     const CommodityType& commodityType() const;
@@ -68,8 +69,10 @@ class UnitOfMeasureConversion {
 
 class CommodityType {
   public:
-    CommodityType() = default;
-    CommodityType(const std::string& code, const std::string& name);
+    CommodityType();
+    CommodityType(
+        const std::string& code, 
+        const std::string& name);
 
     const std::string& code() const;
     const std::string& name() const;
@@ -102,10 +105,11 @@ class NullCommodityType : public CommodityType {
 class UnitOfMeasure {
   public:
     enum Type { Mass, Volume, Energy, Quantity };
-    UnitOfMeasure() = default;
-    UnitOfMeasure(const std::string& name,
-                  const std::string& code,
-                  Type unitType);
+    UnitOfMeasure();
+    UnitOfMeasure(
+        const std::string& name,
+        const std::string& code,
+        Type unitType);
     const std::string& name() const;
     const std::string& code() const;
     Type unitType() const;
@@ -174,8 +178,11 @@ class TokyoKilolitreUnitOfMeasure : public UnitOfMeasure {
 
 class Quantity {
   public:
-    Quantity() = default;
-    Quantity(CommodityType commodityType, UnitOfMeasure unitOfMeasure, Real amount);
+    Quantity();
+    Quantity(
+        CommodityType commodityType, 
+        UnitOfMeasure unitOfMeasure, 
+        Real amount);
     const CommodityType& commodityType() const;
     const UnitOfMeasure& unitOfMeasure() const;
     Real amount() const;
@@ -200,7 +207,6 @@ class Quantity {
         Quantity __add__(const Quantity& q) const {
             return *self + q;
         }
-
         Quantity __sub__(const Quantity& q) const {
             return *self - q;
         }
@@ -216,7 +222,6 @@ class Quantity {
         Real __truediv__(const Quantity& q) const {
             return *self / q;
         }
-
         bool __eq__(const Quantity& q) const {
             return *self == q;
         }

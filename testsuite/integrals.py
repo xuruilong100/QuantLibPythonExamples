@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, sin, cos
+
+from QuantLib import *
+
+from utilities import *
 
 tolerance = 1.0e-6
 
@@ -52,39 +54,46 @@ def pw_fct(t):
 
 
 class IntegralTest(unittest.TestCase):
+
     def testSegment(self):
-        TEST_MESSAGE("Testing segment integration...")
+        TEST_MESSAGE(
+            "Testing segment integration...")
 
         self._testSeveral(SegmentIntegral(10000))
         self._testDegeneratedDomain(SegmentIntegral(10000))
 
     def testTrapezoid(self):
-        TEST_MESSAGE("Testing trapezoid integration...")
+        TEST_MESSAGE(
+            "Testing trapezoid integration...")
 
         self._testSeveral(TrapezoidIntegralDefault(tolerance, 10000))
         self._testDegeneratedDomain(TrapezoidIntegralDefault(tolerance, 10000))
 
     def testMidPointTrapezoid(self):
-        TEST_MESSAGE("Testing mid-point trapezoid integration...")
+        TEST_MESSAGE(
+            "Testing mid-point trapezoid integration...")
 
         self._testSeveral(TrapezoidIntegralMidPoint(tolerance, 10000))
         self._testDegeneratedDomain(TrapezoidIntegralMidPoint(tolerance, 10000))
 
     def testSimpson(self):
-        TEST_MESSAGE("Testing Simpson integration...")
+        TEST_MESSAGE(
+            "Testing Simpson integration...")
 
         self._testSeveral(SimpsonIntegral(tolerance, 10000))
         self._testDegeneratedDomain(SimpsonIntegral(tolerance, 10000))
 
     def testGaussKronrodAdaptive(self):
-        TEST_MESSAGE("Testing adaptive Gauss-Kronrod integration...")
+        TEST_MESSAGE(
+            "Testing adaptive Gauss-Kronrod integration...")
 
         maxEvaluations = 1000
         self._testSeveral(GaussKronrodAdaptive(tolerance, maxEvaluations))
         self._testDegeneratedDomain(GaussKronrodAdaptive(tolerance, maxEvaluations))
 
     def testGaussKronrodNonAdaptive(self):
-        TEST_MESSAGE("Testing non-adaptive Gauss-Kronrod integration...")
+        TEST_MESSAGE(
+            "Testing non-adaptive Gauss-Kronrod integration...")
 
         precision = tolerance
         maxEvaluations = 100
@@ -95,16 +104,16 @@ class IntegralTest(unittest.TestCase):
         self._testDegeneratedDomain(gaussKronrodNonAdaptive)
 
     def testGaussLobatto(self):
-        TEST_MESSAGE("Testing adaptive Gauss-Lobatto integration...")
+        TEST_MESSAGE(
+            "Testing adaptive Gauss-Lobatto integration...")
 
         maxEvaluations = 1000
         self._testSeveral(GaussLobattoIntegral(maxEvaluations, tolerance))
-        # on degenerated domain [1,1+macheps] an exception is thrown
-        # which is also ok, but not tested here
 
     def testTwoDimensionalIntegration(self):
-        TEST_MESSAGE("Testing two dimensional adaptive "
-                     "Gauss-Lobatto integration...")
+        TEST_MESSAGE(
+            "Testing two dimensional adaptive "
+            "Gauss-Lobatto integration...")
 
         maxEvaluations = 1000
         calculated = TwoDimensionalIntegral(
@@ -118,10 +127,9 @@ class IntegralTest(unittest.TestCase):
         self.assertFalse(abs(calculated - expected) > tolerance)
 
     def testFolinIntegration(self):
-        TEST_MESSAGE("Testing Folin's integral formulae...")
+        TEST_MESSAGE(
+            "Testing Folin's integral formulae...")
 
-        # Examples taken from
-        # http:#www.tat.physik.uni-tuebingen.de/~kokkotas/Teaching/Num_Methods_files/Comp_Phys5.pdf
         nr = [4, 8, 16, 128, 256, 1024, 2048]
         expected = [
             4.55229440e-5, 4.72338540e-5, 4.72338540e-5,
@@ -144,7 +152,8 @@ class IntegralTest(unittest.TestCase):
             self.assertFalse(abs(calculatedSine - expected[i]) > tol)
 
     def testDiscreteIntegrals(self):
-        TEST_MESSAGE("Testing discrete integral formulae...")
+        TEST_MESSAGE(
+            "Testing discrete integral formulae...")
 
         x = Array(6)
         f = Array(6)
@@ -176,13 +185,15 @@ class IntegralTest(unittest.TestCase):
         self.assertFalse(abs(calculatedTrapezoid - expectedTrapezoid) > tol)
 
     def testDiscreteIntegrator(self):
-        TEST_MESSAGE("Testing discrete integrator formulae...")
+        TEST_MESSAGE(
+            "Testing discrete integrator formulae...")
 
         self._testSeveral(DiscreteSimpsonIntegrator(300))
         self._testSeveral(DiscreteTrapezoidIntegrator(3000))
 
     def testPiecewiseIntegral(self):
-        TEST_MESSAGE("Testing piecewise integral...")
+        TEST_MESSAGE(
+            "Testing piecewise integral...")
         x = [1.0, 2.0, 3.0, 4.0, 5.0]
 
         segment = SegmentIntegral(1)
@@ -202,9 +213,9 @@ class IntegralTest(unittest.TestCase):
         self._pw_check(piecewise, 9.0, 10.0, 6.0)
 
     def testRealSiCiIntegrals(self):
-        TEST_MESSAGE("Testing real Ci and Si...")
+        TEST_MESSAGE(
+            "Testing real Ci and Si...")
 
-        # reference values are calculated with Mathematica or Python/mpmath
         data = [
             [1e-12, 1e-12, -27.0538054510270153677],
             [0.1, 0.09994446110827695570, -1.7278683866572965838],
@@ -242,9 +253,9 @@ class IntegralTest(unittest.TestCase):
             self.assertFalse(diff > tol)
 
     def testExponentialIntegral(self):
-        TEST_MESSAGE("Testing exponential integrals...")
+        TEST_MESSAGE(
+            "Testing exponential integrals...")
 
-        # reference values are calculated with Mathematica or Python/mpmath
         data = [
             [0.0010000000000000000208, 0.0, 0.00099999994444444613193, 0.0, -6.330539864080593754, 0.0, -6.3295393640250381967, 0.0, 6.3315393641361493112, 0.0],
             [0.00070710678118654756077, 0.00070710678118654751747, 0.00070710682047025644818, 0.00070710674190283627304, -6.3305396140806145873, 0.785397913397448279, -6.329832507338711751, 0.7861055202179185354, 6.3312467208225174236, -0.78469130657697802259],
@@ -347,7 +358,7 @@ class IntegralTest(unittest.TestCase):
 
         for i in data:
             x = i[0]
-            # y = (abs(i[1]) < 1e-12) ? 0.0: i[1]
+
             y = 0.0 if abs(i[1]) < 1e-12 else i[1]
             z = complex(x, y)
 

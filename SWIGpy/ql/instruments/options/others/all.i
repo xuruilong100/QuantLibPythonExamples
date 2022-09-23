@@ -103,12 +103,14 @@ class Swaption : public Option {
 
 class MakeSwaption {
   public:
-    MakeSwaption(ext::shared_ptr<SwapIndex> swapIndex,
-                 const Period& optionTenor,
-                 Rate strike = Null<Rate>());
-    MakeSwaption(ext::shared_ptr<SwapIndex> swapIndex,
-                 const Date& fixingDate,
-                 Rate strike = Null<Rate>());
+    MakeSwaption(
+        ext::shared_ptr<SwapIndex> swapIndex,
+        const Period& optionTenor,
+        Rate strike = Null<Rate>());
+    MakeSwaption(
+        ext::shared_ptr<SwapIndex> swapIndex,
+        const Date& fixingDate,
+        Rate strike = Null<Rate>());
 
     %extend {
         ext::shared_ptr<Swaption> makeSwaption() const {
@@ -129,7 +131,8 @@ class MakeSwaption {
 %shared_ptr(NonstandardSwaption)
 class NonstandardSwaption : public Option {
   public:
-    NonstandardSwaption(const Swaption& fromSwaption);
+    NonstandardSwaption(
+        const Swaption& fromSwaption);
     NonstandardSwaption(
         const ext::shared_ptr<NonstandardSwap>& swap,
         const ext::shared_ptr<Exercise>& exercise,

@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class TqrEigenDecompositionTest(unittest.TestCase):
 
     def testEigenValueDecomposition(self):
-        TEST_MESSAGE("Testing TQR eigenvalue decomposition...")
+        TEST_MESSAGE(
+            "Testing TQR eigenvalue decomposition...")
 
         diag = Array(5)
         sub = Array(4, 1)
@@ -32,7 +35,8 @@ class TqrEigenDecompositionTest(unittest.TestCase):
             self.assertFalse(abs(expected - calculated) > tolerance)
 
     def testZeroOffDiagEigenValues(self):
-        TEST_MESSAGE("Testing TQR zero-off-diagonal eigenvalues...")
+        TEST_MESSAGE(
+            "Testing TQR zero-off-diagonal eigenvalues...")
 
         diag = Array(5)
         sub = Array(4, 1)
@@ -55,7 +59,8 @@ class TqrEigenDecompositionTest(unittest.TestCase):
             self.assertFalse(abs(expected - calculated) > tolerance)
 
     def testEigenVectorDecomposition(self):
-        TEST_MESSAGE("Testing TQR eigenvector decomposition...")
+        TEST_MESSAGE(
+            "Testing TQR eigenvector decomposition...")
 
         diag = Array(2, 1)
         sub = Array(1, 1)

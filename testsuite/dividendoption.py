@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class DividendOptionTest(unittest.TestCase):
@@ -22,7 +24,7 @@ class DividendOptionTest(unittest.TestCase):
         vols = [0.05, 0.20, 0.70]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -33,7 +35,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
                     exDate = today + Period(length, Years)
@@ -48,7 +50,7 @@ class DividendOptionTest(unittest.TestCase):
                         dividends.push_back(0.0)
                         d += Period(6, Months)
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
                     stochProcess = BlackScholesMertonProcess(
                         QuoteHandle(spot), qTS, rTS, volTS)
@@ -65,11 +67,9 @@ class DividendOptionTest(unittest.TestCase):
                     ref_option.setPricingEngine(ref_engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -84,16 +84,13 @@ class DividendOptionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing dividend European option against known value...")
 
-        # Reference pg. 253 - Hull - Options, Futures, and Other Derivatives 5th ed
-        # Exercise 12.8
-
         backup = SavedSettings()
 
         tolerance = 1.0e-2
         expected = 3.67
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -152,7 +149,7 @@ class DividendOptionTest(unittest.TestCase):
         vols = [0.05, 0.20, 0.70]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -163,7 +160,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
                     exDate = today + Period(length, Years)
@@ -172,7 +169,7 @@ class DividendOptionTest(unittest.TestCase):
                     dividendDates = [today]
                     dividends = [dividendValue]
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
                     stochProcess = BlackScholesMertonProcess(
                         QuoteHandle(spot), qTS, rTS, volTS)
@@ -189,11 +186,9 @@ class DividendOptionTest(unittest.TestCase):
                     ref_option.setPricingEngine(ref_engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -205,7 +200,7 @@ class DividendOptionTest(unittest.TestCase):
                                     error = abs(calculated - expected)
                                     self.assertFalse(error > tolerance)
 
-    @unittest.skip("Doesn't quite work.  Need to use discounted values")
+    @unittest.skip("testEuropeanEndLimit: Doesn't quite work.  Need to use discounted values")
     def testEuropeanEndLimit(self):
         TEST_MESSAGE(
             "Testing dividend European option values with end limits...")
@@ -224,7 +219,7 @@ class DividendOptionTest(unittest.TestCase):
         vols = [0.05, 0.20, 0.70]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -235,7 +230,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
                     exDate = today + Period(length, Years)
@@ -244,9 +239,9 @@ class DividendOptionTest(unittest.TestCase):
                     dividendDates = [exercise.lastDate()]
                     dividends = [dividendValue]
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
-                    refPayoff = PlainVanillaPayoff(type, strike + dividendValue)
+                    refPayoff = PlainVanillaPayoff(ty, strike + dividendValue)
 
                     stochProcess = BlackScholesMertonProcess(
                         QuoteHandle(spot), qTS, rTS, volTS)
@@ -263,11 +258,10 @@ class DividendOptionTest(unittest.TestCase):
                     ref_option.setPricingEngine(ref_engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -280,7 +274,8 @@ class DividendOptionTest(unittest.TestCase):
                                         self.assertFalse(error > tolerance)
 
     def testEuropeanGreeks(self):
-        TEST_MESSAGE("Testing dividend European option greeks...")
+        TEST_MESSAGE(
+            "Testing dividend European option greeks...")
 
         backup = SavedSettings()
 
@@ -302,7 +297,7 @@ class DividendOptionTest(unittest.TestCase):
         vols = [0.05, 0.20, 0.40]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -313,7 +308,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
                     exDate = today + Period(length, Years)
@@ -328,7 +323,7 @@ class DividendOptionTest(unittest.TestCase):
                         dividends.push_back(5.0)
                         d += Period(6, Months)
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
                     stochProcess = BlackScholesMertonProcess(
                         QuoteHandle(spot), qTS, rTS, volTS)
@@ -339,11 +334,10 @@ class DividendOptionTest(unittest.TestCase):
                     option.setPricingEngine(engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
@@ -357,7 +351,7 @@ class DividendOptionTest(unittest.TestCase):
                                     calculated["vega"] = option.vega()
 
                                     if value > spot.value() * 1.0e-5:
-                                        # perturb spot and get delta and gamma
+
                                         du = u * 1.0e-4
                                         spot.setValue(u + du)
                                         value_p = option.NPV()
@@ -369,7 +363,6 @@ class DividendOptionTest(unittest.TestCase):
                                         expected["delta"] = (value_p - value_m) / (2 * du)
                                         expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                        # perturb risk-free rate and get rho
                                         dr = r * 1.0e-4
                                         rRate.setValue(r + dr)
                                         value_p = option.NPV()
@@ -378,7 +371,6 @@ class DividendOptionTest(unittest.TestCase):
                                         rRate.setValue(r)
                                         expected["rho"] = (value_p - value_m) / (2 * dr)
 
-                                        # perturb volatility and get vega
                                         dv = v * 1.0e-4
                                         vol.setValue(v + dv)
                                         value_p = option.NPV()
@@ -387,7 +379,6 @@ class DividendOptionTest(unittest.TestCase):
                                         vol.setValue(v)
                                         expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                        # perturb date and get theta
                                         dT = dc.yearFraction(today - 1, today + 1)
                                         Settings.instance().evaluationDate = today - 1
                                         value_m = option.NPV()
@@ -396,7 +387,6 @@ class DividendOptionTest(unittest.TestCase):
                                         Settings.instance().evaluationDate = today
                                         expected["theta"] = (value_p - value_m) / dT
 
-                                        # compare
                                         for it in calculated.keys():
                                             greek = it
                                             expct = expected[greek]
@@ -424,7 +414,7 @@ class DividendOptionTest(unittest.TestCase):
         vols = [0.05, 0.20, 0.40]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -435,7 +425,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
                     exDate = today + Period(length, Years)
@@ -449,7 +439,7 @@ class DividendOptionTest(unittest.TestCase):
                         dividends.push_back(5.0)
                         d += Period(6, Months)
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
                     stochProcess = BlackScholesMertonProcess(
                         QuoteHandle(spot), qTS, rTS, volTS)
@@ -469,16 +459,15 @@ class DividendOptionTest(unittest.TestCase):
                     ref_option.setPricingEngine(ref_engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
-                                    q = m
-                                    r = n
+
                                     spot.setValue(u)
                                     qRate.setValue(q)
                                     rRate.setValue(r)
                                     vol.setValue(v)
-                                    # FLOATING_POINT_EXCEPTION
+
                                     calculated = option.NPV()
                                     if calculated > spot.value() * 1.0e-5:
                                         expected = ref_option.NPV()
@@ -491,7 +480,7 @@ class DividendOptionTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
         lengths = [1, 2]
 
@@ -507,7 +496,7 @@ class DividendOptionTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
         lengths = [1, 2]
 
@@ -576,8 +565,9 @@ class DividendOptionTest(unittest.TestCase):
         self._testFdDividendAtTZero(today, exercise, FdBlackScholesVanillaEngine.Spot)
 
     def testEscrowedDividendModel(self):
-        TEST_MESSAGE("Testing finite-difference European engine "
-                     "with the escrowed dividend model...")
+        TEST_MESSAGE(
+            "Testing finite-difference European engine "
+            "with the escrowed dividend model...")
 
         backup = SavedSettings()
 
@@ -596,7 +586,7 @@ class DividendOptionTest(unittest.TestCase):
         process = BlackScholesMertonProcess(
             spot, qTS, rTS, volTS)
 
-        payoff = PlainVanillaPayoff(Option.Put, spot.currentLink().value())
+        payoff = PlainVanillaPayoff(Option.Put, spot.value())
 
         exercise = EuropeanExercise(maturity)
 
@@ -632,14 +622,12 @@ class DividendOptionTest(unittest.TestCase):
             self,
             today,
             exercise,
-            # FdBlackScholesVanillaEngine.CashDividendModel
             model):
         calculated = dict()
         expected = dict()
         tolerance = dict()
         tolerance["delta"] = 5.0e-3
         tolerance["gamma"] = 7.0e-3
-        # tolerance["theta"] = 1.0e-2
 
         types = [Option.Call, Option.Put]
         strikes = [50.0, 99.5, 100.0, 100.5, 150.0]
@@ -658,7 +646,7 @@ class DividendOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = BlackVolTermStructureHandle(flatVol(vol, dc))
 
-        for tp in types:
+        for ty in types:
             for strike in strikes:
 
                 dividendDates = DateVector()
@@ -669,7 +657,7 @@ class DividendOptionTest(unittest.TestCase):
                     dividends.push_back(5.0)
                     d += Period(6, Months)
 
-                payoff = PlainVanillaPayoff(tp, strike)
+                payoff = PlainVanillaPayoff(ty, strike)
 
                 stochProcess = BlackScholesMertonProcess(
                     QuoteHandle(spot), qTS, rTS, volTS)
@@ -683,23 +671,21 @@ class DividendOptionTest(unittest.TestCase):
                 option.setPricingEngine(engine)
 
                 for u in underlyings:
-                    for m in qRates:
-                        for n in rRates:
+                    for q in qRates:
+                        for r in rRates:
                             for v in vols:
-                                q = m
-                                r = n
+
                                 spot.setValue(u)
                                 qRate.setValue(q)
                                 rRate.setValue(r)
                                 vol.setValue(v)
 
-                                # FLOATING_POINT_EXCEPTION
                                 value = option.NPV()
                                 calculated["delta"] = option.delta()
                                 calculated["gamma"] = option.gamma()
 
                                 if value > spot.value() * 1.0e-5:
-                                    # perturb spot and get delta and gamma
+
                                     du = u * 1.0e-4
                                     spot.setValue(u + du)
                                     value_p = option.NPV()
@@ -710,18 +696,6 @@ class DividendOptionTest(unittest.TestCase):
                                     spot.setValue(u)
                                     expected["delta"] = (value_p - value_m) / (2 * du)
                                     expected["gamma"] = (delta_p - delta_m) / (2 * du)
-
-                                    # perturb date and get theta
-
-                                    #     dT = dc.yearFraction(today-1, today+1)
-                                    #     Settings.instance().evaluationDate = today-1
-                                    #     value_m = option.NPV()
-                                    #     Settings.instance().evaluationDate = today+1
-                                    #     value_p = option.NPV()
-                                    #     Settings.instance().evaluationDate = today
-                                    #     expected["theta"] = (value_p - value_m)/dT
-
-                                    # compare
 
                                     for it in calculated.keys():
                                         greek = it
@@ -735,7 +709,6 @@ class DividendOptionTest(unittest.TestCase):
             self,
             today,
             exercise,
-            # FdBlackScholesVanillaEngine.CashDividendModel
             model):
         dc = Actual360()
         spot = SimpleQuote(54.625)
@@ -783,7 +756,6 @@ class DividendOptionTest(unittest.TestCase):
             self,
             today,
             exercise,
-            # FdBlackScholesVanillaEngine.CashDividendModel
             model):
         dc = Actual360()
         spot = SimpleQuote(54.625)
@@ -804,7 +776,6 @@ class DividendOptionTest(unittest.TestCase):
 
         payoff = PlainVanillaPayoff(Option.Call, 55.0)
 
-        # today's dividend must by taken into account
         dividends = DoubleVector(1, 1.0)
         dividendDates = DateVector(1, today)
 

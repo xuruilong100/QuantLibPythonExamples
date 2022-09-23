@@ -13,8 +13,7 @@ using QuantLib::FdmLinearOp;
 class FdmLinearOp {
   public:
     Array apply(const Array& r) const;
-    //SparseMatrix toMatrix() const;
-
+    
   private:
     FdmLinearOp();
 };

@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class FdCIRTest(unittest.TestCase):
 
     def testFdmCIRConvergence(self):
-        TEST_MESSAGE("Testing FDM CIR convergence...")
+        TEST_MESSAGE(
+            "Testing FDM CIR convergence...")
 
         schemes = [
             FdmSchemeDesc.Hundsdorfer(),
@@ -16,10 +19,8 @@ class FdCIRTest(unittest.TestCase):
             FdmSchemeDesc.TrBDF2(),
             FdmSchemeDesc.CrankNicolson()]
 
-        # set up dates
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
-        # our options
         typeOpt = Option.Put
         underlying = 36
         strike = 40
@@ -53,8 +54,8 @@ class FdCIRTest(unittest.TestCase):
         initialRate = 0.06
         rho = 0.00789
         lmbd = -0.5726
-        newSpeed = speed + (cirSigma * lmbd)  # 1.0792
-        newLevel = (level * speed) / (speed + (cirSigma * lmbd))  ## 0.0240
+        newSpeed = speed + (cirSigma * lmbd)
+        newLevel = (level * speed) / (speed + (cirSigma * lmbd))
 
         cirProcess = CoxIngersollRossProcess(
             newSpeed, cirSigma, initialRate, newLevel)

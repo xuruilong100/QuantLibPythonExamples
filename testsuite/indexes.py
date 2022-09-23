@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class IndexTest(unittest.TestCase):
 
     def testFixingObservability(self):
-        TEST_MESSAGE("Testing observability of index fixings...")
+        TEST_MESSAGE(
+            "Testing observability of index fixings...")
 
         i1 = Euribor6M()
         i2 = BMAIndex()
@@ -19,7 +22,7 @@ class IndexTest(unittest.TestCase):
         f2.registerWith(i2)
         f2.lower()
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         euribor = Euribor6M()
 
@@ -40,7 +43,8 @@ class IndexTest(unittest.TestCase):
         self.assertFalse(not f2.isUp())
 
     def testFixingHasHistoricalFixing(self):
-        TEST_MESSAGE("Testing if index has historical fixings...")
+        TEST_MESSAGE(
+            "Testing if index has historical fixings...")
 
         def testCase(indexName,
                      expected,

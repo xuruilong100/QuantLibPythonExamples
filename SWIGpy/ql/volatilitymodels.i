@@ -23,14 +23,14 @@ class VolatilityCompositor {
   private:
     VolatilityCompositor();
   public:
-    typedef TimeSeries<Volatility> time_series;
-    time_series calculate(const time_series& volatilitySeries);
-    void calibrate(const time_series& volatilitySeries);
+    TimeSeries<Volatility> calculate(const TimeSeries<Volatility>& volatilitySeries);
+    void calibrate(const TimeSeries<Volatility>& volatilitySeries);
 };
 
 class ConstantEstimator : public VolatilityCompositor {
   public:
-    ConstantEstimator(Size size);
+    ConstantEstimator(
+        Size size);
 };
 
 class Garch11 : public VolatilityCompositor {
@@ -42,8 +42,13 @@ class Garch11 : public VolatilityCompositor {
         DoubleOptimization
     };
 
-    Garch11(Real a, Real b, Real vl);
-    Garch11(const time_series& qs, Mode mode = BestOfTwo);
+    Garch11(
+        Real a, 
+        Real b,
+        Real vl);
+    Garch11(
+        const TimeSeries<Volatility>& qs, 
+        Mode mode = BestOfTwo);
 
     Real alpha() const;
     Real beta() const;
@@ -52,13 +57,20 @@ class Garch11 : public VolatilityCompositor {
     Real logLikelihood() const;
     Mode mode() const;
 
-    void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria);
-    void calibrate(const time_series& quoteSeries, OptimizationMethod& method, const EndCriteria& endCriteria, const Array& initialGuess);
+    void calibrate(
+        const TimeSeries<Volatility>& quoteSeries, 
+        OptimizationMethod& method, 
+        const EndCriteria& endCriteria);
+    void calibrate(
+        const TimeSeries<Volatility>& quoteSeries, 
+        OptimizationMethod& method, 
+        const EndCriteria& endCriteria, 
+        const Array& initialGuess);
     Real forecast(Real r, Real sigma2) const;
-    /* static time_series calculate(const time_series& quoteSeries, Real alpha, Real beta, Real omega); */
+    /* static TimeSeries<Volatility> calculate(const TimeSeries<Volatility>& quoteSeries, Real alpha, Real beta, Real omega); */
     %extend {
-        static time_series staticCalculate(
-            const time_series& quoteSeries, Real alpha, Real beta, Real omega) {
+        static TimeSeries<Volatility> staticCalculate(
+            const TimeSeries<Volatility>& quoteSeries, Real alpha, Real beta, Real omega) {
                 return Garch11::calculate(
                     quoteSeries, alpha, beta, omega);
             }

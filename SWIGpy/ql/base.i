@@ -197,7 +197,7 @@ class CashFlow : public Event {
   public:
     Real amount() const;
     Date exCouponDate() const;
-    bool tradingExCoupon(const Date& refDate=Date()) const;
+    bool tradingExCoupon(const Date& refDate = Date()) const;
 };
 
 %template(Leg) std::vector<ext::shared_ptr<CashFlow>>;
@@ -239,7 +239,6 @@ class TermStructureConsistentModel : public Observable{
 class Index : public Observable {
   private:
     Index();
-
   public:
     std::string name() const;
     Calendar fixingCalendar() const;
@@ -276,7 +275,6 @@ class Index : public Observable {
 class SmileSection : public Observer, public Observable {
   private:
     SmileSection();
-
   public:
     Real minStrike() const;
     Real maxStrike() const;
@@ -384,7 +382,6 @@ class discretization {
 class StochasticProcess : public Observer, public Observable {
   private:
     StochasticProcess();
-
   public:
     Size size() const;
     Size factors() const;
@@ -408,9 +405,9 @@ class StochasticProcess : public Observer, public Observable {
 
 %template(StochasticProcessVector) std::vector<ext::shared_ptr<StochasticProcess>>;
 
-%template(CalibrationErrorTuple) ext::tuple<Real, Real, Real>;
-%template(CalibrationPair) std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>;
-%template(CalibrationSet) std::vector<std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>>;
+%template(DoubleDoubleDoubleTuple) ext::tuple<Real, Real, Real>;
+%template(VanillaOptionQuotePair) std::pair<ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>;
+%template(VanillaOptionQuotePairVector) std::vector<std::pair< ext::shared_ptr<VanillaOption>, ext::shared_ptr<Quote>>>;
 
 %shared_ptr(AndreasenHugeVolatilityInterpl)
 class AndreasenHugeVolatilityInterpl : public LazyObject {
@@ -438,10 +435,8 @@ class AndreasenHugeVolatilityInterpl : public LazyObject {
         Size nGridPoints = 500,
         Real minStrike = Null<Real>(),
         Real maxStrike = Null<Real>(),
-        const ext::shared_ptr<OptimizationMethod>& optimizationMethod =
-            ext::shared_ptr<OptimizationMethod>(new LevenbergMarquardt),
-        const EndCriteria& endCriteria = EndCriteria(
-            500, 100, 1e-12, 1e-10, 1e-10));
+        const ext::shared_ptr<OptimizationMethod>& optimizationMethod = ext::shared_ptr<OptimizationMethod>(new LevenbergMarquardt),
+        const EndCriteria& endCriteria = EndCriteria(500, 100, 1e-12, 1e-10, 1e-10));
 
     Date maxDate() const;
     Real minStrike() const;
@@ -534,29 +529,32 @@ class InflationCouponPricer: public Observer, public Observable {
     void initialize(const InflationCoupon&);
 };
 
+void setCouponPricer(
+	const Leg& leg,
+	const ext::shared_ptr<InflationCouponPricer>& p);
+
 %shared_ptr(NormalCLVModel)
 class NormalCLVModel : public LazyObject {
   public:
     NormalCLVModel(
-		const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
-		ext::shared_ptr<OrnsteinUhlenbeckProcess> ouProcess,
-		const std::vector<Date>& maturityDates,
-		Size lagrangeOrder,
-		Real pMax = Null<Real>(),
-		Real pMin = Null<Real>());
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
+        ext::shared_ptr<OrnsteinUhlenbeckProcess> ouProcess,
+        const std::vector<Date>& maturityDates,
+        Size lagrangeOrder,
+        Real pMax = Null<Real>(),
+        Real pMin = Null<Real>());
 	%extend {
 		NormalCLVModel(
-			const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
-			/* ext::shared_ptr<OrnsteinUhlenbeckProcess> ouProcess, */
-			const std::vector<Date>& maturityDates,
-			Size lagrangeOrder,
-			Real pMax = Null<Real>(),
-			Real pMin = Null<Real>()) {
-				return new NormalCLVModel(
-					bsProcess,
-					ext::shared_ptr<OrnsteinUhlenbeckProcess>(),
-					maturityDates, lagrangeOrder, pMax, pMin);
-			}
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
+        const std::vector<Date>& maturityDates,
+        Size lagrangeOrder,
+        Real pMax = Null<Real>(),
+        Real pMin = Null<Real>()) {
+            return new NormalCLVModel(
+                bsProcess,
+                ext::shared_ptr<OrnsteinUhlenbeckProcess>(),
+                maturityDates, lagrangeOrder, pMax, pMin);
+    }
 	}
     Real cdf(const Date& d, Real x) const;
     Real invCDF(const Date& d, Real q) const;
@@ -574,16 +572,15 @@ class NormalCLVModel : public LazyObject {
 class SquareRootCLVModel : public LazyObject {
   public:
     SquareRootCLVModel(
-		const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
-		ext::shared_ptr<SquareRootProcess> sqrtProcess,
-		const std::vector<Date>& maturityDates,
-		Size lagrangeOrder,
-		Real pMax = Null<Real>(),
-		Real pMin = Null<Real>());
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
+        ext::shared_ptr<SquareRootProcess> sqrtProcess,
+        const std::vector<Date>& maturityDates,
+        Size lagrangeOrder,
+        Real pMax = Null<Real>(),
+        Real pMin = Null<Real>());
 	%extend {
 		SquareRootCLVModel(
 			const ext::shared_ptr<GeneralizedBlackScholesProcess>& bsProcess,
-			/* ext::shared_ptr<SquareRootProcess> sqrtProcess, */
 			const std::vector<Date>& maturityDates,
 			Size lagrangeOrder,
 			Real pMax = Null<Real>(),
@@ -638,7 +635,8 @@ struct GlobalBootstrap {
     std::vector<Date> additionalDates;
     Array additionalErrors;
     double accuracy;
-    GlobalBootstrap(double accur = Null<double>())
+    GlobalBootstrap(
+        double accur = Null<double>())
         : accuracy(accur) {}
     GlobalBootstrap(
         const std::vector<ext::shared_ptr<RateHelper>>& additionHelpers,
@@ -652,16 +650,16 @@ struct GlobalBootstrap {
 };
 
 struct LocalBootstrap {
-	Size localisation;
-	bool forcePositive;
-	Real accuracy;
-	LocalBootstrap(
-		Size localisation = 2,
-		bool forcePositive = true,
-		Real accuracy = Null<Real>())
-		: localisation(localisation),
-		  forcePositive(forcePositive),
-		  accuracy(accuracy) {}
+    Size localisation;
+    bool forcePositive;
+    Real accuracy;
+    LocalBootstrap(
+        Size localisation = 2,
+        bool forcePositive = true,
+        Real accuracy = Null<Real>())
+        : localisation(localisation),
+          forcePositive(forcePositive),
+          accuracy(accuracy) {}
 };
 %}
 
@@ -689,11 +687,11 @@ struct GlobalBootstrap {
 };
 
 struct LocalBootstrap {
-	%feature("kwargs") LocalBootstrap;
-	LocalBootstrap(
-		Size localisation = 2,
-		bool forcePositive = true,
-		Real accuracy = Null<Real>());
+    %feature("kwargs") LocalBootstrap;
+    LocalBootstrap(
+      Size localisation = 2,
+      bool forcePositive = true,
+      Real accuracy = Null<Real>());
 };
 
 #endif

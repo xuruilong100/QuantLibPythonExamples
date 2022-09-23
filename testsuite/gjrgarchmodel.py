@@ -1,11 +1,14 @@
 import unittest
-from utilities import *
-from QuantLib import *
-import numpy as np
 from math import exp, sqrt
+
+import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class GJRGARCHModelTest(unittest.TestCase):
+
     def testEngines(self):
         TEST_MESSAGE(
             "Testing Monte Carlo GJR-GARCH engine against "
@@ -13,7 +16,7 @@ class GJRGARCHModelTest(unittest.TestCase):
 
         dayCounter = ActualActual(ActualActual.ISDA)
 
-        today = Date.todaysDate()
+        today = knownGoodDefault
         riskFreeTS = YieldTermStructureHandle(flatRate(today, 0.05, dayCounter))
         dividendTS = YieldTermStructureHandle(flatRate(today, 0.0, dayCounter))
 
@@ -22,11 +25,11 @@ class GJRGARCHModelTest(unittest.TestCase):
         alpha = 0.024
         beta = 0.93
         gamma = 0.059
-        daysPerYear = 365.0  # number of trading days per year
+        daysPerYear = 365.0
         maturity = [90, 180]
         strike = [35, 40, 45, 50, 55, 60]
         Lambda = [0.0, 0.1, 0.2]
-        analytic = np.ndarray(shape=(3, 2, 6))  # [3][2][6] # correct values of analytic approximation
+        analytic = np.ndarray(shape=(3, 2, 6))
         analytic[0][0][0] = 15.4315
         analytic[0][0][1] = 10.5552
         analytic[0][0][2] = 5.9625
@@ -63,7 +66,7 @@ class GJRGARCHModelTest(unittest.TestCase):
         analytic[2][1][3] = 4.6348
         analytic[2][1][4] = 2.3429
         analytic[2][1][5] = 1.0590
-        mcValues = np.ndarray(shape=(3, 2, 6))  # [3][2][6] # correct values of Monte Carlo
+        mcValues = np.ndarray(shape=(3, 2, 6))
         mcValues[0][0][0] = 15.4332
         mcValues[0][0][1] = 10.5453
         mcValues[0][0][2] = 5.9351
@@ -138,10 +141,6 @@ class GJRGARCHModelTest(unittest.TestCase):
                     self.assertFalse(abs(calculated - mcValues[k][i][j]) > 2.0 * tolerance)
 
     def testDAXCalibration(self):
-        # this example is taken from A. Sepp
-        # Pricing European-Style Options under Jump Diffusion Processes
-        # with Stochstic Volatility: Applications of Fourier Transform
-        # http:#math.ut.ee/~spartak/papers/stochjumpvols.pdf
 
         TEST_MESSAGE(
             "Testing GJR-GARCH model calibration using DAX volatility data...")
@@ -198,7 +197,7 @@ class GJRGARCHModelTest(unittest.TestCase):
         beta = 0.93
         gamma = 0.059
         lmd = 0.1
-        daysPerYear = 365.0  # number of trading days per year
+        daysPerYear = 365.0
         m1 = beta + (alpha + gamma * CumulativeNormalDistribution()(lmd)) * (1.0 + lmd * lmd) + \
              gamma * lmd * exp(-lmd * lmd / 2.0) / sqrt(2.0 * M_PI)
         v0 = omega / (1.0 - m1)
@@ -216,7 +215,7 @@ class GJRGARCHModelTest(unittest.TestCase):
                 vol = QuoteHandle(
                     SimpleQuote(v[s * 8 + m]))
 
-                maturity = Period(int((t[m] + 3) / 7.), Weeks)  # round to weeks
+                maturity = Period(int((t[m] + 3) / 7.), Weeks)
                 option = HestonModelHelper(
                     maturity, calendar,
                     s0.value(), strike[s], vol,

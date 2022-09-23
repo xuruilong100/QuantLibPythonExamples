@@ -18,6 +18,7 @@ using QuantLib::HestonSLVFDMModel;
 using QuantLib::HestonSLVFokkerPlanckFdmParams;
 %}
 
+%shared_ptr(BrownianGenerator)
 class BrownianGenerator {
   private:
     BrownianGenerator();
@@ -28,6 +29,7 @@ class BrownianGenerator {
     Size numberOfSteps() const;
 };
 
+%shared_ptr(MTBrownianGenerator)
 class MTBrownianGenerator : public BrownianGenerator {
   public:
     MTBrownianGenerator(
@@ -36,6 +38,7 @@ class MTBrownianGenerator : public BrownianGenerator {
         unsigned long seed = 0);
 };
 
+%shared_ptr(SobolBrownianGenerator)
 class SobolBrownianGenerator : public BrownianGenerator {
   public:
     enum Ordering {
@@ -67,16 +70,17 @@ class BrownianGeneratorFactory {
 %shared_ptr(MTBrownianGeneratorFactory)
 class MTBrownianGeneratorFactory : public BrownianGeneratorFactory {
   public:
-    MTBrownianGeneratorFactory(unsigned long seed = 0);
+    MTBrownianGeneratorFactory(
+        unsigned long seed = 0);
 };
 
 %shared_ptr(SobolBrownianGeneratorFactory)
 class SobolBrownianGeneratorFactory : public BrownianGeneratorFactory {
   public:
     SobolBrownianGeneratorFactory(
-            SobolBrownianGenerator::Ordering ordering,
-            unsigned long seed = 0,
-            SobolRsg::DirectionIntegers directionIntegers = SobolRsg::Jaeckel);
+        SobolBrownianGenerator::Ordering ordering,
+        unsigned long seed = 0,
+        SobolRsg::DirectionIntegers directionIntegers = SobolRsg::Jaeckel);
 };
 
 %shared_ptr(HestonSLVMCModel)

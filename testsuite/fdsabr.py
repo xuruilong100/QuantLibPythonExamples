@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, pow, log, exp
+
+from QuantLib import *
+
+from utilities import *
 
 
 class SabrMonteCarloPricer(object):
@@ -44,12 +46,11 @@ class SabrMonteCarloPricer(object):
 
             n = rsg.nextSequence().value()
 
-            for j in range(timeSteps):  # (int j = 0 j < timeSteps && f > 0.0 ++j) [
+            for j in range(timeSteps):
 
                 r1 = n[j]
                 r2 = self.rho_ * r1 + n[j + timeSteps] * w
 
-                # simple Euler method
                 f += exp(a) * pow(f, self.beta_) * r1 * sqrtDt
                 if f <= 0.0:
                     break
@@ -60,11 +61,6 @@ class SabrMonteCarloPricer(object):
 
         return stats.mean()
 
-
-# Example and reference values are taken from
-# B. Chen, C.W. Oosterlee, H. Weide,
-# Efficient unbiased simulation scheme for the SABR stochastic volatility model.
-# https://http://ta.twi.tudelft.nl/mf/users/oosterle/oosterlee/SABRMC.pdf
 
 class OsterleeReferenceResults(object):
     data_ = [
@@ -81,15 +77,15 @@ class OsterleeReferenceResults(object):
             i = 0
         elif close_enough(t, 1 / 32.):
             i = 1
-        # else
-        #     QL_FAIL("unmatched reference result lookup")
 
         return self.data_[self.i_][i]
 
 
 class FdSabrTest(unittest.TestCase):
+
     def testFdmSabrOp(self):
-        TEST_MESSAGE("Testing FDM SABR operator...")
+        TEST_MESSAGE(
+            "Testing FDM SABR operator...")
 
         backup = SavedSettings()
 
@@ -130,7 +126,6 @@ class FdSabrTest(unittest.TestCase):
             optionPut.setPricingEngine(pdeEngine)
             pdePut = optionPut.NPV()
 
-            # check put/call parity
             optionCall.setPricingEngine(pdeEngine)
             pdeCall = optionCall.NPV()
 
@@ -159,7 +154,8 @@ class FdSabrTest(unittest.TestCase):
             self.assertFalse(volDiff > volTol)
 
     def testFdmSabrCevPricing(self):
-        TEST_MESSAGE("Testing FDM CEV pricing with trivial SABR model...")
+        TEST_MESSAGE(
+            "Testing FDM CEV pricing with trivial SABR model...")
 
         backup = SavedSettings()
 
@@ -206,7 +202,8 @@ class FdSabrTest(unittest.TestCase):
                     self.assertFalse(abs(expected - calculated) > tol)
 
     def testFdmSabrVsVolApproximation(self):
-        TEST_MESSAGE("Testing FDM SABR vs approximations...")
+        TEST_MESSAGE(
+            "Testing FDM SABR vs approximations...")
 
         backup = SavedSettings()
 
@@ -255,7 +252,8 @@ class FdSabrTest(unittest.TestCase):
                 self.assertFalse(abs(fdmVol - hagenVol) > tol)
 
     def testOosterleeTestCaseIV(self):
-        TEST_MESSAGE("Testing Chen, Oosterlee and Weide test case IV...")
+        TEST_MESSAGE(
+            "Testing Chen, Oosterlee and Weide test case IV...")
 
         backup = SavedSettings()
 
@@ -305,14 +303,8 @@ class FdSabrTest(unittest.TestCase):
                 self.assertFalse(diff > tol)
 
     def testBenchOpSabrCase(self):
-        TEST_MESSAGE("Testing SABR BenchOp problem...")
-
-        # von Sydow, L, Milovanović, S, Larsson, E, In't Hout, K,
-        # Wiktorsson, M, Oosterlee, C.W, Shcherbakov, V, Wyns, M,
-        # Leitao Rodriguez, A, Jain, S, et al. (2018)
-        # BENCHOP–SLV: the BENCHmarking project in Option
-        # Pricing–Stochastic and Local Volatility problems
-        # https://ir.cwi.nl/pub/28249
+        TEST_MESSAGE(
+            "Testing SABR BenchOp problem...")
 
         backup = SavedSettings()
 

@@ -17,15 +17,40 @@ using QuantLib::NeumannBC;
 using QuantLib::DirichletBC;
 %}
 
+%{
+using QuantLib::PdeSecondOrderParabolic;  
+using QuantLib::PdeBSM;
+using QuantLib::PdeOperator;
+%}
+
+class PdeSecondOrderParabolic {
+  private:
+    PdeSecondOrderParabolic();
+  public:
+    Real diffusion(Time t, Real x) const;
+    Real drift(Time t, Real x) const;
+    Real discount(Time t, Real x) const;
+    void generateOperator(
+        Time t, const TransformedGrid& tg, TridiagonalOperator& L) const;
+};
+
+class PdeBSM : public PdeSecondOrderParabolic {
+  public:
+    PdeBSM(ext::shared_ptr<GeneralizedBlackScholesProcess> process);
+};
+
 class TridiagonalOperator {
   public:
-    TridiagonalOperator(Size size=0);
+    TridiagonalOperator(
+        Size size = 0);
     TridiagonalOperator(
         const Array& low,
         const Array& mid,
         const Array& high);
 
     Array solveFor(const Array& rhs) const;
+    void solveFor(const Array& rhs,
+                  Array& result) const;
     Array applyTo(const Array& v) const;
     Array SOR(const Array& rhs, Real tol) const;
     Size size() const;
@@ -77,17 +102,23 @@ class TridiagonalOperator {
 
 class DPlus : public TridiagonalOperator {
   public:
-    DPlus(Size gridPoints, Real h);
+    DPlus(
+        Size gridPoints, 
+        Real h);
 };
 
 class DPlusDMinus : public TridiagonalOperator {
   public:
-    DPlusDMinus(Size gridPoints, Real h);
+    DPlusDMinus(
+        Size gridPoints, 
+        Real h);
 };
 
 class DMinus : public TridiagonalOperator {
   public:
-    DMinus(Size gridPoints, Real h);
+    DMinus(
+        Size gridPoints, 
+        Real h);
 };
 
 class DZero : public TridiagonalOperator {
@@ -98,9 +129,34 @@ class DZero : public TridiagonalOperator {
 class BSMOperator : public TridiagonalOperator {
   public:
     BSMOperator();
-    BSMOperator(Size size, Real dx, Rate r, Rate q, Volatility sigma);
-    BSMOperator(const Array& grid, Rate r, Rate q, Volatility sigma);
+    BSMOperator(
+        Size size,
+        Real dx, 
+        Rate r, 
+        Rate q, 
+        Volatility sigma);
+    BSMOperator(
+        const Array& grid, 
+        Rate r, 
+        Rate q, 
+        Volatility sigma);
 };
+
+template <class PdeClass>
+class PdeOperator : public TridiagonalOperator {
+public:
+    %extend {
+        PdeOperator(
+        const Array& grid,
+        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+        Time residualTime = 0.0) {
+        return new PdeOperator<PdeClass>(
+            grid, process, residualTime);
+        }
+    }    
+};
+
+%template(BSMTermOperator) PdeOperator<PdeBSM>;
 
 %shared_ptr(DefaultBoundaryCondition)
 class DefaultBoundaryCondition {
@@ -126,5 +182,7 @@ class DirichletBC : public DefaultBoundaryCondition {
         Real value,
         DefaultBoundaryCondition::Side side);
 };
+
+
 
 #endif

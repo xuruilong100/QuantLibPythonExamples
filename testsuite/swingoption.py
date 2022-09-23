@@ -1,7 +1,11 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sin, exp, log, sqrt, sinh
+
+from QuantLib import *
+
+from utilities import *
+
+SizeVector = BigNaturalVector
 
 
 class SwingPdePricing(object):
@@ -43,7 +47,6 @@ def createKlugeProcess():
 
     ouProcess = ExtendedOrnsteinUhlenbeckProcess(
         speed, volatility, 3.0,
-        # constant<Real, Real>(x0[0]),
         lambda x: 3.0)
 
     return ExtOUWithJumpsProcess(
@@ -54,7 +57,8 @@ def createKlugeProcess():
 class SwingOptionTest(unittest.TestCase):
 
     def testExtendedOrnsteinUhlenbeckProcess(self):
-        TEST_MESSAGE("Testing extended Ornstein-Uhlenbeck process...")
+        TEST_MESSAGE(
+            "Testing extended Ornstein-Uhlenbeck process...")
 
         backup = SavedSettings()
 
@@ -67,13 +71,9 @@ class SwingOptionTest(unittest.TestCase):
             ExtendedOrnsteinUhlenbeckProcess.Trapezodial,
             ExtendedOrnsteinUhlenbeckProcess.GaussLobatto]
 
-        # f    =[ constant<Real, Real>(level),
-        #         add<Real>(1.0),
-        #         static_cast<Real(*)(Real)>(sin) ]
-        f = [
-            lambda x: level,
-            lambda x: x + 1.0,
-            lambda x: sin(x)]
+        f = [lambda x: level,
+             lambda x: x + 1.0,
+             lambda x: sin(x)]
 
         for n in range(len(f)):
             refProcess = ExtendedOrnsteinUhlenbeckProcess(
@@ -103,11 +103,12 @@ class SwingOptionTest(unittest.TestCase):
                     t += dt
 
     def testFdBSSwingOption(self):
-        TEST_MESSAGE("Testing Black-Scholes vanilla swing option pricing...")
+        TEST_MESSAGE(
+            "Testing Black-Scholes vanilla swing option pricing...")
 
         backup = SavedSettings()
 
-        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
+        settlementDate = knownGoodDefault
         Settings.instance().evaluationDate = settlementDate
         dayCounter = ActualActual(ActualActual.ISDA)
         maturityDate = settlementDate + Period(12, Months)
@@ -159,14 +160,14 @@ class SwingOptionTest(unittest.TestCase):
 
             self.assertFalse(lowerBound - swingOptionPrice > 4e-2)
 
-    @unittest.skipIf(skipSlowTest, 'testExtOUJumpSwingOption is VERY SLOW')
+    @unittest.skipIf(skipSlowTest, "testExtOUJumpSwingOption is VERY SLOW")
     def testExtOUJumpSwingOption(self):
         TEST_MESSAGE(
             "Testing simple swing option pricing for Kluge model...")
 
         backup = SavedSettings()
 
-        settlementDate = Date(16, Sep, 2015) # Date.todaysDate()
+        settlementDate = knownGoodDefault
         Settings.instance().evaluationDate = settlementDate
         dayCounter = ActualActual(ActualActual.ISDA)
         maturityDate = settlementDate + Period(12, Months)
@@ -237,7 +238,6 @@ class SwingOptionTest(unittest.TestCase):
 
             self.assertFalse(lowerBound - swingOptionPrice > 2e-2)
 
-            # use MC plus perfect forecast to find an upper bound
             npv = GeneralStatistics()
             for n in range(nrTrails):
                 path = generator.next()
@@ -251,14 +251,11 @@ class SwingOptionTest(unittest.TestCase):
                     exerciseValues[k] = payoff(s) * rTS.discount(exerciseDates[k])
 
                 exerciseValues.sort(reverse=True)
-                # sort(exerciseValues.begin(), exerciseValues.end(),
-                #     greater<Real>())
+
                 npCashFlows = 0.0
                 for i in range(exerciseRights):
                     npCashFlows += exerciseValues[i]
 
-                # npCashFlows                    = accumulate(exerciseValues.begin(),
-                #         exerciseValues.begin() + exerciseRights, Real(0.0))
                 npv.add(npCashFlows)
 
             mcUpperBound = npv.mean()
@@ -266,7 +263,8 @@ class SwingOptionTest(unittest.TestCase):
             self.assertFalse(swingOptionPrice - mcUpperBound > 2.36 * mcErrorUpperBound)
 
     def testFdmExponentialJump1dMesher(self):
-        TEST_MESSAGE("Testing finite difference mesher for the Kluge model...")
+        TEST_MESSAGE(
+            "Testing finite difference mesher for the Kluge model...")
 
         backup = SavedSettings()
 
@@ -304,14 +302,10 @@ class SwingOptionTest(unittest.TestCase):
         relTol2 = 2e-2
         threshold = 0.9
 
-        # for (x = 1e-12 x < 1.0 x *= 10) {
-        #     v = mesher.jumpSizeDistribution(x)
         for i in range(-12, 0):
             x = 10 ** i
             v = mesher.jumpSizeDistribution(x)
 
-            # iter = lower_bound(path.begin(), path.end(), x)
-            # q = distance(path.begin(), iter) / Real(n)
             iter = 0
             for p in path:
                 if p >= x:
@@ -324,7 +318,7 @@ class SwingOptionTest(unittest.TestCase):
                 or ((v < threshold) and abs(q - v) < relTol2),
                 "can not reproduce jump distribution")
 
-    @unittest.skipIf(skipSlowTest, 'testExtOUJumpVanillaEngine is VERY SLOW')
+    @unittest.skipIf(skipSlowTest, "testExtOUJumpVanillaEngine is VERY SLOW")
     def testExtOUJumpVanillaEngine(self):
         TEST_MESSAGE(
             "Testing finite difference pricer for the Kluge model...")
@@ -333,7 +327,7 @@ class SwingOptionTest(unittest.TestCase):
 
         jumpProcess = createKlugeProcess()
 
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         dc = ActualActual(ActualActual.ISDA)
@@ -378,8 +372,9 @@ class SwingOptionTest(unittest.TestCase):
         self.assertFalse(abs(fdNPV - mcNPV) > 3.0 * mcError)
 
     def testKlugeChFVanillaPricing(self):
-        TEST_MESSAGE("Testing Kluge PDE Vanilla Pricing in"
-                     " comparison to moment matching...")
+        TEST_MESSAGE(
+            "Testing Kluge PDE Vanilla Pricing in"
+            " comparison to moment matching...")
 
         backup = SavedSettings()
 
@@ -403,7 +398,6 @@ class SwingOptionTest(unittest.TestCase):
         klugeProcess = ExtOUWithJumpsProcess(
             ExtendedOrnsteinUhlenbeckProcess(
                 alpha, sig, x0,
-                # constant<Real, Real>(0.0),
                 lambda x: 0.0),
             y0, beta, lmbd, eta)
 
@@ -419,13 +413,14 @@ class SwingOptionTest(unittest.TestCase):
              sig * sig / (4 * alpha) * (1 - exp(-2 * alpha * t)) - \
              lmbd / beta * log((eta - exp(-beta * t)) / (eta - 1.0))
 
-        shape.push_back(DoublePair(t, ps))
+        shape.push_back(DoubleDoublePair(t, ps))
 
         expected = RichardsonExtrapolation(
             SwingPdePricing(klugeProcess, option, shape), 4.0)(2.0, 1.5)
 
-        stdDev = sqrt((((2 - 2 * exp(-2 * beta * t)) * lmbd)
-                       / (beta * eta * eta) + ((1 - exp(-2 * alpha * t)) * sig * sig) / alpha) / 2.)
+        stdDev = sqrt(
+            (((2 - 2 * exp(-2 * beta * t)) * lmbd)
+             / (beta * eta * eta) + ((1 - exp(-2 * alpha * t)) * sig * sig) / alpha) / 2.)
 
         bsNPV = blackFormula(Option.Call, strike, f0, stdDev)
 
@@ -440,24 +435,15 @@ class SwingOptionTest(unittest.TestCase):
 
         d = (log(f0 / strike) + 0.5 * stdDev * stdDev) / stdDev
 
-        # Jurczenko E., Maillet B. and Negrea B.,
-        # Multi-Moment Approximate Option Pricing Models:
-        # A General Comparison (Part 1)
-        # https:#papers.ssrn.com/sol3/papers.cfm?abstract_id=300922
         n = NormalDistribution()
         q3 = 1 / Factorial.get(3) * f0 * stdDev * (2 * stdDev - d) * n(d)
         q4 = 1 / Factorial.get(4) * f0 * stdDev * (d * d - 3 * d * stdDev - 1) * n(d)
         q5 = 10 / Factorial.get(6) * f0 * stdDev * (
                 d * d * d * d - 5 * d * d * d * stdDev - 6 * d * d + 15 * d * stdDev + 3) * n(d)
 
-        # Corrado C. and T. Su, (1996-b),
-        # “Skewness and Kurtosis in S&P 500 IndexReturns Implied by Option Prices”,
-        # Journal of Financial Research 19 (2), 175-192.
         ccs3 = bsNPV + g1 * q3
         ccs4 = ccs3 + g2 * q4
 
-        # Rubinstein M., (1998), “Edgeworth Binomial Trees”,
-        # Journal of Derivatives 5 (3), 20-27.
         cr = ccs4 + g1 * g1 * q5
 
         expectedImplVol = blackFormulaImpliedStdDevLiRS(

@@ -39,7 +39,7 @@ class FdSimpleExtOUJumpSwingEngine : public PricingEngine {
                     shape_.reset(new Shape(shape));
                 return new FdSimpleExtOUJumpSwingEngine(
                     p, rTS, tGrid, xGrid, yGrid, shape_, schemeDesc);
-        }
+            }
     }
 };
 

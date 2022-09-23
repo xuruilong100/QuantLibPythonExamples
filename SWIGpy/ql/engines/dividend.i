@@ -25,7 +25,7 @@ class AnalyticDividendEuropeanEngine : public PricingEngine {
 %shared_ptr(FdBlackScholesShoutEngine)
 class FdBlackScholesShoutEngine : public PricingEngine {
   public:
-    explicit FdBlackScholesShoutEngine(
+    FdBlackScholesShoutEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess>,
         Size tGrid = 100,
         Size xGrid = 100,
@@ -68,7 +68,7 @@ class FdHestonHullWhiteVanillaEngine : public PricingEngine {
 %shared_ptr(FdCIRVanillaEngine)
 class FdCIRVanillaEngine : public PricingEngine {
   public:
-    explicit FdCIRVanillaEngine(
+    FdCIRVanillaEngine(
         ext::shared_ptr<CoxIngersollRossProcess> cirProcess,
         ext::shared_ptr<GeneralizedBlackScholesProcess> bsProcess,
         Size tGrid,
@@ -84,7 +84,7 @@ class FdCIRVanillaEngine : public PricingEngine {
 
 class MakeFdCIRVanillaEngine {
   public:
-    explicit MakeFdCIRVanillaEngine(
+    MakeFdCIRVanillaEngine(
         ext::shared_ptr<CoxIngersollRossProcess> cirProcess,
         ext::shared_ptr<GeneralizedBlackScholesProcess> bsProcess,
         Real rho);

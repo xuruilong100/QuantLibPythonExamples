@@ -82,14 +82,15 @@ class SpreadedSwaptionVolatility : public SwaptionVolatilityStructure {
 %shared_ptr(TenorSwaptionVTS)
 class TenorSwaptionVTS : public SwaptionVolatilityStructure {
   public:
-    TenorSwaptionVTS(const Handle<SwaptionVolatilityStructure>& baseVTS,
-                     Handle<YieldTermStructure> discountCurve,
-                     ext::shared_ptr<IborIndex> baseIndex,
-                     ext::shared_ptr<IborIndex> targIndex,
-                     const Period& baseFixedFreq,
-                     const Period& targFixedFreq,
-                     DayCounter baseFixedDC,
-                     DayCounter targFixedDC);
+    TenorSwaptionVTS(
+        const Handle<SwaptionVolatilityStructure>& baseVTS,
+        Handle<YieldTermStructure> discountCurve,
+        ext::shared_ptr<IborIndex> baseIndex,
+        ext::shared_ptr<IborIndex> targIndex,
+        const Period& baseFixedFreq,
+        const Period& targFixedFreq,
+        DayCounter baseFixedDC,
+        DayCounter targFixedDC);
 };
 
 %shared_ptr(SwaptionVolatilityDiscrete)
@@ -189,7 +190,14 @@ class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
     bool vegaWeightedSmileFit() const;
 };
 
-struct SwaptionVolCubeSabrModel { };
+%inline %{
+    ext::shared_ptr<SwaptionVolatilityCube> as_swaption_volatility_cube(
+        const ext::shared_ptr<SwaptionVolatilityStructure>& v) {
+        return ext::dynamic_pointer_cast<SwaptionVolatilityCube>(v);
+    }
+%}
+
+struct SwaptionVolCubeSabrModel {};
 
 %shared_ptr(SwaptionVolCube1x<SwaptionVolCubeSabrModel>)
 template<class Model>

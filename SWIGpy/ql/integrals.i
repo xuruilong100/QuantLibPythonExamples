@@ -88,20 +88,25 @@ class DiscreteSimpsonIntegral {
 %shared_ptr(DiscreteTrapezoidIntegrator)
 class DiscreteTrapezoidIntegrator: public Integrator {
   public:
-    explicit DiscreteTrapezoidIntegrator(Size evaluations);
+    DiscreteTrapezoidIntegrator(
+        Size evaluations);
 };
 
 %shared_ptr(DiscreteSimpsonIntegrator)
 class DiscreteSimpsonIntegrator: public Integrator {
   public:
-    explicit DiscreteSimpsonIntegrator(Size evaluations);
+    DiscreteSimpsonIntegrator(
+        Size evaluations);
 };
 
 %shared_ptr(FilonIntegral)
 class FilonIntegral : public Integrator {
   public:
     enum Type { Sine, Cosine };
-    FilonIntegral(Type type, Real t, Size intervals);
+    FilonIntegral(
+        Type type, 
+        Real t, 
+        Size intervals);
 };
 
 %shared_ptr(GaussKronrodAdaptive)
@@ -145,7 +150,8 @@ class PiecewiseIntegral : public Integrator {
 %shared_ptr(SegmentIntegral)
 class SegmentIntegral : public Integrator {
   public:
-    SegmentIntegral(Size intervals);
+    SegmentIntegral(
+        Size intervals);
 };
 
 %shared_ptr(TrapezoidIntegral<Default>)
@@ -153,7 +159,9 @@ class SegmentIntegral : public Integrator {
 template <class IntegrationPolicy>
 class TrapezoidIntegral : public Integrator {
   public:
-    TrapezoidIntegral(Real accuracy, Size maxIterations);
+    TrapezoidIntegral(
+        Real accuracy, 
+        Size maxIterations);
 };
 
 %template(TrapezoidIntegralDefault) TrapezoidIntegral<Default>;
@@ -162,7 +170,9 @@ class TrapezoidIntegral : public Integrator {
 %shared_ptr(SimpsonIntegral)
 class SimpsonIntegral : public TrapezoidIntegral<Default> {
   public:
-    SimpsonIntegral(Real accuracy, Size maxIterations);
+    SimpsonIntegral(
+        Real accuracy, 
+        Size maxIterations);
 };
 
 class GaussianOrthogonalPolynomial {
@@ -179,17 +189,21 @@ class GaussianOrthogonalPolynomial {
 
 class GaussLaguerrePolynomial : public GaussianOrthogonalPolynomial {
   public:
-    explicit GaussLaguerrePolynomial(Real s = 0.0);
+    GaussLaguerrePolynomial(
+        Real s = 0.0);
 };
 
 class GaussHermitePolynomial : public GaussianOrthogonalPolynomial {
   public:
-    explicit GaussHermitePolynomial(Real mu = 0.0);
+    GaussHermitePolynomial(
+        Real mu = 0.0);
 };
 
 class GaussJacobiPolynomial : public GaussianOrthogonalPolynomial {
   public:
-    explicit GaussJacobiPolynomial(Real alpha, Real beta);
+    GaussJacobiPolynomial(
+        Real alpha, 
+        Real beta);
 };
 
 class GaussHyperbolicPolynomial : public GaussianOrthogonalPolynomial {
@@ -212,7 +226,8 @@ class GaussChebyshev2ndPolynomial : public GaussJacobiPolynomial {
 
 class GaussGegenbauerPolynomial : public GaussJacobiPolynomial {
   public:
-    explicit GaussGegenbauerPolynomial(Real lambda);
+    GaussGegenbauerPolynomial(
+        Real lambda);
 };
 
 template <class mp_real>
@@ -228,7 +243,9 @@ typedef MomentBasedGaussianPolynomial<Real> MomentBasedRealGaussianPolynomial;
 
 class GaussNonCentralChiSquaredPolynomial : public MomentBasedGaussianPolynomial<Real> {
   public:
-    GaussNonCentralChiSquaredPolynomial(Real nu, Real lambda);
+    GaussNonCentralChiSquaredPolynomial(
+        Real nu, 
+        Real lambda);
 };
 
 template <class mp_real>
@@ -243,7 +260,8 @@ typedef GaussLaguerreTrigonometricBase<Real> GaussLaguerreTrigonometricBaseReal;
 template <class mp_real>
 class GaussLaguerreCosinePolynomial : public GaussLaguerreTrigonometricBase<mp_real> {
   public:
-    GaussLaguerreCosinePolynomial(Real u);
+    GaussLaguerreCosinePolynomial(
+        Real u);
 };
 
 %template(GaussLaguerreCosineRealPolynomial) GaussLaguerreCosinePolynomial<Real>;
@@ -251,7 +269,8 @@ class GaussLaguerreCosinePolynomial : public GaussLaguerreTrigonometricBase<mp_r
 template <class mp_real>
 class GaussLaguerreSinePolynomial : public GaussLaguerreTrigonometricBase<mp_real> {
   public:
-    GaussLaguerreSinePolynomial(Real u);
+    GaussLaguerreSinePolynomial(
+        Real u);
 };
 
 %template(GaussLaguerreSineRealPolynomial) GaussLaguerreSinePolynomial<Real>;
@@ -275,47 +294,61 @@ class GaussianQuadrature {
 
 class GaussLaguerreIntegration : public GaussianQuadrature {
   public:
-    explicit GaussLaguerreIntegration(Size n, Real s = 0.0);
+    GaussLaguerreIntegration(
+        Size n, 
+        Real s = 0.0);
 };
 
 class GaussHermiteIntegration : public GaussianQuadrature {
   public:
-    explicit GaussHermiteIntegration(Size n, Real mu = 0.0);
+    GaussHermiteIntegration(
+        Size n, 
+        Real mu = 0.0);
 };
 
 class GaussJacobiIntegration : public GaussianQuadrature {
   public:
-    GaussJacobiIntegration(Size n, Real alpha, Real beta);
+    GaussJacobiIntegration(
+        Size n, 
+        Real alpha, 
+        Real beta);
 };
 
 class GaussHyperbolicIntegration : public GaussianQuadrature {
   public:
-    explicit GaussHyperbolicIntegration(Size n);
+    GaussHyperbolicIntegration(
+        Size n);
 };
 
 class GaussLegendreIntegration : public GaussianQuadrature {
   public:
-    explicit GaussLegendreIntegration(Size n);
+    GaussLegendreIntegration(
+        Size n);
 };
 
 class GaussChebyshevIntegration : public GaussianQuadrature {
   public:
-    explicit GaussChebyshevIntegration(Size n);
+    GaussChebyshevIntegration(
+        Size n);
 };
 
 class GaussChebyshev2ndIntegration : public GaussianQuadrature {
   public:
-    explicit GaussChebyshev2ndIntegration(Size n);
+    GaussChebyshev2ndIntegration(
+        Size n);
 };
 
 class GaussGegenbauerIntegration : public GaussianQuadrature {
   public:
-    GaussGegenbauerIntegration(Size n, Real lambda);
+    GaussGegenbauerIntegration(
+        Size n, 
+        Real lambda);
 };
 
 class TabulatedGaussLegendre {
   public:
-    TabulatedGaussLegendre(Size n = 20);
+    TabulatedGaussLegendre(
+        Size n = 20);
     %extend {
         Real operator() (PyObject* f) const {
             return (*self)(UnaryFunction(f));

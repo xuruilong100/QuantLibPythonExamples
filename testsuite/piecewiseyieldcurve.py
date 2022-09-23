@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from copy import deepcopy
+
+from QuantLib import *
+
+from utilities import *
 
 
 class Datum(object):
@@ -94,14 +96,13 @@ bmaData = [
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
-        # data
+
         self.backup = SavedSettings()
         self.calendar = TARGET()
         self.settlementDays = 2
-        # self.today = self.calendar.adjust(Date.todaysDate())
-        self.today = self.calendar.adjust(Date(16, Sep, 2015))
+
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.settlement = self.calendar.advance(self.today, self.settlementDays, Days)
         self.fixedLegConvention = Unadjusted
@@ -123,7 +124,6 @@ class CommonVars(object):
         self.bonds = len(bondData)
         self.bmas = len(bmaData)
 
-        # market elements
         self.rates = []
         self.fraRates = []
         self.immFutPrices = []
@@ -158,7 +158,6 @@ class CommonVars(object):
             self.fractions.append(
                 SimpleQuote(bmaData[i].rate / 100))
 
-        # rate helpers
         self.instruments = RateHelperVector(self.deposits + self.swaps)
         self.fraHelpers = RateHelperVector(self.fras)
         self.immFutHelpers = RateHelperVector(self.immFuts)
@@ -183,11 +182,7 @@ class CommonVars(object):
                 self.fixedLegFrequency, self.fixedLegConvention,
                 self.fixedLegDayCounter, euribor6m)
 
-        # ifdef QL_USE_INDEXED_COUPON
-        # useIndexedFra = false
-        # else
         useIndexedFra = true
-        # endif
 
         euribor3m = Euribor3M()
         for i in range(self.fras):
@@ -208,8 +203,7 @@ class CommonVars(object):
         for i in range(self.immFuts):
             r = QuoteHandle(self.immFutPrices[i])
             immDate = IMM.nextDate(immDate, false)
-            # if the fixing is before the evaluation date, we
-            # just jump forward by one future maturity
+
             if euribor3m.fixingDate(immDate) < Settings.instance().evaluationDate:
                 immDate = IMM.nextDate(immDate, false)
             self.immFutHelpers[i] = FuturesRateHelper(
@@ -220,8 +214,7 @@ class CommonVars(object):
         for i in range(self.asxFuts):
             r = QuoteHandle(self.asxFutPrices[i])
             asxDate = ASX.nextDate(asxDate, false)
-            # if the fixing is before the evaluation date, we
-            # just jump forward by one future maturity
+
             if euribor3m.fixingDate(asxDate) < Settings.instance().evaluationDate:
                 asxDate = ASX.nextDate(asxDate, false)
             if euribor3m.fixingCalendar().isBusinessDay(asxDate):
@@ -250,9 +243,6 @@ class CommonVars(object):
                 self.bondRedemption, issue)
 
 
-# helper classes for testGlobalBootstrap() below:
-
-# functor returning the additional error terms for the cost function
 class additionalErrors(object):
     def __init__(self,
                  additionalHelpers):
@@ -269,7 +259,6 @@ class additionalErrors(object):
         return errors
 
 
-# functor returning additional dates used in the bootstrap
 class additionalDates(object):
     def __init__(self):
         pass
@@ -285,17 +274,16 @@ class additionalDates(object):
 
 class PiecewiseYieldCurveTest(unittest.TestCase):
 
-    @unittest.skip('unstable')
+    @unittest.skip("testLogCubicDiscountConsistency: unstable")
     def testLogCubicDiscountConsistency(self):
         TEST_MESSAGE(
             "Testing consistency of piecewise-log-cubic discount curve...")
 
         vars = CommonVars()
 
-        # self.testCurveConsistency<Discount, LogCubic, IterativeBootstrap>(vars, MonotonicLogCubic())
         self._testCurveConsistency(
             PiecewiseLogCubicDiscount, PiecewiseLogCubicDiscount, vars, MonotonicLogCubic())
-        # self.testBMACurveConsistency<Discount, LogCubic, IterativeBootstrap>(vars, MonotonicLogCubic())
+
         self._testBMACurveConsistency(
             PiecewiseLogCubicDiscount, vars, MonotonicLogCubic())
 
@@ -307,10 +295,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self.testCurveConsistency<Discount, LogLinear, IterativeBootstrap>(vars)
         self._testCurveConsistency(
             PiecewiseLogLinearDiscount, PiecewiseLogLinearDiscount, vars, LogLinear())
-        # self.testBMACurveConsistency<Discount, LogLinear, IterativeBootstrap>(vars)
+
         self._testBMACurveConsistency(
             PiecewiseLogLinearDiscount, vars, LogLinear())
 
@@ -322,10 +309,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < Discount, Linear, IterativeBootstrap > (vars)
         self._testCurveConsistency(
             PiecewiseLinearDiscount, PiecewiseLinearDiscount, vars, Linear())
-        # self._testBMACurveConsistency < Discount, Linear, IterativeBootstrap > (vars)
+
         self._testBMACurveConsistency(
             PiecewiseLinearDiscount, vars, Linear())
 
@@ -337,10 +323,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ZeroYield, Linear, IterativeBootstrap > (vars)
         self._testCurveConsistency(
             PiecewiseLinearZeroYield, PiecewiseLinearZeroYield, vars, Linear())
-        # self._testBMACurveConsistency < ZeroYield, Linear, IterativeBootstrap > (vars)
+
         self._testBMACurveConsistency(
             PiecewiseLinearZeroYield, vars, Linear())
 
@@ -352,11 +337,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ZeroYield, Cubic, IterativeBootstrap > (
-        #     vars,
-        #     Cubic(CubicInterpolation.Spline, true,
-        #         CubicInterpolation.SecondDerivative, 0.0,
-        #         CubicInterpolation.SecondDerivative, 0.0))
         self._testCurveConsistency(
             PiecewiseCubicZeroYield,
             PiecewiseCubicZeroYield,
@@ -364,11 +344,7 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             Cubic(CubicInterpolation.Spline, true,
                   CubicInterpolation.SecondDerivative, 0.0,
                   CubicInterpolation.SecondDerivative, 0.0))
-        # self._testBMACurveConsistency < ZeroYield, Cubic, IterativeBootstrap > (
-        #     vars,
-        #     Cubic(CubicInterpolation.Spline, true,
-        #         CubicInterpolation.SecondDerivative, 0.0,
-        #         CubicInterpolation.SecondDerivative, 0.0))
+
         self._testBMACurveConsistency(
             PiecewiseCubicZeroYield,
             vars,
@@ -384,10 +360,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ForwardRate, Linear, IterativeBootstrap > (vars)
         self._testCurveConsistency(
             PiecewiseLinearForward, PiecewiseLinearForward, vars, Linear())
-        # self._testBMACurveConsistency < ForwardRate, Linear, IterativeBootstrap > (vars)
+
         self._testBMACurveConsistency(
             PiecewiseLinearForward, vars, Linear())
 
@@ -399,27 +374,21 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ForwardRate, BackwardFlat, IterativeBootstrap > (vars)
         self._testCurveConsistency(
             PiecewiseBackwardFlatForward, PiecewiseBackwardFlatForward, vars, BackwardFlat())
-        # self._testBMACurveConsistency < ForwardRate, BackwardFlat, IterativeBootstrap > (vars)
+
         self._testBMACurveConsistency(
             PiecewiseBackwardFlatForward, vars, BackwardFlat())
 
         IndexManager.instance().clearHistories()
 
-    @unittest.skip('unstable')
+    @unittest.skip("testSplineForwardConsistency: unstable")
     def testSplineForwardConsistency(self):
         TEST_MESSAGE(
             "Testing consistency of piecewise-cubic forward-rate curve...")
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ForwardRate, Cubic, IterativeBootstrap > (
-        #     vars,
-        #     Cubic(CubicInterpolation.Spline, true,
-        #         CubicInterpolation.SecondDerivative, 0.0,
-        #         CubicInterpolation.SecondDerivative, 0.0))
         self._testCurveConsistency(
             PiecewiseCubicForward,
             PiecewiseCubicForward,
@@ -427,11 +396,7 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             Cubic(CubicInterpolation.Spline, true,
                   CubicInterpolation.SecondDerivative, 0.0,
                   CubicInterpolation.SecondDerivative, 0.0))
-        # self._testBMACurveConsistency < ForwardRate, Cubic, IterativeBootstrap > (
-        #     vars,
-        #     Cubic(CubicInterpolation.Spline, true,
-        #         CubicInterpolation.SecondDerivative, 0.0,
-        #         CubicInterpolation.SecondDerivative, 0.0))
+
         self._testBMACurveConsistency(
             PiecewiseCubicForward,
             vars,
@@ -447,10 +412,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ForwardRate, ConvexMonotone, IterativeBootstrap > (vars)
         self._testCurveConsistency(
             PiecewiseConvexMonotoneForward, PiecewiseConvexMonotoneForward, vars, ConvexMonotone())
-        # self._testBMACurveConsistency < ForwardRate, ConvexMonotone, IterativeBootstrap > (vars)
+
         self._testBMACurveConsistency(
             PiecewiseConvexMonotoneForward, vars, ConvexMonotone())
 
@@ -462,21 +426,20 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         vars = CommonVars()
 
-        # self._testCurveConsistency < ForwardRate, ConvexMonotone, LocalBootstrap > (vars, ConvexMonotone(), 1.0e-6)
         self._testCurveConsistency(
             PiecewiseConvexMonotoneForward, PiecewiseConvexMonotoneForward, vars, ConvexMonotone(), 1.0e-6)
-        # self._testBMACurveConsistency < ForwardRate, ConvexMonotone, LocalBootstrap > (vars, ConvexMonotone(), 1.0e-7)
+
         self._testBMACurveConsistency(
             PiecewiseConvexMonotoneForward, vars, ConvexMonotone(), 1.0e-7)
 
         IndexManager.instance().clearHistories()
 
     def testObservability(self):
-        TEST_MESSAGE("Testing observability of piecewise yield curve...")
+        TEST_MESSAGE(
+            "Testing observability of piecewise yield curve...")
 
         vars = CommonVars()
 
-        # vars.termStructure = PiecewiseYieldCurve<Discount, LogLinear>(
         vars.termStructure = PiecewiseLogLinearDiscount(
             vars.settlementDays,
             vars.calendar,
@@ -526,7 +489,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                 vars.fixedLegFrequency, vars.fixedLegConvention,
                 vars.fixedLegDayCounter, euribor6m)
 
-        # vars.termStructure = PiecewiseYieldCurve<Discount, LogLinear>(
         vars.termStructure = PiecewiseLogLinearDiscount(
             vars.settlement,
             swapHelpers,
@@ -591,13 +553,11 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         vars.settlement = vars.calendar.advance(
             vars.today, vars.settlementDays, Days)
 
-        # market elements
         vars.rates = []
         for i in range(vars.swaps):
             vars.rates.append(SimpleQuote(
                 swapData[i].rate / 100))
 
-        # rate helpers
         vars.instruments = RateHelperVector(vars.swaps)
 
         index = JPYLibor(Period(6, Months))
@@ -609,7 +569,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                 vars.fixedLegFrequency, vars.fixedLegConvention,
                 vars.fixedLegDayCounter, index)
 
-        # vars.termStructure = PiecewiseYieldCurve<Discount, LogLinear>(
         vars.termStructure = PiecewiseLogLinearDiscount(
             vars.settlement, vars.instruments,
             Actual360(), LogLinear())
@@ -617,7 +576,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         curveHandle = RelinkableYieldTermStructureHandle()
         curveHandle.linkTo(vars.termStructure)
 
-        # check swaps
         jpylibor6m = JPYLibor(Period(6, Months), curveHandle)
         for i in range(vars.swaps):
             tenor = Period(swapData[i].n, swapData[i].units)
@@ -641,41 +599,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         IndexManager.instance().clearHistories()
 
-    @unittest.skip("can not deep copy a SwigPyObject")
-    def testDiscountCopy(self):
-        TEST_MESSAGE("Testing copying of discount curve...")
-
-        vars = CommonVars()
-        # self._testCurveCopy<Discount, LogLinear>(vars)
-        self._testCurveCopy(
-            PiecewiseLogLinearDiscount, vars, LogLinear())
-
-        IndexManager.instance().clearHistories()
-
-    @unittest.skip("can not deep copy a SwigPyObject")
-    def testForwardCopy(self):
-        TEST_MESSAGE("Testing copying of forward-rate curve...")
-
-        vars = CommonVars()
-        # testCurveCopy<ForwardRate, BackwardFlat>(vars)
-        self._testCurveCopy(
-            PiecewiseBackwardFlatForward, vars, BackwardFlat())
-
-        IndexManager.instance().clearHistories()
-
-    @unittest.skip("can not deep copy a SwigPyObject")
-    def testZeroCopy(self):
-        TEST_MESSAGE("Testing copying of zero-rate curve...")
-
-        vars = CommonVars()
-        # testCurveCopy<ZeroYield, Linear>(vars)
-        self._testCurveCopy(
-            PiecewiseLinearZeroYield, vars, Linear())
-
-        IndexManager.instance().clearHistories()
-
     def testSwapRateHelperLastRelevantDate(self):
-        TEST_MESSAGE("Testing SwapRateHelper last relevant date...")
+        TEST_MESSAGE(
+            "Testing SwapRateHelper last relevant date...")
 
         backup = SavedSettings()
         Settings.instance().evaluationDate = Date(22, Dec, 2016)
@@ -686,18 +612,15 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                 today, QuoteHandle(SimpleQuote(0.02)), Actual365Fixed()))
         usdLibor3m = USDLibor(Period(3, Months), flat3m)
 
-        # note that the calendar should be US+UK here actually, but technically it should also work with
-        # the US calendar only
         helper = SwapRateHelper(
             0.02, Period(50, Years),
             UnitedStates(UnitedStates.GovernmentBond),
             Semiannual, ModifiedFollowing,
             Thirty360(Thirty360.BondBasis), usdLibor3m)
 
-        # curve=PiecewiseYieldCurve<Discount, LogLinear> (today, RateHelperVector(1, helper), Actual365Fixed())
         curve = PiecewiseLogLinearDiscount(
             today, RateHelperVector(1, helper), Actual365Fixed(), LogLinear())
-        # BOOST_CHECK_NO_THROW(curve.discount(1.0))
+
         try:
             curve.discount(1.0)
         except Exception as e:
@@ -705,7 +628,8 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             self.assertTrue(NO_THROW)
 
     def testSwapRateHelperSpotDate(self):
-        TEST_MESSAGE("Testing SwapRateHelper spot date...")
+        TEST_MESSAGE(
+            "Testing SwapRateHelper spot date...")
 
         backup = SavedSettings()
 
@@ -719,29 +643,16 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         Settings.instance().evaluationDate = Date(11, October, 2019)
 
-        # Advancing 2 days on the US calendar would yield October 16th (because October 14th
-        # is Columbus day), but the LIBOR spot is calculated advancing on the UK calendar,
-        # resulting in October 15th which is also a business day for the US calendar.
         expected = Date(15, October, 2019)
         calculated = helper.swap().startDate()
         self.assertFalse(calculated != expected)
 
-        # Settings.instance().evaluationDate = Date(1, July, 2020)
-
-        # TODO: July 3rd is holiday in the US, but not for LIBOR purposes.  This should probably
-        # be considered when building the schedule.
-        # expected = Date(3, July, 2020)
-        # calculated = helper.swap().startDate()
-        # if (calculated != expected)
-        #     BOOST_ERROR("expected spot date: " << expected << "\n"
-        #                 "calculated:         " << calculated)
-
-    # This regression test didn't work with indexed coupons anyway.
     @unittest.skipUnless(
         IborCouponSettings.instance().usingAtParCoupons(),
         "This regression test didn't work with indexed coupons anyway.")
     def testBadPreviousCurve(self):
-        TEST_MESSAGE("Testing bootstrap starting from bad guess...")
+        TEST_MESSAGE(
+            "Testing bootstrap starting from bad guess...")
 
         backup = SavedSettings()
 
@@ -765,14 +676,11 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         Settings.instance().evaluationDate = today
 
-        # curve =PiecewiseYieldCurve<ForwardRate, BackwardFlat> (
         curve = PiecewiseBackwardFlatForward(
             test_date, helpers, Actual360(), BackwardFlat())
 
-        # force bootstrap on today's date, so we have a previous curve...
         curve.discount(1.0)
 
-        # ...then move to a date where the previous curve is a bad guess.
         Settings.instance().evaluationDate = test_date
 
         h = RelinkableYieldTermStructureHandle()
@@ -796,33 +704,27 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testConstructionWithExplicitBootstrap(self):
-        TEST_MESSAGE("Testing that construction with an explicit bootstrap succeeds...")
+        TEST_MESSAGE(
+            "Testing that construction with an explicit bootstrap succeeds...")
 
         vars = CommonVars()
 
-        # With an explicit IterativeBootstrap object
-        # typedef PiecewiseYieldCurve<ForwardRate, Linear, IterativeBootstrap> PwLinearForward
         PwLinearForward = PiecewiseLinearForward
         yts = PwLinearForward(
             vars.settlement, vars.instruments, Actual360(), Linear(),
             IterativeBootstrap())
 
-        # Check anything to show that the construction succeeded
-        # BOOST_CHECK_NO_THROW(yts.discount(1.0, true))
         try:
             yts.discount(1.0, true)
         except Exception as e:
             NO_THROW = False
             self.assertTrue(NO_THROW)
 
-        # With an explicit LocalBootstrap object
-        # typedef PiecewiseYieldCurve<ForwardRate, ConvexMonotone, LocalBootstrap> PwCmForward
         PwCmForward = LocalPiecewiseConvexMonotoneForward
         yts = PwCmForward(
             vars.settlement, vars.instruments, Actual360(),
             ConvexMonotone(), LocalBootstrap())
 
-        # BOOST_CHECK_NO_THROW(yts.discount(1.0, true))
         try:
             yts.discount(1.0, true)
         except Exception as e:
@@ -832,7 +734,8 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         IndexManager.instance().clearHistories()
 
     def testLargeRates(self):
-        TEST_MESSAGE("Testing bootstrap with large input rates...")
+        TEST_MESSAGE(
+            "Testing bootstrap with large input rates...")
 
         backup = SavedSettings()
 
@@ -852,35 +755,33 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
         Settings.instance().evaluationDate = today
 
-        accuracy = NullReal()  # use the default
-        minValue = NullReal()  # use the default
-        maxValue = 3.0  # override
+        accuracy = NullReal()
+        minValue = NullReal()
+        maxValue = 3.0
 
-        # typedef PiecewiseYieldCurve<ForwardRate, BackwardFlat> PiecewiseCurve
         PiecewiseCurve = PiecewiseBackwardFlatForward
         curve = PiecewiseCurve(
             today, helpers, Actual360(), BackwardFlat(),
             IterativeBootstrap(accuracy, minValue, maxValue))
 
-        # force bootstrap and check it worked
         curve.discount(0.01)
-        # BOOST_CHECK_NO_THROW(curve.discount(0.01))
+
         try:
             curve.discount(0.01)
         except Exception as e:
             NO_THROW = False
             self.assertTrue(NO_THROW)
 
-    @unittest.skip("skip testGlobalBootstrap")
+    @unittest.skip("testGlobalBootstrap")
     def testGlobalBootstrap(self):
-        TEST_MESSAGE("Testing global bootstrap...")
+        TEST_MESSAGE(
+            "Testing global bootstrap...")
 
         backup = SavedSettings()
 
         today = Date(26, Sep, 2019)
         Settings.instance().evaluationDate = today
 
-        # market rates
         refMktRate = [
             -0.373, -0.388, -0.402, -0.418, -0.431, -0.441, -0.45,
             -0.457, -0.463, -0.469, -0.461, -0.463, -0.479, -0.4511,
@@ -888,7 +789,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             -0.1745, -0.12425, -0.07746, 0.0385, 0.1435, 0.17525, 0.17275,
             0.1515, 0.1225, 0.095, 0.0644]
 
-        # expected outputs
         refDate = [
             Date(31, Mar, 2020), Date(30, Apr, 2020), Date(29, May, 2020), Date(30, Jun, 2020),
             Date(31, Jul, 2020), Date(31, Aug, 2020), Date(30, Sep, 2020), Date(30, Oct, 2020),
@@ -906,7 +806,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             -0.00173422, -0.00123688, -0.00077237, 0.00038554, 0.00144248, 0.00175995, 0.00172873,
             0.00150782, 0.00121145, 0.000933912, 0.000628946]
 
-        # build ql helpers
         helpers = RateHelperVector()
         index = Euribor(Period(6, Months))
 
@@ -927,17 +826,12 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                     TARGET(), Annual, ModifiedFollowing,
                     Thirty360(Thirty360.BondBasis), index))
 
-        # global bootstrap constraints
-        # vector<ext.shared_ptr<BootstrapHelper<YieldTermStructure> > > additionalHelpers
         additionalHelpers = []
 
-        # set up the additional rate helpers we need in the cost function
         for i in range(7):
             additionalHelpers.append(
                 FraRateHelper(-0.004, Period(12 + i, Months), index))
 
-        # build curve with additional dates and constraints using a global bootstrapper
-        # typedef PiecewiseYieldCurve<SimpleZeroYield, Linear, GlobalBootstrap> Curve
         Curve = GlobalPiecewiseLinearSimpleZeroYield
         a = additionalHelpers[0].impliedQuote()
         b = additionalHelpers[6].impliedQuote()
@@ -950,23 +844,18 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                 additionalErrors(additionalHelpers)(), 1.0e-12))
         curve.enableExtrapolation()
 
-        # check expected pillar dates
         for i in range(len(refDate)):
             self.assertEqual(refDate[i], helpers[i].pillarDate())
 
-        # check expected zero rates
         for i in range(len(refZeroRate)):
-            # 0.01 basis points tolerance
             self.assertLess(
                 abs(refZeroRate[i] - curve.zeroRate(refDate[i], Actual360(), Continuous).rate()),
                 1E-6)
 
     def testIterativeBootstrapRetries(self):
-        # This test attempts to build an ARS collateralised in USD curve as of 25 Sep 2019. Using the default
-        # IterativeBootstrap with no retries, the yield curve building fails. Allowing retries, it expands the min and max
-        # bounds and passes.
 
-        TEST_MESSAGE("Testing iterative bootstrap with retries...")
+        TEST_MESSAGE(
+            "Testing iterative bootstrap with retries...")
 
         backup = SavedSettings()
 
@@ -974,7 +863,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         Settings.instance().evaluationDate = asof
         tsDayCounter = Actual365Fixed()
 
-        # USD discount curve built out of FedFunds OIS swaps.
         usdCurveDates = [
             Date(25, Sep, 2019),
             Date(26, Sep, 2019),
@@ -1014,11 +902,9 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             0.984413446]
 
         usdYts = YieldTermStructureHandle(
-            # InterpolatedDiscountCurve<LogLinear> (
             DiscountCurve(
                 usdCurveDates, usdCurveDfs, tsDayCounter))
 
-        # USD/ARS forward points
         arsSpot = QuoteHandle(SimpleQuote(56.881))
         arsFwdPoints = [
             (Period(1, Months), 8.5157),
@@ -1028,7 +914,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             (Period(9, Months), 45.5520),
             (Period(1, Years), 60.7370)]
 
-        # Create the FX swap rate helpers for the ARS in USD curve.
         instruments = []
         for it in arsFwdPoints:
             arsFwd = QuoteHandle(SimpleQuote(it[1]))
@@ -1038,43 +923,31 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                     UnitedStates(UnitedStates.GovernmentBond),
                     Following, false, true, usdYts))
 
-        # Create the ARS in USD curve with the default IterativeBootstrap.
-        # typedef PiecewiseYieldCurve<Discount, LogLinear, IterativeBootstrap> LLDFCurve
         LLDFCurve = PiecewiseLogLinearDiscount
         arsYts = LLDFCurve(asof, instruments, tsDayCounter, LogLinear())
 
-        # USD/ARS spot date. The date on which we check the ARS discount curve.
         spotDate = Date(27, Sep, 2019)
 
-        # Check that the ARS in USD curve throws by requesting a discount factor.
-        # using piecewise_yield_curve_test.ExpErrorPred
-        # BOOST_CHECK_EXCEPTION(arsYts.discount(spotDate), Error,
-        #     ExpErrorPred("1st iteration: failed at 1st alive instrument"))
-        # BOOST_CHECK_EXCEPTION(arsYts.discount(spotDate), Error)
         self.assertRaises(RuntimeError, arsYts.discount, spotDate)
 
-        # Create the ARS in USD curve with an IterativeBootstrap allowing for 4 retries.
         ib = IterativeBootstrap(NullReal(), NullReal(), NullReal(), 5)
         arsYts = LLDFCurve(asof, instruments, tsDayCounter, LogLinear(), ib)
 
-        # Check that the ARS in USD curve builds and populate the spot ARS discount factor.
         spotDfArs = 1.0
-        # BOOST_REQUIRE_NO_THROW(spotDfArs = arsYts.discount(spotDate))
+
         try:
             spotDfArs = arsYts.discount(spotDate)
         except Exception as e:
             NO_THROW = False
             self.assertTrue(NO_THROW)
 
-        # Additional dates and discount factors used in the final check i.e. that calculated 1Y FX forward equals input.
         oneYearFwdDate = Date(28, Sep, 2020)
         spotDfUsd = usdYts.discount(spotDate)
         oneYearDfUsd = usdYts.discount(oneYearFwdDate)
 
-        # Given that the ARS in USD curve builds, check that the 1Y USD/ARS forward rate is as expected.
         oneYearDfArs = arsYts.discount(oneYearFwdDate)
         calcFwd = (spotDfArs * arsSpot.value() / oneYearDfArs) / (spotDfUsd / oneYearDfUsd)
-        # expFwd = arsSpot.value() + arsFwdPoints.at(Period(1 , Years))
+
         expFwd = arsSpot.value() + arsFwdPoints[-1][1]
         self.assertLess(calcFwd - expFwd, 1e-10)
 
@@ -1085,14 +958,12 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
                               interpolator,
                               tolerance=1.0e-9):
 
-        # vars.termStructure = PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.instruments, Actual360(), interpolator)
         vars.termStructure = PYCtib(
             vars.settlement, vars.instruments, Actual360(), interpolator)
 
         curveHandle = RelinkableYieldTermStructureHandle()
         curveHandle.linkTo(vars.termStructure)
 
-        # check deposits
         for i in range(vars.deposits):
             index = Euribor(
                 Period(depositData[i].n, depositData[i].units), curveHandle)
@@ -1101,7 +972,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
 
             self.assertFalse(abs(expectedRate - estimatedRate) > tolerance)
 
-        # check swaps
         euribor6m = Euribor6M(curveHandle)
         for i in range(vars.swaps):
             tenor = Period(swapData[i].n, swapData[i].units)
@@ -1119,8 +989,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             error = abs(expectedRate - estimatedRate)
             self.assertFalse(error > tolerance)
 
-        # check bonds
-        # vars.termStructure = PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.bondHelpers, Actual360(), interpolator)
         vars.termStructure = PYCtib(
             vars.settlement, vars.bondHelpers, Actual360(), interpolator)
         curveHandle.linkTo(vars.termStructure)
@@ -1148,18 +1016,11 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             error = abs(expectedPrice - estimatedPrice)
             self.assertFalse(error > tolerance)
 
-        # check FRA
-        # vars.termStructure = PiecewiseYieldCurve<T, I>(
-        # vars.settlement, vars.fraHelpers, Actual360(), interpolator)
         vars.termStructure = PYCti(
             vars.settlement, vars.fraHelpers, Actual360(), interpolator)
         curveHandle.linkTo(vars.termStructure)
 
-        # ifdef QL_USE_INDEXED_COUPON
-        # useIndexedFra = false
-        # else
         useIndexedFra = true
-        # endif
 
         euribor3m = Euribor3M(curveHandle)
         for i in range(vars.fras):
@@ -1185,8 +1046,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             estimatedRate = fra.forwardRate().rate()
             self.assertFalse(abs(expectedRate - estimatedRate) > tolerance)
 
-        # check immFuts
-        # vars.termStructure = PiecewiseYieldCurve<T, I>(vars.settlement, vars.immFutHelpers, Actual360(), interpolator)
         vars.termStructure = PYCti(
             vars.settlement, vars.immFutHelpers, Actual360(), interpolator)
         curveHandle.linkTo(vars.termStructure)
@@ -1194,8 +1053,7 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         immStart = Date()
         for i in range(vars.immFuts):
             immStart = IMM.nextDate(immStart, false)
-            # if the fixing is before the evaluation date, we
-            # just jump forward by one future maturity
+
             if euribor3m.fixingDate(immStart) < Settings.instance().evaluationDate:
                 immStart = IMM.nextDate(immStart, false)
             end = vars.calendar.advance(
@@ -1211,8 +1069,6 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             estimatedRate = immFut.forwardRate().rate()
             self.assertFalse(abs(expectedRate - estimatedRate) > tolerance)
 
-        # check asxFuts
-        # vars.termStructure = PiecewiseYieldCurve<T, I>(vars.settlement, vars.asxFutHelpers, Actual360(), interpolator)
         vars.termStructure = PYCti(
             vars.settlement, vars.asxFutHelpers, Actual360(), interpolator)
         curveHandle.linkTo(vars.termStructure)
@@ -1220,8 +1076,7 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         asxStart = Date()
         for i in range(vars.asxFuts):
             asxStart = ASX.nextDate(asxStart, false)
-            # if the fixing is before the evaluation date, we
-            # just jump forward by one future maturity
+
             if euribor3m.fixingDate(asxStart) < Settings.instance().evaluationDate:
                 asxStart = ASX.nextDate(asxStart, false)
             if euribor3m.fixingCalendar().isHoliday(asxStart):
@@ -1239,21 +1094,17 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
             estimatedRate = asxFut.forwardRate().rate()
             self.assertFalse(abs(expectedRate - estimatedRate) > tolerance)
 
-            # end checks
-
-    # template <class T, class I, template<class C> class B>
     def _testBMACurveConsistency(self,
                                  PYCtib,
                                  vars,
                                  interpolator,
                                  tolerance=1.0e-9):
 
-        # re-adjust settlement
         vars.calendar = JointCalendar(
             BMAIndex().fixingCalendar(),
             USDLibor(Period(3, Months)).fixingCalendar(),
             JoinHolidays)
-        vars.today = vars.calendar.adjust(Date.todaysDate())
+        vars.today = vars.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = vars.today
         vars.settlement = vars.calendar.advance(
             vars.today, vars.settlementDays, Days)
@@ -1280,14 +1131,12 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday)
         bmaIndex.addFixing(lastFixing, 0.03)
 
-        # vars.termStructure = PiecewiseYieldCurve<T, I, B>(vars.today, vars.bmaHelpers, Actual360(), interpolator)
         vars.termStructure = PYCtib(
             vars.today, vars.bmaHelpers, Actual360(), interpolator)
 
         curveHandle = RelinkableYieldTermStructureHandle()
         curveHandle.linkTo(vars.termStructure)
 
-        # check BMA swaps
         bma = BMAIndex(curveHandle)
         libor3m = USDLibor(Period(3, Months), riskFreeCurve)
         for i in range(vars.bmas):
@@ -1332,26 +1181,19 @@ class PiecewiseYieldCurveTest(unittest.TestCase):
         curve = PYC(
             vars.settlement, vars.instruments,
             Actual360(), interpolator)
-        # necessary to trigger bootstrap
+
         curve.recalculate()
 
-        # typedef typename T::template curve<I>::type base_curve
-        # base_curve copiedCurve = curve
         copiedCurve = deepcopy(curve)
 
-        # the two curves should be the same.
         t = 2.718
         r1 = curve.zeroRate(t, Continuous)
         r2 = copiedCurve.zeroRate(t, Continuous)
         self.assertFalse(not close(r1.rate(), r2.rate()))
 
-        # for rate in vars.rates:
-        #     rate.setValue(rate.value() + 0.001)
         for i in range(len(vars.rates)):
             vars.rates[i].setValue(vars.rates[i].value() + 0.001)
 
-        # now the original curve should have changed the copied
-        # curve should not.
         r3 = curve.zeroRate(t, Continuous)
         r4 = copiedCurve.zeroRate(t, Continuous)
         self.assertFalse(close(r1.rate(), r3.rate()))

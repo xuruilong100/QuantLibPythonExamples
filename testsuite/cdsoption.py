@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CdsOptionTest(unittest.TestCase):
 
     def testCached(self):
-        TEST_MESSAGE("Testing CDS-option value against cached values...")
+        TEST_MESSAGE(
+            "Testing CDS-option value against cached values...")
 
         backup = SavedSettings()
 

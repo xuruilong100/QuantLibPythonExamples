@@ -21,6 +21,8 @@ using QuantLib::OvernightIndexFutureRateHelper;
 using QuantLib::SofrFutureRateHelper;
 using QuantLib::ConstNotionalCrossCurrencyBasisSwapRateHelper;
 using QuantLib::MtMCrossCurrencyBasisSwapRateHelper;
+using QuantLib::IborIborBasisSwapRateHelper;
+using QuantLib::OvernightIborBasisSwapRateHelper;
 %}
 
 %shared_ptr(BMASwapRateHelper)
@@ -68,88 +70,98 @@ class DepositRateHelper : public BootstrapHelper<YieldTermStructure> {
 %shared_ptr(FraRateHelper)
 class FraRateHelper : public BootstrapHelper<YieldTermStructure> {
   public:
-    FraRateHelper(const Handle<Quote>& rate,
-                  Natural monthsToStart,
-                  Natural monthsToEnd,
-                  Natural fixingDays,
-                  const Calendar& calendar,
-                  BusinessDayConvention convention,
-                  bool endOfMonth,
-                  const DayCounter& dayCounter,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(Rate rate,
-                  Natural monthsToStart,
-                  Natural monthsToEnd,
-                  Natural fixingDays,
-                  const Calendar& calendar,
-                  BusinessDayConvention convention,
-                  bool endOfMonth,
-                  const DayCounter& dayCounter,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(const Handle<Quote>& rate,
-                  Natural monthsToStart,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(Rate rate,
-                  Natural monthsToStart,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(const Handle<Quote>& rate,
-                  Period periodToStart,
-                  Natural lengthInMonths,
-                  Natural fixingDays,
-                  const Calendar& calendar,
-                  BusinessDayConvention convention,
-                  bool endOfMonth,
-                  const DayCounter& dayCounter,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(Rate rate,
-                  Period periodToStart,
-                  Natural lengthInMonths,
-                  Natural fixingDays,
-                  const Calendar& calendar,
-                  BusinessDayConvention convention,
-                  bool endOfMonth,
-                  const DayCounter& dayCounter,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(const Handle<Quote>& rate,
-                  Period periodToStart,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(Rate rate,
-                  Period periodToStart,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(const Handle<Quote>& rate,
-                  Natural immOffsetStart,
-                  Natural immOffsetEnd,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
-    FraRateHelper(Rate rate,
-                  Natural immOffsetStart,
-                  Natural immOffsetEnd,
-                  const ext::shared_ptr<IborIndex>& iborIndex,
-                  Pillar::Choice pillar = Pillar::LastRelevantDate,
-                  Date customPillarDate = Date(),
-                  bool useIndexedCoupon = true);
+    FraRateHelper(
+        const Handle<Quote>& rate,
+        Natural monthsToStart,
+        Natural monthsToEnd,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const DayCounter& dayCounter,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        Rate rate,
+        Natural monthsToStart,
+        Natural monthsToEnd,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const DayCounter& dayCounter,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        const Handle<Quote>& rate,
+        Natural monthsToStart,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        Rate rate,
+        Natural monthsToStart,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        const Handle<Quote>& rate,
+        Period periodToStart,
+        Natural lengthInMonths,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const DayCounter& dayCounter,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        Rate rate,
+        Period periodToStart,
+        Natural lengthInMonths,
+        Natural fixingDays,
+        const Calendar& calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const DayCounter& dayCounter,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        const Handle<Quote>& rate,
+        Period periodToStart,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        Rate rate,
+        Period periodToStart,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        const Handle<Quote>& rate,
+        Natural immOffsetStart,
+        Natural immOffsetEnd,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
+    FraRateHelper(
+        Rate rate,
+        Natural immOffsetStart,
+        Natural immOffsetEnd,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Pillar::Choice pillar = Pillar::LastRelevantDate,
+        Date customPillarDate = Date(),
+        bool useIndexedCoupon = true);
 };
 
 %shared_ptr(FuturesRateHelper)
@@ -384,17 +396,13 @@ class SofrFutureRateHelper : public OvernightIndexFutureRateHelper {
         Month referenceMonth,
         Year referenceYear,
         Frequency referenceFreq,
-        const ext::shared_ptr<OvernightIndex>& index,
-        const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
-        RateAveraging::Type averagingMethod = RateAveraging::Compound);
+        const Handle<Quote>& convexityAdjustment = Handle<Quote>());
     SofrFutureRateHelper(
         Real price,
         Month referenceMonth,
         Year referenceYear,
         Frequency referenceFreq,
-        const ext::shared_ptr<OvernightIndex>& index,
-        Real convexityAdjustment = 0.0,
-        RateAveraging::Type averagingMethod = RateAveraging::Compound);
+        Real convexityAdjustment = 0.0);
 };
 
 %template(BondHelperVector) std::vector<ext::shared_ptr<BondHelper>>;
@@ -451,6 +459,37 @@ class MtMCrossCurrencyBasisSwapRateHelper : public BootstrapHelper<YieldTermStru
         bool isFxBaseCurrencyCollateralCurrency,
         bool isBasisOnFxBaseCurrencyLeg,
         bool isFxBaseCurrencyLegResettable);
+};
+
+%shared_ptr(IborIborBasisSwapRateHelper)
+class IborIborBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
+  public:
+    IborIborBasisSwapRateHelper(
+        const Handle<Quote>& basis,
+        const Period& tenor,
+        Natural settlementDays,
+        Calendar calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const ext::shared_ptr<IborIndex>& baseIndex,
+        const ext::shared_ptr<IborIndex>& otherIndex,
+        Handle<YieldTermStructure> discountHandle,
+        bool bootstrapBaseCurve);
+};
+
+%shared_ptr(OvernightIborBasisSwapRateHelper)
+class OvernightIborBasisSwapRateHelper : public BootstrapHelper<YieldTermStructure> {
+  public:
+    OvernightIborBasisSwapRateHelper(
+        const Handle<Quote>& basis,
+        const Period& tenor,
+        Natural settlementDays,
+        Calendar calendar,
+        BusinessDayConvention convention,
+        bool endOfMonth,
+        const ext::shared_ptr<OvernightIndex>& baseIndex,
+        const ext::shared_ptr<IborIndex>& otherIndex,
+        Handle<YieldTermStructure> discountHandle = Handle<YieldTermStructure>());
 };
 
 #endif

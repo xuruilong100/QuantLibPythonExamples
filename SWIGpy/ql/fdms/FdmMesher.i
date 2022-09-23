@@ -29,9 +29,9 @@ class FdmMesherComposite : public FdmMesher {
     FdmMesherComposite(
         const ext::shared_ptr<FdmLinearOpLayout>& layout,
         const std::vector<ext::shared_ptr<Fdm1dMesher>>& mesher);
-    explicit FdmMesherComposite(
+    FdmMesherComposite(
         const std::vector<ext::shared_ptr<Fdm1dMesher>>& mesher);
-    explicit FdmMesherComposite(
+    FdmMesherComposite(
         const ext::shared_ptr<Fdm1dMesher>& mesher);
     FdmMesherComposite(
         const ext::shared_ptr<Fdm1dMesher>& m1,

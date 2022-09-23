@@ -15,17 +15,18 @@ using QuantLib::MakeChinaFixingRepoSwap;
 %shared_ptr(ChinaFixingRepoSwap)
 class ChinaFixingRepoSwap : public Swap {
   public:
-    ChinaFixingRepoSwap(Type type,
-                        Real nominal,
-                        const Schedule& schedule,
-                        Rate fixedRate,
-                        DayCounter fixedDC,
-                        ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo,
-                        Real gearing = 1.0,
-                        Spread spread = 0.0,
-                        Natural paymentLag = 0,
-                        BusinessDayConvention paymentAdjustment = ModifiedFollowing,
-                        const Calendar& paymentCalendar = China(China::IB));
+    ChinaFixingRepoSwap(
+        Type type,
+        Real nominal,
+        const Schedule& schedule,
+        Rate fixedRate,
+        DayCounter fixedDC,
+        ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo,
+        Real gearing = 1.0,
+        Spread spread = 0.0,
+        Natural paymentLag = 0,
+        BusinessDayConvention paymentAdjustment = ModifiedFollowing,
+        const Calendar& paymentCalendar = China(China::IB));
 
     Type type() const;
     Real nominal() const;
@@ -51,10 +52,11 @@ class ChinaFixingRepoSwap : public Swap {
 
 class MakeChinaFixingRepoSwap {
   public:
-    MakeChinaFixingRepoSwap(const Period& swapTenor,
-                            const ext::shared_ptr<ChinaFixingRepo>& chinaFixingRepo,
-                            Rate fixedRate = Null<Rate>(),
-                            const Period& fwdStart = 0 * Days);
+    MakeChinaFixingRepoSwap(
+        const Period& swapTenor,
+        const ext::shared_ptr<ChinaFixingRepo>& chinaFixingRepo,
+        Rate fixedRate = Null<Rate>(),
+        const Period& fwdStart = 0 * Days);
 
     %extend{
         ext::shared_ptr<ChinaFixingRepoSwap> makeChinaFixingRepoSwap(){

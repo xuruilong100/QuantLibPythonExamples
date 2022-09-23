@@ -1,24 +1,24 @@
 import unittest
-from utilities import *
-from QuantLib import *
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
 
         self.calendar = TARGET()
 
-        self.referenceDate = self.calendar.adjust(Date.todaysDate())
+        self.referenceDate = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.referenceDate
         self.termStructure = RelinkableYieldTermStructureHandle()
         self.termStructure.linkTo(
             flatRate(self.referenceDate, 0.05, Actual365Fixed()))
         self.backup = SavedSettings()
 
-        # ATM structure
         atmOptionTenors = [
             Period(1, Months), Period(6, Months), Period(1, Years),
             Period(5, Years), Period(10, Years), Period(30, Years)]
@@ -60,7 +60,6 @@ class CommonVars(object):
                 atmSwapTenors,
                 m, Actual365Fixed()))
 
-        # Vol cubes
         optionTenors = [Period(1, Years), Period(10, Years), Period(30, Years)]
         swapTenors = [Period(2, Years), Period(10, Years), Period(30, Years)]
         strikeSpreads = [-0.020, -0.005, 0.000, 0.005, 0.020]
@@ -116,11 +115,8 @@ class CommonVars(object):
 
         volSpreads = QuoteHandleVectorVector(nRows)
         for i in range(nRows):
-            # volSpreads[i] = QuoteHandleVector(nCols)
             temp = QuoteHandleVector()
             for j in range(nCols):
-                # volSpreads[i][j] = QuoteHandle(
-                #     SimpleQuote(volSpreadsMatrix[i][j]))
                 temp.append(
                     QuoteHandle(
                         SimpleQuote(volSpreadsMatrix[i][j])))
@@ -142,11 +138,10 @@ class CommonVars(object):
                 swapIndexBase,
                 shortSwapIndexBase,
                 vegaWeightedSmileFit))
-        self.SabrVolCube2.enableExtrapolation()
+        self.SabrVolCube2.currentLink().enableExtrapolation()
 
         guess = QuoteHandleVectorVector(nRows)
         for i in range(nRows):
-            # guess[i] = QuoteHandleVector(4)
             temp = QuoteHandleVector()
             temp.append(QuoteHandle(SimpleQuote(0.2)))
             temp.append(QuoteHandle(SimpleQuote(0.5)))
@@ -157,7 +152,6 @@ class CommonVars(object):
         isParameterFixed = BoolVector(4, false)
         isParameterFixed[1] = true
 
-        # FIXME
         isAtmCalibrated = false
 
         self.SabrVolCube1 = SwaptionVolatilityStructureHandle(
@@ -173,7 +167,7 @@ class CommonVars(object):
                 guess,
                 isParameterFixed,
                 isAtmCalibrated))
-        self.SabrVolCube1.enableExtrapolation()
+        self.SabrVolCube1.currentLink().enableExtrapolation()
 
         self.yieldCurveModels = [
             GFunctionFactory.Standard,
@@ -203,7 +197,8 @@ class CommonVars(object):
 class CmsTest(unittest.TestCase):
 
     def testFairRate(self):
-        TEST_MESSAGE("Testing Hagan-pricer flat-vol equivalence for coupons...")
+        TEST_MESSAGE(
+            "Testing Hagan-pricer flat-vol equivalence for coupons...")
 
         vars = CommonVars()
 
@@ -215,11 +210,9 @@ class CmsTest(unittest.TestCase):
             vars.iborIndex.fixingCalendar(),
             Period(1, Years),
             Unadjusted,
-            vars.iborIndex.dayCounter(),  # ??
+            vars.iborIndex.dayCounter(),
             vars.iborIndex)
-        # FIXME
-        # swapIndex=
-        #    EuriborSwapIsdaFixA(10*Years, vars.iborIndex.termStructure()))
+
         startDate = vars.termStructure.referenceDate() + Period(20, Years)
         paymentDate = startDate + Period(1, Years)
         endDate = paymentDate
@@ -252,7 +245,8 @@ class CmsTest(unittest.TestCase):
             self.assertFalse(difference > tol)
 
     def testParity(self):
-        TEST_MESSAGE("Testing put-call parity for capped-floored CMS coupons...")
+        TEST_MESSAGE(
+            "Testing put-call parity for capped-floored CMS coupons...")
 
         vars = CommonVars()
 
@@ -322,7 +316,8 @@ class CmsTest(unittest.TestCase):
                         self.assertFalse(difference > tol)
 
     def testCmsSwap(self):
-        TEST_MESSAGE("Testing Hagan-pricer flat-vol equivalence for swaps...")
+        TEST_MESSAGE(
+            "Testing Hagan-pricer flat-vol equivalence for swaps...")
 
         vars = CommonVars()
 
@@ -334,19 +329,13 @@ class CmsTest(unittest.TestCase):
             vars.iborIndex.fixingCalendar(),
             Period(1, Years),
             Unadjusted,
-            vars.iborIndex.dayCounter(),  # ??
+            vars.iborIndex.dayCounter(),
             vars.iborIndex)
-        # FIXME
-        # swapIndex=
-        #    EuriborSwapIsdaFixA(10*Years, vars.iborIndex.termStructure()))
         spread = 0.0
         swapLengths = [1, 5, 6, 10]
         n = len(swapLengths)
-        # cms = SwapVector(n)
         cms = []
         for i in range(n):
-            # no cap, floor
-            # no gearing, spread
             cms.append(
                 MakeCms(
                     Period(swapLengths[i], Years),

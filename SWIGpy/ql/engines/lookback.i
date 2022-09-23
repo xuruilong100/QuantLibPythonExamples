@@ -86,8 +86,8 @@ class MCLookbackEngine : public PricingEngine {
 template <class I, class RNG>
 class MakeMCLookbackEngine {
   public:
-    explicit MakeMCLookbackEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
-    // named parameters
+    MakeMCLookbackEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
+    
     MakeMCLookbackEngine& withSteps(Size steps);
     MakeMCLookbackEngine& withStepsPerYear(Size steps);
     MakeMCLookbackEngine& withBrownianBridge(bool b = true);
@@ -96,6 +96,7 @@ class MakeMCLookbackEngine {
     MakeMCLookbackEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCLookbackEngine& withMaxSamples(Size samples);
     MakeMCLookbackEngine& withSeed(BigNatural seed);
+    
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(*self);

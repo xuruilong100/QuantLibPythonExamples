@@ -58,10 +58,12 @@ class CashFlows {
         Date settlementDate = Date());
     static Real previousCashFlowAmount(
         const Leg& leg,
-        bool includeSettlementDateFlows, Date settlementDate = Date());
+        bool includeSettlementDateFlows, 
+        Date settlementDate = Date());
     static Real nextCashFlowAmount(
         const Leg& leg,
-        bool includeSettlementDateFlows, Date settlementDate = Date());
+        bool includeSettlementDateFlows, 
+        Date settlementDate = Date());
     static Rate previousCouponRate(
         const Leg& leg,
         bool includeSettlementDateFlows,
@@ -122,21 +124,13 @@ class CashFlows {
         bool includeSettlementDateFlows,
         Date settlementDate = Date(),
         Date npvDate = Date());
- 	static void npvbps(
-        const Leg& leg,
-        const YieldTermStructure& discountCurve,
-        bool includeSettlementDateFlows,
-        Date settlementDate,
-        Date npvDate,
-        Real& npv,
-        Real& bps);
  	static Rate atmRate(
         const Leg& leg,
         const YieldTermStructure& discountCurve,
         bool includeSettlementDateFlows,
         Date settlementDate = Date(),
         Date npvDate = Date(),
-        Real npv=Null<Real>());
+        Real npv = Null<Real>());
     static Real npv(
         const Leg& leg,
         const InterestRate& yield,
@@ -254,7 +248,7 @@ class CashFlows {
  	static Spread zSpread(
         const Leg& leg,
         Real npv,
-        const ext::shared_ptr<YieldTermStructure>& ,
+        const ext::shared_ptr<YieldTermStructure>& discount,
         const DayCounter& dayCounter,
         Compounding compounding,
         Frequency frequency,
@@ -266,7 +260,7 @@ class CashFlows {
         Rate guess = 0.0);
  	static Spread zSpread(
         const Leg& leg,
-        const ext::shared_ptr<YieldTermStructure>& d,
+        const ext::shared_ptr<YieldTermStructure>& discount,
         Real npv,
         const DayCounter& dayCounter,
         Compounding compounding,
@@ -277,6 +271,28 @@ class CashFlows {
         Real accuracy = 1.0e-10,
         Size maxIterations = 100,
         Rate guess = 0.0);
+    %extend {
+        static void npvbps(
+            const Leg& leg,
+            const YieldTermStructure& discountCurve,
+            bool includeSettlementDateFlows,
+            Date settlementDate,
+            Date npvDate,
+            Value& npvq,
+            Value& bpsq) {
+                Real npv, bps;
+                CashFlows::npvbps(
+                    leg,
+                    discountCurve,
+                    includeSettlementDateFlows,
+                    settlementDate,
+                    npvDate,
+                    npv,
+                    bps);
+                npvq.setValue(npv);
+                bpsq.setValue(bps);
+            }
+    }
 };
 
 

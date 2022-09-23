@@ -4,6 +4,7 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
+%include ../ql/base.i
 
 %{
 using QuantLib::Constraint;
@@ -34,6 +35,8 @@ using QuantLib::GaussianSimulatedAnnealing;
 using QuantLib::MirrorGaussianSimulatedAnnealing;
 using QuantLib::LogNormalSimulatedAnnealing;
 using QuantLib::Problem;
+using QuantLib::SphereCylinderOptimizer;
+using QuantLib::sphereCylinderOptimizerClosest;
 typedef QuantLib::HestonModel::FellerConstraint FellerConstraint;
 %}
 
@@ -51,7 +54,9 @@ class Constraint {
 %shared_ptr(BoundaryConstraint)
 class BoundaryConstraint : public Constraint {
   public:
-    BoundaryConstraint(Real lower, Real upper);
+    BoundaryConstraint(
+        Real lower, 
+        Real upper);
 };
 
 %shared_ptr(NoConstraint)
@@ -70,14 +75,16 @@ class PositiveConstraint : public Constraint {
 class CompositeConstraint : public Constraint {
   public:
     CompositeConstraint(
-        const Constraint& c1, const Constraint& c2);
+        const Constraint& c1,
+        const Constraint& c2);
 };
 
 %shared_ptr(NonhomogeneousBoundaryConstraint)
 class NonhomogeneousBoundaryConstraint : public Constraint {
   public:
     NonhomogeneousBoundaryConstraint(
-        const Array& l, const Array& u);
+        const Array& l, 
+        const Array& u);
 };
 
 %shared_ptr(FellerConstraint)
@@ -138,6 +145,9 @@ class EndCriteria {
     bool checkZeroGradientNorm(
         Real gNorm,
         EndCriteria::Type& ecType) const;
+    %extend {
+        
+    }
 };
 
 %shared_ptr(LineSearch)
@@ -157,18 +167,20 @@ class LineSearch {
 %shared_ptr(ArmijoLineSearch)
 class ArmijoLineSearch : public LineSearch {
   public:
-    ArmijoLineSearch(Real eps = 1e-8,
-                     Real alpha = 0.05,
-                     Real beta = 0.65);
+    ArmijoLineSearch(
+        Real eps = 1e-8,
+        Real alpha = 0.05,
+        Real beta = 0.65);
 };
 
 %shared_ptr(GoldsteinLineSearch)
 class GoldsteinLineSearch : public LineSearch {
   public:
-    GoldsteinLineSearch(Real eps = 1e-8,
-                        Real alpha = 0.05,
-                        Real beta = 0.65,
-                        Real extrapolation = 1.5);
+    GoldsteinLineSearch(
+        Real eps = 1e-8,
+        Real alpha = 0.05,
+        Real beta = 0.65,
+        Real extrapolation = 1.5);
 };
 
 %shared_ptr(OptimizationMethod)
@@ -184,14 +196,15 @@ class OptimizationMethod {
 %shared_ptr(LineSearchBasedMethod)
 class LineSearchBasedMethod : public OptimizationMethod {
   private:
-    explicit LineSearchBasedMethod(
+    LineSearchBasedMethod(
         ext::shared_ptr<LineSearch> lSearch = ext::shared_ptr<LineSearch>());
 };
 
 %shared_ptr(BFGS)
 class BFGS : public LineSearchBasedMethod {
   public:
-    BFGS(const ext::shared_ptr<LineSearch> lSearch = ext::shared_ptr<LineSearch>());
+    BFGS(
+        const ext::shared_ptr<LineSearch> lSearch = ext::shared_ptr<LineSearch>());
 };
 
 %shared_ptr(ConjugateGradient)
@@ -212,7 +225,8 @@ class SteepestDescent : public LineSearchBasedMethod {
 class Simplex : public OptimizationMethod {
     %rename(getLambda) lambda;
   public:
-    Simplex(Real lambda);
+    Simplex(
+        Real lambda);
     Real lambda();
 };
 
@@ -292,12 +306,14 @@ class DifferentialEvolution : public OptimizationMethod {
 
 class SamplerGaussian{
   public:
-    SamplerGaussian(unsigned long seed = 0);
+    SamplerGaussian(
+        unsigned long seed = 0);
 };
 
 class SamplerLogNormal{
   public:
-    SamplerLogNormal(unsigned long seed = 0);
+    SamplerLogNormal(
+        unsigned long seed = 0);
 };
 
 class SamplerMirrorGaussian{
@@ -387,21 +403,57 @@ class LogNormalSimulatedAnnealing : public OptimizationMethod {
         Size resetSteps = 150);
 };
 
-%inline %{
-    class Optimizer {
-      public:
-        Optimizer() {}
-        Array solve(
-            PyObject* function, Constraint& c,
-            OptimizationMethod& m, EndCriteria& e,
-            Array& iv) {
-            PyCostFunction f(function);
-            Problem p(f, c, iv);
-            m.minimize(p, e);
-            return p.currentValue();
-        }
-    };
-%}
+class SphereCylinderOptimizer {
+  public:
+    SphereCylinderOptimizer(
+        Real r,
+        Real s,
+        Real alpha,
+        Real z1,
+        Real z2,
+        Real z3,
+        Real zweight = 1.0);
+    bool isIntersectionNonEmpty() const;
+    %extend {
+        void findClosest(
+            Size maxIterations,
+            Real tolerance,
+            Value& yq1,
+            Value& yq2,
+            Value& yq3) const {
+                Real y1, y2, y3;
+                self->findClosest(maxIterations, tolerance, y1, y2, y3);
+                yq1.setValue(y1);
+                yq2.setValue(y2);
+                yq3.setValue(y3);
+            }
+        bool findByProjection(
+            Value& yq1,
+            Value& yq2,
+            Value& yq3) const {
+                Real y1, y2, y3;
+                bool b;
+                b = self->findByProjection(y1, y2, y3);
+                yq1.setValue(y1);
+                yq2.setValue(y2);
+                yq3.setValue(y3);
+                return b;
+            }
+    }
+};
+
+std::vector<Real> sphereCylinderOptimizerClosest(
+    Real r,
+    Real s,
+    Real alpha,
+    Real z1,
+    Real z2,
+    Real z3,
+    Natural maxIterations,
+    Real tolerance,
+    Real finalWeight = 1.0);
+
+
 
 class Problem {
   public:

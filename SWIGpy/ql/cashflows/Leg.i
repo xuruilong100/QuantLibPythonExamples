@@ -39,14 +39,16 @@ class FixedRateLeg {
     FixedRateLeg(const Schedule& schedule);
     FixedRateLeg& withNotionals(Real);
     FixedRateLeg& withNotionals(const std::vector<Real>&);
-    FixedRateLeg& withCouponRates(Rate,
-                                  const DayCounter& paymentDayCounter,
-                                  Compounding comp = Simple,
-                                  Frequency freq = Annual);
-    FixedRateLeg& withCouponRates(const std::vector<Rate>&,
-                                  const DayCounter& paymentDayCounter,
-                                  Compounding comp = Simple,
-                                  Frequency freq = Annual);
+    FixedRateLeg& withCouponRates(
+        Rate,
+        const DayCounter& paymentDayCounter,
+        Compounding comp = Simple,
+        Frequency freq = Annual);
+    FixedRateLeg& withCouponRates(
+        const std::vector<Rate>&,
+        const DayCounter& paymentDayCounter,
+        Compounding comp = Simple,
+        Frequency freq = Annual);
     FixedRateLeg& withCouponRates(const InterestRate&);
     FixedRateLeg& withCouponRates(const std::vector<InterestRate>&);
     FixedRateLeg& withPaymentAdjustment(BusinessDayConvention);
@@ -104,7 +106,9 @@ class IborLeg {
 
 class OvernightLeg {
   public:
-    OvernightLeg(const Schedule& schedule, ext::shared_ptr<OvernightIndex> overnightIndex);
+    OvernightLeg(
+        const Schedule& schedule, 
+        ext::shared_ptr<OvernightIndex> overnightIndex);
     OvernightLeg& withNotionals(Real notional);
     OvernightLeg& withNotionals(const std::vector<Real>& notionals);
     OvernightLeg& withPaymentDayCounter(const DayCounter&);
@@ -126,7 +130,9 @@ class OvernightLeg {
 
 class CmsLeg {
   public:
-    CmsLeg(Schedule schedule, ext::shared_ptr<SwapIndex> swapIndex);
+    CmsLeg(
+        Schedule schedule, 
+        ext::shared_ptr<SwapIndex> swapIndex);
     CmsLeg& withNotionals(Real notional);
     CmsLeg& withNotionals(const std::vector<Real>& notionals);
     CmsLeg& withPaymentDayCounter(const DayCounter&);
@@ -143,10 +149,11 @@ class CmsLeg {
     CmsLeg& withFloors(const std::vector<Rate>& floors);
     CmsLeg& inArrears(bool flag = true);
     CmsLeg& withZeroPayments(bool flag = true);
-    CmsLeg& withExCouponPeriod(const Period&,
-                               const Calendar&,
-                               BusinessDayConvention,
-                               bool endOfMonth);
+    CmsLeg& withExCouponPeriod(
+        const Period&,
+        const Calendar&,
+        BusinessDayConvention,
+        bool endOfMonth);
 
     %extend {
         Leg makeLeg() const {
@@ -157,7 +164,9 @@ class CmsLeg {
 
 class CmsSpreadLeg {
   public:
-    CmsSpreadLeg(Schedule schedule, ext::shared_ptr<SwapSpreadIndex> swapSpreadIndex);
+    CmsSpreadLeg(
+        Schedule schedule, 
+        ext::shared_ptr<SwapSpreadIndex> swapSpreadIndex);
     CmsSpreadLeg& withNotionals(Real notional);
     CmsSpreadLeg& withNotionals(const std::vector<Real>& notionals);
     CmsSpreadLeg& withPaymentDayCounter(const DayCounter&);
@@ -183,7 +192,7 @@ class CmsSpreadLeg {
 };
 
 class yoyInflationLeg {
-public:
+  public:
     yoyInflationLeg(
         Schedule schedule,
         Calendar cal,
@@ -213,7 +222,9 @@ public:
 
 class SubPeriodsLeg {
   public:
-    SubPeriodsLeg(const Schedule &schedule, ext::shared_ptr<IborIndex> index);
+    SubPeriodsLeg(
+        const Schedule& schedule,
+        ext::shared_ptr<IborIndex> index);
     SubPeriodsLeg& withNotionals(Real notional);
     SubPeriodsLeg& withNotionals(const std::vector<Real>& notionals);
     SubPeriodsLeg& withPaymentDayCounter(const DayCounter&);

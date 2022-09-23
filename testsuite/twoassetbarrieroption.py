@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class OptionData(object):
@@ -22,33 +24,32 @@ class OptionData(object):
         self.typeOpt = typeOpt
         self.barrier = barrier
         self.strike = strike
-        self.s1 = s1  # spot
-        self.q1 = q1  # dividend
-        self.v1 = v1  # volatility
+        self.s1 = s1
+        self.q1 = q1
+        self.v1 = v1
         self.s2 = s2
         self.q2 = q2
         self.v2 = v2
         self.correlation = correlation
-        self.r = r  # risk-free rate
-        self.result = result  # result
+        self.r = r
+        self.result = result
 
 
 class TwoAssetBarrierOptionTest(unittest.TestCase):
+
     def testHaugValues(self):
-        TEST_MESSAGE("Testing two-asset barrier options against Haug's values...")
+        TEST_MESSAGE(
+            "Testing two-asset barrier options against Haug's values...")
 
         values = [
-            # The data below are from
-            # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
             OptionData(Barrier.DownOut, Option.Call, 95, 90, 100.0, 0.0, 0.2, 100.0, 0.0, 0.2, 0.5, 0.08, 6.6592),
             OptionData(Barrier.UpOut, Option.Call, 105, 90, 100.0, 0.0, 0.2, 100.0, 0.0, 0.2, -0.5, 0.08, 4.6670),
             OptionData(Barrier.DownOut, Option.Put, 95, 90, 100.0, 0.0, 0.2, 100.0, 0.0, 0.2, -0.5, 0.08, 0.6184),
-            OptionData(Barrier.UpOut, Option.Put, 105, 100, 100.0, 0.0, 0.2, 100.0, 0.0, 0.2, 0.0, 0.08, 0.8246)
-        ]
+            OptionData(Barrier.UpOut, Option.Put, 105, 100, 100.0, 0.0, 0.2, 100.0, 0.0, 0.2, 0.0, 0.08, 0.8246)]
 
         dc = Actual360()
         calendar = TARGET()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         maturity = today + 180
         exercise = EuropeanExercise(maturity)
 

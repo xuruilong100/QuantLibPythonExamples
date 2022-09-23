@@ -1,9 +1,12 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class ExtensibleOptionsTest(unittest.TestCase):
+
     def testAnalyticHolderExtensibleOptionEngine(self):
         TEST_MESSAGE(
             "Testing analytic engine for holder-extensible option...")
@@ -25,19 +28,21 @@ class ExtensibleOptionsTest(unittest.TestCase):
         payoff = PlainVanillaPayoff(typeOpt, strike1)
         exercise = EuropeanExercise(exDate1)
 
-        option = HolderExtensibleOption(typeOpt, premium,
-                                        exDate2, strike2,
-                                        payoff, exercise)
+        option = HolderExtensibleOption(
+            typeOpt, premium,
+            exDate2, strike2,
+            payoff, exercise)
 
         underlying = QuoteHandle(spot)
         dividendTS = YieldTermStructureHandle(flatRate(today, qRate, dc))
         riskFreeTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
         blackVolTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
 
-        process = BlackScholesMertonProcess(underlying,
-                                            dividendTS,
-                                            riskFreeTS,
-                                            blackVolTS)
+        process = BlackScholesMertonProcess(
+            underlying,
+            dividendTS,
+            riskFreeTS,
+            blackVolTS)
 
         option.setPricingEngine(AnalyticHolderExtensibleOptionEngine(process))
 
@@ -48,9 +53,9 @@ class ExtensibleOptionsTest(unittest.TestCase):
         self.assertFalse(error > tolerance)
 
     def testAnalyticWriterExtensibleOptionEngine(self):
-        TEST_MESSAGE("Testing analytic engine for writer-extensible option...")
+        TEST_MESSAGE(
+            "Testing analytic engine for writer-extensible option...")
 
-        # What we need for the option (tests):
         typeOpt = Option.Call
         strike1 = 90.0
         strike2 = 82.0
@@ -67,29 +72,23 @@ class ExtensibleOptionsTest(unittest.TestCase):
         vol = SimpleQuote(0.30)
         blackVolTS = flatVol(today, vol, dc)
 
-        # B&S process (needed for the engine):
         process = GeneralizedBlackScholesProcess(
             QuoteHandle(spot),
             YieldTermStructureHandle(dividendTS),
             YieldTermStructureHandle(riskFreeTS),
             BlackVolTermStructureHandle(blackVolTS))
 
-        # The engine:
         engine = AnalyticWriterExtensibleOptionEngine(process)
 
-        # Create the arguments:
         payoff1 = PlainVanillaPayoff(typeOpt, strike1)
         exercise1 = EuropeanExercise(exDate1)
         payoff2 = PlainVanillaPayoff(typeOpt, strike2)
         exercise2 = EuropeanExercise(exDate2)
 
-        # Create the option by calling the constructor:
         option = WriterExtensibleOption(payoff1, exercise1, payoff2, exercise2)
 
-        # Set the engine of our option:
         option.setPricingEngine(engine)
 
-        # Compare the calculated NPV value to the theoretical value:
         calculated = option.NPV()
         expected = 6.8238
         error = abs(calculated - expected)

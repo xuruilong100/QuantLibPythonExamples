@@ -47,9 +47,10 @@ class HimalayaOption : public MultiAssetOption {
 %shared_ptr(MargrabeOption)
 class MargrabeOption : public MultiAssetOption {
   public:
-    MargrabeOption(Integer Q1,
-                   Integer Q2,
-                   const ext::shared_ptr<Exercise>&);
+    MargrabeOption(
+        Integer Q1,
+        Integer Q2,
+        const ext::shared_ptr<Exercise>&);
     Real delta1() const;
     Real delta2() const;
     Real gamma1() const;
@@ -59,9 +60,10 @@ class MargrabeOption : public MultiAssetOption {
 %shared_ptr(PagodaOption)
 class PagodaOption : public MultiAssetOption {
   public:
-    PagodaOption(const std::vector<Date>& fixingDates,
-                 Real roof,
-                 Real fraction);
+    PagodaOption(
+        const std::vector<Date>& fixingDates,
+        Real roof,
+        Real fraction);
 };
 
 %shared_ptr(SpreadOption)
@@ -87,9 +89,12 @@ class VanillaVPPOption : public MultiAssetOption {
   public:
     VanillaVPPOption(
         Real heatRate,
-        Real pMin, Real pMax,
-        Size tMinUp, Size tMinDown,
-        Real startUpFuel, Real startUpFixCost,
+        Real pMin,
+        Real pMax,
+        Size tMinUp, 
+        Size tMinDown,
+        Real startUpFuel, 
+        Real startUpFixCost,
         const ext::shared_ptr<SwingExercise>& exercise,
         Size nStarts = Null<Size>(),
         Size nRunningHours = Null<Size>());

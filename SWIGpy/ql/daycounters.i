@@ -10,9 +10,8 @@ using QuantLib::DayCounter;
 %}
 
 class DayCounter {
-  protected:
-    DayCounter();
   public:
+    DayCounter();
     BigInteger dayCount(const Date& d1, const Date& d2) const;
     Time yearFraction(const Date& d1, const Date& d2,
                       const Date& startRef = Date(),
@@ -40,7 +39,8 @@ namespace QuantLib {
 
 class Actual360 : public DayCounter {
   public:
-    Actual360(const bool includeLastDay = false);
+    Actual360(
+        const bool includeLastDay = false);
 };
 
 class Actual364 : public DayCounter {};
@@ -52,7 +52,8 @@ class Actual365Fixed : public DayCounter {
         Canadian,
         NoLeap
     };
-    Actual365Fixed(Convention c = Standard);
+    Actual365Fixed(
+        Convention c = Standard);
 };
 
 class ActualActual : public DayCounter {
@@ -73,7 +74,8 @@ class ActualActual : public DayCounter {
 
 class Business252 : public DayCounter {
   public:
-    Business252(Calendar c = Brazil());
+    Business252(
+        Calendar c = Brazil());
 };
 
 class OneDayCounter : public DayCounter {};
@@ -95,7 +97,7 @@ class Thirty360 : public DayCounter {
     };
     Thirty360(
         Convention c,
-        const Date& terminationDate=Date());
+        const Date& terminationDate = Date());
 };
 
 class Thirty365 : public DayCounter {};

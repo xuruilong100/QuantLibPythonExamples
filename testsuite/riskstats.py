@@ -1,13 +1,16 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 class RiskStatisticsTest(unittest.TestCase):
-    # typedef GenericGaussianStatistics<IncrementalStatistics> IncrementalGaussianStatistics
+
     def testResults(self):
-        TEST_MESSAGE("Testing risk measures...")
+        TEST_MESSAGE(
+            "Testing risk measures...")
 
         igs = IncrementalGaussianStatistics()
         s = RiskStatistics()
@@ -16,7 +19,7 @@ class RiskStatisticsTest(unittest.TestCase):
         sigmas = [0.1, 1.0, 100.0]
 
         N = int(pow(2.0, 16)) - 1
-        # dataMin, dataMax
+
         data = DoubleVector(N)
         weights = DoubleVector(N)
 
@@ -51,7 +54,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.weightSum()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # min
                 tolerance = 1e-12
                 expected = dataMin
                 calculated = igs.min()
@@ -59,14 +61,12 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.min()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # max
                 expected = dataMax
                 calculated = igs.max()
                 self.assertFalse(abs(calculated - expected) > tolerance)
                 calculated = s.max()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # mean
                 expected = averages[i]
 
                 tolerance = 1.0e-13 if expected == 0.0 else abs(expected) * 1.0e-13
@@ -75,7 +75,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.mean()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # variance
                 expected = sigmas[j] * sigmas[j]
                 tolerance = expected * 1.0e-1
                 calculated = igs.variance()
@@ -83,7 +82,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.variance()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # standardDeviation
                 expected = sigmas[j]
                 tolerance = expected * 1.0e-1
                 calculated = igs.standardDeviation()
@@ -91,9 +89,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.standardDeviation()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # missing errorEstimate() test
-
-                # skewness
                 expected = 0.0
                 tolerance = 1.0e-4
                 calculated = igs.skewness()
@@ -101,7 +96,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.skewness()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # kurtosis
                 expected = 0.0
                 tolerance = 1.0e-1
                 calculated = igs.kurtosis()
@@ -109,7 +103,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.kurtosis()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # percentile
                 expected = averages[i]
 
                 tolerance = 1.0e-3 if expected == 0.0 else abs(expected * 1.0e-3)
@@ -120,7 +113,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.percentile(0.5)
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # potential upside
                 upper_tail = averages[i] + 2.0 * sigmas[j]
                 lower_tail = averages[i] - 2.0 * sigmas[j]
                 twoSigma = cumulative(upper_tail)
@@ -135,7 +127,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.potentialUpside(twoSigma)
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # just to check that GaussianStatistics<StatsHolder> does work
                 h = StatsHolder(s.mean(), s.standardDeviation())
 
                 test = GaussianStatisticsHolder(h)
@@ -143,7 +134,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = test.gaussianPotentialUpside(twoSigma)
                 self.assertFalse(not close(calculated, expected))
 
-                # value-at-risk
                 expected = -min(lower_tail, 0.0)
 
                 tolerance = 1.0e-3 if expected == 0.0 else abs(expected * 1.0e-3)
@@ -154,14 +144,11 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.valueAtRisk(twoSigma)
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                if (averages[i] > 0.0 and sigmas[j] < averages[i]):
-                    # no data will miss the targets:
-                    # skip the rest of this iteration
+                if averages[i] > 0.0 and sigmas[j] < averages[i]:
                     igs.reset()
                     s.reset()
                     continue
 
-                # expected shortfall
                 expected = -min(averages[i] - sigmas[j] * sigmas[j] * normal(lower_tail) / (1.0 - twoSigma), 0.0)
 
                 tolerance = 1.0e-4 if expected == 0.0 else abs(expected * 1.0e-2)
@@ -172,7 +159,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.expectedShortfall(twoSigma)
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # shortfall
                 expected = 0.5
 
                 tolerance = 1.0e-3 if expected == 0.0 else abs(expected * 1.0e-3)
@@ -183,7 +169,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.shortfall(averages[i])
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # average shortfall
                 expected = sigmas[j] / sqrt(2.0 * M_PI) * 2.0
                 tolerance = expected * 1.0e-3
                 calculated = igs.gaussianAverageShortfall(averages[i])
@@ -193,7 +178,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.averageShortfall(averages[i])
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # regret
                 expected = sigmas[j] * sigmas[j]
                 tolerance = expected * 1.0e-1
                 calculated = igs.gaussianRegret(averages[i])
@@ -203,7 +187,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = s.regret(averages[i])
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # downsideVariance
                 expected = s.downsideVariance()
 
                 tolerance = 1.0e-3 if expected == 0.0 else abs(expected * 1.0e-3)
@@ -212,7 +195,6 @@ class RiskStatisticsTest(unittest.TestCase):
                 calculated = igs.gaussianDownsideVariance()
                 self.assertFalse(abs(calculated - expected) > tolerance)
 
-                # downsideVariance
                 if averages[i] == 0.0:
                     expected = sigmas[j] * sigmas[j]
                 tolerance = expected * 1.0e-3

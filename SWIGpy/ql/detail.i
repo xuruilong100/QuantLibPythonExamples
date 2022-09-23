@@ -4,7 +4,6 @@
 %include ../ql/types.i
 %include ../ql/common.i
 %include ../ql/alltypes.i
-%include ../ql/base.i
 %include ../ql/quotes/all.i
 
 %{
@@ -15,7 +14,12 @@ using QuantLib::detail::ImpliedVolatilityHelper;
 class D0Interpolator {
   public:
     D0Interpolator(
-        Real forward, Real expiryTime, Real alpha, Real beta, Real nu, Real rho);
+        Real forward, 
+        Real expiryTime, 
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho);
     Real operator()() const;
 };
 

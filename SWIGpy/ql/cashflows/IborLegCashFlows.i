@@ -39,11 +39,12 @@ class SwapCashFlows : public IborLegCashFlows {
 
 class SwaptionCashFlows : public SwapCashFlows {
   public:
+    SwaptionCashFlows();
     SwaptionCashFlows(
         const ext::shared_ptr<Swaption>& swaption,
         const Handle<YieldTermStructure>& discountCurve,
         bool contTenorSpread = true);
-    SwaptionCashFlows() = default;
+    
     ext::shared_ptr<Swaption> swaption() const;
     const std::vector<Real>& exerciseTimes() const;
 };

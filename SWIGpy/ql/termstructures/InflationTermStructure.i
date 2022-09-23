@@ -8,6 +8,7 @@
 
 %{
 using QuantLib::InflationTermStructure;
+using QuantLib::inflationPeriod;
 %}
 
 %shared_ptr(InflationTermStructure)
@@ -17,14 +18,15 @@ class InflationTermStructure : public TermStructure {
   public:
     Period observationLag() const;
     Frequency frequency() const;
-    bool indexIsInterpolated() const;
-    Rate baseRate() const;    
+    Rate baseRate() const;
     Date baseDate() const;
     void setSeasonality(
         const ext::shared_ptr<Seasonality>& seasonality = ext::shared_ptr<Seasonality>());
     ext::shared_ptr<Seasonality> seasonality() const;
     bool hasSeasonality() const;
 };
+
+std::pair<Date, Date> inflationPeriod(const Date& d, Frequency frequency);
 
 %inline %{
     Date inflationBaseDate(

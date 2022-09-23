@@ -166,7 +166,7 @@ class MakeSchedule {
     MakeSchedule& withRule(DateGeneration::Rule);
     MakeSchedule& forwards();
     MakeSchedule& backwards();
-    MakeSchedule& endOfMonth(bool flag=true);
+    MakeSchedule& endOfMonth(bool flag = true);
     MakeSchedule& withFirstDate(const Date& d);
     MakeSchedule& withNextToLastDate(const Date& d);
 

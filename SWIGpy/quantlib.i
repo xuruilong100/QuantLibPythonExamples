@@ -17,7 +17,7 @@
 %{
 #include <ql/version.hpp>
 const int    __hexversion__ = QL_HEX_VERSION;
-const char* __version__    = QL_VERSION;
+const char* __version__     = QL_VERSION;
 %}
 
 const int __hexversion__;

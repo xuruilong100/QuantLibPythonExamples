@@ -10,7 +10,8 @@
 class SafeInterpolation2D : public Interpolation2D {
   public:
     SafeInterpolation2D(
-        const Array& x, const Array& y,
+        const Array& x, 
+        const Array& y,
         const Matrix& z) : x_(x), y_(y), z_(z) {}
     ~SafeInterpolation2D() override = default;
 

@@ -20,7 +20,9 @@ class KernelFunction {
 
 class GaussianKernel : public KernelFunction {
   public:
-    GaussianKernel(Real average, Real sigma);
+    GaussianKernel(
+      Real average, 
+      Real sigma);
     Real derivative(Real x) const;
     Real primitive(Real x) const;
 };
@@ -29,8 +31,8 @@ class GaussianKernel : public KernelFunction {
 class SafeAbcdInterpolation : public SafeInterpolation {
   public:
     SafeAbcdInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Real a = -0.06,
         Real b = 0.17,
         Real c = 0.54,
@@ -59,7 +61,7 @@ class SafeAbcdInterpolation : public SafeInterpolation {
     Real rmsError() const { return ext::dynamic_pointer_cast<AbcdInterpolation>(i_)->rmsError(); }
     Real maxError() const { return ext::dynamic_pointer_cast<AbcdInterpolation>(i_)->maxError(); }
     EndCriteria::Type endCriteria() { return ext::dynamic_pointer_cast<AbcdInterpolation>(i_)->endCriteria(); }
-    Real k(Time t, const Array &x) const {
+    Real k(Time t, const Array& x) const {
         return ext::dynamic_pointer_cast<AbcdInterpolation>(i_)->k(t, x_.begin(), x_.end());
     }
 };
@@ -67,7 +69,8 @@ class SafeAbcdInterpolation : public SafeInterpolation {
 class SafeBackwardFlatInterpolation : public SafeInterpolation {
   public:
     SafeBackwardFlatInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new BackwardFlatInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
@@ -77,7 +80,8 @@ class SafeBackwardFlatInterpolation : public SafeInterpolation {
 class SafeForwardFlatInterpolation : public SafeInterpolation {
   public:
     SafeForwardFlatInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new ForwardFlatInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
@@ -87,12 +91,13 @@ class SafeForwardFlatInterpolation : public SafeInterpolation {
 class SafeLagrangeInterpolation : public SafeInterpolation {
   public:
     SafeLagrangeInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new LagrangeInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
     }
-    Real value(const Array &y, Real x) const {
+    Real value(const Array& y, Real x) const {
         return ext::dynamic_pointer_cast<LagrangeInterpolation>(i_)->value(y, x);
     }
 };
@@ -100,7 +105,8 @@ class SafeLagrangeInterpolation : public SafeInterpolation {
 class SafeLinearFlatInterpolation : public SafeInterpolation {
   public:
     SafeLinearFlatInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new LinearFlatInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
@@ -110,7 +116,8 @@ class SafeLinearFlatInterpolation : public SafeInterpolation {
 class SafeLinearInterpolation : public SafeInterpolation {
   public:
     SafeLinearInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new LinearInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
@@ -120,7 +127,8 @@ class SafeLinearInterpolation : public SafeInterpolation {
 class SafeLogLinearInterpolation : public SafeInterpolation {
   public:
     SafeLogLinearInterpolation(
-        const Array &x, const Array &y) : SafeInterpolation(x, y) {
+        const Array& x, 
+        const Array& y) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new LogLinearInterpolation(
                 x_.begin(), x_.end(), y_.begin()));
@@ -130,11 +138,14 @@ class SafeLogLinearInterpolation : public SafeInterpolation {
 class SafeNoArbSabrInterpolation : public SafeInterpolation {
   public:
     SafeNoArbSabrInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real alpha, Real beta, Real nu, Real rho,
+        const Real& forward,
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho,
         bool alphaIsFixed,
         bool betaIsFixed,
         bool nuIsFixed,
@@ -182,11 +193,14 @@ class SafeNoArbSabrInterpolation : public SafeInterpolation {
 class SafeSABRInterpolation : public SafeInterpolation {
   public:
     SafeSABRInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real alpha, Real beta, Real nu, Real rho,
+        const Real& forward,
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho,
         bool alphaIsFixed,
         bool betaIsFixed,
         bool nuIsFixed,
@@ -233,11 +247,15 @@ class SafeSABRInterpolation : public SafeInterpolation {
 class SafeSviInterpolation : public SafeInterpolation {
   public:
     SafeSviInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real a, Real b, Real sigma, Real rho, Real m,
+        const Real& forward,
+        Real a,
+        Real b, 
+        Real sigma, 
+        Real rho, 
+        Real m,
         bool aIsFixed, bool bIsFixed, bool sigmaIsFixed,
         bool rhoIsFixed,
         bool mIsFixed,
@@ -280,7 +298,8 @@ class SafeSviInterpolation : public SafeInterpolation {
 class SafeVannaVolgaInterpolation : public SafeInterpolation {
   public:
     SafeVannaVolgaInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Real spot,
         DiscountFactor dDiscount,
         DiscountFactor fDiscount,
@@ -295,7 +314,8 @@ class SafeVannaVolgaInterpolation : public SafeInterpolation {
 class SafeCubicInterpolation : public SafeInterpolation {
   public:
     SafeCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         CubicInterpolation::DerivativeApprox da,
         bool monotonic,
         CubicInterpolation::BoundaryCondition leftCond,
@@ -323,7 +343,8 @@ class SafeCubicInterpolation : public SafeInterpolation {
 class SafeLogMixedLinearCubicInterpolation : public SafeInterpolation {
   public:
     SafeLogMixedLinearCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior,
         CubicInterpolation::DerivativeApprox da,
@@ -349,7 +370,8 @@ class SafeLogMixedLinearCubicInterpolation : public SafeInterpolation {
 class SafeLogCubicInterpolation : public SafeInterpolation {
   public:
     SafeLogCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         CubicInterpolation::DerivativeApprox da,
         bool monotonic,
         CubicInterpolation::BoundaryCondition leftC,
@@ -371,7 +393,8 @@ class SafeLogCubicInterpolation : public SafeInterpolation {
 class SafeMixedLinearCubicInterpolation : public SafeInterpolation {
   public:
     SafeMixedLinearCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior,
         CubicInterpolation::DerivativeApprox da,
@@ -398,7 +421,8 @@ class SafeMixedLinearCubicInterpolation : public SafeInterpolation {
 class SafeAkimaCubicInterpolation : public SafeCubicInterpolation {
   public:
     SafeAkimaCubicInterpolation(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Akima, false,
@@ -409,7 +433,8 @@ class SafeAkimaCubicInterpolation : public SafeCubicInterpolation {
 class SafeCubicNaturalSpline : public SafeCubicInterpolation {
   public:
     SafeCubicNaturalSpline(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Spline, false,
@@ -420,7 +445,8 @@ class SafeCubicNaturalSpline : public SafeCubicInterpolation {
 class SafeCubicSplineOvershootingMinimization1 : public SafeCubicInterpolation {
   public:
     SafeCubicSplineOvershootingMinimization1(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::SplineOM1, false,
@@ -431,7 +457,8 @@ class SafeCubicSplineOvershootingMinimization1 : public SafeCubicInterpolation {
 class SafeCubicSplineOvershootingMinimization2 : public SafeCubicInterpolation {
   public:
     SafeCubicSplineOvershootingMinimization2(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::SplineOM2, false,
@@ -442,7 +469,8 @@ class SafeCubicSplineOvershootingMinimization2 : public SafeCubicInterpolation {
 class SafeFritschButlandCubic : public SafeCubicInterpolation {
   public:
     SafeFritschButlandCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::FritschButland, true,
@@ -453,7 +481,8 @@ class SafeFritschButlandCubic : public SafeCubicInterpolation {
 class SafeHarmonicCubic : public SafeCubicInterpolation {
   public:
     SafeHarmonicCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Harmonic, false,
@@ -464,7 +493,8 @@ class SafeHarmonicCubic : public SafeCubicInterpolation {
 class SafeKrugerCubic : public SafeCubicInterpolation {
   public:
     SafeKrugerCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Kruger, false,
@@ -475,7 +505,8 @@ class SafeKrugerCubic : public SafeCubicInterpolation {
 class SafeMonotonicCubicNaturalSpline : public SafeCubicInterpolation {
   public:
     SafeMonotonicCubicNaturalSpline(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Spline, true,
@@ -486,7 +517,8 @@ class SafeMonotonicCubicNaturalSpline : public SafeCubicInterpolation {
 class SafeMonotonicParabolic : public SafeCubicInterpolation {
   public:
     SafeMonotonicParabolic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Parabolic, true,
@@ -497,7 +529,8 @@ class SafeMonotonicParabolic : public SafeCubicInterpolation {
 class SafeParabolic : public SafeCubicInterpolation {
   public:
     SafeParabolic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeCubicInterpolation(
             x, y,
             CubicInterpolation::Parabolic, false,
@@ -508,7 +541,8 @@ class SafeParabolic : public SafeCubicInterpolation {
 class SafeLogMixedLinearCubicNaturalSpline : public SafeLogMixedLinearCubicInterpolation {
   public:
     SafeLogMixedLinearCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x,
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeLogMixedLinearCubicInterpolation(
@@ -521,7 +555,8 @@ class SafeLogMixedLinearCubicNaturalSpline : public SafeLogMixedLinearCubicInter
 class SafeFritschButlandLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeFritschButlandLogCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::FritschButland, false,
@@ -532,7 +567,8 @@ class SafeFritschButlandLogCubic : public SafeLogCubicInterpolation {
 class SafeHarmonicLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeHarmonicLogCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Harmonic, false,
@@ -543,7 +579,8 @@ class SafeHarmonicLogCubic : public SafeLogCubicInterpolation {
 class SafeKrugerLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeKrugerLogCubic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Kruger, false,
@@ -554,7 +591,8 @@ class SafeKrugerLogCubic : public SafeLogCubicInterpolation {
 class SafeLogCubicNaturalSpline : public SafeLogCubicInterpolation {
   public:
     SafeLogCubicNaturalSpline(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Spline, false,
@@ -565,7 +603,8 @@ class SafeLogCubicNaturalSpline : public SafeLogCubicInterpolation {
 class SafeLogParabolic : public SafeLogCubicInterpolation {
   public:
     SafeLogParabolic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Parabolic, false,
@@ -576,7 +615,8 @@ class SafeLogParabolic : public SafeLogCubicInterpolation {
 class SafeMonotonicLogCubicNaturalSpline : public SafeLogCubicInterpolation {
   public:
     SafeMonotonicLogCubicNaturalSpline(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Spline, true,
@@ -587,7 +627,8 @@ class SafeMonotonicLogCubicNaturalSpline : public SafeLogCubicInterpolation {
 class SafeMonotonicLogParabolic : public SafeLogCubicInterpolation {
   public:
     SafeMonotonicLogParabolic(
-        const Array &x, const Array &y) :
+        const Array& x, 
+        const Array& y) :
         SafeLogCubicInterpolation(
             x, y,
             CubicInterpolation::Parabolic, true,
@@ -598,7 +639,8 @@ class SafeMonotonicLogParabolic : public SafeLogCubicInterpolation {
 class SafeMixedLinearCubicNaturalSpline : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -611,7 +653,8 @@ class SafeMixedLinearCubicNaturalSpline : public SafeMixedLinearCubicInterpolati
 class SafeMixedLinearFritschButlandCubic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearFritschButlandCubic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -624,7 +667,8 @@ class SafeMixedLinearFritschButlandCubic : public SafeMixedLinearCubicInterpolat
 class SafeMixedLinearKrugerCubic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearKrugerCubic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -637,7 +681,8 @@ class SafeMixedLinearKrugerCubic : public SafeMixedLinearCubicInterpolation {
 class SafeMixedLinearMonotonicCubicNaturalSpline : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearMonotonicCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -650,7 +695,8 @@ class SafeMixedLinearMonotonicCubicNaturalSpline : public SafeMixedLinearCubicIn
 class SafeMixedLinearMonotonicParabolic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearMonotonicParabolic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -663,7 +709,8 @@ class SafeMixedLinearMonotonicParabolic : public SafeMixedLinearCubicInterpolati
 class SafeMixedLinearParabolic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearParabolic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) :
         SafeMixedLinearCubicInterpolation(
@@ -676,9 +723,9 @@ class SafeMixedLinearParabolic : public SafeMixedLinearCubicInterpolation {
 class SafeKernelInterpolation : public SafeInterpolation {
   public:
     SafeKernelInterpolation(
-        const Array &x,
-        const Array &y,
-        const GaussianKernel &kernel,
+        const Array& x,
+        const Array& y,
+        const GaussianKernel& kernel,
         double epsilon = 1.0E-7) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
             new KernelInterpolation(
@@ -686,8 +733,8 @@ class SafeKernelInterpolation : public SafeInterpolation {
                 kernel, epsilon));
     }
     SafeKernelInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         PyObject* kernel,
         double epsilon = 1.0E-7) : SafeInterpolation(x, y) {
         i_ = ext::shared_ptr<Interpolation>(
@@ -717,8 +764,8 @@ class SafeConvexMonotoneInterpolation : public SafeInterpolation {
 class SafeAbcdInterpolation : public SafeInterpolation {
   public:
     SafeAbcdInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Real a = -0.06,
         Real b = 0.17,
         Real c = 0.54,
@@ -739,61 +786,70 @@ class SafeAbcdInterpolation : public SafeInterpolation {
     Real rmsError() const;
     Real maxError() const;
     EndCriteria::Type endCriteria();
-    Real k(Time t, const Array &x) const;
+    Real k(Time t, const Array& x) const;
 };
 
 %shared_ptr(SafeBackwardFlatInterpolation)
 class SafeBackwardFlatInterpolation : public SafeInterpolation {
   public:
     SafeBackwardFlatInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeForwardFlatInterpolation)
 class SafeForwardFlatInterpolation : public SafeInterpolation {
   public:
     SafeForwardFlatInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLagrangeInterpolation)
 class SafeLagrangeInterpolation : public SafeInterpolation {
   public:
     SafeLagrangeInterpolation(
-        const Array &x, const Array &y);
-    Real value(const Array &y, Real x) const;
+        const Array& x, 
+        const Array& y);
+    Real value(const Array& y, Real x) const;
 };
 
 %shared_ptr(SafeLinearFlatInterpolation)
 class SafeLinearFlatInterpolation : public SafeInterpolation {
   public:
     SafeLinearFlatInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLinearInterpolation)
 class SafeLinearInterpolation : public SafeInterpolation {
   public:
     SafeLinearInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLogLinearInterpolation)
 class SafeLogLinearInterpolation : public SafeInterpolation {
   public:
     SafeLogLinearInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeNoArbSabrInterpolation)
 class SafeNoArbSabrInterpolation : public SafeInterpolation {
   public:
     SafeNoArbSabrInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real alpha, Real beta, Real nu, Real rho,
+        const Real& forward,
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho,
         bool alphaIsFixed,
         bool betaIsFixed,
         bool nuIsFixed,
@@ -822,11 +878,14 @@ class SafeNoArbSabrInterpolation : public SafeInterpolation {
 class SafeSABRInterpolation : public SafeInterpolation {
   public:
     SafeSABRInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real alpha, Real beta, Real nu, Real rho,
+        const Real& forward,
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho,
         bool alphaIsFixed,
         bool betaIsFixed,
         bool nuIsFixed,
@@ -855,12 +914,18 @@ class SafeSABRInterpolation : public SafeInterpolation {
 class SafeSviInterpolation : public SafeInterpolation {
   public:
     SafeSviInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         Time t,
-        const Real &forward,
-        Real a, Real b, Real sigma, Real rho, Real m,
-        bool aIsFixed, bool bIsFixed, bool sigmaIsFixed,
+        const Real& forward,
+        Real a, 
+        Real b, 
+        Real sigma, 
+        Real rho, 
+        Real m,
+        bool aIsFixed, 
+        bool bIsFixed, 
+        bool sigmaIsFixed,
         bool rhoIsFixed,
         bool mIsFixed,
         bool vegaWeighted = true,
@@ -887,7 +952,8 @@ class SafeSviInterpolation : public SafeInterpolation {
 class SafeVannaVolgaInterpolation : public SafeInterpolation {
   public:
     SafeVannaVolgaInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Real spot,
         DiscountFactor dDiscount,
         DiscountFactor fDiscount,
@@ -898,7 +964,8 @@ class SafeVannaVolgaInterpolation : public SafeInterpolation {
 class SafeCubicInterpolation : public SafeInterpolation {
   public:
     SafeCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         CubicInterpolation::DerivativeApprox da,
         bool monotonic,
         CubicInterpolation::BoundaryCondition leftCond,
@@ -917,7 +984,8 @@ class SafeCubicInterpolation : public SafeInterpolation {
 class SafeLogMixedLinearCubicInterpolation : public SafeInterpolation {
   public:
     SafeLogMixedLinearCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior,
         CubicInterpolation::DerivativeApprox da,
@@ -932,7 +1000,8 @@ class SafeLogMixedLinearCubicInterpolation : public SafeInterpolation {
 class SafeLogCubicInterpolation : public SafeInterpolation {
   public:
     SafeLogCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         CubicInterpolation::DerivativeApprox da,
         bool monotonic,
         CubicInterpolation::BoundaryCondition leftC,
@@ -945,7 +1014,8 @@ class SafeLogCubicInterpolation : public SafeInterpolation {
 class SafeMixedLinearCubicInterpolation : public SafeInterpolation {
   public:
     SafeMixedLinearCubicInterpolation(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior,
         CubicInterpolation::DerivativeApprox da,
@@ -960,77 +1030,88 @@ class SafeMixedLinearCubicInterpolation : public SafeInterpolation {
 class SafeAkimaCubicInterpolation : public SafeCubicInterpolation {
   public:
     SafeAkimaCubicInterpolation(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeCubicNaturalSpline)
 class SafeCubicNaturalSpline : public SafeCubicInterpolation {
   public:
     SafeCubicNaturalSpline(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeCubicSplineOvershootingMinimization1)
 class SafeCubicSplineOvershootingMinimization1 : public SafeCubicInterpolation {
   public:
     SafeCubicSplineOvershootingMinimization1(
-        const Array &x, const Array &y);
+        const Array& x,
+        const Array& y);
 };
 
 %shared_ptr(SafeCubicSplineOvershootingMinimization2)
 class SafeCubicSplineOvershootingMinimization2 : public SafeCubicInterpolation {
   public:
     SafeCubicSplineOvershootingMinimization2(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeFritschButlandCubic)
 class SafeFritschButlandCubic : public SafeCubicInterpolation {
   public:
     SafeFritschButlandCubic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeHarmonicCubic)
 class SafeHarmonicCubic : public SafeCubicInterpolation {
   public:
     SafeHarmonicCubic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeKrugerCubic)
 class SafeKrugerCubic : public SafeCubicInterpolation {
   public:
     SafeKrugerCubic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeMonotonicCubicNaturalSpline)
 class SafeMonotonicCubicNaturalSpline : public SafeCubicInterpolation {
   public:
     SafeMonotonicCubicNaturalSpline(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeMonotonicParabolic)
 class SafeMonotonicParabolic : public SafeCubicInterpolation {
   public:
     SafeMonotonicParabolic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeParabolic)
 class SafeParabolic : public SafeCubicInterpolation {
   public:
     SafeParabolic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLogMixedLinearCubicNaturalSpline)
 class SafeLogMixedLinearCubicNaturalSpline : public SafeLogMixedLinearCubicInterpolation {
   public:
     SafeLogMixedLinearCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         const Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1039,56 +1120,64 @@ class SafeLogMixedLinearCubicNaturalSpline : public SafeLogMixedLinearCubicInter
 class SafeFritschButlandLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeFritschButlandLogCubic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeHarmonicLogCubic)
 class SafeHarmonicLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeHarmonicLogCubic(
-        const Array &x, const Array &y);
+        const Array& x,
+        const Array& y);
 };
 
 %shared_ptr(SafeKrugerLogCubic)
 class SafeKrugerLogCubic : public SafeLogCubicInterpolation {
   public:
     SafeKrugerLogCubic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLogCubicNaturalSpline)
 class SafeLogCubicNaturalSpline : public SafeLogCubicInterpolation {
   public:
     SafeLogCubicNaturalSpline(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeLogParabolic)
 class SafeLogParabolic : public SafeLogCubicInterpolation {
   public:
     SafeLogParabolic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeMonotonicLogCubicNaturalSpline)
 class SafeMonotonicLogCubicNaturalSpline : public SafeLogCubicInterpolation {
   public:
     SafeMonotonicLogCubicNaturalSpline(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeMonotonicLogParabolic)
 class SafeMonotonicLogParabolic : public SafeLogCubicInterpolation {
   public:
     SafeMonotonicLogParabolic(
-        const Array &x, const Array &y);
+        const Array& x, 
+        const Array& y);
 };
 
 %shared_ptr(SafeMixedLinearCubicNaturalSpline)
 class SafeMixedLinearCubicNaturalSpline : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1097,7 +1186,8 @@ class SafeMixedLinearCubicNaturalSpline : public SafeMixedLinearCubicInterpolati
 class SafeMixedLinearFritschButlandCubic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearFritschButlandCubic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1106,7 +1196,8 @@ class SafeMixedLinearFritschButlandCubic : public SafeMixedLinearCubicInterpolat
 class SafeMixedLinearKrugerCubic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearKrugerCubic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1115,7 +1206,8 @@ class SafeMixedLinearKrugerCubic : public SafeMixedLinearCubicInterpolation {
 class SafeMixedLinearMonotonicCubicNaturalSpline : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearMonotonicCubicNaturalSpline(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1124,7 +1216,8 @@ class SafeMixedLinearMonotonicCubicNaturalSpline : public SafeMixedLinearCubicIn
 class SafeMixedLinearMonotonicParabolic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearMonotonicParabolic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1133,7 +1226,8 @@ class SafeMixedLinearMonotonicParabolic : public SafeMixedLinearCubicInterpolati
 class SafeMixedLinearParabolic : public SafeMixedLinearCubicInterpolation {
   public:
     SafeMixedLinearParabolic(
-        const Array &x, const Array &y,
+        const Array& x, 
+        const Array& y,
         Size n,
         MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges);
 };
@@ -1142,13 +1236,13 @@ class SafeMixedLinearParabolic : public SafeMixedLinearCubicInterpolation {
 class SafeKernelInterpolation : public SafeInterpolation {
   public:
     SafeKernelInterpolation(
-        const Array &x,
-        const Array &y,
-        const GaussianKernel &kernel,
+        const Array& x,
+        const Array& y,
+        const GaussianKernel& kernel,
         double epsilon = 1.0E-7);
     SafeKernelInterpolation(
-        const Array &x,
-        const Array &y,
+        const Array& x,
+        const Array& y,
         PyObject* kernel,
         double epsilon = 1.0E-7);
 };
@@ -1157,7 +1251,8 @@ class SafeKernelInterpolation : public SafeInterpolation {
 class SafeConvexMonotoneInterpolation : public SafeInterpolation {
   public:
     SafeConvexMonotoneInterpolation(
-        const Array& x, const Array& y,
+        const Array& x, 
+        const Array& y,
         Real quadraticity,
         Real monotonicity, bool forcePositive,
         bool flatFinalPeriod = false);

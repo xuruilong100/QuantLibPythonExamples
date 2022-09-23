@@ -1,13 +1,13 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
 
-# auxiliary data
+from utilities import *
+
 termsData = [
     Period(0, Days), Period(1, Years), Period(2, Years), Period(3, Years),
     Period(5, Years), Period(7, Years), Period(10, Years), Period(15, Years),
-    Period(20, Years), Period(61, Years)  # avoid extrapolation issues with 30y caplets
-]
+    Period(20, Years), Period(61, Years)]
 terms = termsData
 
 discRatesData = [
@@ -31,13 +31,12 @@ def getYTS(terms,
            spread=0.0):
     today = Settings.instance().evaluationDate
     dates = DateVector()
-    # dates.reserve(terms.size())
+
     for term in terms:
         dates.append(
             NullCalendar().advance(today, term, Unadjusted))
     ratesPlusSpread = DoubleVector(rates)
-    # for k in ratesPlusSpread:
-    #     k += spread
+
     for i in range(len(ratesPlusSpread)):
         ratesPlusSpread[i] += spread
     ts = CubicZeroCurve(
@@ -64,7 +63,7 @@ def getOptionletTS():
     for capletTerm in capletTerms:
         dates.append(
             TARGET().advance(today, capletTerm, Following))
-    # set up vol data manually
+
     capletVols = [
         [0.003010094, 0.002628065, 0.00456118, 0.006731268, 0.008678572, 0.010570881, 0.014149552, 0.021000638],
         [0.004173715, 0.003727039, 0.004180263, 0.005726083, 0.006905876, 0.008263514, 0.010555395, 0.014976523],
@@ -76,7 +75,7 @@ def getOptionletTS():
         [0.006905851, 0.006966315, 0.007056413, 0.007116494, 0.007259661, 0.00733308, 0.007667563, 0.008419696],
         [0.006529553, 0.006630731, 0.006749022, 0.006858027, 0.007001959, 0.007139097, 0.007390404, 0.008036255],
         [0.006225482, 0.006404012, 0.00651594, 0.006642273, 0.006640887, 0.006885713, 0.007093024, 0.00767373]]
-    # create quotes
+
     capletVolQuotes = QuoteHandleVectorVector()
     for capletVol in capletVols:
         row = QuoteHandleVector()
@@ -136,8 +135,8 @@ class BasismodelsTest(unittest.TestCase):
     def testTenoroptionletvts(self):
         TEST_MESSAGE(
             "Testing volatility transformation for caplets/floorlets...")
-        # market data and floating rate index
-        today = Date(16, Sep, 2015)
+
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
         spread = 0.01
         discYTS = getYTS(terms, discRates)
@@ -145,10 +144,9 @@ class BasismodelsTest(unittest.TestCase):
         proj6mYTS = getYTS(terms, proj3mRates, spread)
         euribor3m = Euribor6M(proj3mYTS)
         euribor6m = Euribor6M(proj6mYTS)
-        # 3m optionlet VTS
+
         optionletVTS3m = getOptionletTS()
 
-        # we need a correlation structure
         corrTimesRaw = [0.0, 50.0]
         rhoInfDataRaw = [0.3, 0.3]
         betaDataRaw = [0.9, 0.9]
@@ -158,7 +156,7 @@ class BasismodelsTest(unittest.TestCase):
         rho = SafeLinearInterpolation(corrTimes, rhoInfData)
         beta = SafeLinearInterpolation(corrTimes, betaData)
         corr = TwoParameterCorrelation(rho, beta)
-        # now we can set up the = volTS and calculate volatilities
+
         optionletVTS6m = TenorOptionletVTS(
             optionletVTS3m, euribor3m, euribor6m, corr)
         for capletTerm in capletTerms:
@@ -166,12 +164,10 @@ class BasismodelsTest(unittest.TestCase):
                 vol3m = optionletVTS3m.volatility(capletTerm, capletStrike, true)
                 vol6m = optionletVTS6m.volatility(capletTerm, capletStrike, true)
                 vol6mShifted = optionletVTS6m.volatility(capletTerm, capletStrike + spread, true)
-                # De-correlation yields that larger tenor shifted vols are smaller then shorter
-                # tenor vols
-                self.assertFalse(
-                    vol6mShifted - vol3m > 0.0001)  # we leave 1bp tolerance due to simplified spread calculation
 
-        # we need a correlation structure
+                self.assertFalse(
+                    vol6mShifted - vol3m > 0.0001)
+
         corrTimesRaw = [0.0, 50.0]
         rhoInfDataRaw = [0.0, 0.0]
         betaDataRaw = [0.0, 0.0]
@@ -181,35 +177,36 @@ class BasismodelsTest(unittest.TestCase):
         rho = SafeLinearInterpolation(corrTimes, rhoInfData)
         beta = SafeLinearInterpolation(corrTimes, betaData)
         corr = TwoParameterCorrelation(rho, beta)
-        # now we can set up the = volTS and calculate volatilities
+
         optionletVTS6m = TenorOptionletVTS(optionletVTS3m, euribor3m, euribor6m, corr)
         for i in range(len(capletTerms)):
             for capletStrike in capletStrikes:
                 vol3m = optionletVTS3m.volatility(capletTerms[i], capletStrike, true)
                 vol6m = optionletVTS6m.volatility(capletTerms[i], capletStrike, true)
                 vol6mShifted = optionletVTS6m.volatility(capletTerms[i], capletStrike + spread, true)
-                # for perfect correlation shifted 6m vols should coincide with 3m vols
-                tol = 0.001 if i < 3 else 0.0001  # 10bp tol for smaller tenors and 1bp tol for larger tenors
+
+                tol = 0.001 if i < 3 else 0.0001
                 self.assertFalse(abs(vol6mShifted - vol3m) > tol)
 
     def testTenorswaptionvts(self):
-        TEST_MESSAGE("Testing volatility transformation for swaptions...")
-        # market data and floating rate index
+        TEST_MESSAGE(
+            "Testing volatility transformation for swaptions...")
+
         spread = 0.01
         discYTS = getYTS(terms, discRates)
         proj3mYTS = getYTS(terms, proj3mRates)
         proj6mYTS = getYTS(terms, proj3mRates, spread)
         euribor3m = Euribor6M(proj3mYTS)
         euribor6m = Euribor6M(proj6mYTS)
-        # Euribor6m ATM vols
+
         euribor6mSwVTS = getSwaptionVTS()
-        # ----------
+
         euribor3mSwVTS = TenorSwaptionVTS(
             euribor6mSwVTS, discYTS, euribor6m, euribor3m,
             Period(1, Years), Period(1, Years),
             Thirty360(Thirty360.BondBasis),
             Thirty360(Thirty360.BondBasis))
-        # 6m vols should be slightly larger then 3m vols due to basis
+
         for i in range(len(swaptionVTSTerms)):
             for j in range(len(swaptionVTSTerms)):
                 vol6m = euribor6mSwVTS.volatility(
@@ -218,12 +215,11 @@ class BasismodelsTest(unittest.TestCase):
                     swaptionVTSTerms[i], swaptionVTSTerms[j], 0.01, true)
                 self.assertFalse(vol3m > vol6m)
 
-        # ----------
         euribor6mSwVTS2 = TenorSwaptionVTS(
             euribor6mSwVTS, discYTS, euribor6m, euribor6m,
             Period(1, Years), Period(1, Years),
             Thirty360(Thirty360.BondBasis), Thirty360(Thirty360.BondBasis))
-        # 6m vols to 6m vols should yield initiial vols
+
         for i in range(len(swaptionVTSTerms)):
             for j in range(len(swaptionVTSTerms)):
                 vol6m = euribor6mSwVTS.volatility(
@@ -233,8 +229,6 @@ class BasismodelsTest(unittest.TestCase):
                 tol = 1.0e-8
                 self.assertFalse(abs(vol6m2 - vol6m) > tol)
 
-        # ---------
-
         euribor3mSwVTS = TenorSwaptionVTS(
             euribor6mSwVTS, discYTS, euribor6m, euribor3m,
             Period(1, Years), Period(1, Years),
@@ -243,7 +237,7 @@ class BasismodelsTest(unittest.TestCase):
             RelinkableSwaptionVolatilityStructureHandle(euribor3mSwVTS),
             discYTS, euribor3m, euribor6m, Period(1, Years), Period(1, Years),
             Thirty360(Thirty360.BondBasis), Thirty360(Thirty360.BondBasis))
-        # 6m vols to 6m vols should yield initiial vols
+
         for i in range(len(swaptionVTSTerms)):
             for j in range(len(swaptionVTSTerms)):
                 vol6m = euribor6mSwVTS.volatility(
@@ -255,11 +249,11 @@ class BasismodelsTest(unittest.TestCase):
 
     def _testSwaptioncfs(self, contTenorSpread):
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
-        # market data and floating rate index
+
         discYTS = getYTS(terms, discRates)
         proj6mYTS = getYTS(terms, proj6mRates)
         euribor6m = Euribor6M(proj6mYTS)
-        # Vanilla swap details
+
         today = Settings.instance().evaluationDate
         swapStart = TARGET().advance(today, Period(5, Years), Following)
         swapEnd = TARGET().advance(swapStart, Period(10, Years), Following)
@@ -274,32 +268,28 @@ class BasismodelsTest(unittest.TestCase):
             Swap.Payer, 10000.0, fixedSchedule, 0.03, Thirty360(Thirty360.BondBasis),
             floatSchedule, euribor6m, 0.0, euribor6m.dayCounter())
         swap.setPricingEngine(DiscountingSwapEngine(discYTS))
-        # European exercise and swaption
+
         europeanExercise = EuropeanExercise(exerciseDate)
         swaption = Swaption(swap, europeanExercise, Settlement.Physical)
-        # calculate basis model swaption cash flows, discount and conmpare with swap
+
         cashFlows = SwaptionCashFlows(swaption, discYTS, contTenorSpread)
-        # model time is always Act365Fixed
+
         exerciseTime = Actual365Fixed().yearFraction(
             discYTS.referenceDate(), swaption.exercise().dates()[0])
         self.assertFalse(exerciseTime != cashFlows.exerciseTimes()[0])
-        # there might be rounding errors
+
         tol = 1.0e-8
-        # (discounted) fixed leg coupons must match swap fixed leg NPV
+
         fixedLeg = 0.0
         for k in range(len(cashFlows.fixedTimes())):
             fixedLeg += cashFlows.fixedWeights()[k] * discYTS.discount(cashFlows.fixedTimes()[k])
-        self.assertFalse(abs(fixedLeg - (-swap.fixedLegNPV())) > tol)  # note, '-1' because payer swap
-        # (discounted) floating leg coupons must match swap floating leg NPV
+        self.assertFalse(abs(fixedLeg - (-swap.fixedLegNPV())) > tol)
+
         floatLeg = 0.0
         for k in range(len(cashFlows.floatTimes())):
             floatLeg += cashFlows.floatWeights()[k] * discYTS.discount(cashFlows.floatTimes()[k])
         self.assertFalse(abs(floatLeg - swap.floatingLegNPV()) > tol)
 
-        # There should not be spread coupons in a single-curve setting.
-        # However, if indexed coupons are used the floating leg is not at par,
-        # so we need to relax the tolerance to a level at which it will only
-        # catch large errors.
         tol2 = tol if usingAtParCoupons else 0.02
 
         singleCurveCashFlows = SwaptionCashFlows(

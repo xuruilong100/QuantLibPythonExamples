@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CalibrationData(object):
@@ -16,9 +18,9 @@ class CalibrationData(object):
 class ShortRateModelTest(unittest.TestCase):
 
     def testFuturesConvexityBias(self):
-        TEST_MESSAGE("Testing Hull-White futures convexity bias...")
+        TEST_MESSAGE(
+            "Testing Hull-White futures convexity bias...")
 
-        # G. Kirikos, D. Novak, "Convexity Conundrums", Risk Magazine, March 1997
         futureQuote = 94.0
         a = 0.03
         sigma = 0.015
@@ -43,7 +45,6 @@ class ShortRateModelTest(unittest.TestCase):
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
         backup = SavedSettings()
-        # cleaner = IndexHistoryCleaner()
 
         today = Date(15, February, 2002)
         settlement = Date(19, February, 2002)
@@ -71,18 +72,12 @@ class ShortRateModelTest(unittest.TestCase):
             helper.setPricingEngine(engine)
             swaptions.append(helper)
 
-        # Set up the optimization problem
-        # simplexLambda = 0.1
-        # Simplex optimizationMethod(simplexLambda)
         optimizationMethod = LevenbergMarquardt(1.0e-8, 1.0e-8, 1.0e-8)
         endCriteria = EndCriteria(10000, 100, 1e-6, 1e-8, 1e-8)
 
-        # Optimize
         model.calibrate(swaptions, optimizationMethod, endCriteria)
         ecType = model.endCriteria()
 
-        # Check and print out results
-        # cachedA, cachedSigma
         if not usingAtParCoupons:
             cachedA = 0.0463679
             cachedSigma = 0.00579831
@@ -104,12 +99,12 @@ class ShortRateModelTest(unittest.TestCase):
         IndexManager.instance().clearHistories()
 
     def testCachedHullWhiteFixedReversion(self):
-        TEST_MESSAGE("Testing Hull-White calibration with fixed reversion against cached values...")
+        TEST_MESSAGE(
+            "Testing Hull-White calibration with fixed reversion against cached values...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
         backup = SavedSettings()
-        # cleaner = IndexHistoryCleaner()
 
         today = Date(15, February, 2002)
         settlement = Date(19, February, 2002)
@@ -138,21 +133,15 @@ class ShortRateModelTest(unittest.TestCase):
             helper.setPricingEngine(engine)
             swaptions.append(helper)
 
-        # Set up the optimization problem
-        # simplexLambda = 0.1
-        # Simplex optimizationMethod(simplexLambda)
         optimizationMethod = LevenbergMarquardt(1.0e-18, 1.0e-18, 1.0e-18)
         endCriteria = EndCriteria(1000, 500, 1E-8, 1E-8, 1E-8)
 
-        # Optimize
         model.calibrate(
             swaptions, optimizationMethod, endCriteria,
             Constraint(), DoubleVector(),
             HullWhite.FixedReversion())
         ecType = model.endCriteria()
 
-        # Check and print out results
-        # cachedA, cachedSigma
         if not usingAtParCoupons:
             cachedA = 0.05
             cachedSigma = 0.00585835
@@ -173,13 +162,13 @@ class ShortRateModelTest(unittest.TestCase):
         IndexManager.instance().clearHistories()
 
     def testCachedHullWhite2(self):
-        TEST_MESSAGE("Testing Hull-White calibration against cached "
-                     "values using swaptions without start delay...")
+        TEST_MESSAGE(
+            "Testing Hull-White calibration against cached "
+            "values using swaptions without start delay...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
         backup = SavedSettings()
-        # cleaner = IndexHistoryCleaner()
 
         today = Date(15, February, 2002)
         settlement = Date(19, February, 2002)
@@ -199,7 +188,7 @@ class ShortRateModelTest(unittest.TestCase):
             index.familyName(), index.tenor(), 0,
             index.currency(), index.fixingCalendar(),
             index.businessDayConvention(), index.endOfMonth(),
-            index.dayCounter(), termStructure)  # Euribor 6m with zero fixing days
+            index.dayCounter(), termStructure)
 
         engine = JamshidianSwaptionEngine(model)
 
@@ -213,21 +202,12 @@ class ShortRateModelTest(unittest.TestCase):
             helper.setPricingEngine(engine)
             swaptions.append(helper)
 
-        # Set up the optimization problem
-        # simplexLambda = 0.1
-        # Simplex optimizationMethod(simplexLambda)
         optimizationMethod = LevenbergMarquardt(1.0e-8, 1.0e-8, 1.0e-8)
         endCriteria = EndCriteria(10000, 100, 1e-6, 1e-8, 1e-8)
 
-        # Optimize
         model.calibrate(swaptions, optimizationMethod, endCriteria)
         ecType = model.endCriteria()
 
-        # Check and print out results
-        # The cached values were produced with an older version of the
-        # JamshidianEngine not accounting for the delay between option
-        # expiry and underlying start
-        # cachedA, cachedSigma
         if not usingAtParCoupons:
             cachedA = 0.0481608
             cachedSigma = 0.00582493
@@ -248,12 +228,12 @@ class ShortRateModelTest(unittest.TestCase):
         IndexManager.instance().clearHistories()
 
     def testSwaps(self):
-        TEST_MESSAGE("Testing Hull-White swap pricing against known values...")
+        TEST_MESSAGE(
+            "Testing Hull-White swap pricing against known values...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
         backup = SavedSettings()
-        # cleaner = IndexHistoryCleaner()
 
         today = Settings.instance().evaluationDate
         calendar = TARGET()
@@ -340,7 +320,8 @@ class ShortRateModelTest(unittest.TestCase):
         IndexManager.instance().clearHistories()
 
     def testExtendedCoxIngersollRossDiscountFactor(self):
-        TEST_MESSAGE("Testing zero-bond pricing for extended CIR model...")
+        TEST_MESSAGE(
+            "Testing zero-bond pricing for extended CIR model...")
 
         backup = SavedSettings()
         today = Settings.instance().evaluationDate

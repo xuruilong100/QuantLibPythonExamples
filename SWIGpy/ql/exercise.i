@@ -21,7 +21,8 @@ class Exercise {
     enum Type {
         American, Bermudan, European
     };
-    explicit Exercise(Type type);
+    Exercise(
+        Type type);
     Type type() const;
     Date date(Size index);
     Date dateAt(Size index);
@@ -32,22 +33,25 @@ class Exercise {
 %shared_ptr(EuropeanExercise)
 class EuropeanExercise : public Exercise {
   public:
-    EuropeanExercise(const Date& date);
+    EuropeanExercise(
+        const Date& date);
 };
 
 %shared_ptr(RebatedExercise)
 class RebatedExercise : public Exercise {
   public:
-    RebatedExercise(const Exercise& exercise,
-                    Real rebate = 0.0,
-                    Natural rebateSettlementDays = 0,
-                    const Calendar& rebatePaymentCalendar = NullCalendar(),
-                    BusinessDayConvention rebatePaymentConvention = Following);
-    RebatedExercise(const Exercise& exercise,
-                    const std::vector<Real>& rebates,
-                    Natural rebateSettlementDays = 0,
-                    const Calendar& rebatePaymentCalendar = NullCalendar(),
-                    BusinessDayConvention rebatePaymentConvention = Following);
+    RebatedExercise(
+        const Exercise& exercise,
+        Real rebate = 0.0,
+        Natural rebateSettlementDays = 0,
+        const Calendar& rebatePaymentCalendar = NullCalendar(),
+        BusinessDayConvention rebatePaymentConvention = Following);
+    RebatedExercise(
+        const Exercise& exercise,
+        const std::vector<Real>& rebates,
+        Natural rebateSettlementDays = 0,
+        const Calendar& rebatePaymentCalendar = NullCalendar(),
+        BusinessDayConvention rebatePaymentConvention = Following);
     Real rebate(Size index) const;
     Date rebatePaymentDate(Size index) const;
     const std::vector<Real>& rebates() const;
@@ -56,8 +60,9 @@ class RebatedExercise : public Exercise {
 %shared_ptr(EarlyExercise)
 class EarlyExercise : public Exercise {
   public:
-    EarlyExercise(Exercise::Type type,
-                  bool payoffAtExpiry = false);
+    EarlyExercise(
+        Exercise::Type type,
+        bool payoffAtExpiry = false);
     bool payoffAtExpiry() const;
 };
 
@@ -84,7 +89,7 @@ class BermudanExercise : public EarlyExercise {
 %shared_ptr(SwingExercise)
 class SwingExercise : public BermudanExercise {
   public:
-    explicit SwingExercise(
+    SwingExercise(
         const std::vector<Date>& dates,
         const std::vector<Size>& seconds = std::vector<Size>());
     SwingExercise(

@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 def norm(m):
@@ -13,8 +15,10 @@ def norm(m):
 
 
 class CovarianceTest(unittest.TestCase):
+
     def testRankReduction(self):
-        TEST_MESSAGE("Testing matrix rank reduction salvaging algorithms...")
+        TEST_MESSAGE(
+            "Testing matrix rank reduction salvaging algorithms...")
 
         n = 3
 
@@ -63,8 +67,9 @@ class CovarianceTest(unittest.TestCase):
         self.assertFalse(error > 4.0e-4)
 
     def testSalvagingMatrix(self):
-        TEST_MESSAGE("Testing positive semi-definiteness salvaging "
-                     "algorithms...")
+        TEST_MESSAGE(
+            "Testing positive semi-definiteness salvaging "
+            "algorithms...")
 
         n = 3
 
@@ -113,7 +118,8 @@ class CovarianceTest(unittest.TestCase):
         self.assertFalse(error > 4.0e-4)
 
     def testCovariance(self):
-        TEST_MESSAGE("Testing covariance and correlation calculations...")
+        TEST_MESSAGE(
+            "Testing covariance and correlation calculations...")
 
         data = [
             [3.0, 9.0],

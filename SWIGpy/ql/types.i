@@ -34,12 +34,7 @@ typedef Real Spread;
 typedef Real DiscountFactor;
 typedef Real Volatility;
 typedef Real Probability;
-
-// needed for those using SWIG 1.3.21 in order to compile with VC++6
-/* %typecheck(SWIG_TYPECHECK_INTEGER) std::size_t {
-    $1 = (PyInt_Check($input) || PyLong_Check($input)) ? 1 : 0;
-} */
-
-typedef unsigned long Size;
+// typedef size_t Size;        // for windows
+typedef BigNatural Size;    // for ubuntu
 
 #endif

@@ -29,7 +29,8 @@ class ConstantParameter : public Parameter {
     ConstantParameter(
         const Constraint& constraint);
     ConstantParameter(
-        Real value, const Constraint& constraint);
+        Real value, 
+        const Constraint& constraint);
 };
 
 class NullParameter : public Parameter {

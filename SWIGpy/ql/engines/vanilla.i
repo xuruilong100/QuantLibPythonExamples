@@ -193,7 +193,8 @@ class AnalyticHestonEngine : public PricingEngine {
         static Integration gaussChebyshev(Size integrationOrder = 128);
         static Integration gaussChebyshev2nd(Size integrationOrder = 128);
         static Integration gaussLobatto(
-            Real relTolerance, Real absTolerance,
+            Real relTolerance, 
+            Real absTolerance,
             Size maxEvaluations = 1000);
         static Integration gaussKronrod(
             Real absTolerance,
@@ -255,28 +256,53 @@ class AnalyticHestonEngine : public PricingEngine {
         Real andersenPiterbargEpsilon = 1e-8);
 
     Size numberOfEvaluations() const;
-    static void doCalculation(
-        Real riskFreeDiscount,
-        Real dividendDiscount,
-        Real spotPrice,
-        Real strikePrice,
-        Real term,
-        Real kappa,
-        Real theta,
-        Real sigma,
-        Real v0,
-        Real rho,
-        const TypePayoff& type,
-        const Integration& integration,
-        ComplexLogFormula cpxLog,
-        const AnalyticHestonEngine* enginePtr,
-        Real& value,
-        Size& evaluations);
     static ComplexLogFormula optimalControlVariate(
         Time t, Real v0, Real kappa, Real theta, Real sigma, Real rho);
 
     std::complex<Real> chF(const std::complex<Real>& z, Time t) const;
     std::complex<Real> lnChF(const std::complex<Real>& z, Time t) const;
+
+    %extend {
+        static void doCalculation(
+            Real riskFreeDiscount,
+            Real dividendDiscount,
+            Real spotPrice,
+            Real strikePrice,
+            Real term,
+            Real kappa,
+            Real theta,
+            Real sigma,
+            Real v0,
+            Real rho,
+            const TypePayoff& type,
+            const Integration& integration,
+            ComplexLogFormula cpxLog,
+            const AnalyticHestonEngine* enginePtr,
+            Value& valueq,
+            Value& evaluationsq) {
+                Real value;
+                Size evaluations;
+                AnalyticHestonEngine::doCalculation(
+                    riskFreeDiscount,
+                    dividendDiscount,
+                    spotPrice,
+                    strikePrice,
+                    term,
+                    kappa,
+                    theta,
+                    sigma,
+                    v0,
+                    rho,
+                    type,
+                    integration,
+                    cpxLog,
+                    enginePtr,
+                    value,
+                    evaluations);
+                valueq.setValue(value);
+                evaluationsq.setValue(evaluations);
+            }
+    }
 };
 
 %shared_ptr(AnalyticPTDHestonEngine)
@@ -290,7 +316,8 @@ class AnalyticPTDHestonEngine : public PricingEngine {
 
     AnalyticPTDHestonEngine(
         const ext::shared_ptr<PiecewiseTimeDependentHestonModel>& model,
-        Real relTolerance, Size maxEvaluations);
+        Real relTolerance, 
+        Size maxEvaluations);
     AnalyticPTDHestonEngine(
         const ext::shared_ptr<PiecewiseTimeDependentHestonModel>& model,
         Size integrationOrder = 144);
@@ -308,7 +335,7 @@ class AnalyticPTDHestonEngine : public PricingEngine {
 %shared_ptr(AnalyticPDFHestonEngine)
 class AnalyticPDFHestonEngine : public PricingEngine {
   public:
-    explicit AnalyticPDFHestonEngine(
+    AnalyticPDFHestonEngine(
         ext::shared_ptr<HestonModel> model,
         Real gaussLobattoEps = 1e-6,
         Size gaussLobattoIntegrationOrder = 10000UL);
@@ -339,7 +366,7 @@ class BatesEngine : public AnalyticHestonEngine {
 %shared_ptr(BatesDoubleExpEngine)
 class BatesDoubleExpEngine : public AnalyticHestonEngine {
   public:
-    explicit BatesDoubleExpEngine(
+    BatesDoubleExpEngine(
         const ext::shared_ptr<BatesDoubleExpModel>& model,
         Size integrationOrder = 144);
     BatesDoubleExpEngine(
@@ -359,7 +386,8 @@ class COSHestonEngine : public PricingEngine {
   public:
     COSHestonEngine(
         const ext::shared_ptr<HestonModel>& model,
-        Real L = 16, Size N = 200);
+        Real L = 16, 
+        Size N = 200);
 
     std::complex<Real> chF(Real u, Real t) const;
 
@@ -400,7 +428,9 @@ class FdBlackScholesVanillaEngine : public PricingEngine {
 
     FdBlackScholesVanillaEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
-        Size tGrid = 100, Size xGrid = 100, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas(),
         bool localVol = false,
         Real illegalLocalVolOverwrite = -Null<Real>(),
@@ -409,7 +439,9 @@ class FdBlackScholesVanillaEngine : public PricingEngine {
     FdBlackScholesVanillaEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess>,
         ext::shared_ptr<FdmQuantoHelper> quantoHelper,
-        Size tGrid = 100, Size xGrid = 100, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas(),
         bool localVol = false,
         Real illegalLocalVolOverwrite = -Null<Real>(),
@@ -418,7 +450,7 @@ class FdBlackScholesVanillaEngine : public PricingEngine {
 
 class MakeFdBlackScholesVanillaEngine {
   public:
-    explicit MakeFdBlackScholesVanillaEngine(
+    MakeFdBlackScholesVanillaEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 
     MakeFdBlackScholesVanillaEngine& withQuantoHelper(
@@ -447,8 +479,10 @@ class FdBatesVanillaEngine : public PricingEngine {
   public:
     FdBatesVanillaEngine(
         const ext::shared_ptr<BatesModel>& model,
-        Size tGrid = 100, Size xGrid = 100,
-        Size vGrid=50, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100,
+        Size vGrid = 50, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
 };
 
@@ -456,11 +490,15 @@ class FdBatesVanillaEngine : public PricingEngine {
 class FdCEVVanillaEngine : public PricingEngine {
   public:
     FdCEVVanillaEngine(
-        Real f0, Real alpha, Real beta,
+        Real f0, 
+        Real alpha, 
+        Real beta,
         Handle<YieldTermStructure> rTS,
-        Size tGrid = 50, Size xGrid = 400,
+        Size tGrid = 50,
+        Size xGrid = 400,
         Size dampingSteps = 0,
-        Real scalingFactor = 1.0, Real eps = 1e-4,
+        Real scalingFactor = 1.0,
+        Real eps = 1e-4,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas());
 };
 
@@ -469,8 +507,10 @@ class FdHestonVanillaEngine : public PricingEngine {
   public:
     FdHestonVanillaEngine(
         const ext::shared_ptr<HestonModel>& model,
-        Size tGrid = 100, Size xGrid = 100,
-        Size vGrid = 50, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100,
+        Size vGrid = 50, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         ext::shared_ptr<LocalVolTermStructure> leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         Real mixingFactor = 1.0);
@@ -496,7 +536,7 @@ class FdHestonVanillaEngine : public PricingEngine {
 
 class MakeFdHestonVanillaEngine {
   public:
-    explicit MakeFdHestonVanillaEngine(
+    MakeFdHestonVanillaEngine(
         const ext::shared_ptr<HestonModel>& hestonModel);
 
     MakeFdHestonVanillaEngine& withQuantoHelper(
@@ -523,10 +563,15 @@ class MakeFdHestonVanillaEngine {
 class FdSabrVanillaEngine : public PricingEngine {
   public:
     FdSabrVanillaEngine(
-        Real f0, Real alpha, Real beta,
-        Real nu, Real rho,
+        Real f0, 
+        Real alpha, 
+        Real beta,
+        Real nu, 
+        Real rho,
         Handle<YieldTermStructure> rTS,
-        Size tGrid = 50, Size fGrid = 400, Size xGrid = 50,
+        Size tGrid = 50, 
+        Size fGrid = 400, 
+        Size xGrid = 50,
         Size dampingSteps = 0,
         Real scalingFactor = 1.0,
         Real eps = 1e-4,
@@ -546,7 +591,7 @@ class FFTVarianceGammaEngine : public PricingEngine {
 %shared_ptr(FFTVanillaEngine)
 class FFTVanillaEngine : public PricingEngine {
   public:
-    explicit FFTVanillaEngine(
+    FFTVanillaEngine(
         const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
         Real logStrikeSpacing = 0.001);
     void precalculate(
@@ -639,10 +684,10 @@ class MCAmericanEngine : public PricingEngine {
         Size maxSamples,
         BigNatural seed,
         Size polynomOrder,
-        LsmBasisSystem::PolynomType polynomType,
-        Size nCalibrationSamples=Null<Size>(),
-        boost::optional<bool> antitheticVariateCalibration=boost::none,
-        BigNatural seedCalibration=Null<Size>());
+        LsmBasisSystem::PolynomialType polynomType,
+        Size nCalibrationSamples = Null<Size>(),
+        boost::optional<bool> antitheticVariateCalibration = boost::none,
+        BigNatural seedCalibration = Null<Size>());
 };
 
 %template(MCPRAmericanEngine) MCAmericanEngine<PseudoRandom>;
@@ -661,8 +706,8 @@ class MakeMCAmericanEngine {
     MakeMCAmericanEngine& withSeed(BigNatural seed);
     MakeMCAmericanEngine& withAntitheticVariate(bool b = true);
     MakeMCAmericanEngine& withControlVariate(bool b = true);
-    MakeMCAmericanEngine& withPolynomOrder(Size polynomOrer);
-    MakeMCAmericanEngine& withBasisSystem(LsmBasisSystem::PolynomType);
+    MakeMCAmericanEngine& withPolynomialOrder(Size polynomialOrder);
+    MakeMCAmericanEngine& withBasisSystem(LsmBasisSystem::PolynomialType);
     MakeMCAmericanEngine& withCalibrationSamples(Size calibrationSamples);
     MakeMCAmericanEngine& withAntitheticVariateCalibration(bool b = true);
     MakeMCAmericanEngine& withSeedCalibration(BigNatural seed);
@@ -682,7 +727,7 @@ class VarianceGammaEngine : public PricingEngine {
   public:
     VarianceGammaEngine(
         ext::shared_ptr<VarianceGammaProcess> process,
-        Real absoluteError=1e-5);
+        Real absoluteError = 1e-5);
 };
 
 %shared_ptr(MCEuropeanHestonEngine<PseudoRandom>)
@@ -709,7 +754,7 @@ template<class RNG = PseudoRandom,
          class P = HestonProcess>
 class MakeMCEuropeanHestonEngine {
   public:
-    explicit MakeMCEuropeanHestonEngine(
+    MakeMCEuropeanHestonEngine(
         const ext::shared_ptr<P>& process);
 
     MakeMCEuropeanHestonEngine& withSteps(Size steps);
@@ -809,7 +854,7 @@ class AnalyticH1HWEngine : public AnalyticHestonHullWhiteEngine {
 %shared_ptr(BatesDetJumpEngine)
 class BatesDetJumpEngine : public BatesEngine {
   public:
-    explicit BatesDetJumpEngine(
+    BatesDetJumpEngine(
         const ext::shared_ptr<BatesDetJumpModel>& model,
         Size integrationOrder = 144);
     BatesDetJumpEngine(
@@ -820,7 +865,7 @@ class BatesDetJumpEngine : public BatesEngine {
 %shared_ptr(BatesDoubleExpDetJumpEngine)
 class BatesDoubleExpDetJumpEngine : public BatesDoubleExpEngine {
   public:
-    explicit BatesDoubleExpDetJumpEngine(
+    BatesDoubleExpDetJumpEngine(
         const ext::shared_ptr<BatesDoubleExpDetJumpModel>& model,
         Size integrationOrder = 144);
     BatesDoubleExpDetJumpEngine(
@@ -862,9 +907,9 @@ class MCHestonHullWhiteEngine : public PricingEngine {
 template <class RNG>
 class MakeMCHestonHullWhiteEngine {
   public:
-    explicit MakeMCHestonHullWhiteEngine(
+    MakeMCHestonHullWhiteEngine(
         ext::shared_ptr<HybridHestonHullWhiteProcess>);
-    // named parameters
+    
     MakeMCHestonHullWhiteEngine& withSteps(Size steps);
     MakeMCHestonHullWhiteEngine& withStepsPerYear(Size steps);
     MakeMCHestonHullWhiteEngine& withAntitheticVariate(bool b = true);
@@ -873,7 +918,7 @@ class MakeMCHestonHullWhiteEngine {
     MakeMCHestonHullWhiteEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCHestonHullWhiteEngine& withMaxSamples(Size samples);
     MakeMCHestonHullWhiteEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+    
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(*self);
@@ -908,7 +953,7 @@ template <class RNG>
 class MakeMCDigitalEngine {
   public:
     MakeMCDigitalEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
-    // named parameters
+    
     MakeMCDigitalEngine& withSteps(Size steps);
     MakeMCDigitalEngine& withStepsPerYear(Size steps);
     MakeMCDigitalEngine& withBrownianBridge(bool b = true);
@@ -917,7 +962,7 @@ class MakeMCDigitalEngine {
     MakeMCDigitalEngine& withMaxSamples(Size samples);
     MakeMCDigitalEngine& withSeed(BigNatural seed);
     MakeMCDigitalEngine& withAntitheticVariate(bool b = true);
-    // conversion to pricing engine
+    
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(*self);

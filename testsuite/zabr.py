@@ -1,11 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class ZabrTest(unittest.TestCase):
 
     def testConsistency(self):
+        TEST_MESSAGE(
+            "Testing consistency of ZABR...")
         tol = 1E-4
 
         alpha = 0.08
@@ -17,21 +21,15 @@ class ZabrTest(unittest.TestCase):
 
         sabr = SabrSmileSection(tau, forward, [alpha, beta, nu, rho])
 
-        # ZabrSmileSection<ZabrShortMaturityLognormal> \
         zabr0 = ZabrShortMaturityLognormalSmileSection(
             tau, forward, [alpha, beta, nu, rho, 1.0])
 
-        # ZabrSmileSection<ZabrShortMaturityNormal> \
         zabr1 = ZabrShortMaturityNormalSmileSection(
             tau, forward, [alpha, beta, nu, rho, 1.0])
 
-        # ZabrSmileSection<ZabrLocalVolatility> \
         zabr2 = ZabrLocalVolatilitySmileSection(
             tau, forward, [alpha, beta, nu, rho, 1.0])
 
-        # for full finite prices reduce the number of intermediate points here
-        # below the recommended value to speed up the test
-        # ZabrSmileSection<ZabrFullFd> \
         zabr3 = ZabrFullFdSmileSection(
             tau, forward, [alpha, beta, nu, rho, 1.0], DoubleVector(), 2)
 

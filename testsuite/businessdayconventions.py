@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class SingleCase(object):
@@ -22,36 +24,31 @@ class SingleCase(object):
 class BusinessDayConventionTest(unittest.TestCase):
 
     def testConventions(self):
-        TEST_MESSAGE("Testing business day conventions...")
+        TEST_MESSAGE(
+            "Testing business day conventions...")
         testCases = [
-            # Following
             SingleCase(SouthAfrica(), Following, Date(3, February, 2015), Period(1, Months), false, Date(3, March, 2015)),
             SingleCase(SouthAfrica(), Following, Date(3, February, 2015), Period(4, Days), false, Date(9, February, 2015)),
             SingleCase(SouthAfrica(), Following, Date(31, January, 2015), Period(1, Months), true, Date(27, February, 2015)),
             SingleCase(SouthAfrica(), Following, Date(31, January, 2015), Period(1, Months), false, Date(2, March, 2015)),
-            # ModifiedFollowing
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(3, February, 2015), Period(1, Months), false, Date(3, March, 2015)),
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(3, February, 2015), Period(4, Days), false, Date(9, February, 2015)),
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(31, January, 2015), Period(1, Months), true, Date(27, February, 2015)),
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(31, January, 2015), Period(1, Months), false, Date(27, February, 2015)),
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(25, March, 2015), Period(1, Months), false, Date(28, April, 2015)),
             SingleCase(SouthAfrica(), ModifiedFollowing, Date(7, February, 2015), Period(1, Months), false, Date(9, March, 2015)),
-            # Preceding
             SingleCase(SouthAfrica(), Preceding, Date(3, March, 2015), Period(-1, Months), false, Date(3, February, 2015)),
             SingleCase(SouthAfrica(), Preceding, Date(3, February, 2015), Period(-2, Days), false, Date(30, January, 2015)),
             SingleCase(SouthAfrica(), Preceding, Date(1, March, 2015), Period(-1, Months), true, Date(30, January, 2015)),
             SingleCase(SouthAfrica(), Preceding, Date(1, March, 2015), Period(-1, Months), false, Date(30, January, 2015)),
-            # ModifiedPreceding
             SingleCase(SouthAfrica(), ModifiedPreceding, Date(3, March, 2015), Period(-1, Months), false, Date(3, February, 2015)),
             SingleCase(SouthAfrica(), ModifiedPreceding, Date(3, February, 2015), Period(-2, Days), false, Date(30, January, 2015)),
             SingleCase(SouthAfrica(), ModifiedPreceding, Date(1, March, 2015), Period(-1, Months), true, Date(2, February, 2015)),
             SingleCase(SouthAfrica(), ModifiedPreceding, Date(1, March, 2015), Period(-1, Months), false, Date(2, February, 2015)),
-            # Unadjusted
             SingleCase(SouthAfrica(), Unadjusted, Date(3, February, 2015), Period(1, Months), false, Date(3, March, 2015)),
             SingleCase(SouthAfrica(), Unadjusted, Date(3, February, 2015), Period(4, Days), false, Date(9, February, 2015)),
             SingleCase(SouthAfrica(), Unadjusted, Date(31, January, 2015), Period(1, Months), true, Date(27, February, 2015)),
             SingleCase(SouthAfrica(), Unadjusted, Date(31, January, 2015), Period(1, Months), false, Date(28, February, 2015)),
-            # HalfMonthModifiedFollowing
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(3, February, 2015), Period(1, Months), false, Date(3, March, 2015)),
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(3, February, 2015), Period(4, Days), false, Date(9, February, 2015)),
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(31, January, 2015), Period(1, Months), true, Date(27, February, 2015)),
@@ -59,7 +56,6 @@ class BusinessDayConventionTest(unittest.TestCase):
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(3, January, 2015), Period(1, Weeks), false, Date(12, January, 2015)),
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(21, March, 2015), Period(1, Weeks), false, Date(30, March, 2015)),
             SingleCase(SouthAfrica(), HalfMonthModifiedFollowing, Date(7, February, 2015), Period(1, Months), false, Date(9, March, 2015)),
-            # Nearest
             SingleCase(SouthAfrica(), Nearest, Date(3, February, 2015), Period(1, Months), false, Date(3, March, 2015)),
             SingleCase(SouthAfrica(), Nearest, Date(3, February, 2015), Period(4, Days), false, Date(9, February, 2015)),
             SingleCase(SouthAfrica(), Nearest, Date(16, April, 2015), Period(1, Months), false, Date(15, May, 2015)),

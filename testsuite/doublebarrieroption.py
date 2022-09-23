@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 class NewBarrierOptionData(object):
@@ -25,13 +27,13 @@ class NewBarrierOptionData(object):
         self.type = typeOpt
         self.exType = exType
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class DoubleBarrierFxOptionData(object):
@@ -58,30 +60,26 @@ class DoubleBarrierFxOptionData(object):
         self.rebate = rebate
         self.type = typeOpt
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.vol25Put = vol25Put  # 25 delta put vol
-        self.volAtm = volAtm  # atm vol
-        self.vol25Call = vol25Call  # 25 delta call vol
-        self.v = v  # volatility
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.vol25Put = vol25Put
+        self.volAtm = volAtm
+        self.vol25Call = vol25Call
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class DoubleBarrierOptionTest(unittest.TestCase):
+
     def testEuropeanHaugValues(self):
-        TEST_MESSAGE("Testing double barrier european options against Haug's values...")
+        TEST_MESSAGE(
+            "Testing double barrier european options against Haug's values...")
 
         european = Exercise.European
         values = [
-            # The data below are from
-            # "The complete guide to option pricing formulas 2nd Ed",E.G. Haug, McGraw-Hill, p.156 and following.
-
-            # Note:
-            # The book uses b instead of q (q=r-b)
-            #           BarrierType, barr.lo,  barr.hi,         type, exercise,strk,     s,   q,   r,    t,    v,  result, tol
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.15, 4.3515, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.25, 6.1644, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.35, 7.0373, 1.0e-4),
@@ -112,7 +110,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.15, 0.5537, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.25, 0.0441, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.35, 0.0011, 1.0e-4),
-            #           BarrierType, barr.lo,  barr.hi,         type, exercise,strk,     s,   q,   r,    t,    v,  result, tol
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.25, 0.15, 1.8825, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.25, 0.25, 3.7855, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.25, 0.35, 5.7191, 1.0e-4),
@@ -143,7 +140,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.50, 0.15, 0.4555, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.50, 0.25, 0.0491, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, Option.Put, european, 100, 100.0, 0.0, 0.1, 0.50, 0.35, 0.0013, 1.0e-4),
-            #           BarrierType, barr.lo,  barr.hi,         type,  strk,     s,   q,   r,    t,    v,  result, tol
             NewBarrierOptionData(DoubleBarrier.KnockIn, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.15, 0.0000, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockIn, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.25, 0.0900, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockIn, 50.0, 150.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.35, 1.1537, 1.0e-4),
@@ -173,11 +169,10 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(DoubleBarrier.KnockIn, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.25, 0.35, 8.1432, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockIn, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.15, 6.4608, 1.0e-4),
             NewBarrierOptionData(DoubleBarrier.KnockIn, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.25, 9.5382, 1.0e-4),
-            NewBarrierOptionData(DoubleBarrier.KnockIn, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.35, 12.2398, 1.0e-4),
-        ]
+            NewBarrierOptionData(DoubleBarrier.KnockIn, 90.0, 110.0, Option.Call, european, 100, 100.0, 0.0, 0.1, 0.50, 0.35, 12.2398, 1.0e-4), ]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -206,10 +201,9 @@ class DoubleBarrierOptionTest(unittest.TestCase):
 
             opt = DoubleBarrierOption(
                 value.barrierType, value.barrierlo, value.barrierhi,
-                0,  # no rebate
+                0,
                 payoff, exercise)
 
-            # Ikeda/Kunitomo engine
             engine = AnalyticDoubleBarrierEngine(stochProcess)
             opt.setPricingEngine(engine)
 
@@ -218,7 +212,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             error = abs(calculated - expected)
             self.assertFalse(error > value.tol)
 
-            # Wulin Suo/Yong Wang engine
             engine = SuoWangDoubleBarrierEngine(stochProcess)
             opt.setPricingEngine(engine)
 
@@ -240,7 +233,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             calculated = opt.NPV()
             expected = value.result
             error = abs(calculated - expected)
-            tol = 0.033  # error one order of magnitude lower than plain binomial
+            tol = 0.033
             self.assertFalse(error > tol)
 
             if value.barrierType == DoubleBarrier.KnockOut:
@@ -259,7 +252,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
                 expected = value.result
                 error = abs(calculated - expected)
 
-                tol = 0.025  # error one order of magnitude lower than plain binomial
+                tol = 0.025
                 self.assertFalse(error > tol)
 
     def testVannaVolgaDoubleBarrierValues(self):
@@ -269,8 +262,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
         backup = SavedSettings()
 
         values = [
-
-            #            BarrierType, barr.1, barr.2, rebate,         type,    strike,          s,         q,         r,  t, vol25Put,    volAtm,vol25Call,      vol,    result,   tol
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.1, 1.5, 0.0, Option.Call, 1.13321, 1.30265, 0.0003541, 0.0033871, 1.0, 0.10087, 0.08925, 0.08463, 0.11638, 0.14413, 1.0e-4),
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.1, 1.5, 0.0, Option.Call, 1.22687, 1.30265, 0.0003541, 0.0033871, 1.0, 0.10087, 0.08925, 0.08463, 0.10088, 0.07456, 1.0e-4),
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.1, 1.5, 0.0, Option.Call, 1.31179, 1.30265, 0.0003541, 0.0033871, 1.0, 0.10087, 0.08925, 0.08463, 0.08925, 0.02710, 1.0e-4),
@@ -290,8 +281,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.0, 1.6, 0.0, Option.Put, 1.19545, 1.30265, 0.0009418, 0.0039788, 2.0, 0.10891, 0.09525, 0.09197, 0.10890, 0.00436, 1.0e-4),
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.0, 1.6, 0.0, Option.Put, 1.32238, 1.30265, 0.0009418, 0.0039788, 2.0, 0.10891, 0.09525, 0.09197, 0.09444, 0.03173, 1.0e-4),
             DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.0, 1.6, 0.0, Option.Put, 1.44298, 1.30265, 0.0009418, 0.0039788, 2.0, 0.10891, 0.09525, 0.09197, 0.09197, 0.09346, 1.0e-4),
-            DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.0, 1.6, 0.0, Option.Put, 1.56345, 1.30265, 0.0009418, 0.0039788, 2.0, 0.10891, 0.09525, 0.09197, 0.09261, 0.17704, 1.0e-4)
-        ]
+            DoubleBarrierFxOptionData(DoubleBarrier.KnockOut, 1.0, 1.6, 0.0, Option.Put, 1.56345, 1.30265, 0.0009418, 0.0039788, 2.0, 0.10891, 0.09525, 0.09197, 0.09261, 0.17704, 1.0e-4)]
 
         dc = Actual360()
         today = Date(5, Mar, 2013)
@@ -309,7 +299,7 @@ class DoubleBarrierOptionTest(unittest.TestCase):
         for value in values:
             for j in range(1 + 1):
 
-                barrierType = j  # static_cast<DoubleBarrier.Type>(j)
+                barrierType = j
 
                 spot.setValue(value.s)
                 qRate.setValue(value.q)
@@ -328,7 +318,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
                         QuoteHandle(volAtm), DeltaVolQuote.Fwd, value.t,
                         DeltaVolQuote.AtmDeltaNeutral))
 
-                # always delta neutral atm
                 vol25PutQuote = DeltaVolQuoteHandle(
                     DeltaVolQuote(
                         -0.25, QuoteHandle(vol25Put), value.t, DeltaVolQuote.Fwd))
@@ -341,9 +330,10 @@ class DoubleBarrierOptionTest(unittest.TestCase):
                     barrierType, value.barrier1, value.barrier2,
                     value.rebate, payoff, exercise)
 
-                bsVanillaPrice = blackFormula(value.type, value.strike,
-                                              spot.value() * qTS.discount(value.t) / rTS.discount(value.t),
-                                              value.v * sqrt(value.t), rTS.discount(value.t))
+                bsVanillaPrice = blackFormula(
+                    value.type, value.strike,
+                    spot.value() * qTS.discount(value.t) / rTS.discount(value.t),
+                    value.v * sqrt(value.t), rTS.discount(value.t))
                 vannaVolgaEngine = VannaVolgaSWDoubleBarrierEngine(
                     volAtmQuote,
                     vol25PutQuote,
@@ -355,7 +345,6 @@ class DoubleBarrierOptionTest(unittest.TestCase):
                     bsVanillaPrice)
                 doubleBarrierOption.setPricingEngine(vannaVolgaEngine)
 
-                # Expected result for KO is given in array, for KI is evaluated as vanilla - KO
                 expected = 0
                 if barrierType == DoubleBarrier.KnockOut:
                     expected = value.result
@@ -379,23 +368,22 @@ class DoubleBarrierOptionTest(unittest.TestCase):
 
                 calculated = doubleBarrierOption.NPV()
                 error = abs(calculated - expected)
-                maxtol = 5.0e-3  # different engines have somewhat different results
+                maxtol = 5.0e-3
                 self.assertFalse(error > maxtol)
 
     def testMonteCarloDoubleBarrierWithAnalytical(self):
-        TEST_MESSAGE("Testing MC double-barrier options against analytical values...")
+        TEST_MESSAGE(
+            "Testing MC double-barrier options against analytical values...")
 
         backup = SavedSettings()
 
-        tolerance = 0.01  # percentage difference between analytical and monte carlo values to be tolerated
+        tolerance = 0.01
 
-        # set up dates
         calendar = TARGET()
         todaysDate = Date(15, May, 1998)
         settlementDate = Date(17, May, 1998)
         Settings.instance().evaluationDate = todaysDate
 
-        # our options
         typeOpt = Option.Put
         underlying = 36
         strike = 40
@@ -407,13 +395,12 @@ class DoubleBarrierOptionTest(unittest.TestCase):
 
         exerciseDates = DateVector()
         for i in range(1, 4 + 1):
-            exerciseDates.push_back(settlementDate + 3 * i * Months)
+            exerciseDates.push_back(settlementDate + Period(3 * i, Months))
 
         europeanExercise = EuropeanExercise(maturity)
 
         underlyingH = QuoteHandle(SimpleQuote(underlying))
 
-        # bootstrap the yield/dividend/vol curves
         flatTermStructure = YieldTermStructureHandle(
             FlatForward(settlementDate, riskFreeRate, dayCounter))
         flatDividendTS = YieldTermStructureHandle(

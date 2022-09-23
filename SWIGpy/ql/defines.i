@@ -5,8 +5,8 @@
 
 #define QL_MIN_INTEGER         -2147483648              // std::numeric_limits<int>::min()
 #define QL_MAX_INTEGER          2147483647              // std::numeric_limits<int>::max()
-#define QL_MIN_REAL            -1.797693134862316e+308  // -std::numeric_limits<double>::max()
-#define QL_MAX_REAL             1.797693134862316e+308  // std::numeric_limits<double>::max()
+#define QL_MIN_REAL            -1.797693134862315e+308  // -std::numeric_limits<double>::max()
+#define QL_MAX_REAL             1.797693134862315e+308  // std::numeric_limits<double>::max()
 #define QL_MIN_POSITIVE_REAL    2.225073858507201e-308  // std::numeric_limits<double>::min()
 #define QL_EPSILON              2.220446049250313e-16   // std::numeric_limits<double>::epsilon()
 #define QL_NULL_INTEGER         2147483647              // std::numeric_limits<int>::max()

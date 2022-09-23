@@ -17,7 +17,6 @@ using QuantLib::InterpolatedYoYOptionletStripper;
 class Seasonality {
   private:
     Seasonality();
-
   public:
     Rate correctZeroRate(
         const Date& d, const Rate r,

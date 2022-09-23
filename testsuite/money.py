@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class MoneyTest(unittest.TestCase):
 
     def testNone(self):
-        TEST_MESSAGE("Testing money arithmetic without conversions...")
+        TEST_MESSAGE(
+            "Testing money arithmetic without conversions...")
 
         EUR = EURCurrency()
 
@@ -23,8 +26,9 @@ class MoneyTest(unittest.TestCase):
         self.assertFalse(calculated != expected)
 
     def testBaseCurrency(self):
-        TEST_MESSAGE("Testing money arithmetic with conversion "
-                     "to base currency...")
+        TEST_MESSAGE(
+            "Testing money arithmetic with conversion "
+            "to base currency...")
 
         EUR = EURCurrency()
         GBP = GBPCurrency()
@@ -56,7 +60,8 @@ class MoneyTest(unittest.TestCase):
         self.assertFalse(calculated != expected)
 
     def testAutomated(self):
-        TEST_MESSAGE("Testing money arithmetic with automated conversion...")
+        TEST_MESSAGE(
+            "Testing money arithmetic with automated conversion...")
 
         EUR = EURCurrency()
         GBP = GBPCurrency()

@@ -27,20 +27,9 @@
 }
 
 %{
-// This is necessary to avoid compile failures on
-// GCC 4
-// see http://svn.boost.org/trac/boost/ticket/1793
-
-#if defined(NDEBUG)
-#define BOOST_DISABLE_ASSERTS 1
-#endif
-
-#include <boost/algorithm/string/case_conv.hpp>
-%}
-
-%{
 using QuantLib::Null;
 using QuantLib::Error;
+using QuantLib::Clone;
 using QuantLib::Handle;
 using QuantLib::RelinkableHandle;
 using QuantLib::Sample;
@@ -206,32 +195,100 @@ using QuantLib::Pillar;
 
 
 namespace ext {
-%extend shared_ptr {
-    T* operator->() {
-        return (*self).operator->();
-    }
-    bool __nonzero__() {
-        return !!(*self);
-    }
-    bool __bool__() {
-        return !!(*self);
-    }
+	%extend shared_ptr {
+	    // T* operator->() {
+	    //     return (*self).operator->();
+	    // }
+        // const T* operator->() const {
+	    //     return (*self).operator->();
+	    // }
+	    bool __nonzero__() const {
+	        return !!(*self);
+	    }
+	    bool __bool__() const {
+	        return !!(*self);
+	    }
+	}
+
+	template <typename T1 = void, typename T2 = void, typename T3 = void>
+	struct tuple;
+
+	template <>
+	struct tuple<void, void, void> { };
+
+	template <typename T1>
+	struct tuple<T1, void, void> {
+		tuple(T1);
+		%extend {
+			T1 first() const {
+				return ext::get<0>(*self);
+			}
+		}
+	};
+
+	template <typename T1, typename T2>
+	struct tuple<T1, T2, void> {
+		tuple(T1, T2);
+		%extend {
+			T1 first() const {
+				return ext::get<0>(*self);
+			}
+			T2 second() const {
+				return ext::get<1>(*self);
+			}
+		}
+	};
+
+	template <typename T1, typename T2, typename T3>
+	struct tuple<T1, T2, T3> {
+		tuple(T1, T2, T3);
+		%extend {
+			T1 first() const {
+				return ext::get<0>(*self);
+			}
+			T2 second() const {
+				return ext::get<1>(*self);
+			}
+			T3 third() const {
+				return ext::get<2>(*self);
+			}
+		}
+	};
 }
-}
+
+template <class T>
+class Clone {
+  public:
+	Clone();
+	Clone(const T&);
+	Clone(const Clone<T>&);
+	Clone(Clone<T>&&) noexcept;
+	T& operator*() const;
+	T* operator->() const;
+	bool empty() const;
+	void swap(Clone<T>& t);
+};
 
 template <class T>
 class Handle {
   public:
-  Handle(const ext::shared_ptr<T>& = ext::shared_ptr<T>());
-    const ext::shared_ptr<T>& operator->() const;
+    Handle(
+		const ext::shared_ptr<T>& = ext::shared_ptr<T>(),
+		bool registerAsObserver = true);
     const ext::shared_ptr<T>& currentLink() const;
-    const ext::shared_ptr<T>& operator*() const;
     bool empty() const;
     %extend {
-        bool __nonzero__() {
+		Handle(
+			bool registerAsObserver) {
+				return new Handle<T>(ext::shared_ptr<T>(), registerAsObserver);
+		}
+        const T* operator->() const {
+	        return (*self).operator->().get();
+	    }
+        bool __nonzero__() const {
             return !self->empty();
         }
-        bool __bool__() {
+        bool __bool__() const {
             return !self->empty();
         }
         ext::shared_ptr<Observable> asObservable() const {
@@ -255,54 +312,6 @@ class RelinkableHandle : public Handle<T> {
         }
     }
 };
-
-namespace ext {
-template <typename T1 = void, typename T2 = void, typename T3 = void>
-struct tuple;
-
-template <>
-struct tuple<void, void, void> {
-};
-
-template <typename T1>
-struct tuple<T1, void, void> {
-    tuple(T1);
-    %extend {
-        T1 first() const {
-            return ext::get<0>(*self);
-        }
-    }
-};
-
-template <typename T1, typename T2>
-struct tuple<T1, T2, void> {
-    tuple(T1, T2);
-    %extend {
-        T1 first() const {
-            return ext::get<0>(*self);
-        }
-        T2 second() const {
-            return ext::get<1>(*self);
-        }
-    }
-};
-
-template <typename T1, typename T2, typename T3>
-struct tuple<T1, T2, T3> {
-    tuple(T1, T2, T3);
-    %extend {
-        T1 first() const {
-            return ext::get<0>(*self);
-        }
-        T2 second() const {
-            return ext::get<1>(*self);
-        }
-        T3 third() const {
-            return ext::get<2>(*self);
-        }
-    }
-};
-}    // namespace ext
 
 template <class T>
 class Sample {
@@ -343,15 +352,15 @@ class CostFunction {
 	Real valueAndGradient(
 		Array& grad,
 		const Array& x) const;
-	void jacobian(Matrix &jac, const Array &x) const;
+	void jacobian(Matrix& jac, const Array& x) const;
 	Array valuesAndJacobian(
-		Matrix &jac,
-		const Array &x) const;
+		Matrix& jac,
+		const Array& x) const;
 	Real finiteDifferenceEpsilon() const;
 };
 
 struct LsmBasisSystem {
-    enum PolynomType {
+    enum PolynomialType {
         Monomial,
         Laguerre,
         Hermite,
@@ -365,6 +374,11 @@ struct LsmBasisSystem {
 struct CPI {
     enum InterpolationType {
         AsIndex, Flat, Linear };
+    static Real laggedFixing(
+        const ext::shared_ptr<ZeroInflationIndex>& index,
+        const Date& date,
+        const Period& observationLag,
+        InterpolationType interpolationType);
 };
 
 struct Duration {
@@ -399,13 +413,16 @@ struct Protection {
 %{
 class UnaryFunction {
   public:
-    UnaryFunction(PyObject* function) : function_(function) {
+    UnaryFunction(
+        PyObject* function) : function_(function) {
         Py_XINCREF(function_);
     }
-    UnaryFunction(const UnaryFunction& f) : function_(f.function_) {
+    UnaryFunction(
+        const UnaryFunction& f) : function_(f.function_) {
         Py_XINCREF(function_);
     }
-    UnaryFunction(UnaryFunction&& f) {
+    UnaryFunction(
+        UnaryFunction&& f) {
         std::swap(function_, f.function_);
     }
     UnaryFunction& operator=(const UnaryFunction& f) {
@@ -460,14 +477,17 @@ class UnaryFunction {
 
 class BinaryFunction {
   public:
-    BinaryFunction(PyObject* function) : function_(function) {
+    BinaryFunction(
+        PyObject* function) : function_(function) {
         Py_XINCREF(function_);
     }
-    BinaryFunction(const BinaryFunction& f)
+    BinaryFunction(
+        const BinaryFunction& f)
         : function_(f.function_) {
         Py_XINCREF(function_);
     }
-    BinaryFunction(BinaryFunction&& f) {
+    BinaryFunction(
+        BinaryFunction&& f) {
         std::swap(function_, f.function_);
     }
     BinaryFunction& operator=(const BinaryFunction& f) {
@@ -489,54 +509,6 @@ class BinaryFunction {
         Real result = PyFloat_AsDouble(pyResult);
         Py_XDECREF(pyResult);
         return result;
-    }
-
-  private:
-    PyObject* function_;
-};
-
-class PyCostFunction : public CostFunction {
-  public:
-    PyCostFunction(PyObject* function) : function_(function) {
-        Py_XINCREF(function_);
-    }
-    PyCostFunction(const PyCostFunction& f)
-        : function_(f.function_) {
-        Py_XINCREF(function_);
-    }
-    PyCostFunction(PyCostFunction&& f) {
-        std::swap(function_, f.function_);
-    }
-    PyCostFunction& operator=(const PyCostFunction& f) {
-        if ((this != &f) && (function_ != f.function_)) {
-            Py_XDECREF(function_);
-            function_ = f.function_;
-            Py_XINCREF(function_);
-        }
-        return *this;
-    }
-    ~PyCostFunction() {
-        Py_XDECREF(function_);
-    }
-    Real value(const Array& x) const {
-        PyObject* tuple = PyTuple_New(x.size());
-        for (Size i = 0; i < x.size(); i++)
-            PyTuple_SetItem(
-                tuple, i, PyFloat_FromDouble(x[i]));
-        PyObject* pyResult = PyObject_CallObject(
-            function_, tuple);
-        Py_XDECREF(tuple);
-        QL_ENSURE(
-            pyResult != NULL,
-            "failed to call Python function");
-        Real result = PyFloat_AsDouble(pyResult);
-        Py_XDECREF(pyResult);
-        return result;
-    }
-    Disposable<Array> values(const Array& x) const {
-        QL_FAIL("Not implemented");
-        // Should be straight forward to copy from a python list
-        // to an array
     }
 
   private:
@@ -630,19 +602,19 @@ enum TimeUnit {
 };
 
 enum Frequency {
-    NoFrequency = -1,
-    Once = 0,
-    Annual = 1,
-    Semiannual = 2,
-    EveryFourthMonth = 3,
-    Quarterly = 4,
-    Bimonthly = 6,
-    Monthly = 12,
-    EveryFourthWeek = 13,
-    Biweekly = 26,
-    Weekly = 52,
-    Daily = 365,
-    OtherFrequency = 999
+    NoFrequency         = -1,
+    Once                = 0,
+    Annual              = 1,
+    Semiannual          = 2,
+    EveryFourthMonth    = 3,
+    Quarterly           = 4,
+    Bimonthly           = 6,
+    Monthly             = 12,
+    EveryFourthWeek     = 13,
+    Biweekly            = 26,
+    Weekly              = 52,
+    Daily               = 365,
+    OtherFrequency      = 999
 };
 
 enum Compounding {
@@ -778,7 +750,18 @@ struct DateGeneration {
 };
 
 struct Pillar {
-    enum Choice { MaturityDate, LastRelevantDate, CustomDate};
+    enum Choice { MaturityDate, LastRelevantDate, CustomDate };
 };
+
+%inline {
+    class Value {
+      public:
+        Value() {}
+        double value() const {return value_;}
+        void setValue(double value) {value_ = value;}
+      private:
+        double value_;
+    };
+}
 
 #endif

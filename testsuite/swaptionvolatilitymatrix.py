@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class SwaptionTenors(object):
@@ -69,8 +71,6 @@ class AtmVolatility(object):
         for i in range(len(self.tenors.options)):
             tmp = QuoteHandleVector(len(self.tenors.swaps))
             for j in range(len(self.tenors.swaps)):
-                # // every handle must be reassigned, as the ones created by
-                # // default are all linked together.
                 tmp[j] = QuoteHandle(
                     SimpleQuote(self.vols[i][j]))
             self.volsHandle[i] = tmp
@@ -78,230 +78,124 @@ class AtmVolatility(object):
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
         self.conventions = SwaptionMarketConventions()
         self.conventions.setConventions()
         self.atm = AtmVolatility()
         self.atm.setMarketData()
-        Settings.instance().evaluationDate = self.conventions.calendar.adjust(Date.todaysDate())
+        Settings.instance().evaluationDate = self.conventions.calendar.adjust(knownGoodDefault)
         self.atmVolMatrix = RelinkableSwaptionVolatilityStructureHandle(
-            SwaptionVolatilityMatrix(self.conventions.calendar,
-                                     self.conventions.optionBdc,
-                                     self.atm.tenors.options,
-                                     self.atm.tenors.swaps,
-                                     self.atm.volsHandle,
-                                     self.conventions.dayCounter))
+            SwaptionVolatilityMatrix(
+                self.conventions.calendar,
+                self.conventions.optionBdc,
+                self.atm.tenors.options,
+                self.atm.tenors.swaps,
+                self.atm.volsHandle,
+                self.conventions.dayCounter))
         self.termStructure = RelinkableYieldTermStructureHandle()
         self.termStructure.linkTo(
-            FlatForward(0, self.conventions.calendar,
-                        0.05, Actual365Fixed()))
-
-    # utilities
-    # def makeObservabilityTest(self,
-    #                           description,
-    #                           vol,
-    #                           mktDataFloating,
-    #                           referenceDateFloating):
-    #     dummyStrike = .02
-    #     referenceDate = Settings.instance().evaluationDate
-    #     initialVol = vol.volatility(
-    #         referenceDate + self.atm.tenors.options[0],
-    #         self.atm.tenors.swaps[0], dummyStrike, false)
-    #     # testing evaluation date change ...
-    #     Settings.instance().evaluationDate = referenceDate - Period(1, Years)
-    #     newVol = vol.volatility(
-    #         referenceDate + self.atm.tenors.options[0],
-    #         self.atm.tenors.swaps[0], dummyStrike, false)
-    #     Settings.instance().evaluationDate = referenceDate
-    #     self.assertFalse(referenceDateFloating and (initialVol == newVol))
-    #
-    #     self.assertFalse(not referenceDateFloating and (initialVol != newVol))
-    #
-    #     # test market data change...
-    #     if mktDataFloating:
-    #         initialVolatility = self.atm.volsHandle[0][0].value()
-    #         as_simple_quote(
-    #             self.atm.volsHandle[0][0].currentLink()).setValue(10)
-    #         newVol = vol.volatility(
-    #             referenceDate + self.atm.tenors.options[0],
-    #             self.atm.tenors.swaps[0], dummyStrike, false)
-    #         # ext.dynamic_pointer_cast<SimpleQuote>(
-    #         as_simple_quote(
-    #             self.atm.volsHandle[0][0].currentLink()).setValue(initialVolatility)
-    #         self.assertFalse(initialVol == newVol)
-
-    # def makeCoherenceTest(self,
-    #                       description,
-    #                       vol):
-    # 
-    #     for i in range(self.atm.tenors.options.size()):
-    #         optionDate = vol.optionDateFromTenor(self.atm.tenors.options[i])
-    #         self.assertFalse(optionDate != vol.optionDates()[i])
-    #         optionTime = vol.timeFromReference(optionDate)
-    #         self.assertFalse(not close(optionTime, vol.optionTimes()[i]))
-    # 
-    #     engine = BlackSwaptionEngine(self.termStructure,
-    #                                  SwaptionVolatilityStructureHandle(vol))
-    # 
-    #     for j in range(self.atm.tenors.swaps.size()):
-    #         swapLength = vol.swapLength(self.atm.tenors.swaps[j])
-    #         self.assertFalse(not close(swapLength, years(self.atm.tenors.swaps[j])))
-    # 
-    #         swapIndex = EuriborSwapIsdaFixA(self.atm.tenors.swaps[j], self.termStructure)
-    # 
-    #         for i in range(self.atm.tenors.options.size()):
-    #             tolerance = 1.0e-16
-    #             expVol = self.atm.vols[i][j]
-    # 
-    #             actVol = vol.volatility(self.atm.tenors.options[i],
-    #                                     self.atm.tenors.swaps[j], 0.05, true)
-    #             error = abs(expVol - actVol)
-    #             self.assertFalse(error > tolerance)
-    # 
-    #             optionDate = vol.optionDateFromTenor(self.atm.tenors.options[i])
-    #             actVol = vol.volatility(optionDate,
-    #                                     self.atm.tenors.swaps[j], 0.05, true)
-    #             error = abs(expVol - actVol)
-    #             self.assertFalse(error > tolerance)
-    # 
-    #             optionTime = vol.timeFromReference(optionDate)
-    #             actVol = vol.volatility(optionTime, swapLength,
-    #                                     0.05, true)
-    #             error = abs(expVol - actVol)
-    #             self.assertFalse(error > tolerance)
-    # 
-    #             # ATM swaption
-    #             swaption = MakeSwaption(swapIndex, self.atm.tenors.options[i])
-    #             swaption.withPricingEngine(engine)
-    #             swaption=swaption.makeSwaption()
-    # 
-    #             exerciseDate = swaption.exercise().dates().front()
-    #             self.assertFalse(exerciseDate != vol.optionDates()[i])
-    # 
-    #             start = swaption.underlyingSwap().startDate()
-    #             end = swaption.underlyingSwap().maturityDate()
-    #             swapLength2 = vol.swapLength(start, end)
-    #             self.assertFalse(not close(swapLength2, swapLength))
-    # 
-    #             npv = swaption.NPV()
-    #             actVol = swaption.impliedVolatility(npv, self.termStructure,
-    #                                                 expVol * 0.98, 1e-6,
-    #                                                 100, 10.0e-7, 4.0,
-    #                                                 ShiftedLognormal, 0.0)
-    #             error = abs(expVol - actVol)
-    #             tolerance2 = 0.000001
-    #             self.assertFalse(error > tolerance2)
+            FlatForward(
+                0, self.conventions.calendar,
+                0.05, Actual365Fixed()))
 
 
 class SwaptionVolatilityMatrixTest(unittest.TestCase):
 
     def testSwaptionVolMatrixCoherence(self):
-        TEST_MESSAGE("Testing swaption volatility matrix...")
+        TEST_MESSAGE(
+            "Testing swaption volatility matrix...")
 
         vars = CommonVars()
 
-        # vol
-        # description
-
-        # floating reference date, floating market data
         description = "floating reference date, floating market data"
-        vol = SwaptionVolatilityMatrix(vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeCoherenceTest(vars, description, vol)
 
-        # fixed reference date, floating market data
         description = "fixed reference date, floating market data"
-        vol = SwaptionVolatilityMatrix(Settings.instance().evaluationDate,
-                                       vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            Settings.instance().evaluationDate,
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeCoherenceTest(vars, description, vol)
 
-        # floating reference date, fixed market data
         description = "floating reference date, fixed market data"
-        vol = SwaptionVolatilityMatrix(vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeCoherenceTest(vars, description, vol)
 
-        # fixed reference date, fixed market data
         description = "fixed reference date, fixed market data"
-        vol = SwaptionVolatilityMatrix(Settings.instance().evaluationDate,
-                                       vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            Settings.instance().evaluationDate,
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeCoherenceTest(vars, description, vol)
 
     def testSwaptionVolMatrixObservability(self):
-        TEST_MESSAGE("Testing swaption volatility matrix observability...")
+        TEST_MESSAGE(
+            "Testing swaption volatility matrix observability...")
 
         vars = CommonVars()
 
-        # vol
-        # description
-
-        # floating reference date, floating market data
         description = "floating reference date, floating market data"
-        vol = SwaptionVolatilityMatrix(vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeObservabilityTest(vars, description, vol, true, true)
 
-        # fixed reference date, floating market data
         description = "fixed reference date, floating market data"
-        vol = SwaptionVolatilityMatrix(Settings.instance().evaluationDate,
-                                       vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            Settings.instance().evaluationDate,
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeObservabilityTest(vars, description, vol, true, false)
 
-        # floating reference date, fixed market data
         description = "floating reference date, fixed market data"
-        vol = SwaptionVolatilityMatrix(vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeObservabilityTest(vars, description, vol, false, true)
 
-        # fixed reference date, fixed market data
         description = "fixed reference date, fixed market data"
-        vol = SwaptionVolatilityMatrix(Settings.instance().evaluationDate,
-                                       vars.conventions.calendar,
-                                       vars.conventions.optionBdc,
-                                       vars.atm.tenors.options,
-                                       vars.atm.tenors.swaps,
-                                       vars.atm.volsHandle,
-                                       vars.conventions.dayCounter)
+        vol = SwaptionVolatilityMatrix(
+            Settings.instance().evaluationDate,
+            vars.conventions.calendar,
+            vars.conventions.optionBdc,
+            vars.atm.tenors.options,
+            vars.atm.tenors.swaps,
+            vars.atm.volsHandle,
+            vars.conventions.dayCounter)
         self.makeObservabilityTest(vars, description, vol, false, false)
-
-        # fixed reference date and fixed market data, option dates
-        # SwaptionVolatilityMatrix(referenceDate,
-        #                         exerciseDates,
-        #                         swapTenors,
-        #                         Matrix& volatilities,
-        #                         dayCounter)
 
     def makeCoherenceTest(self,
                           common,
@@ -314,8 +208,9 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
             optionTime = vol.timeFromReference(optionDate)
             self.assertFalse(not close(optionTime, vol.optionTimes()[i]))
 
-        engine = BlackSwaptionEngine(common.termStructure,
-                                     SwaptionVolatilityStructureHandle(vol))
+        engine = BlackSwaptionEngine(
+            common.termStructure,
+            SwaptionVolatilityStructureHandle(vol))
 
         for j in range(common.atm.tenors.swaps.size()):
             swapLength = vol.swapLength(common.atm.tenors.swaps[j])
@@ -327,24 +222,24 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
                 tolerance = 1.0e-16
                 expVol = common.atm.vols[i][j]
 
-                actVol = vol.volatility(common.atm.tenors.options[i],
-                                        common.atm.tenors.swaps[j], 0.05, true)
+                actVol = vol.volatility(
+                    common.atm.tenors.options[i],
+                    common.atm.tenors.swaps[j], 0.05, true)
                 error = abs(expVol - actVol)
                 self.assertFalse(error > tolerance)
 
                 optionDate = vol.optionDateFromTenor(common.atm.tenors.options[i])
-                actVol = vol.volatility(optionDate,
-                                        common.atm.tenors.swaps[j], 0.05, true)
+                actVol = vol.volatility(
+                    optionDate,
+                    common.atm.tenors.swaps[j], 0.05, true)
                 error = abs(expVol - actVol)
                 self.assertFalse(error > tolerance)
 
                 optionTime = vol.timeFromReference(optionDate)
-                actVol = vol.volatility(optionTime, swapLength,
-                                        0.05, true)
+                actVol = vol.volatility(optionTime, swapLength, 0.05, true)
                 error = abs(expVol - actVol)
                 self.assertFalse(error > tolerance)
 
-                # ATM swaption
                 swaption = MakeSwaption(swapIndex, common.atm.tenors.options[i])
                 swaption.withPricingEngine(engine)
                 swaption = swaption.makeSwaption()
@@ -358,10 +253,11 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
                 self.assertFalse(not close(swapLength2, swapLength))
 
                 npv = swaption.NPV()
-                actVol = swaption.impliedVolatility(npv, common.termStructure,
-                                                    expVol * 0.98, 1e-6,
-                                                    100, 10.0e-7, 4.0,
-                                                    ShiftedLognormal, 0.0)
+                actVol = swaption.impliedVolatility(
+                    npv, common.termStructure,
+                    expVol * 0.98, 1e-6,
+                    100, 10.0e-7, 4.0,
+                    ShiftedLognormal, 0.0)
                 error = abs(expVol - actVol)
                 tolerance2 = 0.000001
                 self.assertFalse(error > tolerance2)
@@ -377,7 +273,7 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
         initialVol = vol.volatility(
             referenceDate + common.atm.tenors.options[0],
             common.atm.tenors.swaps[0], dummyStrike, false)
-        # testing evaluation date change ...
+
         Settings.instance().evaluationDate = referenceDate - Period(1, Years)
         newVol = vol.volatility(
             referenceDate + common.atm.tenors.options[0],
@@ -387,7 +283,6 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
 
         self.assertFalse(not referenceDateFloating and (initialVol != newVol))
 
-        # test market data change...
         if mktDataFloating:
             initialVolatility = common.atm.volsHandle[0][0].value()
             as_simple_quote(
@@ -395,7 +290,7 @@ class SwaptionVolatilityMatrixTest(unittest.TestCase):
             newVol = vol.volatility(
                 referenceDate + common.atm.tenors.options[0],
                 common.atm.tenors.swaps[0], dummyStrike, false)
-            # ext.dynamic_pointer_cast<SimpleQuote>(
+
             as_simple_quote(
                 common.atm.volsHandle[0][0].currentLink()).setValue(initialVolatility)
             self.assertFalse(initialVol == newVol)

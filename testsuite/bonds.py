@@ -1,13 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
     def __init__(self):
         self.calendar = TARGET()
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.faceAmount = 1000000.0
         self.backup = SavedSettings()
@@ -16,7 +18,8 @@ class CommonVars(object):
 class BondTest(unittest.TestCase):
 
     def testYield(self):
-        TEST_MESSAGE("Testing consistency of bond price/bondYield calculation...")
+        TEST_MESSAGE(
+            "Testing consistency of bond price/bondYield calculation...")
 
         vars = CommonVars()
 
@@ -40,7 +43,7 @@ class BondTest(unittest.TestCase):
             for length in lengths:
                 for coupon in coupons:
                     for frequencie in frequencies:
-                        for n in compounding:
+                        for cp in compounding:
 
                             dated = vars.calendar.advance(
                                 vars.today, issueMonth, Months)
@@ -58,36 +61,35 @@ class BondTest(unittest.TestCase):
                                 DoubleVector(1, coupon), bondDayCount,
                                 paymentConvention, redemption, issue)
 
-                            for m in yields:
+                            for y in yields:
 
                                 price = BondFunctions.cleanPrice(
-                                    bond, m, bondDayCount, n, frequencie)
+                                    bond, y, bondDayCount, cp, frequencie)
 
                                 calculated = BondFunctions.bondYield(
-                                    bond, price, bondDayCount, n, frequencie, Date(), tolerance,
+                                    bond, price, bondDayCount, cp, frequencie, Date(), tolerance,
                                     maxEvaluations, 0.05, BondPrice.Clean)
 
-                                if abs(m - calculated) > tolerance:
-                                    # the difference might not matter
+                                if abs(y - calculated) > tolerance:
                                     price2 = BondFunctions.cleanPrice(
-                                        bond, calculated, bondDayCount, n, frequencie)
+                                        bond, calculated, bondDayCount, cp, frequencie)
                                     self.assertFalse(abs(price - price2) / price > tolerance)
 
                                 price = BondFunctions.dirtyPrice(
-                                    bond, m, bondDayCount, n, frequencie)
+                                    bond, y, bondDayCount, cp, frequencie)
 
                                 calculated = BondFunctions.bondYield(
-                                    bond, price, bondDayCount, n, frequencie, Date(), tolerance,
+                                    bond, price, bondDayCount, cp, frequencie, Date(), tolerance,
                                     maxEvaluations, 0.05, BondPrice.Dirty)
 
-                                if abs(m - calculated) > tolerance:
-                                    # the difference might not matter
+                                if abs(y - calculated) > tolerance:
                                     price2 = BondFunctions.dirtyPrice(
-                                        bond, calculated, bondDayCount, n, frequencie)
+                                        bond, calculated, bondDayCount, cp, frequencie)
                                     self.assertFalse(abs(price - price2) / price > tolerance)
 
     def testAtmRate(self):
-        TEST_MESSAGE("Testing consistency of bond price/ATM rate calculation...")
+        TEST_MESSAGE(
+            "Testing consistency of bond price/ATM rate calculation...")
 
         vars = CommonVars()
 
@@ -134,7 +136,8 @@ class BondTest(unittest.TestCase):
                         self.assertFalse(abs(coupon - calculated) > tolerance)
 
     def testZspread(self):
-        TEST_MESSAGE("Testing consistency of bond price/z-spread calculation...")
+        TEST_MESSAGE(
+            "Testing consistency of bond price/z-spread calculation...")
 
         vars = CommonVars()
 
@@ -190,14 +193,14 @@ class BondTest(unittest.TestCase):
                                     tolerance, maxEvaluations)
 
                                 if abs(spread - calculated) > tolerance:
-                                    # the difference might not matter
                                     price2 = BondFunctions.cleanPrice(
                                         bond, discountCurve.currentLink(),
                                         calculated, bondDayCount, n, frequencie)
                                     self.assertFalse(abs(price - price2) / price > tolerance)
 
     def testTheoretical(self):
-        TEST_MESSAGE("Testing theoretical bond price/bondYield calculation...")
+        TEST_MESSAGE(
+            "Testing theoretical bond price/bondYield calculation...")
 
         vars = CommonVars()
 
@@ -239,11 +242,11 @@ class BondTest(unittest.TestCase):
                     bondEngine = DiscountingBondEngine(discountCurve)
                     bond.setPricingEngine(bondEngine)
 
-                    for m in yields:
-                        rate.setValue(m)
+                    for y in yields:
+                        rate.setValue(y)
 
                         price = BondFunctions.cleanPrice(
-                            bond, m, bondDayCount, Continuous, frequencie)
+                            bond, y, bondDayCount, Continuous, frequencie)
                         calculatedPrice = bond.cleanPrice()
 
                         self.assertFalse(abs(price - calculatedPrice) > tolerance)
@@ -251,15 +254,13 @@ class BondTest(unittest.TestCase):
                         calculatedYield = BondFunctions.bondYield(
                             bond, calculatedPrice, bondDayCount, Continuous, frequencie,
                             bond.settlementDate(), tolerance, maxEvaluations)
-                        self.assertFalse(abs(m - calculatedYield) > tolerance)
+                        self.assertFalse(abs(y - calculatedYield) > tolerance)
 
     def testCached(self):
         TEST_MESSAGE(
             "Testing bond price/bondYield calculation against cached values...")
 
         vars = CommonVars()
-
-        # with implicit settlement calculation:
 
         today = Date(22, November, 2004)
         Settings.instance().evaluationDate = today
@@ -271,15 +272,7 @@ class BondTest(unittest.TestCase):
         discountCurve = YieldTermStructureHandle(
             flatRate(today, 0.03, Actual360()))
 
-        # actual market values from the evaluation date
-
         freq = Semiannual
-        # This means that this bond has a short first coupon, as the
-        # first coupon payment is april 30th and therefore the notional
-        # first coupon is on October 30th 2004. Changing the EOM
-        # convention to true will correct this so that the coupon starts
-        # on October 31st and the first coupon is complete. This is
-        # effectively assumed by the no-schedule daycounter.
         sch1 = Schedule(
             Date(31, October, 2004), Date(31, October, 2006),
             Period(freq), bondCalendar,
@@ -329,8 +322,6 @@ class BondTest(unittest.TestCase):
         marketPrice2 = 99.6875
         marketYield2 = 0.03569
 
-        # calculated values
-
         cachedPrice1a = 99.204505
         cachedPrice2a = 99.687192
         cachedPrice1b = 98.943393
@@ -342,7 +333,6 @@ class BondTest(unittest.TestCase):
         cachedYield1c = 0.030423
         cachedYield2c = 0.030432
 
-        # check
         tolerance = 1.0e-6
 
         self.checkValue(
@@ -394,7 +384,6 @@ class BondTest(unittest.TestCase):
             cachedYield1c, tolerance,
             "failed to reproduce cached continuous bondYield with no schedule for bond 1:")
 
-        # Now bond 2
         self.checkValue(
             BondFunctions.cleanPrice(
                 bond2, marketYield2, bondDayCount2, Compounded, freq),
@@ -444,8 +433,6 @@ class BondTest(unittest.TestCase):
             cachedYield2c, tolerance,
             "failed to reproduce cached continuous bondYield for bond 2 with no schedule:")
 
-        # with explicit settlement date:
-
         sch3 = Schedule(
             Date(30, November, 2004),
             Date(30, November, 2006), Period(freq),
@@ -487,9 +474,6 @@ class BondTest(unittest.TestCase):
             cachedPrice3, tolerance,
             "Failed to reproduce cached price for bond 3 with no schedule")
 
-        # this should give the same result since the issue date is the
-        # earliest possible settlement date
-
         Settings.instance().evaluationDate = Date(22, November, 2004)
         self.checkValue(
             BondFunctions.cleanPrice(
@@ -504,7 +488,8 @@ class BondTest(unittest.TestCase):
             "Failed to reproduce the cached price for bond 3 with no schedule and the earlierst possible settlment date")
 
     def testCachedZero(self):
-        TEST_MESSAGE("Testing zero-coupon bond prices against cached values...")
+        TEST_MESSAGE(
+            "Testing zero-coupon bond prices against cached values...")
 
         vars = CommonVars()
 
@@ -517,8 +502,6 @@ class BondTest(unittest.TestCase):
             flatRate(today, 0.03, Actual360()))
 
         tolerance = 1.0e-6
-
-        # plain
 
         bond1 = ZeroCouponBond(
             settlementDays,
@@ -567,7 +550,8 @@ class BondTest(unittest.TestCase):
         self.assertFalse(abs(price - cachedPrice3) > tolerance)
 
     def testCachedFixed(self):
-        TEST_MESSAGE("Testing fixed-coupon bond prices against cached values...")
+        TEST_MESSAGE(
+            "Testing fixed-coupon bond prices against cached values...")
 
         vars = CommonVars()
 
@@ -580,8 +564,6 @@ class BondTest(unittest.TestCase):
             flatRate(today, 0.03, Actual360()))
 
         tolerance = 1.0e-6
-
-        # plain
 
         sch = Schedule(
             Date(30, November, 2004),
@@ -604,8 +586,6 @@ class BondTest(unittest.TestCase):
         price = bond1.cleanPrice()
         self.assertFalse(abs(price - cachedPrice1) > tolerance)
 
-        # varying coupons
-
         couponRates = DoubleVector(4)
         couponRates[0] = 0.02875
         couponRates[1] = 0.03
@@ -625,8 +605,6 @@ class BondTest(unittest.TestCase):
 
         price = bond2.cleanPrice()
         self.assertFalse(abs(price - cachedPrice2) > tolerance)
-
-        # stub date
 
         sch3 = Schedule(
             Date(30, November, 2004),
@@ -649,7 +627,8 @@ class BondTest(unittest.TestCase):
         self.assertFalse(abs(price - cachedPrice3) > tolerance)
 
     def testCachedFloating(self):
-        TEST_MESSAGE("Testing floating-rate bond prices against cached values...")
+        TEST_MESSAGE(
+            "Testing floating-rate bond prices against cached values...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
@@ -669,8 +648,6 @@ class BondTest(unittest.TestCase):
         tolerance = 1.0e-6
 
         pricer = BlackIborCouponPricer(OptionletVolatilityStructureHandle())
-
-        # plain
 
         sch = Schedule(
             Date(30, November, 2004),
@@ -699,8 +676,6 @@ class BondTest(unittest.TestCase):
         price = bond1.cleanPrice()
         self.assertFalse(abs(price - cachedPrice1) > tolerance)
 
-        # different risk-free and discount curve
-
         bond2 = FloatingRateBond(
             settlementDays, vars.faceAmount, sch,
             index, ActualActual(ActualActual.ISMA),
@@ -719,8 +694,6 @@ class BondTest(unittest.TestCase):
 
         price = bond2.cleanPrice()
         self.assertFalse(abs(price - cachedPrice2) > tolerance)
-
-        # varying spread
 
         spreads = DoubleVector(4)
         spreads[0] = 0.001
@@ -778,13 +751,10 @@ class BondTest(unittest.TestCase):
         today = Date(6, June, 2007)
         issueDate = Date(1, January, 2007)
 
-        # The tolerance is high because Andima truncate yields
         tolerance = 1.0e-4
 
-        # Reset evaluation date
         Settings.instance().evaluationDate = today
 
-        # NTN-F maturity dates
         maturityDates = DateVector(6)
         maturityDates[0] = Date(1, January, 2008)
         maturityDates[1] = Date(1, January, 2010)
@@ -793,7 +763,6 @@ class BondTest(unittest.TestCase):
         maturityDates[4] = Date(1, January, 2014)
         maturityDates[5] = Date(1, January, 2017)
 
-        # Andima NTN-F yields
         yields = DoubleVector(6)
         yields[0] = 0.114614
         yields[1] = 0.105726
@@ -802,7 +771,6 @@ class BondTest(unittest.TestCase):
         yields[4] = 0.103218
         yields[5] = 0.102948
 
-        # Andima NTN-F prices
         prices = DoubleVector(6)
         prices[0] = 1034.63031372
         prices[1] = 1030.09919487
@@ -839,7 +807,8 @@ class BondTest(unittest.TestCase):
             self.assertFalse(abs(price - cachedPrice) > tolerance)
 
     def testFixedBondWithGivenDates(self):
-        TEST_MESSAGE("Testing fixed-coupon bond built on schedule with given dates...")
+        TEST_MESSAGE(
+            "Testing fixed-coupon bond built on schedule with given dates...")
 
         vars = CommonVars()
 
@@ -853,7 +822,6 @@ class BondTest(unittest.TestCase):
         tolerance = 1.0e-6
 
         bondEngine = DiscountingBondEngine(discountCurve)
-        # plain
 
         sch1 = Schedule(
             Date(30, November, 2004),
@@ -875,9 +843,7 @@ class BondTest(unittest.TestCase):
             Unadjusted,
             Period(Semiannual),
             DateGeneration.Backward,
-            False,
-            # BoolVector(len(sch1) - 1, true)
-        )
+            False)
         bond1_copy = FixedRateBond(
             settlementDays, vars.faceAmount, sch1_copy,
             DoubleVector(1, 0.02875),
@@ -889,8 +855,6 @@ class BondTest(unittest.TestCase):
         expected = bond1.cleanPrice()
         calculated = bond1_copy.cleanPrice()
         self.assertFalse(abs(expected - calculated) > tolerance)
-
-        # varying coupons
 
         couponRates = DoubleVector(4)
         couponRates[0] = 0.02875
@@ -917,8 +881,6 @@ class BondTest(unittest.TestCase):
         expected = bond2.cleanPrice()
         calculated = bond2_copy.cleanPrice()
         self.assertFalse(abs(expected - calculated) > tolerance)
-
-        # stub date
 
         sch3 = Schedule(
             Date(30, November, 2004),
@@ -952,19 +914,18 @@ class BondTest(unittest.TestCase):
         self.assertFalse(abs(expected - calculated) > tolerance)
 
     def testRiskyBondWithGivenDates(self):
-        TEST_MESSAGE("Testing risky bond engine...")
+        TEST_MESSAGE(
+            "Testing risky bond engine...")
 
         vars = CommonVars()
 
         today = Date(22, November, 2005)
         Settings.instance().evaluationDate = today
 
-        # Structure
         hazardRate = QuoteHandle(SimpleQuote(0.1))
         defaultProbability = DefaultProbabilityTermStructureHandle(
             FlatHazardRate(0, TARGET(), hazardRate, Actual360()))
 
-        # Yield term structure
         riskFree = RelinkableYieldTermStructureHandle()
         riskFree.linkTo(FlatForward(today, 0.02, Actual360()))
         sch1 = Schedule(
@@ -972,7 +933,6 @@ class BondTest(unittest.TestCase):
             UnitedStates(UnitedStates.GovernmentBond), Unadjusted, Unadjusted,
             DateGeneration.Backward, false)
 
-        # Create Bond
         settlementDays = 1
         notionals = [0.0167, 0.023, 0.03234, 0.034, 0.038, 0.042, 0.047, 0.053]
 
@@ -988,12 +948,10 @@ class BondTest(unittest.TestCase):
             ActualActual(ActualActual.ISMA), ModifiedFollowing, 100.0,
             Date(20, November, 2004))
 
-        # Create Engine
         bondEngine = RiskyBondEngine(
             defaultProbability, recoveryRate, riskFree)
         bond.setPricingEngine(bondEngine)
 
-        # Calculate and validate NPV and price
         expected = 888458.819055
         calculated = bond.NPV()
         tolerance = 1.0e-6
@@ -1006,54 +964,6 @@ class BondTest(unittest.TestCase):
     def testExCouponGilt(self):
         TEST_MESSAGE(
             "Testing ex-coupon UK Gilt price against market values...")
-
-        # UK Gilts have an exCouponDate 7 business days before the coupon
-        # is due (see <http:#www.dmo.gov.uk/index.aspx?page=Gilts/Gilt_Faq>).
-        # On the exCouponDate the bond still trades cum-coupon so we use
-        # 6 days below and UK calendar
-
-        # Output verified with Bloomberg:
-
-        # ISIN: GB0009997999
-        # Issue Date: February 29th, 1996
-        # Interest Accrue: February 29th, 1996
-        # First Coupon: June 7th, 1996
-        # Maturity: June 7th, 2021
-        # coupon: 8
-        # period: 6M
-
-        # Settlement date: May 29th, 2013
-        # Test Price in 103
-        # Accrued in 38021.97802
-        # NPV in 106.8021978
-        # Yield in 7.495180593
-        # Yield.NPV in 106.8021978
-        # Yield.NPV.Price in 103
-        # Mod duration in 5.676044458
-        # Convexity in 0.4215314859
-        # PV 0.01 in 0.0606214023
-
-        # Settlement date: May 30th, 2013
-        # Test Price in 103
-        # Accrued in -1758.241758
-        # NPV in 102.8241758
-        # Yield in 7.496183543
-        # Yield.NPV in 102.8241758
-        # Yield.NPV.Price in 103
-        # Mod duration in 5.892816328
-        # Convexity in 0.4375621862
-        # PV 0.01 in 0.06059239822
-
-        # Settlement date: May 31st, 2013
-        # Test Price in 103
-        # Accrued in -1538.461538
-        # NPV in 102.8461538
-        # Yield in 7.495987492
-        # Yield.NPV in 102.8461539
-        # Yield.NPV.Price in 103
-        # Mod duration in 5.890186028
-        # Convexity in 0.4372394381
-        # PV 0.01 in 0.06057829784
 
         class test_case(object):
             def __init__(self,
@@ -1146,54 +1056,6 @@ class BondTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing ex-coupon Australian bond price against market values...")
 
-        # Australian Government Bonds have an exCouponDate 7 calendar
-        # days before the coupon is due.  On the exCouponDate the bond
-        # trades ex-coupon so we use 7 days below and NullCalendar.
-        # AGB accrued interest is rounded to 3dp.
-
-        # Output verified with Bloomberg:
-
-        # ISIN: AU300TB01208
-        # Issue Date: June 10th, 2004
-        # Interest Accrue: February 15th, 2004
-        # First Coupon: August 15th, 2004
-        # Maturity: February 15th, 2017
-        # coupon: 6
-        # period: 6M
-
-        # Settlement date: August 7th, 2014
-        # Test Price in 103
-        # Accrued in 28670
-        # NPV in 105.867
-        # Yield in 4.723814867
-        # Yield.NPV in 105.867
-        # Yield.NPV.Price in 103
-        # Mod duration in 2.262763296
-        # Convexity in 0.0654870275
-        # PV 0.01 in 0.02395519619
-
-        # Settlement date: August 8th, 2014
-        # Test Price in 103
-        # Accrued in -1160
-        # NPV in 102.884
-        # Yield in 4.72354833
-        # Yield.NPV in 102.884
-        # Yield.NPV.Price in 103
-        # Mod duration in 2.325360055
-        # Convexity in 0.06725307785
-        # PV 0.01 in 0.02392423439
-
-        # Settlement date: August 11th, 2014
-        # Test Price in 103
-        # Accrued in -660
-        # NPV in 102.934
-        # Yield in 4.719277687
-        # Yield.NPV in 102.934
-        # Yield.NPV.Price in 103
-        # Mod duration in 2.317320093
-        # Convexity in 0.06684074058
-        # PV 0.01 in 0.02385310264
-
         class test_case(object):
             def __init__(self,
                          settlementDate,
@@ -1282,13 +1144,10 @@ class BondTest(unittest.TestCase):
                 "price from bondYield", i.settlementDate, calcprice, i.testPrice, 1e-3)
 
     def testBondFromScheduleWithDateVector(self):
-        # Test calculation of South African R2048 bond
-        # This requires the use of the Schedule to be constructed
-        # with a custom date vector
-        TEST_MESSAGE("Testing South African R2048 bond price using Schedule constructor with vector...")
+        TEST_MESSAGE(
+            "Testing South African R2048 bond price using Schedule constructor with vector...")
         backup = SavedSettings()
 
-        # When pricing bond from Yield To Maturity, use NullCalendar()
         calendar = NullCalendar()
 
         settlementDays = 3
@@ -1299,7 +1158,6 @@ class BondTest(unittest.TestCase):
         settlementDate = calendar.advance(evaluationDate, Period(settlementDays, Days))
         Settings.instance().evaluationDate = evaluationDate
 
-        # For the schedule to generate correctly for Feb-28's, make maturity date on Feb 29
         maturityDate = Date(29, February, 2048)
 
         coupon = 0.0875
@@ -1309,16 +1167,11 @@ class BondTest(unittest.TestCase):
         tenor = Period(6, Months)
         exCouponPeriod = Period(10, Days)
 
-        # Generate coupon dates for 31 Aug and end of Feb each year
-        # For leap years, this will generate 29 Feb, but the bond
-        # actually pays coupons on 28 Feb, regardsless of whether
-        # it is a leap year or not. 
         schedule = Schedule(
             issueDate, maturityDate, tenor,
             NullCalendar(), Unadjusted, Unadjusted,
             DateGeneration.Backward, true)
 
-        # Adjust the 29 Feb's to 28 Feb
         dates = DateVector()
         for i in range(len(schedule)):
             d = schedule.date(i)
@@ -1346,7 +1199,6 @@ class BondTest(unittest.TestCase):
             issueDate, calendar,
             exCouponPeriod, calendar, Unadjusted, false)
 
-        # Yield as quoted in market
         bondYield = InterestRate(0.09185, dc, comp, freq)
 
         calculatedPrice = BondFunctions.dirtyPrice(bond, bondYield, settlementDate)
@@ -1355,7 +1207,8 @@ class BondTest(unittest.TestCase):
         self.assertFalse(abs(calculatedPrice - expectedPrice) > tolerance)
 
     def testFixedRateBondWithArbitrarySchedule(self):
-        TEST_MESSAGE("Testing fixed-rate bond with arbitrary schedule...")
+        TEST_MESSAGE(
+            "Testing fixed-rate bond with arbitrary schedule...")
         backup = SavedSettings()
 
         calendar = NullCalendar()
@@ -1365,7 +1218,6 @@ class BondTest(unittest.TestCase):
         today = Date(1, January, 2019)
         Settings.instance().evaluationDate = today
 
-        # For the schedule to generate correctly for Feb-28's, make maturity date on Feb 29
         dates = DateVector(4)
         dates[0] = Date(1, February, 2019)
         dates[1] = Date(7, February, 2019)
@@ -1390,13 +1242,10 @@ class BondTest(unittest.TestCase):
             flatRate(today, 0.03, Actual360()))
         bond.setPricingEngine(DiscountingBondEngine(discountCurve))
 
-        # BOOST_CHECK_NO_THROW(bond.cleanPrice())
-
     def testThirty360BondWithSettlementOn31st(self):
         TEST_MESSAGE(
             "Testing Thirty/360 bond with settlement on 31st of the month...")
 
-        # cusip 3130A0X70, data is from Bloomberg
         backup = SavedSettings()
         Settings.instance().evaluationDate = Date(28, July, 2017)
 

@@ -1,17 +1,19 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import log
+
+from QuantLib import *
+
+from utilities import *
 
 
 class CreditDefaultSwapTest(unittest.TestCase):
 
     def testCachedValue(self):
-        TEST_MESSAGE("Testing credit-default swap against cached values...")
+        TEST_MESSAGE(
+            "Testing credit-default swap against cached values...")
 
         backup = SavedSettings()
 
-        # Initialize curves
         Settings.instance().evaluationDate = Date(9, June, 2006)
         today = Settings.instance().evaluationDate
         calendar = TARGET()
@@ -27,7 +29,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         discountCurve.linkTo(
             FlatForward(today, 0.06, Actual360()))
 
-        # Build the schedule
         issueDate = calendar.advance(today, -1, Years)
         maturity = calendar.advance(issueDate, 10, Years)
         frequency = Semiannual
@@ -37,7 +38,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
             issueDate, maturity, Period(frequency), calendar,
             convention, convention, DateGeneration.Forward, false)
 
-        # Build the CDS
         fixedRate = 0.0120
         dayCount = Actual360()
         notional = 10000.0
@@ -174,15 +174,11 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         piecewiseFlatHazardRate = RelinkableDefaultProbabilityTermStructureHandle()
         piecewiseFlatHazardRate.linkTo(
-            # InterpolatedHazardRateCurve<BackwardFlat>(dates,
             HazardRateCurve(
                 dates,
                 hazardRates,
                 Thirty360(Thirty360.BondBasis)))
 
-        # Testing credit default swap
-
-        # Build the schedule
         issueDate = Date(20, March, 2006)
         maturity = Date(20, June, 2013)
         cdsFrequency = Semiannual
@@ -193,7 +189,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
             cdsConvention, cdsConvention,
             DateGeneration.Forward, false)
 
-        # Build the CDS
         recoveryRate = 0.25
         fixedRate = 0.0224
         dayCount = Actual360()
@@ -209,8 +204,8 @@ class CreditDefaultSwapTest(unittest.TestCase):
         calculatedNpv = cds.NPV()
         calculatedFairRate = cds.fairSpread()
 
-        npv = -1.364048777  # from Bloomberg we have 98.15598868 - 100.00
-        fairRate = 0.0248429452  # from Bloomberg we have 0.0258378
+        npv = -1.364048777
+        fairRate = 0.0248429452
 
         tolerance = 1e-9
 
@@ -219,13 +214,13 @@ class CreditDefaultSwapTest(unittest.TestCase):
         self.assertFalse(abs(fairRate - calculatedFairRate) > tolerance)
 
     def testImpliedHazardRate(self):
-        TEST_MESSAGE("Testing implied hazard-rate for credit-default swaps...")
+        TEST_MESSAGE(
+            "Testing implied hazard-rate for credit-default swaps...")
 
         backup = SavedSettings()
 
-        # Initialize curves
         calendar = TARGET()
-        today = calendar.adjust(Date.todaysDate())
+        today = calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = today
 
         h1 = 0.30
@@ -245,7 +240,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         probabilityCurve = RelinkableDefaultProbabilityTermStructureHandle()
         probabilityCurve.linkTo(
-            # InterpolatedHazardRateCurve<BackwardFlat>
             HazardRateCurve(
                 dates, hazardRates, dayCounter))
 
@@ -263,8 +257,7 @@ class CreditDefaultSwapTest(unittest.TestCase):
         recoveryRate = 0.4
 
         latestRate = NullReal()
-        for n in range(6, 10 + 1):  # (n = 6 n <= 10 ++n) {
-
+        for n in range(6, 10 + 1):
             maturity = calendar.advance(issueDate, n, Years)
             schedule = Schedule(
                 issueDate, maturity, Period(frequency), calendar,
@@ -310,9 +303,8 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        # Initialize curves
         calendar = TARGET()
-        today = calendar.adjust(Date.todaysDate())
+        today = calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = today
 
         hazardRate = QuoteHandle(
@@ -325,7 +317,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         discountCurve.linkTo(
             FlatForward(today, 0.06, Actual360()))
 
-        # Build the schedule
         issueDate = calendar.advance(today, -1, Years)
         maturity = calendar.advance(issueDate, 10, Years)
         convention = Following
@@ -339,7 +330,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         schedule.withRule(DateGeneration.TwentiethIMM)
         schedule = schedule.makeSchedule()
 
-        # Build the CDS
         fixedRate = 0.001
         dayCount = Actual360()
         notional = 10000.0
@@ -370,9 +360,8 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        # Initialize curves
         calendar = TARGET()
-        today = calendar.adjust(Date.todaysDate())
+        today = calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = today
 
         hazardRate = QuoteHandle(
@@ -385,7 +374,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         discountCurve.linkTo(
             FlatForward(today, 0.06, Actual360()))
 
-        # Build the schedule
         issueDate = today
         maturity = calendar.advance(issueDate, 10, Years)
         convention = Following
@@ -399,7 +387,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         schedule.withRule(DateGeneration.TwentiethIMM)
         schedule = schedule.makeSchedule()
 
-        # Build the CDS
         fixedRate = 0.05
         upfront = 0.001
         dayCount = Actual360()
@@ -428,7 +415,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         self.assertFalse(abs(fairNPV) > tolerance)
 
-        # same with null upfront to begin with
         upfront = 0.0
         cds2 = CreditDefaultSwap(
             Protection.Seller, notional, upfront, fixedRate,
@@ -458,8 +444,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
         tradeDate = Date(21, May, 2009)
         Settings.instance().evaluationDate = tradeDate
 
-        # build an ISDA compliant yield curve
-        # data comes from Markit published rates
         isdaRateHelpers = RateHelperVector()
         dep_tenors = [1, 2, 3, 6, 9, 12]
         dep_quotes = [
@@ -493,7 +477,6 @@ class CreditDefaultSwapTest(unittest.TestCase):
 
         discountCurve = RelinkableYieldTermStructureHandle()
         discountCurve.linkTo(
-            # PiecewiseYieldCurve<Discount, LogLinear>
             PiecewiseLogLinearDiscount(
                 0, WeekendsOnly(), isdaRateHelpers, Actual365Fixed(), LogLinear()))
 
@@ -508,14 +491,14 @@ class CreditDefaultSwapTest(unittest.TestCase):
         recoveries = [0.2, 0.4]
 
         markitValues = [
-            97798.29358,  # 0.001
-            97776.11889,  # 0.001
-            -914971.5977,  # 0.1
-            -894985.6298,  # 0.1
-            186921.3594,  # 0.001
-            186839.8148,  # 0.001
-            -1646623.672,  # 0.1
-            -1579803.626,  # 0.1
+            97798.29358,
+            97776.11889,
+            -914971.5977,
+            -894985.6298,
+            186921.3594,
+            186839.8148,
+            -1646623.672,
+            -1579803.626,
             274298.9203,
             274122.4725,
             -2279730.93,
@@ -528,9 +511,7 @@ class CreditDefaultSwapTest(unittest.TestCase):
             795915.9787,
             -4702034.688,
             -4042340.999]
-        # When using indexes coupons, the risk-free curve is a bit off.
-        # We might skip the tests altogether and rely on running them
-        # with indexed coupons disabled, but leaving them can be useful anyway.
+
         tolerance = 1.0e-6 if usingAtParCoupons else 1.0e-3
 
         l = 0
@@ -570,20 +551,15 @@ class CreditDefaultSwapTest(unittest.TestCase):
                     l += 1
 
     def testAccrualRebateAmounts(self):
-        TEST_MESSAGE("Testing accrual rebate amounts on credit default swaps...")
+        TEST_MESSAGE(
+            "Testing accrual rebate amounts on credit default swaps...")
 
         backup = SavedSettings()
 
-        # The accrual values are taken from various test results on the ISDA CDS model website
-        # https:#www.cdsmodel.com/cdsmodel/documentation.html.
-
-        # Inputs
         notional = 10000000
         spread = 0.0100
         maturity = Date(20, Jun, 2014)
 
-        # key is trade date and value is expected accrual
-        # typedef map<Date, Real> InputData
         inputs = [
             (Date(18, Mar, 2009), 24166.67),
             (Date(19, Mar, 2009), 0.00),

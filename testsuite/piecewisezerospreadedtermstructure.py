@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class Datum(object):
@@ -15,7 +17,6 @@ class Datum(object):
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
         self.calendar = TARGET()
         self.settlementDays = 2
@@ -41,7 +42,8 @@ class CommonVars(object):
 class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
     def testFlatInterpolationLeft(self):
-        TEST_MESSAGE("Testing flat interpolation before the first spreaded date...")
+        TEST_MESSAGE(
+            "Testing flat interpolation before the first spreaded date...")
 
         vars = CommonVars()
 
@@ -55,7 +57,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 6, Months)
 
-        # spreadedTermStructure = PiecewiseZeroSpreadedTermStructure(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -69,7 +70,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testFlatInterpolationRight(self):
-        TEST_MESSAGE("Testing flat interpolation after the last spreaded date...")
+        TEST_MESSAGE(
+            "Testing flat interpolation after the last spreaded date...")
 
         vars = CommonVars()
 
@@ -83,7 +85,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 20, Months)
 
-        # spreadedTermStructure = PiecewiseZeroSpreadedTermStructure(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
         spreadedTermStructure.enableExtrapolation()
@@ -98,7 +99,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testLinearInterpolationMultipleSpreads(self):
-        TEST_MESSAGE("Testing linear interpolation with more than two spreaded dates...")
+        TEST_MESSAGE(
+            "Testing linear interpolation with more than two spreaded dates...")
 
         vars = CommonVars()
 
@@ -118,7 +120,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 120, Days)
 
-        # spreadedTermStructure = PiecewiseZeroSpreadedTermStructure(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -132,7 +133,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testLinearInterpolation(self):
-        TEST_MESSAGE("Testing linear interpolation between two dates...")
+        TEST_MESSAGE(
+            "Testing linear interpolation between two dates...")
 
         vars = CommonVars()
 
@@ -146,7 +148,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 120, Days)
 
-        # spreadedTermStructure = InterpolatedPiecewiseZeroSpreadedTermStructure<Linear>(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -165,7 +166,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testForwardFlatInterpolation(self):
-        TEST_MESSAGE("Testing forward flat interpolation between two dates...")
+        TEST_MESSAGE(
+            "Testing forward flat interpolation between two dates...")
 
         vars = CommonVars()
 
@@ -179,7 +181,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 100, Days)
 
-        # spreadedTermStructure = InterpolatedPiecewiseZeroSpreadedTermStructure<ForwardFlat>(
         spreadedTermStructure = SpreadedForwardFlatZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -192,7 +193,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testBackwardFlatInterpolation(self):
-        TEST_MESSAGE("Testing backward flat interpolation between two dates...")
+        TEST_MESSAGE(
+            "Testing backward flat interpolation between two dates...")
 
         vars = CommonVars()
 
@@ -209,7 +211,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 110, Days)
 
-        # spreadedTermStructure = InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat> >(
         spreadedTermStructure = SpreadedBackwardFlatZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -222,7 +223,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testDefaultInterpolation(self):
-        TEST_MESSAGE("Testing default interpolation between two dates...")
+        TEST_MESSAGE(
+            "Testing default interpolation between two dates...")
 
         vars = CommonVars()
 
@@ -236,7 +238,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 100, Days)
 
-        # spreadedTermStructure = PiecewiseZeroSpreadedTermStructure(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -249,7 +250,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testSetInterpolationFactory(self):
-        TEST_MESSAGE("Testing factory constructor with additional parameters...")
+        TEST_MESSAGE(
+            "Testing factory constructor with additional parameters...")
 
         vars = CommonVars()
 
@@ -266,14 +268,10 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 11, Months)
 
-        # spreadedTermStructure
-
         freq = NoFrequency
 
-        # Cubic factory
         factory = Cubic(CubicInterpolation.Spline, false)
 
-        # spreadedTermStructure = InterpolatedPiecewiseZeroSpreadedTermStructure<Cubic>(
         spreadedTermStructure = SpreadedCubicZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure),
             spreads, spreadDates, vars.compounding, freq, vars.dayCount, factory)
@@ -287,7 +285,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(abs(interpolatedZeroRate - expectedRate) > tolerance)
 
     def testMaxDate(self):
-        TEST_MESSAGE("Testing term structure max date...")
+        TEST_MESSAGE(
+            "Testing term structure max date...")
 
         vars = CommonVars()
 
@@ -299,7 +298,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
             vars.calendar.advance(vars.today, 8, Months),
             vars.calendar.advance(vars.today, 15, Months)]
 
-        # spreadedTermStructure = PiecewiseZeroSpreadedTermStructure(
         spreadedTermStructure = SpreadedLinearZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 
@@ -310,7 +308,8 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
         self.assertFalse(maxDate != expectedDate)
 
     def testQuoteChanging(self):
-        TEST_MESSAGE("Testing quote update...")
+        TEST_MESSAGE(
+            "Testing quote update...")
 
         vars = CommonVars()
 
@@ -324,7 +323,6 @@ class PiecewiseZeroSpreadedTermStructureTest(unittest.TestCase):
 
         interpolationDate = vars.calendar.advance(vars.today, 120, Days)
 
-        # spreadedTermStructure = InterpolatedPiecewiseZeroSpreadedTermStructure<BackwardFlat>(
         spreadedTermStructure = SpreadedBackwardFlatZeroInterpolatedTermStructure(
             YieldTermStructureHandle(vars.termStructure), spreads, spreadDates)
 

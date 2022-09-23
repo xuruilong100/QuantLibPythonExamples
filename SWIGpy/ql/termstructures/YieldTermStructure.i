@@ -17,9 +17,9 @@ class YieldTermStructure : public TermStructure {
 
   public:
     DiscountFactor discount(
-        const Date&, bool extrapolate = false);
+        const Date&, bool extrapolate = false) const;
     DiscountFactor discount(
-        Time, bool extrapolate = false);
+        Time, bool extrapolate = false) const;
     InterestRate zeroRate(
         const Date& d,
         const DayCounter&, Compounding, Frequency f = Annual,
@@ -36,8 +36,8 @@ class YieldTermStructure : public TermStructure {
     InterestRate forwardRate(
         const Date& d, const Period& p,
         const DayCounter& resultDayCounter,
-        Compounding comp, Frequency freq=Annual,
-        bool extrapolate=false) const;
+        Compounding comp, Frequency freq = Annual,
+        bool extrapolate = false) const;
     InterestRate forwardRate(
         Time t1, Time t2,
         Compounding, Frequency f = Annual,

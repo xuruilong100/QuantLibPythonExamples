@@ -29,13 +29,12 @@ class GJRGARCHModel : public CalibratedModel {
 %shared_ptr(VarianceGammaModel)
 class VarianceGammaModel : public CalibratedModel {
   public:
-    explicit VarianceGammaModel(
+    VarianceGammaModel(
         const ext::shared_ptr<VarianceGammaProcess>& process);
 
     Real sigma() const;
     Real nu() const;
     Real theta() const;
-
     ext::shared_ptr<VarianceGammaProcess> process() const;
 };
 

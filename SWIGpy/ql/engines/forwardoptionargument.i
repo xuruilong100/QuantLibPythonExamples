@@ -71,7 +71,7 @@ class MCForwardEuropeanBSEngine : public PricingEngine {
 template <class RNG>
 class MakeMCForwardEuropeanBSEngine {
   public:
-    explicit MakeMCForwardEuropeanBSEngine(
+    MakeMCForwardEuropeanBSEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 
     MakeMCForwardEuropeanBSEngine& withSteps(Size steps);
@@ -107,7 +107,7 @@ class MCForwardEuropeanHestonEngine : public PricingEngine {
         Real requiredTolerance,
         Size maxSamples,
         BigNatural seed,
-        bool controlVariate=false);
+        bool controlVariate = false);
 };
 
 %template(MCPRForwardEuropeanHestonEngine) MCForwardEuropeanHestonEngine<PseudoRandom>;
@@ -116,7 +116,7 @@ class MCForwardEuropeanHestonEngine : public PricingEngine {
 template <class RNG>
 class MakeMCForwardEuropeanHestonEngine {
   public:
-    explicit MakeMCForwardEuropeanHestonEngine(ext::shared_ptr<HestonProcess> process);
+    MakeMCForwardEuropeanHestonEngine(ext::shared_ptr<HestonProcess> process);
 
     MakeMCForwardEuropeanHestonEngine& withSteps(Size steps);
     MakeMCForwardEuropeanHestonEngine& withStepsPerYear(Size steps);

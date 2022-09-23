@@ -5,15 +5,16 @@
 
 namespace QuantLib {
 
-class ChinaFixingRepo : public IborIndex {
-  public:
-    ChinaFixingRepo(const Period& tenor,
-                    Natural fixingDays,
-                    const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
+    class ChinaFixingRepo : public IborIndex {
+      public:
+        ChinaFixingRepo(const Period& tenor,
+                        Natural fixingDays,
+                        const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
 
-    ext::shared_ptr<IborIndex> clone(const Handle<YieldTermStructure>& forwarding) const override;
-};
+        ext::shared_ptr<IborIndex>
+        clone(const Handle<YieldTermStructure>& forwarding) const override;
+    };
 
-}    // namespace QuantLib
+} // namespace QuantLib
 
-#endif    // ChinaFixingRepo_HPP
+#endif // ChinaFixingRepo_HPP

@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import log, sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 class BarrierOptionData(object):
@@ -41,13 +43,13 @@ class NewBarrierOptionData(object):
         self.type = typeOpt
         self.exType = exType
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class BarrierFxOptionData(object):
@@ -72,24 +74,25 @@ class BarrierFxOptionData(object):
         self.rebate = rebate
         self.type = typeOpt
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.vol25Put = vol25Put  # 25 delta put vol
-        self.volAtm = volAtm  # atm vol
-        self.vol25Call = vol25Call  # 25 delta call vol
-        self.v = v  # volatility
-        self.result = result  # result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.vol25Put = vol25Put
+        self.volAtm = volAtm
+        self.vol25Call = vol25Call
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class BarrierOptionTest(unittest.TestCase):
+
     def testParity(self):
         TEST_MESSAGE(
             "Testing that knock-in plus knock-out barrier options "
             "replicate a European option...")
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         dc = Actual360()
@@ -127,8 +130,6 @@ class BarrierOptionTest(unittest.TestCase):
         error = abs(replicated - expected)
         self.assertFalse(error > 1e-7)
 
-        # try again with different day counters
-
         volHandle.linkTo(flatVol(today, 0.20, Business252(TARGET())))
 
         replicated = knockIn.NPV() + knockOut.NPV()
@@ -137,14 +138,12 @@ class BarrierOptionTest(unittest.TestCase):
         self.assertFalse(error > 1e-7)
 
     def testHaugValues(self):
-        TEST_MESSAGE("Testing barrier options against Haug's values...")
+        TEST_MESSAGE(
+            "Testing barrier options against Haug's values...")
 
         european = Exercise.European
         american = Exercise.American
         values = [
-            # The data below are from
-            # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
-            #     barrierType, barrier, rebate,         type, exercise, strk,     s,    q,    r,    t,    v,  result, tol
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, european, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 9.0246, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, european, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 6.7924, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, european, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 4.8759, 1.0e-4),
@@ -181,7 +180,6 @@ class BarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Call, european, 90, 100.0, 0.04, 0.08, 0.50, 0.30, 15.2098, 1.0e-4),
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Call, european, 100, 100.0, 0.04, 0.08, 0.50, 0.30, 9.7278, 1.0e-4),
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Call, european, 110, 100.0, 0.04, 0.08, 0.50, 0.30, 5.8350, 1.0e-4),
-            #     barrierType, barrier, rebate,         type, exercise, strk,     s,    q,    r,    t,    v,  result, tol
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Put, european, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 2.2798, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Put, european, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 2.2947, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Put, european, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 2.6252, 1.0e-4),
@@ -218,8 +216,6 @@ class BarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Put, european, 90, 100.0, 0.04, 0.08, 0.50, 0.30, 2.0658, 1.0e-4),
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Put, european, 100, 100.0, 0.04, 0.08, 0.50, 0.30, 4.4226, 1.0e-4),
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Put, european, 110, 100.0, 0.04, 0.08, 0.50, 0.30, 8.3686, 1.0e-4),
-            # Options with american exercise: values computed with 400 steps of Haug's VBA code (handles only out options)
-            #     barrierType, barrier, rebate,         type, exercise, strk,     s,    q,    r,    t,    v,  result, tol
             NewBarrierOptionData(Barrier.DownOut, 95.0, 0.0, Option.Call, american, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 10.4655, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 0.0, Option.Call, american, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 4.5159, 1.0e-4),
             NewBarrierOptionData(Barrier.DownOut, 95.0, 0.0, Option.Call, american, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 2.5971, 1.0e-4),
@@ -238,8 +234,6 @@ class BarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(Barrier.UpOut, 105.0, 0.0, Option.Put, american, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 1.4763, 1.0e-4),
             NewBarrierOptionData(Barrier.UpOut, 105.0, 0.0, Option.Put, american, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 3.3001, 1.0e-4),
             NewBarrierOptionData(Barrier.UpOut, 105.0, 0.0, Option.Put, american, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 10.0000, 1.0e-4),
-            # some american in-options - results (roughly) verified with other numerical methods 
-            #     barrierType, barrier, rebate,         type, exercise, strk,     s,    q,    r,    t,    v,  result, tol
             NewBarrierOptionData(Barrier.DownIn, 95.0, 3.0, Option.Call, american, 90, 100.0, 0.04, 0.08, 0.50, 0.25, 7.7615, 1.0e-4),
             NewBarrierOptionData(Barrier.DownIn, 95.0, 3.0, Option.Call, american, 100, 100.0, 0.04, 0.08, 0.50, 0.25, 4.0118, 1.0e-4),
             NewBarrierOptionData(Barrier.DownIn, 95.0, 3.0, Option.Call, american, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 2.0544, 1.0e-4),
@@ -248,7 +242,7 @@ class BarrierOptionTest(unittest.TestCase):
             NewBarrierOptionData(Barrier.UpIn, 105.0, 3.0, Option.Call, american, 110, 100.0, 0.04, 0.08, 0.50, 0.25, 4.5900, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -258,10 +252,12 @@ class BarrierOptionTest(unittest.TestCase):
         vol = SimpleQuote(0.0)
         volTS = flatVol(today, vol, dc)
 
-        for value in values:
+        def runTest(value,
+                    useZeroSpot,
+                    useTriggeredBarrier):
             exDate = today + timeToDays(value.t)
 
-            spot.setValue(value.s)
+            spot.setValue(0.0 if useZeroSpot else value.s)
             qRate.setValue(value.q)
             rRate.setValue(value.r)
             vol.setValue(value.v)
@@ -275,61 +271,71 @@ class BarrierOptionTest(unittest.TestCase):
                 BlackVolTermStructureHandle(volTS))
 
             exercise = EuropeanExercise(exDate) if value.exType == Exercise.European else AmericanExercise(exDate)
-            # if (value.exType == Exercise.European)
-            #     exercise = EuropeanExercise(exDate)
-            # else
-            #     exercise = AmericanExercise(exDate)
 
-            barrierOption = BarrierOption(
-                value.barrierType, value.barrier, value.rebate, payoff, exercise)
+            if useTriggeredBarrier:
+                if value.barrierType == Barrier.DownIn or value.barrierType == Barrier.DownOut:
+                    barrier = value.s * 1.01
+                else:
+                    barrier = value.s * 0.99
+            else:
+                barrier = value.barrier
 
-            if value.exType == Exercise.European:
-                # these engines support only european options
-                engine = AnalyticBarrierEngine(stochProcess)
+            barrierOption = BarrierOption(value.barrierType, barrier, value.rebate, payoff, exercise)
 
-                barrierOption.setPricingEngine(engine)
+            engine = AnalyticBarrierEngine(stochProcess)
+            barrierOption.setPricingEngine(engine)
 
+            if not useZeroSpot and not useTriggeredBarrier and value.exType == Exercise.European:
                 calculated = barrierOption.NPV()
                 expected = value.result
                 error = abs(calculated - expected)
                 self.assertFalse(error > value.tol)
+            else:
+                self.assertRaises(RuntimeError, barrierOption.NPV)
 
-                engine = FdBlackScholesBarrierEngine(stochProcess, 200, 400)
-                barrierOption.setPricingEngine(engine)
+            engine = FdBlackScholesBarrierEngine(stochProcess, 200, 400)
+            barrierOption.setPricingEngine(engine)
 
+            if not useZeroSpot and not useTriggeredBarrier and value.exType == Exercise.European:
                 calculated = barrierOption.NPV()
                 expected = value.result
                 error = abs(calculated - expected)
                 self.assertFalse(error > 5.0e-3)
+            else:
+                self.assertRaises(RuntimeError, barrierOption.NPV)
 
             engine = BinomialCRRBarrierEngine(stochProcess, 400)
             barrierOption.setPricingEngine(engine)
 
-            calculated = barrierOption.NPV()
-            expected = value.result
-            error = abs(calculated - expected)
-            tol = 1.1e-2
-            self.assertFalse(error > tol)
+            if not useZeroSpot and not useTriggeredBarrier:
+                calculated = barrierOption.NPV()
+                expected = value.result
+                error = abs(calculated - expected)
+                tol = 1.1e-2
+                self.assertFalse(error > tol)
+            else:
+                self.assertRaises(RuntimeError, barrierOption.NPV)
 
-            # Note: here, to test Derman convergence, we force maxTimeSteps to 
-            # timeSteps, effectively disabling Boyle-Lau barrier adjustment.
-            # Production code should always enable Boyle-Lau. In most cases it
-            # gives very good convergence with only a modest timeStep increment.
             engine = BinomialCRRDKBarrierEngine(stochProcess, 400)
             barrierOption.setPricingEngine(engine)
-            calculated = barrierOption.NPV()
-            expected = value.result
-            error = abs(calculated - expected)
-            tol = 4e-2
-            self.assertFalse(error > tol)
+
+            if not useZeroSpot and not useTriggeredBarrier:
+                calculated = barrierOption.NPV()
+                expected = value.result
+                error = abs(calculated - expected)
+                tol = 4e-2
+                self.assertFalse(error > tol)
+            else:
+                self.assertRaises(RuntimeError, barrierOption.NPV)
+
+        for value in values:
+            runTest(value, false, false)
+            runTest(value, true, false)
+            runTest(value, false, true)
 
     def testBabsiriValues(self):
-        TEST_MESSAGE("Testing barrier options against Babsiri's values...")
-
-        # Data from
-        # "Simulating Path-Dependent Options: A New Approach"
-        # - M. El Babsiri and G. Noel
-        # Journal of Derivatives Winter 1998 6, 2
+        TEST_MESSAGE(
+            "Testing barrier options against Babsiri's values...")
 
         values = [
             BarrierOptionData(Barrier.DownIn, 0.10, 100, 90, 0.07187, 0.0),
@@ -349,7 +355,7 @@ class BarrierOptionTest(unittest.TestCase):
         q = 0.02
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         underlying = SimpleQuote(underlyingPrice)
 
         qH_SME = SimpleQuote(q)
@@ -377,7 +383,6 @@ class BarrierOptionTest(unittest.TestCase):
 
             engine = AnalyticBarrierEngine(stochProcess)
 
-            # analytic
             barrierCallOption = BarrierOption(
                 value.type, value.barrier, rebate, callPayoff, exercise)
             barrierCallOption.setPricingEngine(engine)
@@ -392,8 +397,8 @@ class BarrierOptionTest(unittest.TestCase):
             mcEngine = MakeMCLDBarrierEngine(stochProcess)
             mcEngine.withStepsPerYear(1)
             mcEngine.withBrownianBridge()
-            mcEngine.withSamples(131071)  # 2^17-1
-            mcEngine.withMaxSamples(1048575)  # 2^20-1
+            mcEngine.withSamples(131071)
+            mcEngine.withMaxSamples(1048575)
             mcEngine.withSeed(5)
             mcEngine = mcEngine.makeEngine()
 
@@ -403,13 +408,8 @@ class BarrierOptionTest(unittest.TestCase):
             self.assertFalse(error > maxMcRelativeErrorAllowed)
 
     def testBeagleholeValues(self):
-        TEST_MESSAGE("Testing barrier options against Beaglehole's values...")
-
-        # Data from
-        # "Going to Extreme: Correcting Simulation Bias in Exotic
-        # Option Valuation"
-        # - D.R. Beaglehole, P.H. Dybvig and G. Zhou
-        # Financial Analysts Journal Jan / Feb 1997 53, 1
+        TEST_MESSAGE(
+            "Testing barrier options against Beaglehole's values...")
 
         values = [
             BarrierOptionData(Barrier.DownOut, 0.50, 50, 45, 5.477, 0.0)]
@@ -420,7 +420,7 @@ class BarrierOptionTest(unittest.TestCase):
         q = 0.00
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         underlying = SimpleQuote(underlyingPrice)
 
@@ -462,8 +462,8 @@ class BarrierOptionTest(unittest.TestCase):
             mcEngine = MakeMCLDBarrierEngine(stochProcess)
             mcEngine.withStepsPerYear(1)
             mcEngine.withBrownianBridge()
-            mcEngine.withSamples(131071)  # 2^17-1
-            mcEngine.withMaxSamples(1048575)  # 2^20-1
+            mcEngine.withSamples(131071)
+            mcEngine.withMaxSamples(1048575)
             mcEngine.withSeed(10)
             mcEngine = mcEngine.makeEngine()
 
@@ -473,7 +473,8 @@ class BarrierOptionTest(unittest.TestCase):
             self.assertFalse(error > maxMcRelativeErrorAllowed)
 
     def testPerturbative(self):
-        TEST_MESSAGE("Testing perturbative engine for barrier options...")
+        TEST_MESSAGE(
+            "Testing perturbative engine for barrier options...")
 
         S = 100.0
         rebate = 0.0
@@ -481,7 +482,7 @@ class BarrierOptionTest(unittest.TestCase):
         q = 0.02
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         underlying = SimpleQuote(S)
         qTS = flatRate(today, q, dc)
@@ -597,7 +598,7 @@ class BarrierOptionTest(unittest.TestCase):
         volTS = BlackVarianceSurface(
             settlementDate,
             calendar,
-            dates[1:],  # DateVector(dates.begin() + 1, dates.end()),
+            dates[1:],
             strikes,
             blackVolMatrix,
             dayCounter)
@@ -655,12 +656,12 @@ class BarrierOptionTest(unittest.TestCase):
             abs(expectedLocalVolNPV - calculatedLocalVolNPV) > tol * expectedLocalVolNPV)
 
     def testVannaVolgaSimpleBarrierValues(self):
-        TEST_MESSAGE("Testing barrier FX options against Vanna/Volga values...")
+        TEST_MESSAGE(
+            "Testing barrier FX options against Vanna/Volga values...")
 
         backup = SavedSettings()
 
         values = [
-            # barrierType,barrier,rebate,type,strike,s,q,r,t,vol25Put,volAtm,vol25Call,vol, result, tol
             BarrierFxOptionData(Barrier.UpOut, 1.5, 0, Option.Call, 1.13321, 1.30265, 0.0003541, 0.0033871, 1, 0.10087, 0.08925, 0.08463, 0.11638, 0.148127, 1.0e-4),
             BarrierFxOptionData(Barrier.UpOut, 1.5, 0, Option.Call, 1.22687, 1.30265, 0.0003541, 0.0033871, 1, 0.10087, 0.08925, 0.08463, 0.10088, 0.075943, 1.0e-4),
             BarrierFxOptionData(Barrier.UpOut, 1.5, 0, Option.Call, 1.31179, 1.30265, 0.0003541, 0.0033871, 1, 0.10087, 0.08925, 0.08463, 0.08925, 0.0274771, 1.0e-4),

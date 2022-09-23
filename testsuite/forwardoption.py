@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp
+
+from QuantLib import *
+
+from utilities import *
 
 
 class ForwardOptionData(object):
@@ -18,32 +20,28 @@ class ForwardOptionData(object):
                  tol):
         self.type = optType
         self.moneyness = moneyness
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.start = start  # time to reset
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.start = start
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class ForwardOptionTest(unittest.TestCase):
-    def testValues(self):
-        TEST_MESSAGE("Testing forward option values...")
 
-        # The data below are from
-        # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998        
+    def testValues(self):
+        TEST_MESSAGE(
+            "Testing forward option values...")
+
         values = [
-            # type, moneyness, spot,  div, rate,start,   t,  vol, result, tol
-            # "Option pricing formulas", pag. 37
             ForwardOptionData(Option.Call, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 4.4064, 1.0e-4),
-            # "Option pricing formulas", VBA code
-            ForwardOptionData(Option.Put, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 8.2971, 1.0e-4)
-        ]
+            ForwardOptionData(Option.Put, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 8.2971, 1.0e-4)]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -79,26 +77,23 @@ class ForwardOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testGreeks(self):
-        TEST_MESSAGE("Testing forward option greeks...")
+        TEST_MESSAGE(
+            "Testing forward option greeks...")
 
         backup = SavedSettings()
 
         self._testForwardGreeks(ForwardEuropeanEngine)
 
     def testPerformanceValues(self):
-        TEST_MESSAGE("Testing forward performance option values...")
+        TEST_MESSAGE(
+            "Testing forward performance option values...")
 
-        # The data below are the performance equivalent of the
-        # forward options tested above and taken from
-        # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998        
         values = [
-            # type, moneyness, spot,  div, rate,start, maturity,  vol,                       result, tol
             ForwardOptionData(Option.Call, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 4.4064 / 60 * exp(-0.04 * 0.25), 1.0e-4),
-            ForwardOptionData(Option.Put, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 8.2971 / 60 * exp(-0.04 * 0.25), 1.0e-4)
-        ]
+            ForwardOptionData(Option.Put, 1.1, 60.0, 0.04, 0.08, 0.25, 1.0, 0.30, 8.2971 / 60 * exp(-0.04 * 0.25), 1.0e-4)]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -135,19 +130,21 @@ class ForwardOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testPerformanceGreeks(self):
-        TEST_MESSAGE("Testing forward performance option greeks...")
+        TEST_MESSAGE(
+            "Testing forward performance option greeks...")
 
         backup = SavedSettings()
 
         self._testForwardGreeks(ForwardPerformanceEuropeanEngine)
 
-    @unittest.skip("not implemented")
+    @unittest.skip("testGreeksInitialization")
     def testGreeksInitialization(self):
         TEST_MESSAGE(
             "Testing forward option greeks initialization...")
 
     def testMCPrices(self):
-        TEST_MESSAGE("Testing forward option MC prices...")
+        TEST_MESSAGE(
+            "Testing forward option MC prices...")
 
         tol = [0.002, 0.001, 0.0006, 5e-4, 5e-4]
 
@@ -162,7 +159,7 @@ class ForwardOptionTest(unittest.TestCase):
 
         dc = Actual360()
         backup = SavedSettings()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(s)
@@ -203,32 +200,18 @@ class ForwardOptionTest(unittest.TestCase):
             self.assertFalse(error > tol[moneyness_index])
 
     def testHestonMCPrices(self):
-        TEST_MESSAGE("Testing forward option Heston MC prices...")
+        TEST_MESSAGE(
+            "Testing forward option Heston MC prices...")
 
         optionTypes = [Option.Call, Option.Put]
 
         mcForwardStartTolerance = [
-            [7e-4,  # Call, moneyness=0.8
-             8e-4,  # Call, moneyness=0.9
-             6e-4,  # Call, moneyness=1.0
-             5e-4,  # Call, moneyness=1.1
-             5e-4],  # Call, moneyness=1.2
-            [6e-4,  # Put, moneyness=0.8
-             5e-4,  # Put, moneyness=0.9
-             6e-4,  # Put, moneyness=1.0
-             0.001,  # Put, moneyness=1.1
-             0.001]];  # Put, moneyness=1.2
+            [7e-4, 8e-4, 6e-4, 5e-4, 5e-4],
+            [6e-4, 5e-4, 6e-4, 0.001, 0.001]]
 
-        tol = [[9e-4,  # Call, moneyness=0.8
-                9e-4,  # Call, moneyness=0.9
-                6e-4,  # Call, moneyness=1.0
-                5e-4,  # Call, moneyness=1.1
-                5e-4],  # Call, moneyness=1.2
-               [6e-4,  # Put, moneyness=0.8
-                5e-4,  # Put, moneyness=0.9
-                8e-4,  # Put, moneyness=1.0
-                0.002,  # Put, moneyness=1.1
-                0.002]];  # Put, moneyness=1.2
+        tol = [
+            [9e-4, 9e-4, 6e-4, 5e-4, 5e-4],
+            [6e-4, 5e-4, 8e-4, 0.002, 0.002]]
 
         for type_index in range(len(optionTypes)):
 
@@ -244,7 +227,6 @@ class ForwardOptionTest(unittest.TestCase):
             sigma_bs = 0.245
             s = 100
 
-            # Test 1: Set up an equivalent flat Heston and compare to analytical BS pricing
             v0 = sigma_bs * sigma_bs
             kappa = 1e-8
             theta = sigma_bs * sigma_bs
@@ -253,7 +235,7 @@ class ForwardOptionTest(unittest.TestCase):
 
             dc = Actual360()
             backup = SavedSettings()
-            today = Date(16, Sep, 2015)
+            today = knownGoodDefault
             Settings.instance().evaluationDate = today
 
             exDate = today + Period(1, Years)
@@ -297,8 +279,6 @@ class ForwardOptionTest(unittest.TestCase):
                 mcError = relativeError(analyticPrice, mcPrice, s)
                 self.assertFalse(mcError > mcForwardStartTolerance[type_index][moneyness_index])
 
-            # Test 2: Using an arbitrary Heston model, check that prices match semi-analytical
-            # Heston prices when reset date is t=0
             v0 = sigma_bs * sigma_bs
             kappa = 1.0
             theta = 0.08
@@ -338,7 +318,6 @@ class ForwardOptionTest(unittest.TestCase):
                 tolerance = tol[type_index][moneyness_index]
                 self.assertFalse(mcError > tolerance)
 
-                # T=0, testing the Analytic Pricer's T=0 analytical solution
                 forwardOption.setPricingEngine(analyticForwardHestonEngine)
                 hestonAnalyticPrice = forwardOption.NPV()
 
@@ -346,22 +325,14 @@ class ForwardOptionTest(unittest.TestCase):
                 self.assertFalse(analyticError > analyticTolerance)
 
     def testHestonAnalyticalVsMCPrices(self):
-        TEST_MESSAGE("Testing Heston analytic vs MC prices...")
+        TEST_MESSAGE(
+            "Testing Heston analytic vs MC prices...")
 
         optionTypes = [Option.Call, Option.Put]
 
-        tol = [[0.002,  # Call, moneyness=0.8, CV:false
-                0.002,  # Call, moneyness=0.8, CV:true
-                0.001,  # Call, moneyness=1.0, CV:false
-                0.001,  # Call, moneyness=1.8, CV:true
-                0.001,  # Call, moneyness=1.2, CV:false
-                0.001],  # Call, moneyness=1.2, CV:true
-               [0.001,  # Put, moneyness=0.8, CV:false
-                0.001,  # Put, moneyness=0.8, CV:true
-                0.003,  # Put, moneyness=1.0, CV:false
-                0.003,  # Put, moneyness=1.0, CV:true
-                0.003,  # Put, moneyness=1.2, CV:false
-                0.003]]  # Put, moneyness=1.2, CV:true
+        tol = [
+            [0.002, 0.002, 0.001, 0.001, 0.001, 0.001],
+            [0.001, 0.001, 0.003, 0.003, 0.003, 0.003]]
 
         for option_type_index in range(len(optionTypes)):
 
@@ -382,7 +353,7 @@ class ForwardOptionTest(unittest.TestCase):
 
             dc = Actual360()
             backup = SavedSettings()
-            today = Date(16, Sep, 2015)
+            today = knownGoodDefault
             Settings.instance().evaluationDate = today
 
             exDate = today + Period(1, Years)
@@ -461,7 +432,7 @@ class ForwardOptionTest(unittest.TestCase):
         vols = [0.11, 0.50, 1.20]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -494,12 +465,10 @@ class ForwardOptionTest(unittest.TestCase):
                         option.setPricingEngine(engine)
 
                         for u in underlyings:
-                            for m in qRates:
-                                for n in rRates:
+                            for q in qRates:
+                                for r in rRates:
                                     for v in vols:
 
-                                        q = m
-                                        r = n
                                         spot.setValue(u)
                                         qRate.setValue(q)
                                         rRate.setValue(r)
@@ -514,7 +483,7 @@ class ForwardOptionTest(unittest.TestCase):
                                         calculated["vega"] = option.vega()
 
                                         if value > spot.value() * 1.0e-5:
-                                            # perturb spot and get delta and gamma
+
                                             du = u * 1.0e-4
                                             spot.setValue(u + du)
                                             value_p = option.NPV()
@@ -526,7 +495,6 @@ class ForwardOptionTest(unittest.TestCase):
                                             expected["delta"] = (value_p - value_m) / (2 * du)
                                             expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                            # perturb rates and get rho and dividend rho
                                             dr = r * 1.0e-4
                                             rRate.setValue(r + dr)
                                             value_p = option.NPV()
@@ -543,7 +511,6 @@ class ForwardOptionTest(unittest.TestCase):
                                             qRate.setValue(q)
                                             expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                            # perturb volatility and get vega
                                             dv = v * 1.0e-4
                                             vol.setValue(v + dv)
                                             value_p = option.NPV()
@@ -552,7 +519,6 @@ class ForwardOptionTest(unittest.TestCase):
                                             vol.setValue(v)
                                             expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                            # perturb date and get theta
                                             dT = dc.yearFraction(today - Period(1, Days), today + Period(1, Days))
                                             Settings.instance().evaluationDate = today - Period(1, Days)
                                             value_m = option.NPV()
@@ -561,8 +527,6 @@ class ForwardOptionTest(unittest.TestCase):
                                             Settings.instance().evaluationDate = today
                                             expected["theta"] = (value_p - value_m) / dT
 
-                                            # compare
-                                            # std.map<std.string, Real>.iterator it
                                             for it in calculated.keys():
                                                 greek = it
                                                 expct = expected[greek]

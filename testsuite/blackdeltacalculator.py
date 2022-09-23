@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 class DeltaData(object):
@@ -17,8 +19,8 @@ class DeltaData(object):
         self.ot = ot
         self.dt = dt
         self.spot = spot
-        self.dDf = dDf  # domestic discount
-        self.fDf = fDf  # foreign  discount
+        self.dDf = dDf
+        self.fDf = fDf
         self.stdDev = stdDev
         self.strike = strike
         self.value = value
@@ -37,22 +39,22 @@ class EuropeanOptionData(object):
                  tol):
         self.typeOpt = typeOpt
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.result = result
+        self.tol = tol
 
 
 class BlackDeltaCalculatorTest(unittest.TestCase):
 
     def testDeltaValues(self):
-        TEST_MESSAGE("Testing delta calculator values...")
+        TEST_MESSAGE(
+            "Testing delta calculator values...")
 
         values = [
-            # Values taken from parallel implementation in R
             DeltaData(Option.Call, DeltaVolQuote.Spot, 1.421, 0.997306, 0.992266, 0.1180654, 1.608080, 0.15),
             DeltaData(Option.Call, DeltaVolQuote.PaSpot, 1.421, 0.997306, 0.992266, 0.1180654, 1.600545, 0.15),
             DeltaData(Option.Call, DeltaVolQuote.Fwd, 1.421, 0.997306, 0.992266, 0.1180654, 1.609029, 0.15),
@@ -65,7 +67,6 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             DeltaData(Option.Put, DeltaVolQuote.PaSpot, 3.4582, 0.99979, 0.9250616, 0.3199034, 3.778327, -0.821),
             DeltaData(Option.Put, DeltaVolQuote.Fwd, 3.4582, 0.99979, 0.9250616, 0.3199034, 4.51896, -0.821),
             DeltaData(Option.Put, DeltaVolQuote.PaFwd, 3.4582, 0.99979, 0.9250616, 0.3199034, 3.65728, -0.821),
-            # JPYUSD Data taken from Castagnas "FX Options and Smile Risk" (Wiley 2009)
             DeltaData(Option.Put, DeltaVolQuote.Spot, 103.00, 0.99482, 0.98508, 0.07247845, 97.47, -0.25),
             DeltaData(Option.Put, DeltaVolQuote.PaSpot, 103.00, 0.99482, 0.98508, 0.07247845, 97.22, -0.25)]
 
@@ -79,8 +80,9 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             currStrike = values[i].strike
             currDelta = values[i].value
 
-            myCalc = BlackDeltaCalculator(currOt, currDt, currSpot,
-                                          currdDf, currfDf, currStdDev)
+            myCalc = BlackDeltaCalculator(
+                currOt, currDt, currSpot,
+                currdDf, currfDf, currStdDev)
 
             tolerance = 1.0e-3
 
@@ -91,9 +93,6 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
             tolerance = 1.0e-2
-            # tolerance not that small, but sufficient for strikes in
-            # particular since they might be results of a numerical
-            # procedure
 
             expected = currStrike
             calculated = myCalc.strikeFromDelta(currDelta)
@@ -102,17 +101,12 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testDeltaPriceConsistency(self):
-        TEST_MESSAGE("Testing premium-adjusted delta price consistency...")
-
-        # This function tests for price consistencies with the standard
-        # Black Scholes calculator, since premium adjusted deltas can be calculated
-        # from spot deltas by adding/subtracting the premium.
+        TEST_MESSAGE(
+            "Testing premium-adjusted delta price consistency...")
 
         backup = SavedSettings()
 
-        # actually, value and tol won't be needed for testing
         values = [
-            #        type, strike,   spot,    rd,    rf,    t,  vol,   value,    tol
             EuropeanOptionData(Option.Call, 0.9123, 1.2212, 0.0231, 0.0000, 0.25, 0.301, 0.0, 0.0),
             EuropeanOptionData(Option.Call, 0.9234, 1.2212, 0.0231, 0.0000, 0.35, 0.111, 0.0, 0.0),
             EuropeanOptionData(Option.Call, 0.9783, 1.2212, 0.0231, 0.0000, 0.45, 0.071, 0.0, 0.0),
@@ -131,18 +125,13 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             EuropeanOptionData(Option.Put, 1.3212, 1.2212, 0.0231, 0.0000, 0.85, 0.034, 0.0, 0.0),
             EuropeanOptionData(Option.Put, 1.3923, 1.2212, 0.0131, 0.2344, 0.95, 0.001, 0.0, 0.0),
             EuropeanOptionData(Option.Put, 1.3455, 1.2212, 0.0000, 0.0000, 1.00, 0.127, 0.0, 0.0),
-            # extreme case: zero vol
             EuropeanOptionData(Option.Put, 1.3455, 1.2212, 0.0000, 0.0000, 0.50, 0.000, 0.0, 0.0),
-            # extreme case: zero strike
             EuropeanOptionData(Option.Put, 0.0000, 1.2212, 0.0000, 0.0000, 1.50, 0.133, 0.0, 0.0),
-            # extreme case: zero strike+zero vol
             EuropeanOptionData(Option.Put, 0.0000, 1.2212, 0.0000, 0.0000, 1.00, 0.133, 0.0, 0.0)]
 
         dc = Actual360()
         calendar = TARGET()
-        today = Date.todaysDate()
-
-        # Start setup of market data
+        today = knownGoodDefault
 
         discFor = 0.0
         discDom = 0.0
@@ -165,8 +154,6 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
         volQuote = SimpleQuote(0.0)
         volHandle = QuoteHandle(volQuote)
         volTS = BlackConstantVol(today, calendar, volHandle, dc)
-
-        # Setup of market data finished
 
         tolerance = 1.0e-10
 
@@ -221,12 +208,11 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             myCalc.setDeltaType(DeltaVolQuote.PaFwd)
 
             calculatedVal = myCalc.deltaFromStrike(value.strike)
-            expectedVal = expectedVal / discFor  # Premium adjusted Fwd Delta is PA spot without discount
+            expectedVal = expectedVal / discFor
             error = abs(expectedVal - calculatedVal)
 
             self.assertFalse(error > tolerance)
 
-            # Test consistency with BlackScholes Calculator for Spot Delta
             myCalc.setDeltaType(DeltaVolQuote.Spot)
 
             calculatedVal = myCalc.deltaFromStrike(value.strike)
@@ -236,26 +222,18 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testPutCallParity(self):
-        TEST_MESSAGE("Testing put-call parity for deltas...")
-
-        # Test for put call parity between put and call deltas.
+        TEST_MESSAGE(
+            "Testing put-call parity for deltas...")
 
         backup = SavedSettings()
 
-        # The data below are from
-        # "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-        # pag 11-16
-
         values = [
-            # pag 2-8
-            #        type, strike,   spot,    q,    r,    t,  vol,   value,    tol
             EuropeanOptionData(Option.Call, 65.00, 60.00, 0.00, 0.08, 0.25, 0.30, 2.1334, 1.0e-4),
             EuropeanOptionData(Option.Put, 95.00, 100.00, 0.05, 0.10, 0.50, 0.20, 2.4648, 1.0e-4),
             EuropeanOptionData(Option.Put, 19.00, 19.00, 0.10, 0.10, 0.75, 0.28, 1.7011, 1.0e-4),
             EuropeanOptionData(Option.Call, 19.00, 19.00, 0.10, 0.10, 0.75, 0.28, 1.7011, 1.0e-4),
             EuropeanOptionData(Option.Call, 1.60, 1.56, 0.08, 0.06, 0.50, 0.12, 0.0291, 1.0e-4),
             EuropeanOptionData(Option.Put, 70.00, 75.00, 0.05, 0.10, 0.50, 0.35, 4.0870, 1.0e-4),
-            # pag 24
             EuropeanOptionData(Option.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0205, 1.0e-4),
             EuropeanOptionData(Option.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8734, 1.0e-4),
             EuropeanOptionData(Option.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 9.9413, 1.0e-4),
@@ -292,12 +270,11 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             EuropeanOptionData(Option.Put, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
             EuropeanOptionData(Option.Put, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.3679, 1.0e-4),
             EuropeanOptionData(Option.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.7963, 1.0e-4),
-            # pag 27
             EuropeanOptionData(Option.Call, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.0975, 1.0e-4)]
 
         dc = Actual360()
         calendar = TARGET()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spotQuote = SimpleQuote(0.0)
 
@@ -392,7 +369,8 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testAtmCalcs(self):
-        TEST_MESSAGE("Testing delta-neutral ATM quotations...")
+        TEST_MESSAGE(
+            "Testing delta-neutral ATM quotations...")
 
         backup = SavedSettings()
 
@@ -409,14 +387,12 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
             DeltaData(Option.Put, DeltaVolQuote.PaSpot, 3.4582, 0.99979, 0.9250616, 0.3199034, 3.778327, -0.821),
             DeltaData(Option.Put, DeltaVolQuote.Fwd, 3.4582, 0.99979, 0.9250616, 0.3199034, 4.51896, -0.821),
             DeltaData(Option.Put, DeltaVolQuote.PaFwd, 3.4582, 0.99979, 0.9250616, 0.3199034, 3.65728, -0.821),
-            # Data taken from Castagnas "FX Options and Smile Risk" (Wiley 2009)
             DeltaData(Option.Put, DeltaVolQuote.Spot, 103.00, 0.99482, 0.98508, 0.07247845, 97.47, -0.25),
             DeltaData(Option.Put, DeltaVolQuote.PaSpot, 103.00, 0.99482, 0.98508, 0.07247845, 97.22, -0.25),
-            # Extreme case: zero vol, ATM Fwd strike
             DeltaData(Option.Call, DeltaVolQuote.Fwd, 103.00, 0.99482, 0.98508, 0.0, 101.0013, 0.5),
             DeltaData(Option.Call, DeltaVolQuote.Spot, 103.00, 0.99482, 0.98508, 0.0, 101.0013, 0.99482 * 0.5)]
 
-        tolerance = 1.0e-2  # not that small, but sufficient for strikes
+        tolerance = 1.0e-2
 
         for i in range(len(values)):
             currDt = values[i].dt
@@ -481,14 +457,12 @@ class BlackDeltaCalculatorTest(unittest.TestCase):
 
             self.assertFalse(error > tolerance)
 
-            # Test ATM forward Calculations
             calculated = myCalc.atmStrike(DeltaVolQuote.AtmFwd)
             expected = currFwd
             error = abs(expected - calculated)
 
             self.assertFalse(error > tolerance)
 
-            # Test ATM 0.50 delta calculations
             myCalc.setDeltaType(DeltaVolQuote.Fwd)
             atmFiftyStrike = myCalc.atmStrike(DeltaVolQuote.AtmPutCall50)
             calculated = abs(myCalc.deltaFromStrike(atmFiftyStrike))

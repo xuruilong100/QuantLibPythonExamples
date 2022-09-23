@@ -76,7 +76,7 @@ class FdmSimpleSwingCondition : public FdmStepCondition {
 %shared_ptr(FdmSnapshotCondition)
 class FdmSnapshotCondition : public FdmStepCondition {
   public:
-    explicit FdmSnapshotCondition(Time t);
+    FdmSnapshotCondition(Time t);
 
     Time getTime() const;
     const Array& getValues() const;

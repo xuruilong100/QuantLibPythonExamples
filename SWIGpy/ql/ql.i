@@ -3,24 +3,9 @@
 #include <ql/quantlib.hpp>
 #include <qlex/quantlibex.hpp>
 
-#if QL_HEX_VERSION < 0x01250000
+#if QL_HEX_VERSION < 0x01270000
     #error using an old version of QuantLib, please update
 #endif
-
-#ifdef BOOST_MSVC
-#ifdef QL_ENABLE_THREAD_SAFE_OBSERVER_PATTERN
-#define BOOST_LIB_NAME boost_thread
-#include <boost/config/auto_link.hpp>
-#undef BOOST_LIB_NAME
-#define BOOST_LIB_NAME boost_system
-#include <boost/config/auto_link.hpp>
-#undef BOOST_LIB_NAME
-#endif
-#endif
-%}
-
-%{
-#define QL_HIGH_RESOLUTION_DATE
 %}
 
 %include ../ql/defines.i
@@ -28,6 +13,7 @@
 %include ../ql/base.i
 %include ../ql/common.i
 %include ../ql/types.i
+%include ../ql/quotes/all.i
 
 %include ../ql/blackformula.i
 %include ../ql/bondfunctions.i
@@ -130,7 +116,19 @@
 %include ../ql/interpolation/traits/all.i
 %include ../ql/interpolation/trait2ds/all.i
 %include ../ql/linearalgebra.i
+%include ../ql/legacy/lmmodels.i
 %include ../ql/math/all.i
+%include ../ql/models/curvestates.i
+%include ../ql/models/dataprovider.i
+%include ../ql/models/evolvedesc.i
+%include ../ql/models/evolvers.i
+%include ../ql/models/exercisestrategys.i
+%include ../ql/models/greeks.i
+%include ../ql/models/marketmodels.i
+%include ../ql/models/multiproducts.i
+%include ../ql/models/pathwisemultiproducts.i
+%include ../ql/models/process.i
+%include ../ql/models/utilities.i
 %include ../ql/money.i
 %include ../ql/montecarlo.i
 %include ../ql/ode.i
@@ -138,7 +136,6 @@
 %include ../ql/optimizers.i
 %include ../ql/parameter.i
 %include ../ql/payoffs.i
-%include ../ql/quotes/all.i
 %include ../ql/randomnumbers.i
 %include ../ql/ratehelpers/all.i
 %include ../ql/riskneutraldensitycalculator.i

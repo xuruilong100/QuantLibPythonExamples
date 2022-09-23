@@ -287,7 +287,7 @@ class AdditionalErrors {
     std::vector<ext::shared_ptr<RateHelper>> additionalHelpers_;
 
   public:
-    explicit AdditionalErrors(
+    AdditionalErrors(
         const std::vector<ext::shared_ptr<RateHelper>>& additionalHelpers)
         : additionalHelpers_(additionalHelpers) {}
     Array operator()() const {
@@ -309,7 +309,7 @@ class AdditionalDates {
     std::vector<Date> additionalDates_;
 
   public:
-    explicit AdditionalDates(const std::vector<Date>& additionalDates)
+    AdditionalDates(const std::vector<Date>& additionalDates)
         : additionalDates_(additionalDates) {}
     std::vector<Date> operator()() const {
         return additionalDates_;
@@ -368,25 +368,6 @@ class Name : public YieldTermStructure, public LazyObject {
                             b.accuracy));
                 }
             }
-     	/* Name(
-            const Date& referenceDate,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const GlobalBootstrap& b) {
-                if (b.additionalHelpers.empty()) {
-                    return new Name(
-                        referenceDate, instruments, dayCounter,
-                        Name::bootstrap_type(b.accuracy));
-                } else {
-                    return new Name(
-                        referenceDate, instruments, dayCounter,
-                        Name::bootstrap_type(
-                            b.additionalHelpers,
-                            AdditionalDates(b.additionalDates),
-                            AdditionalErrors(b.additionalHelpers),
-                            b.accuracy));
-                }
-            } */
      	Name(
             Natural settlementDays,
             const Calendar& calendar,
@@ -431,26 +412,6 @@ class Name : public YieldTermStructure, public LazyObject {
                             b.accuracy));
                 }
             }
-     	/* Name(
-            Natural settlementDays,
-            const Calendar& calendar,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const GlobalBootstrap& b) {
-                if (b.additionalHelpers.empty()) {
-                    return new Name(
-                        settlementDays, calendar, instruments, dayCounter,
-                        Name::bootstrap_type(b.accuracy));
-                } else {
-                    return new Name(
-                        settlementDays, calendar, instruments, dayCounter,
-                        Name::bootstrap_type(
-                            b.additionalHelpers,
-                            AdditionalDates(b.additionalDates),
-                            AdditionalErrors(b.additionalHelpers),
-                            b.accuracy));
-                }
-            } */
     }
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
@@ -553,16 +514,6 @@ class Name : public YieldTermStructure, public LazyObject {
                     Name::bootstrap_type(
                         b.localisation, b.forcePositive, b.accuracy));
             }
-     	/* Name(
-            const Date& referenceDate,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const LocalBootstrap& b) {
-                return new Name(
-                    referenceDate, instruments, dayCounter,
-                    Name::bootstrap_type(
-                        b.localisation, b.forcePositive, b.accuracy));
-            } */
      	Name(
             Natural settlementDays,
             const Calendar& calendar,
@@ -589,17 +540,6 @@ class Name : public YieldTermStructure, public LazyObject {
                     Name::bootstrap_type(
                         b.localisation, b.forcePositive, b.accuracy));
             }
-     	/* Name(
-            Natural settlementDays,
-            const Calendar& calendar,
-            const std::vector<ext::shared_ptr<RateHelper>>& instruments,
-            const DayCounter& dayCounter,
-            const LocalBootstrap& b) {
-                return new Name(
-                    settlementDays, calendar, instruments, dayCounter,
-                    Name::bootstrap_type(
-                        b.localisation, b.forcePositive, b.accuracy));
-            } */
     }
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;

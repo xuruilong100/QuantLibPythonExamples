@@ -40,7 +40,7 @@ using QuantLib::SviSmileSection;
 %shared_ptr(AtmAdjustedSmileSection)
 class AtmAdjustedSmileSection : public SmileSection {
   public:
-    explicit AtmAdjustedSmileSection(
+    AtmAdjustedSmileSection(
         const ext::shared_ptr<SmileSection>& source,
         Real atm = Null<Real>(),
         bool recenterSmile = false);
@@ -57,19 +57,21 @@ class AtmSmileSection : public SmileSection {
 %shared_ptr(FlatSmileSection)
 class FlatSmileSection : public SmileSection {
   public:
-    FlatSmileSection(const Date& d,
-                     Volatility vol,
-                     const DayCounter& dc,
-                     const Date& referenceDate = Date(),
-                     Real atmLevel = Null<Rate>(),
-                     VolatilityType type = ShiftedLognormal,
-                     Real shift = 0.0);
-    FlatSmileSection(Time exerciseTime,
-                     Volatility vol,
-                     const DayCounter& dc,
-                     Real atmLevel = Null<Rate>(),
-                     VolatilityType type = ShiftedLognormal,
-                     Real shift = 0.0);
+    FlatSmileSection(
+        const Date& d,
+        Volatility vol,
+        const DayCounter& dc,
+        const Date& referenceDate = Date(),
+        Real atmLevel = Null<Rate>(),
+        VolatilityType type = ShiftedLognormal,
+        Real shift = 0.0);
+    FlatSmileSection(
+        Time exerciseTime,
+        Volatility vol,
+        const DayCounter& dc,
+        Real atmLevel = Null<Rate>(),
+        VolatilityType type = ShiftedLognormal,
+        Real shift = 0.0);
 };
 
 %shared_ptr(Gaussian1dSmileSection)
@@ -111,8 +113,12 @@ class KahaleSmileSection : public SmileSection {
 class NoArbSabrModel {
   public:
     NoArbSabrModel(
-        Real expiryTime, Real forward,
-        Real alpha, Real beta, Real nu, Real rho);
+        Real expiryTime, 
+        Real forward,
+        Real alpha, 
+        Real beta,
+        Real nu, 
+        Real rho);
 
     Real optionPrice(Real strike) const;
     Real digitalOptionPrice(Real strike) const;
@@ -197,15 +203,17 @@ class NoArbSabrInterpolatedSmileSection : public SmileSection {
 %shared_ptr(SabrSmileSection)
 class SabrSmileSection : public SmileSection {
   public:
-    SabrSmileSection(const Date& d,
-                     Rate forward,
-                     const std::vector<Real>& sabrParameters,
-                     const DayCounter& dc = Actual365Fixed(),
-                     Real shift = 0.0);
-    SabrSmileSection(Time timeToExpiry,
-                     Rate forward,
-                     const std::vector<Real>& sabrParameters,
-                     Real shift = 0.0);
+    SabrSmileSection(
+        const Date& d,
+        Rate forward,
+        const std::vector<Real>& sabrParameters,
+        const DayCounter& dc = Actual365Fixed(),
+        Real shift = 0.0);
+    SabrSmileSection(
+        Time timeToExpiry,
+        Rate forward,
+        const std::vector<Real>& sabrParameters,
+        Real shift = 0.0);
     Real alpha() const;
     Real beta() const;
     Real nu() const;
@@ -275,7 +283,9 @@ class SabrInterpolatedSmileSection : public SmileSection, public LazyObject {
 %shared_ptr(SpreadedSmileSection)
 class SpreadedSmileSection : public SmileSection {
   public:
-    SpreadedSmileSection(ext::shared_ptr<SmileSection>, Handle<Quote> spread);
+    SpreadedSmileSection(
+        ext::shared_ptr<SmileSection>,
+        Handle<Quote> spread);
 };
 
 %shared_ptr(SviInterpolatedSmileSection)
@@ -438,25 +448,44 @@ template <class Evaluation>
 class ZabrInterpolatedSmileSection : public SmileSection {
   public:
     ZabrInterpolatedSmileSection(
-        const Date& optionDate, const Handle<Quote>& forward,
-        const std::vector<Rate>& strikes, bool hasFloatingStrikes,
+        const Date& optionDate, 
+        const Handle<Quote>& forward,
+        const std::vector<Rate>& strikes, 
+        bool hasFloatingStrikes,
         const Handle<Quote>& atmVolatility,
-        const std::vector<Handle<Quote>>& volHandles, Real alpha, Real beta,
-        Real nu, Real rho, Real gamma, bool isAlphaFixed = false,
-        bool isBetaFixed = false, bool isNuFixed = false,
-        bool isRhoFixed = false, bool isGammaFixed = false,
+        const std::vector<Handle<Quote>>& volHandles, 
+        Real alpha, 
+        Real beta,
+        Real nu,
+        Real rho, 
+        Real gamma, 
+        bool isAlphaFixed = false,
+        bool isBetaFixed = false, 
+        bool isNuFixed = false,
+        bool isRhoFixed = false, 
+        bool isGammaFixed = false,
         bool vegaWeighted = true,
         const ext::shared_ptr<EndCriteria>& endCriteria = ext::shared_ptr<EndCriteria>(),
         const ext::shared_ptr<OptimizationMethod>& method = ext::shared_ptr<OptimizationMethod>(),
         const DayCounter& dc = Actual365Fixed());
     ZabrInterpolatedSmileSection(
-        const Date& optionDate, const Rate& forward,
-        const std::vector<Rate>& strikes, bool hasFloatingStrikes,
-        const Volatility& atmVolatility, const std::vector<Volatility>& vols,
-        Real alpha, Real beta, Real nu, Real rho, Real gamma,
-        bool isAlphaFixed = false, bool isBetaFixed = false,
-        bool isNuFixed = false, bool isRhoFixed = false,
-        bool isGammaFixed = false, bool vegaWeighted = true,
+        const Date& optionDate, 
+        const Rate& forward,
+        const std::vector<Rate>& strikes, 
+        bool hasFloatingStrikes,
+        const Volatility& atmVolatility, 
+        const std::vector<Volatility>& vols,
+        Real alpha, 
+        Real beta, 
+        Real nu, 
+        Real rho, 
+        Real gamma,
+        bool isAlphaFixed = false, 
+        bool isBetaFixed = false,
+        bool isNuFixed = false, 
+        bool isRhoFixed = false,
+        bool isGammaFixed = false, 
+        bool vegaWeighted = true,
         const ext::shared_ptr<EndCriteria>& endCriteria = ext::shared_ptr<EndCriteria>(),
         const ext::shared_ptr<OptimizationMethod>& method = ext::shared_ptr<OptimizationMethod>(),
         const DayCounter& dc = Actual365Fixed());

@@ -1,16 +1,18 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommodityUnitOfMeasureTest(unittest.TestCase):
 
     def testDirect(self):
-        TEST_MESSAGE("Testing direct commodity unit of measure conversions...")
+        TEST_MESSAGE(
+            "Testing direct commodity unit of measure conversions...")
 
         UOMManager = UnitOfMeasureConversionManager.instance()
 
-        # MB to BBL
         actual = UnitOfMeasureConversion(
             NullCommodityType(), MBUnitOfMeasure(),
             BarrelUnitOfMeasure(), 1000).convert(
@@ -22,7 +24,6 @@ class CommodityUnitOfMeasureTest(unittest.TestCase):
 
         self.assertFalse(not close(calc, actual))
 
-        # BBL to Gallon
         actual = UnitOfMeasureConversion(
             NullCommodityType(), BarrelUnitOfMeasure(),
             GallonUnitOfMeasure(), 42).convert(
@@ -35,7 +36,6 @@ class CommodityUnitOfMeasureTest(unittest.TestCase):
 
         self.assertFalse(not close(calc, actual))
 
-        # BBL to Litre
         actual = UnitOfMeasureConversion(
             NullCommodityType(), BarrelUnitOfMeasure(),
             LitreUnitOfMeasure(), 158.987).convert(
@@ -48,7 +48,6 @@ class CommodityUnitOfMeasureTest(unittest.TestCase):
 
         self.assertFalse(not close(calc, actual))
 
-        # BBL to KL
         actual = UnitOfMeasureConversion(
             NullCommodityType(), KilolitreUnitOfMeasure(),
             BarrelUnitOfMeasure(), 6.28981).convert(
@@ -61,7 +60,6 @@ class CommodityUnitOfMeasureTest(unittest.TestCase):
 
         self.assertFalse(not close(calc, actual))
 
-        # MB to Gallon
         actual = UnitOfMeasureConversion(
             NullCommodityType(), GallonUnitOfMeasure(),
             MBUnitOfMeasure(), 42000).convert(
@@ -73,7 +71,6 @@ class CommodityUnitOfMeasureTest(unittest.TestCase):
 
         self.assertFalse(not close(calc, actual))
 
-        # Gallon to Litre
         actual = UnitOfMeasureConversion(
             NullCommodityType(), LitreUnitOfMeasure(),
             GallonUnitOfMeasure(), 3.78541).convert(

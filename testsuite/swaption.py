@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
@@ -16,13 +18,11 @@ class CommonVars(object):
         self.floatingConvention = self.index.businessDayConvention()
         self.floatingTenor = self.index.tenor()
         self.calendar = self.index.fixingCalendar()
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.settlement = self.calendar.advance(self.today, self.settlementDays, Days)
         self.termStructure.linkTo(flatRate(self.settlement, 0.05, Actual365Fixed()))
         self.backup = SavedSettings()
-
-        # utilities
 
     def makeSwaption(self,
                      swap,
@@ -51,10 +51,9 @@ class CommonVars(object):
             self.termStructure, h, Actual365Fixed(), 0.0, model)
 
 
-def makeConstVolEngine(
-        Engine,
-        discountCurve,
-        volatility):
+def makeConstVolEngine(Engine,
+                       discountCurve,
+                       volatility):
     h = QuoteHandle(SimpleQuote(volatility))
     return Engine(discountCurve, h)
 
@@ -72,7 +71,8 @@ type = [Swap.Receiver, Swap.Payer]
 class SwaptionTest(unittest.TestCase):
 
     def testStrikeDependency(self):
-        TEST_MESSAGE("Testing swaption dependency on strike...")
+        TEST_MESSAGE(
+            "Testing swaption dependency on strike...")
 
         vars = CommonVars()
 
@@ -84,7 +84,6 @@ class SwaptionTest(unittest.TestCase):
                     exerciseDate = vars.calendar.advance(vars.today, exercise)
                     startDate = vars.calendar.advance(
                         exerciseDate, vars.settlementDays, Days)
-                    # store the results for different rates...
                     values = DoubleVector()
                     values_cash = DoubleVector()
                     vol = 0.20
@@ -98,17 +97,14 @@ class SwaptionTest(unittest.TestCase):
                         swap.withType(k)
                         swap = swap.makeVanillaSwap()
                         swaption = vars.makeSwaption(swap, exerciseDate, vol)
-                        # FLOATING_POINT_EXCEPTION
+
                         values.append(swaption.NPV())
                         swaption_cash = vars.makeSwaption(
                             swap, exerciseDate, vol,
                             Settlement.Cash, Settlement.ParYieldCurve)
                         values_cash.append(swaption_cash.NPV())
 
-                    # and check that they go the right way
                     if k == Swap.Payer:
-                        # it = adjacent_find(values.begin(), values.end(), less<Real>())
-                        # self.assertFalse (it != values.end())
                         it = 1
                         while values[it - 1] >= values[it]:
                             it += 1
@@ -116,8 +112,6 @@ class SwaptionTest(unittest.TestCase):
                                 break
                         self.assertFalse(it != len(values) - 1)
 
-                        # it_cash = adjacent_find(values_cash.begin(), values_cash.end(), less<Real>())
-                        # self.assertFalse (it_cash != values_cash.end())
                         it_cash = 1
                         while values_cash[it_cash - 1] >= values_cash[it_cash]:
                             it_cash += 1
@@ -126,8 +120,6 @@ class SwaptionTest(unittest.TestCase):
                         self.assertFalse(it_cash != len(values_cash) - 1)
 
                     else:
-                        # it = adjacent_find(values.begin(), values.end(), greater<Real>())
-                        # self.assertFalse (it != values.end())
                         it = 1
                         while values[it - 1] <= values[it]:
                             it += 1
@@ -136,8 +128,6 @@ class SwaptionTest(unittest.TestCase):
 
                         self.assertFalse(it != len(values) - 1)
 
-                        # it_cash = adjacent_find(values_cash.begin(), values_cash.end(), greater<Real>())
-                        # self.assertFalse (it_cash != values_cash.end())
                         it_cash = 1
                         while values_cash[it_cash - 1] <= values_cash[it_cash]:
                             it_cash += 1
@@ -146,7 +136,8 @@ class SwaptionTest(unittest.TestCase):
                         self.assertFalse(it_cash != len(values_cash) - 1)
 
     def testSpreadDependency(self):
-        TEST_MESSAGE("Testing swaption dependency on spread...")
+        TEST_MESSAGE(
+            "Testing swaption dependency on spread...")
 
         vars = CommonVars()
 
@@ -158,7 +149,7 @@ class SwaptionTest(unittest.TestCase):
                     exerciseDate = vars.calendar.advance(vars.today, exercise)
                     startDate = vars.calendar.advance(
                         exerciseDate, vars.settlementDays, Days)
-                    # store the results for different rates...
+
                     values = DoubleVector()
                     values_cash = DoubleVector()
                     for spread in spreads:
@@ -171,17 +162,14 @@ class SwaptionTest(unittest.TestCase):
                         swap.withType(k)
                         swap = swap.makeVanillaSwap()
                         swaption = vars.makeSwaption(swap, exerciseDate, 0.20)
-                        # FLOATING_POINT_EXCEPTION
+
                         values.append(swaption.NPV())
                         swaption_cash = vars.makeSwaption(
                             swap, exerciseDate, 0.20,
                             Settlement.Cash, Settlement.ParYieldCurve)
                         values_cash.append(swaption_cash.NPV())
 
-                    # and check that they go the right way
                     if k == Swap.Payer:
-                        # it = adjacent_find(values.begin(), values.end(), greater<Real>())
-                        # self.assertFalse (it != values.end())
                         it = 1
                         while values[it - 1] <= values[it]:
                             it += 1
@@ -189,8 +177,6 @@ class SwaptionTest(unittest.TestCase):
                                 break
                         self.assertFalse(it != len(values) - 1)
 
-                        # it_cash = adjacent_find(values_cash.begin(), values_cash.end(), greater<Real>())
-                        # self.assertFalse (it_cash != values_cash.end())
                         it_cash = 1
                         while values_cash[it_cash - 1] <= values_cash[it_cash]:
                             it_cash += 1
@@ -199,8 +185,6 @@ class SwaptionTest(unittest.TestCase):
                         self.assertFalse(it_cash != len(values_cash) - 1)
 
                     else:
-                        # it = adjacent_find(values.begin(), values.end(), less<Real>())
-                        # self.assertFalse (it != values.end())
                         it = 1
                         while values[it - 1] >= values[it]:
                             it += 1
@@ -208,8 +192,6 @@ class SwaptionTest(unittest.TestCase):
                                 break
                         self.assertFalse(it != len(values) - 1)
 
-                        # it_cash = adjacent_find(values_cash.begin(), values_cash.end(), less<Real>())
-                        # self.assertFalse (it_cash != values_cash.end())
                         it_cash = 1
                         while values_cash[it_cash - 1] >= values_cash[it_cash]:
                             it_cash += 1
@@ -218,7 +200,8 @@ class SwaptionTest(unittest.TestCase):
                         self.assertFalse(it_cash != len(values_cash) - 1)
 
     def testSpreadTreatment(self):
-        TEST_MESSAGE("Testing swaption treatment of spread...")
+        TEST_MESSAGE(
+            "Testing swaption treatment of spread...")
 
         vars = CommonVars()
 
@@ -239,7 +222,7 @@ class SwaptionTest(unittest.TestCase):
                         swap.withFloatingLegSpread(spread)
                         swap.withType(k)
                         swap = swap.makeVanillaSwap()
-                        # FLOATING_POINT_EXCEPTION
+
                         correction = spread * swap.floatingLegBPS() / swap.fixedLegBPS()
                         equivalentSwap = MakeVanillaSwap(
                             length, vars.index, 0.06 + correction, Period(0, Days))
@@ -263,7 +246,8 @@ class SwaptionTest(unittest.TestCase):
                             abs(swaption1_cash.NPV() - swaption2_cash.NPV()) > 1.0e-6)
 
     def testCachedValue(self):
-        TEST_MESSAGE("Testing swaption value against cached value...")
+        TEST_MESSAGE(
+            "Testing swaption value against cached value...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
@@ -285,11 +269,11 @@ class SwaptionTest(unittest.TestCase):
 
         cachedNPV = 0.036418158579 if usingAtParCoupons else 0.036421429684
 
-        # FLOATING_POINT_EXCEPTION
         self.assertFalse(abs(swaption.NPV() - cachedNPV) > 1.0e-12)
 
     def testCashSettledSwaptions(self):
-        TEST_MESSAGE("Testing cash settled swaptions modified annuity...")
+        TEST_MESSAGE(
+            "Testing cash settled swaptions modified annuity...")
 
         vars = CommonVars()
 
@@ -306,7 +290,6 @@ class SwaptionTest(unittest.TestCase):
                     vars.calendar, vars.floatingConvention,
                     vars.floatingConvention,
                     DateGeneration.Forward, false)
-                # Swap with fixed leg conventions: Business Days = Unadjusted, DayCount = 30/360
                 fixedSchedule_u = Schedule(
                     startDate, maturity,
                     Period(vars.fixedFrequency),
@@ -318,14 +301,12 @@ class SwaptionTest(unittest.TestCase):
                     floatSchedule, vars.index, 0.0,
                     vars.index.dayCounter())
 
-                # Swap with fixed leg conventions: Business Days = Unadjusted, DayCount = Act/365
                 swap_u365 = VanillaSwap(
                     type[0], vars.nominal,
                     fixedSchedule_u, strike, Actual365Fixed(),
                     floatSchedule, vars.index, 0.0,
                     vars.index.dayCounter())
 
-                # Swap with fixed leg conventions: Business Days = Modified Following, DayCount = 30/360
                 fixedSchedule_a = Schedule(
                     startDate, maturity,
                     Period(vars.fixedFrequency),
@@ -338,7 +319,6 @@ class SwaptionTest(unittest.TestCase):
                     floatSchedule, vars.index, 0.0,
                     vars.index.dayCounter())
 
-                # Swap with fixed leg conventions: Business Days = Modified Following, DayCount = Act/365
                 swap_a365 = VanillaSwap(
                     type[0], vars.nominal,
                     fixedSchedule_a, strike, Actual365Fixed(),
@@ -357,8 +337,6 @@ class SwaptionTest(unittest.TestCase):
                 swapFixedLeg_u365 = swap_u365.fixedLeg()
                 swapFixedLeg_a365 = swap_a365.fixedLeg()
 
-                # FlatForward curves
-                # FLOATING_POINT_EXCEPTION
                 termStructure_u360 = YieldTermStructureHandle(
                     FlatForward(
                         vars.settlement, swap_u360.fairRate(),
@@ -380,107 +358,75 @@ class SwaptionTest(unittest.TestCase):
                         Actual365Fixed(), Compounded,
                         vars.fixedFrequency))
 
-                # Annuity calculated by swap method fixedLegBPS().
-                # Fixed leg conventions: Unadjusted, 30/360
                 annuity_u360 = swap_u360.fixedLegBPS() / 0.0001
                 annuity_u360 = -annuity_u360 if swap_u360.type() == Swap.Payer else annuity_u360
-                # Fixed leg conventions: ModifiedFollowing, act/365
                 annuity_a365 = swap_a365.fixedLegBPS() / 0.0001
                 annuity_a365 = -annuity_a365 if swap_a365.type() == Swap.Payer else annuity_a365
-                # Fixed leg conventions: ModifiedFollowing, 30/360
                 annuity_a360 = swap_a360.fixedLegBPS() / 0.0001
                 annuity_a360 = -annuity_a360 if swap_a360.type() == Swap.Payer else annuity_a360
-                # Fixed leg conventions: Unadjusted, act/365
                 annuity_u365 = swap_u365.fixedLegBPS() / 0.0001
                 annuity_u365 = -annuity_u365 if swap_u365.type() == Swap.Payer else annuity_u365
 
-                # Calculation of Modified Annuity (cash settlement)
-                # Fixed leg conventions of swap: unadjusted, 30/360
                 cashannuity_u360 = 0.0
 
-                for i in range(len(swapFixedLeg_u360)):
-                    cashannuity_u360 += swapFixedLeg_u360[i].amount() / strike * \
-                                        termStructure_u360.discount(swapFixedLeg_u360[i].date())
+                for s in swapFixedLeg_u360:
+                    cashannuity_u360 += s.amount() / strike * termStructure_u360.discount(s.date())
 
-                # Fixed leg conventions of swap: unadjusted, act/365
                 cashannuity_u365 = 0.
-                for i in range(len(swapFixedLeg_u365)):
-                    cashannuity_u365 += swapFixedLeg_u365[i].amount() / strike * \
-                                        termStructure_u365.discount(swapFixedLeg_u365[i].date())
+                for s in swapFixedLeg_u365:
+                    cashannuity_u365 += s.amount() / strike * termStructure_u365.discount(s.date())
 
-                # Fixed leg conventions of swap: modified following, 30/360
                 cashannuity_a360 = 0.
-                for i in range(len(swapFixedLeg_a360)):
-                    cashannuity_a360 += swapFixedLeg_a360[i].amount() / strike * \
-                                        termStructure_a360.discount(swapFixedLeg_a360[i].date())
+                for s in swapFixedLeg_a360:
+                    cashannuity_a360 += s.amount() / strike * termStructure_a360.discount(s.date())
 
-                # Fixed leg conventions of swap: modified following, act/365
                 cashannuity_a365 = 0.
-                for i in range(len(swapFixedLeg_a365)):
-                    cashannuity_a365 += swapFixedLeg_a365[i].amount() / strike * \
-                                        termStructure_a365.discount(swapFixedLeg_a365[i].date())
+                for s in swapFixedLeg_a365:
+                    cashannuity_a365 += s.amount() / strike * termStructure_a365.discount(s.date())
 
-                # Swaptions: underlying swap fixed leg conventions:
-                # unadjusted, 30/360
-
-                # Physical settled swaption
                 swaption_p_u360 = vars.makeSwaption(
                     swap_u360, exerciseDate, 0.20)
                 value_p_u360 = swaption_p_u360.NPV()
-                # Cash settled swaption
+
                 swaption_c_u360 = vars.makeSwaption(
                     swap_u360, exerciseDate, 0.20,
                     Settlement.Cash, Settlement.ParYieldCurve)
                 value_c_u360 = swaption_c_u360.NPV()
-                # the NPV's ratio must be equal to annuities ratio
+
                 npv_ratio_u360 = value_c_u360 / value_p_u360
                 annuity_ratio_u360 = cashannuity_u360 / annuity_u360
 
-                # Swaptions: underlying swap fixed leg conventions:
-                # modified following, act/365
-
-                # Physical settled swaption
                 swaption_p_a365 = vars.makeSwaption(
                     swap_a365, exerciseDate, 0.20)
                 value_p_a365 = swaption_p_a365.NPV()
-                # Cash settled swaption
+
                 swaption_c_a365 = vars.makeSwaption(
                     swap_a365, exerciseDate, 0.20,
                     Settlement.Cash, Settlement.ParYieldCurve)
                 value_c_a365 = swaption_c_a365.NPV()
-                # the NPV's ratio must be equal to annuities ratio
+
                 npv_ratio_a365 = value_c_a365 / value_p_a365
                 annuity_ratio_a365 = cashannuity_a365 / annuity_a365
 
-                # Swaptions: underlying swap fixed leg conventions:
-                # modified following, 30/360
-
-                # Physical settled swaption
                 swaption_p_a360 = vars.makeSwaption(
                     swap_a360, exerciseDate, 0.20)
                 value_p_a360 = swaption_p_a360.NPV()
-                # Cash settled swaption
+
                 swaption_c_a360 = vars.makeSwaption(
                     swap_a360, exerciseDate, 0.20,
                     Settlement.Cash, Settlement.ParYieldCurve)
                 value_c_a360 = swaption_c_a360.NPV()
-                # the NPV's ratio must be equal to annuities ratio
+
                 npv_ratio_a360 = value_c_a360 / value_p_a360
                 annuity_ratio_a360 = cashannuity_a360 / annuity_a360
 
-                # Swaptions: underlying swap fixed leg conventions:
-                # unadjusted, act/365
-
-                # Physical settled swaption
                 swaption_p_u365 = vars.makeSwaption(
                     swap_u365, exerciseDate, 0.20)
                 value_p_u365 = swaption_p_u365.NPV()
-                # Cash settled swaption
                 swaption_c_u365 = vars.makeSwaption(
                     swap_u365, exerciseDate, 0.20,
                     Settlement.Cash, Settlement.ParYieldCurve)
                 value_c_u365 = swaption_c_u365.NPV()
-                # the NPV's ratio must be equal to annuities ratio
                 npv_ratio_u365 = value_c_u365 / value_p_u365
                 annuity_ratio_u365 = cashannuity_u365 / annuity_u365
 
@@ -490,7 +436,8 @@ class SwaptionTest(unittest.TestCase):
                 self.assertFalse(abs(annuity_ratio_u365 - npv_ratio_u365) > 1e-10)
 
     def testImpliedVolatility(self):
-        TEST_MESSAGE("Testing implied volatility for swaptions...")
+        TEST_MESSAGE(
+            "Testing implied volatility for swaptions...")
 
         vars = CommonVars()
 
@@ -499,7 +446,6 @@ class SwaptionTest(unittest.TestCase):
 
         types = [Settlement.Physical, Settlement.Cash]
         methods = [Settlement.PhysicalOTC, Settlement.ParYieldCurve]
-        # test data
         strikes = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07]
         vols = [0.01, 0.05, 0.10, 0.20, 0.30, 0.70, 0.90]
 
@@ -524,7 +470,7 @@ class SwaptionTest(unittest.TestCase):
                                 swaption = vars.makeSwaption(
                                     swap, exerciseDate, vol, types[h], methods[h],
                                     BlackSwaptionEngine.DiscountCurve)
-                                # Black price
+
                                 value = swaption.NPV()
                                 implVol = 0.0
                                 try:
@@ -536,19 +482,16 @@ class SwaptionTest(unittest.TestCase):
                                         ShiftedLognormal, 0.0)
 
                                 except Exception as e:
-                                    # couldn't bracket?
                                     swaption.setPricingEngine(
                                         vars.makeEngine(
                                             0.0, BlackSwaptionEngine.DiscountCurve))
                                     value2 = swaption.NPV()
                                     if abs(value - value2) < tolerance:
-                                        # ok, just skip:
                                         continue
 
                                     self.assertFalse(abs(value - value2) < tolerance)
 
                                 if abs(implVol - vol) > tolerance:
-                                    # the difference might not matter
                                     swaption.setPricingEngine(
                                         vars.makeEngine(
                                             implVol, BlackSwaptionEngine.DiscountCurve))
@@ -556,7 +499,8 @@ class SwaptionTest(unittest.TestCase):
                                     self.assertFalse(abs(value - value2) > tolerance)
 
     def testVega(self):
-        TEST_MESSAGE("Testing swaption vega...")
+        TEST_MESSAGE(
+            "Testing swaption vega...")
 
         vars = CommonVars()
 
@@ -584,7 +528,7 @@ class SwaptionTest(unittest.TestCase):
                         for vol in vols:
                             swaption = vars.makeSwaption(
                                 swap, exerciseDate, vol, types[h], methods[h])
-                            # FLOATING_POINT_EXCEPTION
+
                             swaption1 = vars.makeSwaption(
                                 swap, exerciseDate, vol - shift, types[h], methods[h])
                             swaption2 = vars.makeSwaption(
@@ -592,7 +536,7 @@ class SwaptionTest(unittest.TestCase):
 
                             swaptionNPV = swaption.NPV()
                             numericalVegaPerPoint = (swaption2.NPV() - swaption1.NPV()) / (200.0 * shift)
-                            # check only relevant vega
+
                             if swaptionNPV > 0.0:
                                 if numericalVegaPerPoint / swaptionNPV > 1.0e-7:
                                     analyticalVegaPerPoint = swaption.resultScalar("vega") / 100.0
@@ -602,12 +546,14 @@ class SwaptionTest(unittest.TestCase):
                                     self.assertFalse(discrepancy > tolerance)
 
     def testSwaptionDeltaInBlackModel(self):
-        TEST_MESSAGE("Testing swaption delta in Black model...")
+        TEST_MESSAGE(
+            "Testing swaption delta in Black model...")
 
         self.checkSwaptionDelta(BlackSwaptionEngine, false)
 
     def testSwaptionDeltaInBachelierModel(self):
-        TEST_MESSAGE("Testing swaption delta in Bachelier model...")
+        TEST_MESSAGE(
+            "Testing swaption delta in Bachelier model...")
 
         self.checkSwaptionDelta(BachelierSwaptionEngine, true)
 
@@ -689,10 +635,6 @@ class SwaptionTest(unittest.TestCase):
 
                             lowerBound = min(delta, bumpedDelta) - epsilon
                             upperBound = max(delta, bumpedDelta) + epsilon
-
-                            # Based on the Mean Value Theorem, the below inequality
-                            # should hold for any function that is monotonic in the
-                            # area of the bump.
 
                             checkIsCorrect = (lowerBound < approxDelta) and (approxDelta < upperBound)
 

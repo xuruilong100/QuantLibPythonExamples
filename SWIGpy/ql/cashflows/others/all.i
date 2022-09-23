@@ -16,30 +16,37 @@ using QuantLib::AmortizingPayment;
 %shared_ptr(SimpleCashFlow)
 class SimpleCashFlow : public CashFlow {
   public:
-    SimpleCashFlow(Real amount, const Date& date);
+    SimpleCashFlow(
+        Real amount, 
+        const Date& date);
 };
 
 %shared_ptr(Redemption)
 class Redemption : public SimpleCashFlow {
   public:
-    Redemption(Real amount, const Date& date);
+    Redemption(
+        Real amount, 
+        const Date& date);
 };
 
 %shared_ptr(AmortizingPayment)
 class AmortizingPayment : public SimpleCashFlow {
   public:
-    AmortizingPayment(Real amount, const Date& date);
+    AmortizingPayment(
+        Real amount, 
+        const Date& date);
 };
 
 %shared_ptr(IndexedCashFlow)
 class IndexedCashFlow : public CashFlow {
   public:
-    IndexedCashFlow(Real notional,
-                    const ext::shared_ptr<Index>& index,
-                    const Date& baseDate,
-                    const Date& fixingDate,
-                    const Date& paymentDate,
-                    bool growthOnly = false);
+    IndexedCashFlow(
+        Real notional,
+        const ext::shared_ptr<Index>& index,
+        const Date& baseDate,
+        const Date& fixingDate,
+        const Date& paymentDate,
+        bool growthOnly = false);
     Real notional() const;
     Date baseDate() const;
     Date fixingDate() const;

@@ -92,7 +92,7 @@ class BinomialConvertibleEngine : public PricingEngine {
   public:
     BinomialConvertibleEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
-        Size steps,
+        Size timeSteps,
         const Handle<Quote>& creditSpread,
         DividendSchedule dividends = DividendSchedule());
 };

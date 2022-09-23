@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class DateTest(unittest.TestCase):
 
     def testConsistency(self):
-        TEST_MESSAGE("Testing dates...")
+        TEST_MESSAGE(
+            "Testing dates...")
 
         minDate = Date.minDate().serialNumber() + 1
         maxDate = Date.maxDate().serialNumber()
@@ -21,7 +24,6 @@ class DateTest(unittest.TestCase):
             t = Date(i)
             serial = t.serialNumber()
 
-            # check serial number consistency
             self.assertFalse(serial != i)
 
             dy = t.dayOfYear()
@@ -30,7 +32,6 @@ class DateTest(unittest.TestCase):
             y = t.year()
             wd = t.weekday()
 
-            # check if skipping any date
             self.assertFalse(
                 not ((dy == dyold + 1) or
                      (dy == 1 and dyold == 365 and not Date.isLeap(yold)) or
@@ -47,10 +48,8 @@ class DateTest(unittest.TestCase):
             mold = m
             yold = y
 
-            # check month definition
             self.assertFalse(m < 1 or m > 12)
 
-            # check day definition
             self.assertFalse(d < 1)
 
             self.assertFalse(
@@ -68,21 +67,19 @@ class DateTest(unittest.TestCase):
                      (m == 11 and d <= 30) or
                      (m == 12 and d <= 31)))
 
-            # check weekday definition
             self.assertFalse(
                 not ((wd == wdold + 1) or
                      (wd == 1 and wdold == 7)))
 
             wdold = wd
 
-            # create the same date with a different constructor
             s = Date(d, m, y)
-            # check serial number consistency
             serial = s.serialNumber()
             self.assertFalse(serial != i)
 
     def testEcbDates(self):
-        TEST_MESSAGE("Testing ECB dates...")
+        TEST_MESSAGE(
+            "Testing ECB dates...")
 
         knownDates = ECB.knownDates()
         self.assertFalse(len(knownDates) == 0)
@@ -109,7 +106,8 @@ class DateTest(unittest.TestCase):
         self.assertFalse(not ECB.isECBdate(knownDate))
 
     def testImmDates(self):
-        TEST_MESSAGE("Testing IMM dates...")
+        TEST_MESSAGE(
+            "Testing IMM dates...")
 
         IMMcodes = [
             "F0", "G0", "H0", "J0", "K0", "M0", "N0", "Q0", "U0", "V0", "X0", "Z0",
@@ -129,26 +127,19 @@ class DateTest(unittest.TestCase):
         while counter <= last:
             imm = IMM.nextDate(counter, false)
 
-            # check that imm is greater than counter
             self.assertFalse(imm <= counter)
-
-            # check that imm is an IMM date
             self.assertFalse(not IMM.isIMMdate(imm, false))
-
-            # check that imm is <= to the next IMM date in the main cycle
             self.assertFalse(imm > IMM.nextDate(counter, true))
-
-            # check that for every date IMMdate is the inverse of IMMcode
             self.assertFalse(IMM.date(IMM.code(imm), counter) != imm)
 
-            # check that for every date the 120 IMM codes refer to future dates
             for i in range(40):
                 self.assertFalse(IMM.date(IMMcodes[i], counter) < counter)
 
             counter = counter + 1
 
     def testAsxDates(self):
-        TEST_MESSAGE("Testing ASX dates...")
+        TEST_MESSAGE(
+            "Testing ASX dates...")
 
         ASXcodes = [
             "F0", "G0", "H0", "J0", "K0", "M0", "N0", "Q0", "U0", "V0", "X0", "Z0",
@@ -168,26 +159,19 @@ class DateTest(unittest.TestCase):
         while counter <= last:
             asx = ASX.nextDate(counter, false)
 
-            # check that asx is greater than counter
             self.assertFalse(asx <= counter)
-
-            # check that asx is an ASX date
             self.assertFalse(not ASX.isASXdate(asx, false))
-
-            # check that asx is <= to the next ASX date in the main cycle
             self.assertFalse(asx > ASX.nextDate(counter, true))
-
-            # check that for every date ASXdate is the inverse of ASXcode
             self.assertFalse(ASX.date(ASX.code(asx), counter) != asx)
 
-            # check that for every date the 120 ASX codes refer to future dates
             for ASXcode in ASXcodes:
                 self.assertFalse(ASX.date(ASXcode, counter) < counter)
 
             counter = counter + 1
 
     def testIsoDates(self):
-        TEST_MESSAGE("Testing ISO dates...")
+        TEST_MESSAGE(
+            "Testing ISO dates...")
         input_date = "2006-01-15"
         d = DateParser.parseISO(input_date)
         self.assertFalse(
@@ -196,7 +180,8 @@ class DateTest(unittest.TestCase):
             d.year() != 2006)
 
     def testParseDates(self):
-        TEST_MESSAGE("Testing parsing of dates...")
+        TEST_MESSAGE(
+            "Testing parsing of dates...")
 
         input_date = "2006-01-15"
         d = DateParser.parseFormatted(input_date, "%Y-%m-%d")
@@ -214,7 +199,8 @@ class DateTest(unittest.TestCase):
         self.assertFalse(d != Date(2, October, 2001))
 
     def testIntraday(self):
-        TEST_MESSAGE("Testing intraday information of dates...")
+        TEST_MESSAGE(
+            "Testing intraday information of dates...")
 
         d1 = Date(12, February, 2015, 10, 45, 12, 1234, 76253)
 
@@ -261,7 +247,6 @@ class DateTest(unittest.TestCase):
                 d2.microseconds() == 253,
                 "failed to reproduce number of microseconds")
 
-        # std.ostringstream s
         s = str(Date(7, February, 2015, 1, 4, 2, 3, 4))
 
         self.assertTrue(
@@ -269,14 +254,14 @@ class DateTest(unittest.TestCase):
             "datetime to string failed to reproduce expected result")
 
     def testCanHash(self):
-        TEST_MESSAGE("Testing hashing of dates...")
+        TEST_MESSAGE(
+            "Testing hashing of dates...")
 
         start_date = Date(1, Jan, 2020)
         nb_tests = 500
 
         hasher = hash
 
-        # Check hash values
         for i in range(nb_tests):
             for j in range(nb_tests):
                 lhs = start_date + i
@@ -285,7 +270,6 @@ class DateTest(unittest.TestCase):
                 self.assertFalse(lhs == rhs and hasher(lhs) != hasher(rhs))
                 self.assertFalse(lhs != rhs and hasher(lhs) == hasher(rhs))
 
-                # Check if can be used as unordered_set key
         s = dict()
         s[start_date] = 1.0
 

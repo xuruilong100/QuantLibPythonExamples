@@ -20,7 +20,8 @@ class FdmDirichletBoundary : public FdmBoundaryCondition {
     FdmDirichletBoundary(
         const ext::shared_ptr<FdmMesher>& mesher,
         Real valueOnBoundary,
-        Size direction, Side side);
+        Size direction, 
+        Side side);
 
     Real applyAfterApplying(Real x, Real value) const;
 };
@@ -35,7 +36,8 @@ class FdmDiscountDirichletBoundary : public FdmBoundaryCondition {
         const ext::shared_ptr<YieldTermStructure>& rTS,
         Time maturityTime,
         Real valueOnBoundary,
-        Size direction, Side side);
+        Size direction, 
+        Side side);
 };
 
 %shared_ptr(FdmTimeDepDirichletBoundary)

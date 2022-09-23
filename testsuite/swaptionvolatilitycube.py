@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class SwaptionTenors(object):
@@ -69,8 +71,6 @@ class AtmVolatility(object):
         for i in range(len(self.tenors.options)):
             tmp = QuoteHandleVector(len(self.tenors.swaps))
             for j in range(len(self.tenors.swaps)):
-                # every handle must be reassigned, as the ones created by
-                # default are all linked together.
                 tmp[j] = QuoteHandle(
                     SimpleQuote(self.vols[i][j]))
             self.volsHandle[i] = tmp
@@ -151,8 +151,6 @@ class VolatilityCube(object):
         for i in range(len(self.tenors.options) * len(self.tenors.swaps)):
             temp = QuoteHandleVector(len(self.strikeSpreads))
             for j in range(len(self.strikeSpreads)):
-                # every handle must be reassigned, as the ones created by
-                # default are all linked together.
                 temp[j] = QuoteHandle(
                     SimpleQuote(self.volSpreads[i][j]))
             self.volSpreadsHandle[i] = temp
@@ -164,7 +162,6 @@ class CommonVars(object):
         self.conventions = SwaptionMarketConventions()
         self.conventions.setConventions()
 
-        # ATM swaptionvolmatrix
         self.atm = AtmVolatility()
         self.atm.setMarketData()
         self.atmVolMatrix = RelinkableSwaptionVolatilityStructureHandle(
@@ -185,7 +182,6 @@ class CommonVars(object):
                 self.conventions.dayCounter, false,
                 Normal))
 
-        # Swaptionvolcube
         self.cube = VolatilityCube()
         self.cube.setMarketData()
         self.termStructure = RelinkableYieldTermStructureHandle()
@@ -202,7 +198,8 @@ class CommonVars(object):
 class SwaptionVolatilityCubeTest(unittest.TestCase):
 
     def testSabrNormalVolatility(self):
-        TEST_MESSAGE("Testing sabr normal volatility...")
+        TEST_MESSAGE(
+            "Testing sabr normal volatility...")
 
         vars = CommonVars()
 
@@ -227,7 +224,8 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         self.makeAtmVolTest(vars, volCube, tolerance)
 
     def testAtmVols(self):
-        TEST_MESSAGE("Testing swaption volatility cube (atm vols)...")
+        TEST_MESSAGE(
+            "Testing swaption volatility cube (atm vols)...")
 
         vars = CommonVars()
 
@@ -245,7 +243,8 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         self.makeAtmVolTest(vars, volCube, tolerance)
 
     def testSmile(self):
-        TEST_MESSAGE("Testing swaption volatility cube (smile)...")
+        TEST_MESSAGE(
+            "Testing swaption volatility cube (smile)...")
 
         vars = CommonVars()
 
@@ -263,7 +262,8 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         self.makeVolSpreadsTest(vars, volCube, tolerance)
 
     def testSabrVols(self):
-        TEST_MESSAGE("Testing swaption volatility cube (sabr interpolation)...")
+        TEST_MESSAGE(
+            "Testing swaption volatility cube (sabr interpolation)...")
 
         vars = CommonVars()
 
@@ -298,7 +298,8 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         self.makeVolSpreadsTest(vars, volCube, tolerance)
 
     def testSpreadedCube(self):
-        TEST_MESSAGE("Testing spreaded swaption volatility cube...")
+        TEST_MESSAGE(
+            "Testing spreaded swaption volatility cube...")
 
         vars = CommonVars()
 
@@ -353,17 +354,17 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
                            smileSectionByCube.volatility(strike)
                     self.assertFalse(abs(diff - spread.value()) > 1e-16)
 
-        # testing observability
         f = Flag()
         f.registerWith(spreadedVolCube)
-        volCube.update()
+        volCube.currentLink().update()
         self.assertFalse(not f.isUp())
         f.lower()
         spread.setValue(.001)
         self.assertFalse(not f.isUp())
 
     def testObservability(self):
-        TEST_MESSAGE("Testing volatility cube observability...")
+        TEST_MESSAGE(
+            "Testing volatility cube observability...")
 
         vars = CommonVars()
 
@@ -379,9 +380,6 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
 
         isParameterFixed = BoolVector(4, false)
 
-        # description
-        #  volCube1_0, volCube1_1
-        # VolCube created before change of reference date
         volCube1_0 = SwaptionVolCube1(
             vars.atmVolMatrix,
             vars.cube.tenors.options,
@@ -399,7 +397,6 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         Settings.instance().evaluationDate = vars.conventions.calendar.advance(
             referenceDate, Period(1, Days), vars.conventions.optionBdc)
 
-        # VolCube created after change of reference date
         volCube1_1 = SwaptionVolCube1(
             vars.atmVolMatrix,
             vars.cube.tenors.options,
@@ -426,8 +423,6 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
 
         Settings.instance().evaluationDate = referenceDate
 
-        # shared_ptr<SwaptionVolCube2> volCube2_0, volCube2_1
-        # VolCube created before change of reference date
         volCube2_0 = SwaptionVolCube2(
             vars.atmVolMatrix,
             vars.cube.tenors.options,
@@ -440,7 +435,6 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         Settings.instance().evaluationDate = vars.conventions.calendar.advance(
             referenceDate, Period(1, Days), vars.conventions.optionBdc)
 
-        # VolCube created after change of reference date
         volCube2_1 = SwaptionVolCube2(
             vars.atmVolMatrix,
             vars.cube.tenors.options,
@@ -465,7 +459,8 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         Settings.instance().evaluationDate = referenceDate
 
     def testSabrParameters(self):
-        TEST_MESSAGE("Testing interpolation of SABR smile sections...")
+        TEST_MESSAGE(
+            "Testing interpolation of SABR smile sections...")
 
         vars = CommonVars()
 
@@ -497,46 +492,34 @@ class SwaptionVolatilityCubeTest(unittest.TestCase):
         volStructure = volCube
         tolerance = 1.0e-4
 
-        # Interpolating between two SmileSection objects
-
-        # First section: maturity = 10Y, tenor = 2Y
         smileSection1 = volStructure.smileSection(Period(10, Years), Period(2, Years))
-
-        # Second section: maturity = 10Y, tenor = 4Y
         smileSection2 = volStructure.smileSection(Period(10, Years), Period(4, Years))
-
-        # Third section in the middle: maturity = 10Y, tenor = 3Y
         smileSection3 = volStructure.smileSection(Period(10, Years), Period(3, Years))
 
-        # test alpha interpolation
         alpha1 = as_sabr_smile_section(smileSection1).alpha()
         alpha2 = as_sabr_smile_section(smileSection2).alpha()
         alpha3 = as_sabr_smile_section(smileSection3).alpha()
         alpha12 = 0.5 * (alpha1 + alpha2)
         self.assertFalse(abs(alpha3 - alpha12) > tolerance)
 
-        # test beta interpolation
         beta1 = as_sabr_smile_section(smileSection1).beta()
         beta2 = as_sabr_smile_section(smileSection2).beta()
         beta3 = as_sabr_smile_section(smileSection3).beta()
         beta12 = 0.5 * (beta1 + beta2)
         self.assertFalse(abs(beta3 - beta12) > tolerance)
 
-        # test rho interpolation
         rho1 = as_sabr_smile_section(smileSection1).rho()
         rho2 = as_sabr_smile_section(smileSection2).rho()
         rho3 = as_sabr_smile_section(smileSection3).rho()
         rho12 = 0.5 * (rho1 + rho2)
         self.assertFalse(abs(rho3 - rho12) > tolerance)
 
-        # test nu interpolation
         nu1 = as_sabr_smile_section(smileSection1).nu()
         nu2 = as_sabr_smile_section(smileSection2).nu()
         nu3 = as_sabr_smile_section(smileSection3).nu()
         nu12 = 0.5 * (nu1 + nu2)
         self.assertFalse(abs(nu3 - nu12) > tolerance)
 
-        # test forward interpolation
         forward1 = smileSection1.atmLevel()
         forward2 = smileSection2.atmLevel()
         forward3 = smileSection3.atmLevel()

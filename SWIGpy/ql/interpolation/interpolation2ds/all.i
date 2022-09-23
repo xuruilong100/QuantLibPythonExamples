@@ -20,7 +20,9 @@ class BackwardflatLinearInterpolation : public Interpolation2D {
   public:
     %extend {
         BackwardflatLinearInterpolation(
-            const Array& x, const Array& y, const Matrix& z) {
+            const Array& x, 
+            const Array& y, 
+            const Matrix& z) {
             return new BackwardflatLinearInterpolation(
                 x.begin(), x.end(), y.begin(), y.end(), z);
         }
@@ -32,7 +34,9 @@ class BicubicSpline : public Interpolation2D {
   public:
     %extend {
         BicubicSpline(
-            const Array& x, const Array& y, const Matrix& z) {
+            const Array& x, 
+            const Array& y, 
+            const Matrix& z) {
             return new BicubicSpline(
                 x.begin(), x.end(), y.begin(), y.end(), z);
         }
@@ -49,7 +53,9 @@ class BilinearInterpolation : public Interpolation2D {
   public:
     %extend {
         BilinearInterpolation(
-            const Array& x, const Array& y, const Matrix& z) {
+            const Array& x, 
+            const Array& y, 
+            const Matrix& z) {
             return new BilinearInterpolation(
                 x.begin(), x.end(), y.begin(), y.end(), z);
         }
@@ -61,7 +67,9 @@ class Polynomial2DSpline : public Interpolation2D {
   public:
     %extend {
         Polynomial2DSpline(
-            const Array& x, const Array& y, const Matrix& z) {
+            const Array& x, 
+            const Array& y, 
+            const Matrix& z) {
             return new Polynomial2DSpline(
                 x.begin(), x.end(), y.begin(), y.end(), z);
         }

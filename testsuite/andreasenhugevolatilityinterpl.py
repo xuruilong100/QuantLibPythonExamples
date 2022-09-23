@@ -1,8 +1,10 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, log, exp
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class CalibrationData(object):
@@ -34,10 +36,6 @@ class CalibrationResults(object):
 
 
 def AndreasenHugeExampleData():
-    # This is the example market data from the original paper
-    # Andreasen J., Huge B., 2010. Volatility Interpolation
-    # https://ssrn.com/abstract=1694972
-
     spot = QuoteHandle(SimpleQuote(2772.7))
     maturityTimes = [
         0.025, 0.101, 0.197, 0.274, 0.523, 0.772,
@@ -89,7 +87,7 @@ def AndreasenHugeExampleData():
             if raw[i][j] != 0.0:
                 noneZero += 1
 
-    calibrationSet = CalibrationSet()
+    calibrationSet = VanillaOptionQuotePairVector()
     calibrationSet.reserve(noneZero - nStrikes)
 
     for i in range(len(raw)):
@@ -101,7 +99,7 @@ def AndreasenHugeExampleData():
                 impliedVol = raw[i][j]
 
                 calibrationSet.append(
-                    CalibrationPair(
+                    VanillaOptionQuotePair(
                         VanillaOption(
                             PlainVanillaPayoff(
                                 Option.Put if strike < spot.value() else Option.Call,
@@ -116,10 +114,6 @@ def AndreasenHugeExampleData():
 
 
 def BorovkovaExampleData():
-    # see Svetlana Borovkova, Ferry J. Permana
-    # Implied volatility in oil markets
-    # http://www.researchgate.net/publication/46493859_Implied_volatility_in_oil_markets
-
     dc = Actual365Fixed()
     today = Date(4, January, 2018)
     rTS = YieldTermStructureHandle(flatRate(today, 0.025, dc))
@@ -135,7 +129,7 @@ def BorovkovaExampleData():
     strikes = [35, 50, 75, 100, 125, 150, 200, 300]
     maturityMonths = [1, 3, 6, 9, 12, 15, 18, 24]
 
-    calibrationSet = CalibrationSet()
+    calibrationSet = VanillaOptionQuotePairVector()
 
     for i in range(len(strikes)):
         strike = strikes[i]
@@ -148,7 +142,7 @@ def BorovkovaExampleData():
 
             if abs(mn) < 3.71 * vol:
                 calibrationSet.push_back(
-                    CalibrationPair(
+                    VanillaOptionQuotePair(
                         VanillaOption(
                             PlainVanillaPayoff(
                                 Option.Call, strike),
@@ -170,7 +164,7 @@ def arbitrageData():
     maturities = [1, 3, 6, 6]
     vols = [0.25, 0.35, 0.05, 0.35]
 
-    calibrationSet = CalibrationSet()
+    calibrationSet = VanillaOptionQuotePairVector()
 
     for i in range(len(strikes)):
         strike = strikes[i]
@@ -178,7 +172,7 @@ def arbitrageData():
         vol = vols[i]
 
         calibrationSet.push_back(
-            CalibrationPair(
+            VanillaOptionQuotePair(
                 VanillaOption(
                     PlainVanillaPayoff(
                         Option.Call, strike),
@@ -202,7 +196,7 @@ def sabrData():
     maturityDate = today + Period(maturityInYears, Years)
     maturity = dc.yearFraction(today, maturityDate)
 
-    calibrationSet = CalibrationSet()
+    calibrationSet = VanillaOptionQuotePairVector()
     strikes = [0.02, 0.025, 0.03, 0.035, 0.04, 0.05, 0.06]
 
     for i in range(len(strikes)):
@@ -210,7 +204,7 @@ def sabrData():
         vol = sabrVolatility(
             strike, forward, maturity, alpha, beta, nu, rho)
         calibrationSet.push_back(
-            CalibrationPair(
+            VanillaOptionQuotePair(
                 VanillaOption(
                     PlainVanillaPayoff(Option.Call, strike),
                     EuropeanExercise(maturityDate)),
@@ -319,7 +313,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
             AnalyticHestonEngine.AndersenPiterbarg,
             AnalyticHestonEngineIntegration.discreteTrapezoid(128))
 
-        calibrationSetCopy = CalibrationSet()
+        calibrationSetCopy = VanillaOptionQuotePairVector()
         calibrationSetCopy.reserve(calibrationSet.size())
 
         for i in range(calibrationSet.size()):
@@ -337,7 +331,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
                 discount, 0.0, NullReal(), 1.0, 1e-12) / sqrt(t)
 
             calibrationSetCopy.push_back(
-                CalibrationPair(
+                VanillaOptionQuotePair(
                     option, SimpleQuote(impliedVol)))
 
         irData = CalibrationData(spot, rTS, qTS, calibrationSetCopy)
@@ -356,13 +350,13 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
         today = Date(4, January, 2018)
         rTS = YieldTermStructureHandle(flatRate(today, 0.025, dc))
         qTS = YieldTermStructureHandle(flatRate(today, 0.085, dc))
-        calibrationSet = CalibrationSet()
+        calibrationSet = VanillaOptionQuotePairVector()
         strike = 10.0
         vol = 0.3
         maturity = today + Period(1, Years)
         spot = QuoteHandle(SimpleQuote(strike))
         calibrationSet.push_back(
-            CalibrationPair(
+            VanillaOptionQuotePair(
                 VanillaOption(
                     PlainVanillaPayoff(Option.Call, strike),
                     EuropeanExercise(maturity)),
@@ -416,9 +410,6 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
                     t = dc.yearFraction(today, maturityDate)
                     fwd = spot.value() * qTS.discount(t) / rTS.discount(t)
 
-                    # J. Gatheral, Arbitrage-free SVI volatility surfaces
-                    # http://mfe.baruch.cuny.edu/wp-content/uploads/2013/01/OsakaSVI2012.pdf
-
                     eps = 0.025
                     k = fwd * exp(m)
                     km = fwd * exp(m - eps)
@@ -470,7 +461,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
         strikes = [25, 50, 75, 90, 100, 110, 125, 150, 200, 400]
         maturityMonths = [1, 3, 6, 9, 12]
 
-        calibrationSet = CalibrationSet()
+        calibrationSet = VanillaOptionQuotePairVector()
 
         for i in range(len(strikes)):
             strike = strikes[i]
@@ -482,7 +473,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
 
                 if abs(mn) < 3.07 * vol:
                     calibrationSet.push_back(
-                        CalibrationPair(
+                        VanillaOptionQuotePair(
                             VanillaOption(
                                 PlainVanillaPayoff(Option.Call, strike),
                                 EuropeanExercise(maturityDate)),
@@ -590,9 +581,9 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
         s0 = 100.0
         impliedVol = 0.2
         spot = QuoteHandle(SimpleQuote(s0))
-        calibrationSet = CalibrationSet()
+        calibrationSet = VanillaOptionQuotePairVector()
         calibrationSet.push_back(
-            CalibrationPair(
+            VanillaOptionQuotePair(
                 VanillaOption(
                     PlainVanillaPayoff(Option.Call, s0),
                     EuropeanExercise(maturity)),
@@ -648,7 +639,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
         rTS = YieldTermStructureHandle(flatRate(ref, 0.02, dc))
         qTS = YieldTermStructureHandle(flatRate(ref, 0.0, dc))
         vol = SimpleQuote(0.18)
-        calibrationSet = CalibrationSet()
+        calibrationSet = VanillaOptionQuotePairVector()
 
         for i in range(len(expiries)):
             expiry = expiries[i]
@@ -665,7 +656,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
                             Option.Call if strike > fwd else Option.Put,
                             strike),
                         exercise)
-                    calibrationSet.push_back(CalibrationPair(option, vol))
+                    calibrationSet.push_back(VanillaOptionQuotePair(option, vol))
 
         flatVolData = CalibrationData(
             spot, rTS, qTS, calibrationSet)
@@ -702,7 +693,7 @@ class AndreasenHugeVolatilityInterplTest(unittest.TestCase):
 
         self.assertFalse(
             maxError > expected.maxError or avgError > expected.avgError,
-            'Failed to reproduce calibration error')
+            "Failed to reproduce calibration error")
 
         volatilityAdapter = AndreasenHugeVolatilityAdapter(
             andreasenHugeVolInterplation, 1e-12)

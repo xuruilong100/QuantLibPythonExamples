@@ -11,8 +11,10 @@ using QuantLib::SampledCurve;
 
 class SampledCurve {
   public:
-    SampledCurve(Size gridSize = 0);
-    SampledCurve(const Array& grid);
+    SampledCurve(
+        Size gridSize = 0);
+    SampledCurve(
+        const Array& grid);
     const Array& grid() const;
     const Array& values() const;
     Real gridValue(Size i) const;

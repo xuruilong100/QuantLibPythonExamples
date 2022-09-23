@@ -1,20 +1,11 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, exp, asin, log
-from scipy.stats import ncx2
+
 import numpy as np
+from QuantLib import *
+from scipy.stats import ncx2
 
-
-def norm(x, h):
-    l = len(x)
-    I = 0.0
-    for i in range(l):
-        I += x[i] * x[i]
-
-    I -= 0.5 * x[0] * x[0] + 0.5 * x[l - 1] * x[l - 1]
-    return sqrt(h * I)
-
+from utilities import *
 
 average = 1.0
 sigma = 2.0
@@ -61,15 +52,16 @@ class BivariateStudentTestData(object):
 class InverseNonCentralChiSquared(object):
     def __init__(self, df, ncp):
         self.dist_ = ncx2(df, ncp)
-        # boost::math::non_central_chi_squared_distribution<Real> dist_
 
     def __call__(self, x):
         return self.dist_.ppf(x)
 
 
 class DistributionTest(unittest.TestCase):
+
     def testNormal(self):
-        TEST_MESSAGE("Testing normal distributions...")
+        TEST_MESSAGE(
+            "Testing normal distributions...")
 
         invCumStandardNormal = InverseCumulativeNormal()
         check = invCumStandardNormal(0.5)
@@ -98,8 +90,6 @@ class DistributionTest(unittest.TestCase):
         for i in range(len(x)):
             yd[i] = gaussianDerivative(x[i])
 
-        # check that normal = Gaussian
-
         for i in range(len(x)):
             temp[i] = normal(x[i])
         for i in range(len(y)):
@@ -107,8 +97,6 @@ class DistributionTest(unittest.TestCase):
 
         e = norm(diff, h)
         self.assertFalse(e > 1.0e-16)
-
-        # check that invCum . cum = identity
 
         for i in range(len(x)):
             temp[i] = cum(x[i])
@@ -128,7 +116,6 @@ class DistributionTest(unittest.TestCase):
         e = norm(diff, h)
         self.assertFalse(e > 1.0e-7)
 
-        # check that cum.derivative = Gaussian
         for i in range(len(x)):
             temp[i] = cum.derivative(x[i])
 
@@ -138,7 +125,6 @@ class DistributionTest(unittest.TestCase):
         e = norm(diff, h)
         self.assertFalse(e > 1.0e-16)
 
-        # check that normal.derivative = gaussianDerivative
         for i in range(len(x)):
             temp[i] = normal.derivative(x[i])
 
@@ -148,13 +134,12 @@ class DistributionTest(unittest.TestCase):
         self.assertFalse(e > 1.0e-16)
 
     def testBivariate(self):
-        TEST_MESSAGE("Testing bivariate cumulative normal distribution...")
+        TEST_MESSAGE(
+            "Testing bivariate cumulative normal distribution...")
 
         self._checkBivariateAtZero(BivariateCumulativeNormalDistributionDr78, "Drezner 1978", 1.0e-6)
         self._checkBivariate(BivariateCumulativeNormalDistributionDr78, "Drezner 1978")
 
-        # due to relative low accuracy of Dr78, it does not pass with a
-        # smaller perturbation
         self._checkBivariateTail(BivariateCumulativeNormalDistributionDr78, "Drezner 1978", 1.0e-5)
         self._checkBivariateAtZero(BivariateCumulativeNormalDistributionWe04DP, "West 2004", 1.0e-15)
         self._checkBivariate(BivariateCumulativeNormalDistributionWe04DP, "West 2004")
@@ -162,9 +147,10 @@ class DistributionTest(unittest.TestCase):
         self._checkBivariateTail(BivariateCumulativeNormalDistributionWe04DP, "West 2004", 1.0e-8)
 
     def testPoisson(self):
-        TEST_MESSAGE("Testing Poisson distribution...")
+        TEST_MESSAGE(
+            "Testing Poisson distribution...")
 
-        for mean in np.arange(0.0, 10.0 + 0.5, 0.5):  # (mean = 0.0 mean <= 10.0 mean += 0.5) {
+        for mean in np.arange(0.0, 10.0 + 0.5, 0.5):
             i = 0
             pdf = PoissonDistribution(mean)
             calculated = pdf(i)
@@ -185,9 +171,10 @@ class DistributionTest(unittest.TestCase):
                 self.assertFalse(error > 1.0e-13)
 
     def testCumulativePoisson(self):
-        TEST_MESSAGE("Testing cumulative Poisson distribution...")
+        TEST_MESSAGE(
+            "Testing cumulative Poisson distribution...")
 
-        for mean in np.arange(0.0, 10.0 + 0.5, 0.5):  # (mean = 0.0 mean <= 10.0 mean += 0.5) {
+        for mean in np.arange(0.0, 10.0 + 0.5, 0.5):
             i = 0
             cdf = CumulativePoissonDistribution(mean)
             cumCalculated = cdf(i)
@@ -209,7 +196,8 @@ class DistributionTest(unittest.TestCase):
                 self.assertFalse(error > 1.0e-12)
 
     def testInverseCumulativePoisson(self):
-        TEST_MESSAGE("Testing inverse cumulative Poisson distribution...")
+        TEST_MESSAGE(
+            "Testing inverse cumulative Poisson distribution...")
 
         icp = InverseCumulativePoisson(1.0)
 
@@ -235,7 +223,7 @@ class DistributionTest(unittest.TestCase):
 
         xs = [0.00, 0.50, 1.00, 1.50, 2.00, 2.50, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00]
         ns = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 60, 90, 120, 150, 300, 600]
-        # Part of table 1 from the reference paper
+
         expected1 = [
             0.33333, 0.50000, 0.63497, 0.72338, 0.78063, 0.81943, 0.84704, 0.88332, 0.90590, 0.92124, 0.93231, 0.94066, 0.94719, 0.95243,
             0.33333, 0.52017, 0.68114, 0.78925, 0.85607, 0.89754, 0.92417, 0.95433, 0.96978, 0.97862, 0.98411, 0.98774, 0.99026, 0.99208,
@@ -257,7 +245,7 @@ class DistributionTest(unittest.TestCase):
             0.33333, 0.54586, 0.74420, 0.88317, 0.95706, 0.98729, 0.99695, 0.99990, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000,
             0.33333, 0.54605, 0.74470, 0.88394, 0.95781, 0.98777, 0.99717, 0.99992, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000,
             0.33333, 0.54615, 0.74495, 0.88432, 0.95818, 0.98801, 0.99728, 0.99993, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000, 1.00000]
-        # Part of table 2 from the reference paper
+
         expected2 = [
             0.16667, 0.36554, 0.54022, 0.65333, 0.72582, 0.77465, 0.80928, 0.85466, 0.88284, 0.90196, 0.91575, 0.92616, 0.93429, 0.94081,
             0.16667, 0.38889, 0.59968, 0.73892, 0.82320, 0.87479, 0.90763, 0.94458, 0.96339, 0.97412, 0.98078, 0.98518, 0.98823, 0.99044,
@@ -292,7 +280,6 @@ class DistributionTest(unittest.TestCase):
                 self.assertFalse(abs(calculated1 - reference1) > tolerance)
                 self.assertFalse(abs(calculated2 - reference2) > tolerance)
 
-        # a few more random cases
         cases = [
             BivariateStudentTestData(2, -1.0, 5.0, 8.0, 0.973491),
             BivariateStudentTestData(2, 1.0, -2.0, 8.0, 0.091752),
@@ -372,18 +359,17 @@ class DistributionTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing bivariate cumulative Student t distribution for large N...")
 
-        n = 10000  # for this value, the distribution should be
-        # close to a bivariate normal distribution.
+        n = 10000
 
-        for rho in np.arange(-1.0, 1.01, 0.25):  # (rho = -1.0 rho < 1.01 rho += 0.25) {
+        for rho in np.arange(-1.0, 1.01, 0.25):
             T = BivariateCumulativeStudentDistribution(n, rho)
             N = BivariateCumulativeNormalDistribution(rho)
 
             avgDiff = 0.0
             m = 0
             tolerance = 4.0e-5
-            for x in np.arange(-10.0, 10.1, 0.25):  # (x = -10 x < 10.1 x += 0.25) {
-                for y in np.arange(-10.0, 10.1, 0.25):  # (y = -10 y < 10.1 y += 0.25) {
+            for x in np.arange(-10.0, 10.1, 0.25):
+                for y in np.arange(-10.0, 10.1, 0.25):
                     calculated = T(x, y)
                     expected = N(x, y)
                     diff = abs(calculated - expected)
@@ -408,7 +394,6 @@ class DistributionTest(unittest.TestCase):
 
         scInvCDF10 = StochasticCollocationInvCDF(invCDF, 10)
 
-        # low precision
         for x in np.arange(-3.0, 3.0, 0.1):
             u = normalCDF(x)
 
@@ -421,7 +406,6 @@ class DistributionTest(unittest.TestCase):
             tol = 1e-2
             self.assertFalse(abs(calculated2 - expected) > tol)
 
-            # high precision
         scInvCDF30 = StochasticCollocationInvCDF(invCDF, 30, 0.9999999)
         for x in np.arange(-4.0, 4.0, 0.1):
             u = normalCDF(x)
@@ -429,13 +413,14 @@ class DistributionTest(unittest.TestCase):
             expected = invCDF(u)
             calculated = scInvCDF30(u)
 
-            tol = 1e-4  # original tol is 1e-6
+            tol = 1e-4
             error = abs(calculated - expected)
             self.assertFalse(error > tol)
 
     def testSankaranApproximation(self):
-        TEST_MESSAGE("Testing Sankaran approximation for the "
-                     "non-central cumulative chi-square distribution...")
+        TEST_MESSAGE(
+            "Testing Sankaran approximation for the "
+            "non-central cumulative chi-square distribution...")
 
         dfs = [2, 2, 2, 4, 4]
         ncps = [1, 2, 3, 1, 2, 3]
@@ -455,9 +440,6 @@ class DistributionTest(unittest.TestCase):
 
     def _checkBivariate(self, Bivariate, tag):
         values = [
-            #  The data below are from
-            #  "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-            #  pag 193
             BivariateTestData(0.0, 0.0, 0.0, 0.250000),
             BivariateTestData(0.0, 0.0, -0.5, 0.166667),
             BivariateTestData(0.0, 0.0, 0.5, 1.0 / 3),
@@ -485,17 +467,13 @@ class DistributionTest(unittest.TestCase):
             BivariateTestData(0.5, 0.5, 0.0, 0.478120),
             BivariateTestData(0.5, 0.5, -0.5, 0.419223),
             BivariateTestData(0.5, 0.5, 0.5, 0.546244),
-            # known analytical values
             BivariateTestData(0.0, 0.0, sqrt(1 / 2.0), 3.0 / 8),
-            # BivariateTestData(  0.0,  big,  any, 0.500000 ),
             BivariateTestData(0.0, 30, -1.0, 0.500000),
             BivariateTestData(0.0, 30, 0.0, 0.500000),
             BivariateTestData(0.0, 30, 1.0, 0.500000),
-            # BivariateTestData( big,  big,   any, 1.000000 ),
             BivariateTestData(30, 30, -1.0, 1.000000),
             BivariateTestData(30, 30, 0.0, 1.000000),
             BivariateTestData(30, 30, 1.0, 1.000000),
-            # BivariateTestData(-big,  any,   any, 0.000000 }
             BivariateTestData(-30, -1.0, -1.0, 0.000000),
             BivariateTestData(-30, 0.0, -1.0, 0.000000),
             BivariateTestData(-30, 1.0, -1.0, 0.000000),
@@ -515,10 +493,6 @@ class DistributionTest(unittest.TestCase):
 
     def _checkBivariateAtZero(self, Bivariate, tag, tolerance):
 
-        #     BVN(0.0,0.0,rho) = 1/4 + arcsin(rho)/(2*M_PI)
-        #     "Handbook of the Normal Distribution",
-        #     J.K. Patel & C.B.Read, 2nd Ed, 1996
-
         rho = [
             0.0, 0.1, 0.2, 0.3, 0.4, 0.5,
             0.6, 0.7, 0.8, 0.9, 0.99999]
@@ -534,9 +508,7 @@ class DistributionTest(unittest.TestCase):
                 self.assertFalse(abs(realised - expected) >= tolerance)
 
     def _checkBivariateTail(self, Bivariate, tag, tolerance):
-        # make sure numerical greeks are sensible, numerical error in
-        # the tails can make garbage greeks for partial time barrier
-        # option
+
         x = -6.9
         y = 6.9
         corr = -0.999

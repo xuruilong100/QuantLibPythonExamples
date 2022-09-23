@@ -27,7 +27,7 @@ class OdeFct {
         Py_XDECREF(function_);
     }
 
-    const Disposable<std::vector<Real>> operator()(
+    std::vector<Real> operator()(
         Real x, const std::vector<Real>& y) const {
 
         PyObject* pyY = PyList_New(y.size());
@@ -66,9 +66,9 @@ template <class T = Real>
 class AdaptiveRungeKutta {
   public:
     AdaptiveRungeKutta(
-        const Real eps=1.0e-6,
-        const Real h1=1.0e-4,
-        const Real hmin=0.0);
+        const Real eps = 1.0e-6,
+        const Real h1 = 1.0e-4,
+        const Real hmin = 0.0);
 
     %extend {
         T operator()(

@@ -4,9 +4,9 @@
 
 namespace QuantLib {
 
-ChinaFixingRepo::ChinaFixingRepo(const Period& tenor,
-                                 Natural fixingDays,
-                                 const Handle<YieldTermStructure>& h)
+    ChinaFixingRepo::ChinaFixingRepo(const Period& tenor,
+                                     Natural fixingDays,
+                                     const Handle<YieldTermStructure>& h)
     : IborIndex("ChinaFixingRepo",
                 tenor,
                 fixingDays,
@@ -17,11 +17,7 @@ ChinaFixingRepo::ChinaFixingRepo(const Period& tenor,
                 Actual365Fixed(Actual365Fixed::Standard),
                 h) {}
 
-ext::shared_ptr<IborIndex> ChinaFixingRepo::clone(const Handle<YieldTermStructure>& h) const {
-    return ext::shared_ptr<IborIndex>(
-        new ChinaFixingRepo(
-            tenor(),
-            fixingDays(),
-            h));
-}
-}    // namespace QuantLib
+    ext::shared_ptr<IborIndex> ChinaFixingRepo::clone(const Handle<YieldTermStructure>& h) const {
+        return ext::shared_ptr<IborIndex>(new ChinaFixingRepo(tenor(), fixingDays(), h));
+    }
+} // namespace QuantLib

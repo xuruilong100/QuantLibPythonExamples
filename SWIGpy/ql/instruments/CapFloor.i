@@ -71,11 +71,12 @@ class CapFloor : public Instrument {
 
 class MakeCapFloor {
   public:
-    MakeCapFloor(CapFloor::Type capFloorType,
-                 const Period& capFloorTenor,
-                 const ext::shared_ptr<IborIndex>& iborIndex,
-                 Rate strike = Null<Rate>(),
-                 const Period& forwardStart = 0*Days);
+    MakeCapFloor(
+        CapFloor::Type capFloorType,
+        const Period& capFloorTenor,
+        const ext::shared_ptr<IborIndex>& iborIndex,
+        Rate strike = Null<Rate>(),
+        const Period& forwardStart = 0*Days);
 
     %extend {
         ext::shared_ptr<CapFloor> makeCapFloor() const {

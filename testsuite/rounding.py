@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class TestCase(object):
@@ -48,7 +50,8 @@ testData = [
 class RoundingTest(unittest.TestCase):
 
     def testClosest(self):
-        TEST_MESSAGE("Testing closest decimal rounding...")
+        TEST_MESSAGE(
+            "Testing closest decimal rounding...")
 
         for i in testData:
             digits = i.precision
@@ -58,7 +61,8 @@ class RoundingTest(unittest.TestCase):
             self.assertFalse(not close(calculated, expected, 1))
 
     def testUp(self):
-        TEST_MESSAGE("Testing upward decimal rounding...")
+        TEST_MESSAGE(
+            "Testing upward decimal rounding...")
 
         for i in testData:
             digits = i.precision
@@ -68,7 +72,8 @@ class RoundingTest(unittest.TestCase):
             self.assertFalse(not close(calculated, expected, 1))
 
     def testDown(self):
-        TEST_MESSAGE("Testing downward decimal rounding...")
+        TEST_MESSAGE(
+            "Testing downward decimal rounding...")
 
         for i in testData:
             digits = i.precision
@@ -78,7 +83,8 @@ class RoundingTest(unittest.TestCase):
             self.assertFalse(not close(calculated, expected, 1))
 
     def testFloor(self):
-        TEST_MESSAGE("Testing floor decimal rounding...")
+        TEST_MESSAGE(
+            "Testing floor decimal rounding...")
 
         for i in testData:
             digits = i.precision
@@ -88,7 +94,8 @@ class RoundingTest(unittest.TestCase):
             self.assertFalse(not close(calculated, expected, 1))
 
     def testCeiling(self):
-        TEST_MESSAGE("Testing ceiling decimal rounding...")
+        TEST_MESSAGE(
+            "Testing ceiling decimal rounding...")
 
         for i in testData:
             digits = i.precision

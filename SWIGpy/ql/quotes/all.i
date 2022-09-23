@@ -70,14 +70,16 @@ class DeltaVolQuote : public Quote, public Observer {
     enum DeltaType { Spot, Fwd, PaSpot, PaFwd };
     enum AtmType { AtmNull, AtmSpot, AtmFwd, AtmDeltaNeutral,
                    AtmVegaMax, AtmGammaMax, AtmPutCall50 };
-    DeltaVolQuote(Real delta,
-                  const Handle<Quote>& vol,
-                  Time maturity,
-                  DeltaVolQuote::DeltaType deltaType);
-    DeltaVolQuote(const Handle<Quote>& vol,
-                  DeltaVolQuote::DeltaType deltaType,
-                  Time maturity,
-                  DeltaVolQuote::AtmType atmType);
+    DeltaVolQuote(
+        Real delta,
+        const Handle<Quote>& vol,
+        Time maturity,
+        DeltaVolQuote::DeltaType deltaType);
+    DeltaVolQuote(
+        const Handle<Quote>& vol,
+        DeltaVolQuote::DeltaType deltaType,
+        Time maturity,
+        DeltaVolQuote::AtmType atmType);
 
     Real delta() const;
     Time maturity() const;
@@ -106,21 +108,23 @@ class DerivedQuote : public Quote, public Observer {
 %shared_ptr(EurodollarFuturesImpliedStdDevQuote)
 class EurodollarFuturesImpliedStdDevQuote : public Quote, public LazyObject {
   public:
-    EurodollarFuturesImpliedStdDevQuote(Handle<Quote> forward,
-                                        Handle<Quote> callPrice,
-                                        Handle<Quote> putPrice,
-                                        Real strike,
-                                        Real guess = .15,
-                                        Real accuracy = 1.0e-6,
-                                        Natural maxIter = 100);
+    EurodollarFuturesImpliedStdDevQuote(
+        Handle<Quote> forward,
+        Handle<Quote> callPrice,
+        Handle<Quote> putPrice,
+        Real strike,
+        Real guess = .15,
+        Real accuracy = 1.0e-6,
+        Natural maxIter = 100);
 };
 
 %shared_ptr(ForwardSwapQuote)
 class ForwardSwapQuote : public Quote, public LazyObject {
   public:
-    ForwardSwapQuote(ext::shared_ptr<SwapIndex> swapIndex,
-                     Handle<Quote> spread,
-                     const Period& fwdStart);
+    ForwardSwapQuote(
+        ext::shared_ptr<SwapIndex> swapIndex,
+        Handle<Quote> spread,
+        const Period& fwdStart);
 
     const Date& valueDate() const;
     const Date& startDate() const;
@@ -137,16 +141,18 @@ class ForwardValueQuote : public Quote, public Observer {
 %shared_ptr(FuturesConvAdjustmentQuote)
 class FuturesConvAdjustmentQuote : public Quote, public Observer {
   public:
-    FuturesConvAdjustmentQuote(const ext::shared_ptr<IborIndex>& index,
-                               const Date& futuresDate,
-                               Handle<Quote> futuresQuote,
-                               Handle<Quote> volatility,
-                               Handle<Quote> meanReversion);
-    FuturesConvAdjustmentQuote(const ext::shared_ptr<IborIndex>& index,
-                               const std::string& immCode,
-                               Handle<Quote> futuresQuote,
-                               Handle<Quote> volatility,
-                               Handle<Quote> meanReversion);
+    FuturesConvAdjustmentQuote(
+        const ext::shared_ptr<IborIndex>& index,
+        const Date& futuresDate,
+        Handle<Quote> futuresQuote,
+        Handle<Quote> volatility,
+        Handle<Quote> meanReversion);
+    FuturesConvAdjustmentQuote(
+        const ext::shared_ptr<IborIndex>& index,
+        const std::string& immCode,
+        Handle<Quote> futuresQuote,
+        Handle<Quote> volatility,
+        Handle<Quote> meanReversion);
 
     Real futuresValue() const;
     Real volatility() const;
@@ -157,19 +163,21 @@ class FuturesConvAdjustmentQuote : public Quote, public Observer {
 %shared_ptr(ImpliedStdDevQuote)
 class ImpliedStdDevQuote : public Quote, public LazyObject {
   public:
-    ImpliedStdDevQuote(Option::Type optionType,
-                       Handle<Quote> forward,
-                       Handle<Quote> price,
-                       Real strike,
-                       Real guess,
-                       Real accuracy = 1.0e-6,
-                       Natural maxIter = 100);
+    ImpliedStdDevQuote(
+        Option::Type optionType,
+        Handle<Quote> forward,
+        Handle<Quote> price,
+        Real strike,
+        Real guess,
+        Real accuracy = 1.0e-6,
+        Natural maxIter = 100);
 };
 
 %shared_ptr(LastFixingQuote)
 class LastFixingQuote : public Quote, public Observer {
   public:
-    LastFixingQuote(ext::shared_ptr<Index> index);
+    LastFixingQuote(
+        ext::shared_ptr<Index> index);
     const ext::shared_ptr<Index>& index() const;
     Date referenceDate() const;
 };
@@ -178,8 +186,9 @@ class LastFixingQuote : public Quote, public Observer {
 class RecoveryRateQuote : public Quote {
   public:
     static Real conventionalRecovery(Seniority sen);
-    RecoveryRateQuote(Real value = Null<Real>(),
-                      Seniority seniority = NoSeniority);
+    RecoveryRateQuote(
+        Real value = Null<Real>(),
+        Seniority seniority = NoSeniority);
 
     Seniority seniority() const;
     Real setValue(Real value = Null<Real>());
@@ -189,7 +198,8 @@ class RecoveryRateQuote : public Quote {
 %shared_ptr(SimpleQuote)
 class SimpleQuote : public Quote {
   public:
-    SimpleQuote(Real value = Null<Real>());
+    SimpleQuote(
+        Real value = Null<Real>());
     void setValue(Real value = Null<Real>());
 };
 

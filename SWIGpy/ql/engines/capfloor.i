@@ -18,7 +18,7 @@ using QuantLib::Gaussian1dCapFloorEngine;
 class AnalyticCapFloorEngine : public PricingEngine {
   public:
     AnalyticCapFloorEngine(
-        const ext::shared_ptr<OneFactorAffineModel>& model,
+        const ext::shared_ptr<AffineModel>& model,
         Handle<YieldTermStructure> termStructure = Handle<YieldTermStructure>());
 };
 
@@ -28,17 +28,17 @@ class BlackCapFloorEngine : public PricingEngine {
     BlackCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         Volatility vol,
-        const DayCounter& dc=Actual365Fixed(),
-        Real displacement=0.0);
+        const DayCounter& dc = Actual365Fixed(),
+        Real displacement = 0.0);
     BlackCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         const Handle<Quote>& vol,
-        const DayCounter& dc=Actual365Fixed(),
-        Real displacement=0.0);
+        const DayCounter& dc = Actual365Fixed(),
+        Real displacement = 0.0);
     BlackCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         Handle<OptionletVolatilityStructure> vol,
-        Real displacement=Null<Real>());
+        Real displacement = Null<Real>());
     Handle<YieldTermStructure> termStructure();
     Handle<OptionletVolatilityStructure> volatility();
     Real displacement() const;
@@ -50,11 +50,11 @@ class BachelierCapFloorEngine : public PricingEngine {
     BachelierCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         Volatility vol,
-        const DayCounter& dc=Actual365Fixed());
+        const DayCounter& dc = Actual365Fixed());
     BachelierCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         const Handle<Quote>& vol,
-        const DayCounter& dc=Actual365Fixed());
+        const DayCounter& dc = Actual365Fixed());
  	BachelierCapFloorEngine(
         Handle<YieldTermStructure> discountCurve,
         Handle<OptionletVolatilityStructure> vol);

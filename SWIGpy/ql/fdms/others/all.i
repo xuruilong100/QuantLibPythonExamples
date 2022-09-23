@@ -16,16 +16,16 @@ using QuantLib::FdmHestonGreensFct;
 
 class FdmLinearOpIterator {
   public:
-    explicit FdmLinearOpIterator(
+    FdmLinearOpIterator(
         Size index = 0);
-    explicit FdmLinearOpIterator(
+    FdmLinearOpIterator(
         const std::vector<Size>& dim);
     FdmLinearOpIterator(
         std::vector<Size> dim,
         std::vector<Size> coordinates,
         Size index);
     FdmLinearOpIterator(
-        const Disposable<FdmLinearOpIterator>& from);
+        const FdmLinearOpIterator& from);
 
     Size index() const;
     const std::vector<Size>& coordinates() const;
@@ -43,7 +43,7 @@ class FdmLinearOpIterator {
 %shared_ptr(FdmLinearOpLayout)
 class FdmLinearOpLayout {
   public:
-    explicit FdmLinearOpLayout(const std::vector<Size>& dim);
+    FdmLinearOpLayout(const std::vector<Size>& dim);
 
     FdmLinearOpIterator begin() const;
     FdmLinearOpIterator end() const;
@@ -51,14 +51,17 @@ class FdmLinearOpLayout {
     const std::vector<Size>& spacing() const;
     Size size() const;
     Size index(const std::vector<Size>& coordinates) const;
-    Size neighbourhood(const FdmLinearOpIterator& iterator,
-                       Size i, Integer offset) const;
-    Size neighbourhood(const FdmLinearOpIterator& iterator,
-                       Size i1, Integer offset1,
-                       Size i2, Integer offset2) const;
+    Size neighbourhood(
+        const FdmLinearOpIterator& iterator,
+        Size i, Integer offset) const;
+    Size neighbourhood(
+        const FdmLinearOpIterator& iterator,
+        Size i1, Integer offset1,
+        Size i2, Integer offset2) const;
 
     FdmLinearOpIterator iter_neighbourhood(
-        const FdmLinearOpIterator& iterator, Size i, Integer offset) const;
+        const FdmLinearOpIterator& iterator, 
+        Size i, Integer offset) const;
 };
 
 %shared_ptr(FdmIndicesOnBoundary)
@@ -86,7 +89,9 @@ struct FdmSchemeDesc {
     };
 
     FdmSchemeDesc(
-        FdmSchemeType type, Real theta, Real mu);
+        FdmSchemeType type, 
+        Real theta, 
+        Real mu);
 
     const FdmSchemeType type;
     const Real theta, mu;

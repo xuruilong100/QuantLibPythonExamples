@@ -1,8 +1,10 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sin, sqrt, cos
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 def isTheSame(a, b):
@@ -33,13 +35,13 @@ def vandermondeCoefficients(
 class NumericalDifferentiationTest(unittest.TestCase):
 
     def testTabulatedCentralScheme(self):
-        TEST_MESSAGE("Testing numerical differentiation "
-                     "using the central scheme...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation "
+            "using the central scheme...")
         f = lambda x: x
 
         central = NumericalDifferentiation.Central
 
-        # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
         nd = NumericalDifferentiation(f, 1, 1.0, 3, central)
         self.checkTwoArraysAreTheSame(
             nd.weights(),
@@ -66,13 +68,13 @@ class NumericalDifferentiationTest(unittest.TestCase):
             [-1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5])
 
     def testTabulatedBackwardScheme(self):
-        TEST_MESSAGE("Testing numerical differentiation "
-                     "using the backward scheme...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation "
+            "using the backward scheme...")
         f = lambda x: x
 
         backward = NumericalDifferentiation.Backward
 
-        # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
         nd = NumericalDifferentiation(f, 1, 1.0, 2, backward)
         self.checkTwoArraysAreTheSame(
             nd.weights(),
@@ -94,13 +96,13 @@ class NumericalDifferentiationTest(unittest.TestCase):
             [0.0, -0.5, -1.0, -1.5])
 
     def testTabulatedForwardScheme(self):
-        TEST_MESSAGE("Testing numerical differentiation "
-                     "using the Forward scheme...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation "
+            "using the Forward scheme...")
         f = lambda x: x
 
         forward = NumericalDifferentiation.Forward
 
-        # see http:#en.wikipedia.org/wiki/Finite_difference_coefficient
         nd = NumericalDifferentiation(f, 1, 1.0, 2, forward)
         self.checkTwoArraysAreTheSame(
             nd.weights(),
@@ -122,8 +124,9 @@ class NumericalDifferentiationTest(unittest.TestCase):
             [0.0, 0.5, 1.0, 1.5])
 
     def testIrregularSchemeFirstOrder(self):
-        TEST_MESSAGE("Testing numerical differentiation "
-                     "of first order using an irregular scheme...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation "
+            "of first order using an irregular scheme...")
         f = lambda x: x
 
         h1 = 5e-7
@@ -144,8 +147,9 @@ class NumericalDifferentiationTest(unittest.TestCase):
             [alpha, beta, gamma])
 
     def testIrregularSchemeSecondOrder(self):
-        TEST_MESSAGE("Testing numerical differentiation "
-                     "of second order using an irregular scheme...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation "
+            "of second order using an irregular scheme...")
         f = lambda x: x
 
         h1 = 2e-7
@@ -166,8 +170,9 @@ class NumericalDifferentiationTest(unittest.TestCase):
             [alpha, beta, gamma])
 
     def testDerivativesOfSineFunction(self):
-        TEST_MESSAGE("Testing numerical differentiation"
-                     " of sin function...")
+        TEST_MESSAGE(
+            "Testing numerical differentiation"
+            " of sin function...")
 
         f = sin
 
@@ -230,9 +235,10 @@ class NumericalDifferentiationTest(unittest.TestCase):
             self.singleValueTest("irregular 3th", calculatedIrregular, expected, 5e-5)
 
     def testCoefficientBasedOnVandermonde(self):
-        TEST_MESSAGE("Testing coefficients from numerical differentiation"
-                     " by comparison with results from"
-                     " Vandermonde matrix inversion...")
+        TEST_MESSAGE(
+            "Testing coefficients from numerical differentiation"
+            " by comparison with results from"
+            " Vandermonde matrix inversion...")
         f = lambda x: x
 
         for order in range(5):
@@ -241,9 +247,9 @@ class NumericalDifferentiationTest(unittest.TestCase):
                 gridPoints = Array(nGridPoints)
                 for i in range(nGridPoints):
                     p = i
-                    gridPoints[i] = sin(p) + cos(p)  # strange points
+                    gridPoints[i] = sin(p) + cos(p)
 
-                x = 0.3902842  # strange points
+                x = 0.3902842
                 weightsVandermonde = vandermondeCoefficients(order, x, gridPoints)
                 nd = NumericalDifferentiation(f, order, gridPoints - x)
 

@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class TestCase(object):
@@ -16,6 +18,7 @@ class TestCase(object):
 
 
 class PartialTimeBarrierOptionTest(unittest.TestCase):
+
     def testAnalyticEngine(self):
         TEST_MESSAGE(
             "Testing analytic engine for partial-time barrier option...")
@@ -39,10 +42,11 @@ class PartialTimeBarrierOptionTest(unittest.TestCase):
         riskFreeTS = YieldTermStructureHandle(flatRate(today, rRate, dc))
         blackVolTS = BlackVolTermStructureHandle(flatVol(today, vol, dc))
 
-        process = BlackScholesMertonProcess(underlying,
-                                            dividendTS,
-                                            riskFreeTS,
-                                            blackVolTS)
+        process = BlackScholesMertonProcess(
+            underlying,
+            dividendTS,
+            riskFreeTS,
+            blackVolTS)
         engine = AnalyticPartialTimeBarrierOptionEngine(process)
 
         cases = [
@@ -50,27 +54,22 @@ class PartialTimeBarrierOptionTest(unittest.TestCase):
             TestCase(95.0, 110.0, 1, 0.0000),
             TestCase(105.0, 90.0, 1, 9.8751),
             TestCase(105.0, 110.0, 1, 6.2303),
-
             TestCase(95.0, 90.0, 90, 6.2747),
             TestCase(95.0, 110.0, 90, 3.7352),
             TestCase(105.0, 90.0, 90, 15.6324),
             TestCase(105.0, 110.0, 90, 9.6812),
-
             TestCase(95.0, 90.0, 180, 10.3345),
             TestCase(95.0, 110.0, 180, 5.8712),
             TestCase(105.0, 90.0, 180, 19.2896),
             TestCase(105.0, 110.0, 180, 11.6055),
-
             TestCase(95.0, 90.0, 270, 13.4342),
             TestCase(95.0, 110.0, 270, 7.1270),
             TestCase(105.0, 90.0, 270, 22.0753),
             TestCase(105.0, 110.0, 270, 12.7342),
-
             TestCase(95.0, 90.0, 359, 16.8576),
             TestCase(95.0, 110.0, 359, 7.5763),
             TestCase(105.0, 90.0, 359, 25.1488),
-            TestCase(105.0, 110.0, 359, 13.1376)
-        ]
+            TestCase(105.0, 110.0, 359, 13.1376)]
 
         for i in cases:
             coverEventDate = today + i.days

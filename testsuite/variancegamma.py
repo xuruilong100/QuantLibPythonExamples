@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class VarianceGammaProcessData(object):
@@ -11,9 +13,9 @@ class VarianceGammaProcessData(object):
                  sigma,
                  nu,
                  theta):
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
+        self.s = s
+        self.q = q
+        self.r = r
         self.sigma = sigma
         self.nu = nu
         self.theta = theta
@@ -26,23 +28,22 @@ class VarianceGammaOptionData(object):
                  t):
         self.type = type
         self.strike = strike
-        self.t = t  # time to maturity
+        self.t = t
 
 
 class VarianceGammaTest(unittest.TestCase):
 
     def testVarianceGamma(self):
-        TEST_MESSAGE("Testing variance-gamma model for European options...")
+        TEST_MESSAGE(
+            "Testing variance-gamma model for European options...")
 
         backup = SavedSettings()
 
         processes = [
-            #    spot,    q,    r,sigma,   nu, theta
             VarianceGammaProcessData(6000, 0.00, 0.05, 0.20, 0.05, -0.50),
             VarianceGammaProcessData(6000, 0.02, 0.05, 0.15, 0.01, -0.50)]
 
         options = [
-            #            type,strike,  t
             VarianceGammaOptionData(Option.Call, 5550, 1.0),
             VarianceGammaOptionData(Option.Call, 5600, 1.0),
             VarianceGammaOptionData(Option.Call, 5650, 1.0),
@@ -77,7 +78,7 @@ class VarianceGammaTest(unittest.TestCase):
         tol = 0.01
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         for i in range(len(processes)):
             spot = SimpleQuote(processes[i].s)
@@ -94,13 +95,10 @@ class VarianceGammaTest(unittest.TestCase):
                 processes[i].nu,
                 processes[i].theta)
 
-            # Analytic engine
             analyticEngine = VarianceGammaEngine(stochProcess)
 
-            # FFT engine
             fftEngine = FFTVarianceGammaEngine(stochProcess)
 
-            # which requires a list of options
             optionList = []
             payoffs = []
             for j in range(len(options)):
@@ -111,7 +109,6 @@ class VarianceGammaTest(unittest.TestCase):
                     options[j].type, options[j].strike)
                 payoffs.append(payoff)
 
-                # Test analytic engine
                 option = EuropeanOption(payoff, exercise)
                 option.setPricingEngine(analyticEngine)
 
@@ -123,8 +120,6 @@ class VarianceGammaTest(unittest.TestCase):
 
                 optionList.append(option)
 
-            # Test FFT engine
-            # FFT engine is extremely efficient when sent a list of options to calculate first
             fftEngine.precalculate(optionList)
             for j in range(len(options)):
                 option = optionList[j]
@@ -166,7 +161,5 @@ class VarianceGammaTest(unittest.TestCase):
             S0, dividend, disc, sigma, kappa, mu)
 
         option.setPricingEngine(VarianceGammaEngine(process))
-        # without the fix, the call below goes into an infinite loop,
-        # which is hard to test for.  We're just happy to see the test
-        # case finish, hence the lack of an assertion.
+
         option.NPV()

@@ -1,11 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class PathGeneratorTest(unittest.TestCase):
+
     def testPathGenerator(self):
-        TEST_MESSAGE("Testing 1-D path generation against cached values...")
+        TEST_MESSAGE(
+            "Testing 1-D path generation against cached values...")
 
         backup = SavedSettings()
 
@@ -15,20 +19,18 @@ class PathGeneratorTest(unittest.TestCase):
         r = YieldTermStructureHandle(flatRate(0.05, Actual360()))
         q = YieldTermStructureHandle(flatRate(0.02, Actual360()))
         sigma = BlackVolTermStructureHandle(flatVol(0.20, Actual360()))
-        # commented values must be used when Halley's correction is enabled
+
         self._testSingle(
             BlackScholesMertonProcess(x0, q, r, sigma),
             "Black-Scholes", false, 26.13784357783, 467.2928561411)
-        # 26.13784357783, 467.2928562519)
+
         self._testSingle(
             BlackScholesMertonProcess(x0, q, r, sigma),
             "Black-Scholes", true, 60.28215549393, 202.6143139999)
-        # 60.28215551021, 202.6143139437)
 
         self._testSingle(
             GeometricBrownianMotionProcess(100.0, 0.03, 0.20),
             "geometric Brownian", false, 27.62223714065, 483.6026514084)
-        # 27.62223714065, 483.602651493)
 
         self._testSingle(
             OrnsteinUhlenbeckProcess(0.1, 0.20),
@@ -39,7 +41,8 @@ class PathGeneratorTest(unittest.TestCase):
             "square-root", false, 1.70608664108, 6.024200546031)
 
     def testMultiPathGenerator(self):
-        TEST_MESSAGE("Testing n-D path generation against cached values...")
+        TEST_MESSAGE(
+            "Testing n-D path generation against cached values...")
 
         backup = SavedSettings()
 
@@ -67,7 +70,7 @@ class PathGeneratorTest(unittest.TestCase):
         processes[1] = BlackScholesMertonProcess(x0, q, r, sigma)
         processes[2] = BlackScholesMertonProcess(x0, q, r, sigma)
         process = StochasticProcessArray(processes, correlation)
-        # commented values must be used when Halley's correction is enabled
+
         result1 = [
             188.2235868185,
             270.6713069569,

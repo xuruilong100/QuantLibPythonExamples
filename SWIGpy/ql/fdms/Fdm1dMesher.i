@@ -12,7 +12,7 @@ using QuantLib::Fdm1dMesher;
 %shared_ptr(Fdm1dMesher)
 class Fdm1dMesher {
   public:
-    explicit Fdm1dMesher(Size size);
+    Fdm1dMesher(Size size);
 
     Size size() const;
     Real dplus(Size index) const;

@@ -36,10 +36,6 @@ class GeneralStatistics {
     Real kurtosis() const;
     Real min() const;
     Real max() const;
-    /* template <class Func, class Predicate>
-    std::pair<Real,Size> expectationValue(
-        const Func& f,
-        const Predicate& inRange) const */
     Real percentile(Real y) const;
     Real topPercentile(Real y) const;
     void add(Real value, Real weight = 1.0);
@@ -104,7 +100,8 @@ template<class Stat>
 class GenericGaussianStatistics : public Stat {
   public:
     GenericGaussianStatistics();
-    GenericGaussianStatistics(const Stat& s);
+    GenericGaussianStatistics(
+        const Stat& s);
 
     Real gaussianDownsideVariance() const;
     Real gaussianDownsideDeviation() const;
@@ -121,7 +118,8 @@ class GenericGaussianStatistics : public Stat {
 template<>
 class GenericGaussianStatistics<StatsHolder> : public StatsHolder {
   public:
-    GenericGaussianStatistics(const StatsHolder& s);
+    GenericGaussianStatistics(
+        const StatsHolder& s);
 
     Real gaussianDownsideVariance() const;
     Real gaussianDownsideDeviation() const;
@@ -162,7 +160,8 @@ typedef RiskStatistics Statistics;
 template <class StatisticsType>
 class GenericSequenceStatistics {
   public:
-    GenericSequenceStatistics(Size dimension = 0);
+    GenericSequenceStatistics(
+        Size dimension = 0);
     Size size() const { return dimension_; }
     Matrix covariance() const;
     Matrix correlation() const;
@@ -206,7 +205,8 @@ class GenericSequenceStatistics {
 template <>
 class GenericSequenceStatistics<IncrementalStatistics> {
   public:
-    GenericSequenceStatistics(Size dimension = 0);
+    GenericSequenceStatistics(
+        Size dimension = 0);
     Size size() const { return dimension_; }
     Matrix covariance() const;
     Matrix correlation() const;
@@ -250,10 +250,14 @@ class GenericSequenceStatistics<IncrementalStatistics> {
 %template(SequenceStatistics) GenericSequenceStatistics<Statistics>;
 typedef GenericSequenceStatistics<Statistics> SequenceStatistics;
 %template(SequenceStatisticsInc) GenericSequenceStatistics<IncrementalStatistics>;
+typedef GenericSequenceStatistics<IncrementalStatistics> SequenceStatisticsInc;
+%template(SequenceStatisticsIncVector) std::vector<SequenceStatisticsInc>;
+%template(SequenceStatisticsIncVectorVector) std::vector<std::vector<SequenceStatisticsInc>>;
 
 class DiscrepancyStatistics : public SequenceStatistics {
   public:
-    DiscrepancyStatistics(Size dimension);
+    DiscrepancyStatistics(
+        Size dimension);
     Real discrepancy() const;
     %extend {
         void add(
@@ -271,15 +275,17 @@ class DoublingConvergenceSteps {
     Size nextSamples(Size current);
 };
 
-%template(ConvergenceStatisticsTableItem) std::pair<Size, Real>;
-%template(ConvergenceStatisticsTable) std::vector<std::pair<Size, Real>>;
+%template(SizeDoublePair) std::pair<Size, Real>;
+%template(SizeDoublePairVector) std::vector<std::pair<Size, Real>>;
 
 template <class T, class U = DoublingConvergenceSteps>
 class ConvergenceStatistics : public T {
   public:
-    ConvergenceStatistics(const T& stats,
-                          const U& rule = U());
-    ConvergenceStatistics(const U& rule = U());
+    ConvergenceStatistics(
+        const T& stats,
+        const U& rule = U());
+    ConvergenceStatistics(
+        const U& rule = U());
     void add(const Real& value, Real weight = 1.0);
     %extend {
         void addSequence(const std::vector<Real>& datas) {

@@ -55,7 +55,9 @@ class ExtendedOrnsteinUhlenbeckProcess : public StochasticProcess1D {
     };
     %extend {
         ExtendedOrnsteinUhlenbeckProcess(
-            Real speed, Volatility sigma, Real x0,
+            Real speed, 
+            Volatility sigma, 
+            Real x0,
             PyObject * function,
             Discretization discretization = MidPoint,
             Real intEps = 1e-4) {
@@ -80,14 +82,24 @@ class GemanRoncoroniProcess : public StochasticProcess1D {
   public:
     GemanRoncoroniProcess(
         Real x0,
-        Real alpha, Real beta,
-        Real gamma, Real delta,
-        Real eps, Real zeta, Real d,
-        Real k, Real tau,
-        Real sig2, Real a, Real b,
-        Real theta1, Real theta2, Real theta3,
+        Real alpha, 
+        Real beta,
+        Real gamma, 
+        Real delta,
+        Real eps, 
+        Real zeta, 
+        Real d,
+        Real k, 
+        Real tau,
+        Real sig2, 
+        Real a, 
+        Real b,
+        Real theta1,
+        Real theta2, 
+        Real theta3,
         Real psi);
-    Real evolve(Time t0, Real x0, Time dt, Real dw, const Array& du) const;
+    Real evolve(
+        Time t0, Real x0, Time dt, Real dw, const Array& du) const;
 };
 
 %shared_ptr(GeometricBrownianMotionProcess)
@@ -132,8 +144,8 @@ class GeneralizedOrnsteinUhlenbeckProcess : public StochasticProcess1D {
             PyObject * vol,
             Real x0 = 0.0,
             Real level = 0.0) {
-            const ext::function<Real(Real)> s= UnaryFunction(speed);
-            const ext::function<Real(Real)> v= UnaryFunction(vol);
+            const ext::function<Real(Real)> s = UnaryFunction(speed);
+            const ext::function<Real(Real)> v = UnaryFunction(vol);
             return new GeneralizedOrnsteinUhlenbeckProcess(
                 s, v, x0, level);
         }
@@ -148,7 +160,8 @@ class HullWhiteProcess : public StochasticProcess1D {
   public:
     HullWhiteProcess(
         const Handle<YieldTermStructure>& riskFreeTS,
-        Real a, Real sigma);
+        Real a, 
+        Real sigma);
     Real a() const;
     Real sigma() const;
     Real alpha(Time t) const;
@@ -189,8 +202,10 @@ class MfStateProcess : public StochasticProcess1D {
 class OrnsteinUhlenbeckProcess : public StochasticProcess1D {
   public:
     OrnsteinUhlenbeckProcess(
-    	Real speed, Volatility vol,
-        Real x0 = 0.0, Real level = 0.0);
+    	  Real speed, 
+        Volatility vol,
+        Real x0 = 0.0, 
+        Real level = 0.0);
 
     Real speed() const;
     Real volatility() const;
@@ -201,7 +216,8 @@ class OrnsteinUhlenbeckProcess : public StochasticProcess1D {
 class SquareRootProcess : public StochasticProcess1D {
   public:
     SquareRootProcess(
-        Real b, Real a,
+        Real b,
+        Real a,
         Volatility sigma,
         Real x0 = 0.0,
         const ext::shared_ptr<discretization1D>& d = ext::shared_ptr<discretization1D>(new EulerDiscretization));
@@ -218,7 +234,9 @@ class VarianceGammaProcess : public StochasticProcess1D {
         Handle<Quote> s0,
         Handle<YieldTermStructure> dividendYield,
         Handle<YieldTermStructure> riskFreeRate,
-        Real sigma, Real nu, Real theta);
+        Real sigma, 
+        Real nu, 
+        Real theta);
     Real sigma() const;
     Real nu() const;
     Real theta() const;
@@ -231,8 +249,10 @@ class VarianceGammaProcess : public StochasticProcess1D {
 class GsrProcess : public ForwardMeasureProcess1D {
   public:
     GsrProcess(
-        const Array& times, const Array& vols,
-        const Array& reversions, const Real T = 60.0);
+        const Array& times, 
+        const Array& vols,
+        const Array& reversions, 
+        const Real T = 60.0);
     Real sigma(Time t);
     Real reversion(Time t);
     Real y(Time t);
@@ -268,7 +288,7 @@ class BlackScholesProcess : public GeneralizedBlackScholesProcess {
         const Handle<YieldTermStructure>& riskFreeTS,
         const Handle<BlackVolTermStructure>& blackVolTS,
         const ext::shared_ptr<discretization1D>& d = ext::shared_ptr<discretization1D>(new EulerDiscretization),
-        bool forceDiscretization=false);
+        bool forceDiscretization = false);
 };
 
 %shared_ptr(BlackScholesMertonProcess)
@@ -280,7 +300,7 @@ class BlackScholesMertonProcess : public GeneralizedBlackScholesProcess {
         const Handle<YieldTermStructure>& riskFreeTS,
         const Handle<BlackVolTermStructure>& blackVolTS,
         const ext::shared_ptr<discretization1D>& d = ext::shared_ptr<discretization1D>(new EulerDiscretization),
-        bool forceDiscretization=false);
+        bool forceDiscretization = false);
 };
 
 %shared_ptr(BlackProcess)
@@ -291,7 +311,7 @@ class BlackProcess : public GeneralizedBlackScholesProcess {
         const Handle<YieldTermStructure>& riskFreeTS,
         const Handle<BlackVolTermStructure>& blackVolTS,
         const ext::shared_ptr<discretization1D>& d = ext::shared_ptr<discretization1D>(new EulerDiscretization),
-        bool forceDiscretization=false);
+        bool forceDiscretization = false);
 };
 
 %shared_ptr(GarmanKohlagenProcess)
@@ -303,7 +323,7 @@ class GarmanKohlagenProcess : public GeneralizedBlackScholesProcess {
         const Handle<YieldTermStructure>& domesticRiskFreeTS,
         const Handle<BlackVolTermStructure>& blackVolTS,
         const ext::shared_ptr<discretization1D>& d = ext::shared_ptr<discretization1D>(new EulerDiscretization),
-        bool forceDiscretization=false);
+        bool forceDiscretization = false);
 };
 
 %shared_ptr(VegaStressedBlackScholesProcess)

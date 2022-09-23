@@ -5,8 +5,11 @@
 %include ../ql/common.i
 %include ../ql/alltypes.i
 %include ../ql/termstructures/InflationTermStructure.i
+%include ../ql/indexes/all.i
 
 %{
+using QuantLib::CPICapFloorTermPriceSurface;
+using QuantLib::InterpolatedCPICapFloorTermPriceSurface;
 using QuantLib::YoYInflationTermStructure;
 using QuantLib::ZeroInflationTermStructure;
 using QuantLib::YoYCapFloorTermPriceSurface;
@@ -16,6 +19,59 @@ using QuantLib::PiecewiseYoYInflationCurve;
 using QuantLib::InterpolatedZeroInflationCurve;
 using QuantLib::InterpolatedYoYInflationCurve;
 %}
+
+%shared_ptr(CPICapFloorTermPriceSurface)
+class CPICapFloorTermPriceSurface : public InflationTermStructure {
+  private:
+    CPICapFloorTermPriceSurface();
+  public:
+    Handle<ZeroInflationIndex> zeroInflationIndex() const;
+    Real nominal() const;
+    BusinessDayConvention businessDayConvention() const;
+    Real price(const Period& d, Rate k) const;
+    Real capPrice(const Period& d, Rate k) const;
+    Real floorPrice(const Period& d, Rate k) const;
+    Real price(const Date& d, Rate k) const;
+    Real capPrice(const Date& d, Rate k) const;
+    Real floorPrice(const Date& d, Rate k) const;
+    std::vector<Rate> strikes() const;
+    std::vector<Rate> capStrikes() const;
+    std::vector<Rate> floorStrikes() const;
+    std::vector<Period> maturities() const;
+    const Matrix& capPrices() const;
+    const Matrix& floorPrices() const;
+    Rate minStrike() const;
+    Rate maxStrike() const;
+    Date minDate() const;
+    Date cpiOptionDateFromTenor(const Period& p) const;
+};
+
+%template(CPICapFloorTermPriceSurfaceHandle) Handle<CPICapFloorTermPriceSurface>;
+%template(RelinkableCPICapFloorTermPriceSurfaceHandle) RelinkableHandle<CPICapFloorTermPriceSurface>;
+
+%shared_ptr(InterpolatedCPICapFloorTermPriceSurface<Bilinear>)
+template<class Interpolator2D>
+class InterpolatedCPICapFloorTermPriceSurface : public CPICapFloorTermPriceSurface {
+  public:
+    InterpolatedCPICapFloorTermPriceSurface(
+        Real nominal,
+        Rate startRate,
+        const Period& observationLag,
+        const Calendar& cal,
+        const BusinessDayConvention& bdc,
+        const DayCounter& dc,
+        const Handle<ZeroInflationIndex>& zii,
+        const Handle<YieldTermStructure>& yts,
+        const std::vector<Rate> &cStrikes,
+        const std::vector<Rate> &fStrikes,
+        const std::vector<Period> &cfMaturities,
+        const Matrix& cPrice,
+        const Matrix& fPrice,
+        const Interpolator2D &interpolator2d = Interpolator2D());
+        void performCalculations() const;
+};
+
+%template(CPICapFloorSurface) InterpolatedCPICapFloorTermPriceSurface<Bilinear>;
 
 %shared_ptr(YoYInflationTermStructure)
 class YoYInflationTermStructure : public InflationTermStructure {
@@ -129,9 +185,8 @@ export_yoy_capfloor_termpricesurface(YoYInflationCapFloorTermPriceSurface,Bicubi
 
 %shared_ptr(PiecewiseZeroInflationCurve<Linear>)
 template <class Interpolator>
-class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
+class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure, public LazyObject {
     %feature("kwargs") PiecewiseZeroInflationCurve;
-
   public:
     PiecewiseZeroInflationCurve(
         const Date& referenceDate,
@@ -139,7 +194,6 @@ class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
         const DayCounter& dayCounter,
         const Period& lag,
         Frequency frequency,
-        bool indexIsInterpolated,
         Rate baseZeroRate,
         const std::vector<ext::shared_ptr<BootstrapHelper<ZeroInflationTermStructure>>>& instruments,
         Real accuracy = 1.0e-12,
@@ -154,7 +208,7 @@ class PiecewiseZeroInflationCurve : public ZeroInflationTermStructure {
 
 %shared_ptr(PiecewiseYoYInflationCurve<Linear>)
 template <class Interpolator>
-class PiecewiseYoYInflationCurve : public YoYInflationTermStructure {
+class PiecewiseYoYInflationCurve : public YoYInflationTermStructure, public LazyObject {
     %feature("kwargs") PiecewiseYoYInflationCurve;
   public:
     PiecewiseYoYInflationCurve(
@@ -188,10 +242,10 @@ class InterpolatedZeroInflationCurve : public ZeroInflationTermStructure {
         const DayCounter& dayCounter,
         const Period& lag,
         Frequency frequency,
-        bool indexIsInterpolated,
-        std::vector<Date> dates,
+        const std::vector<Date>& dates,
         const std::vector<Rate>& rates,
         const Interpolator& interpolator = Interpolator());
+
     const std::vector<Date>& dates() const;
     const std::vector<Time>& times() const;
     const std::vector<Real>& data() const;

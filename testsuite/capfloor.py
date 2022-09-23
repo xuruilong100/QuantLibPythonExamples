@@ -1,11 +1,12 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
         self.nominals = DoubleVector(1, 100)
         self.frequency = Semiannual
@@ -13,7 +14,7 @@ class CommonVars(object):
         self.index = Euribor6M(self.termStructure)
         self.calendar = self.index.fixingCalendar()
         self.convention = ModifiedFollowing
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.settlementDays = 2
         self.fixingDays = 2
@@ -23,7 +24,6 @@ class CommonVars(object):
                 self.settlement, 0.05, ActualActual(ActualActual.ISDA)))
         self.backup = SavedSettings()
 
-    # utilities
     def makeLeg(self,
                 startDate,
                 length):
@@ -52,16 +52,16 @@ class CommonVars(object):
         return BachelierCapFloorEngine(self.termStructure, vol)
 
     def makeCapFloor(self,
-                     type,
+                     typ,
                      leg,
                      strike,
                      volatility,
                      isLogNormal=true):
         result = None
-        if type == CapFloor.Cap:
+        if typ == CapFloor.Cap:
             result = Cap(leg, DoubleVector(1, strike))
 
-        if type == CapFloor.Floor:
+        if typ == CapFloor.Floor:
             result = Floor(leg, DoubleVector(1, strike))
 
         if isLogNormal:
@@ -88,7 +88,8 @@ def typeToString(type):
 class CapFloorTest(unittest.TestCase):
 
     def testStrikeDependency(self):
-        TEST_MESSAGE("Testing cap/floor dependency on strike...")
+        TEST_MESSAGE(
+            "Testing cap/floor dependency on strike...")
 
         vars = CommonVars()
 
@@ -100,7 +101,6 @@ class CapFloorTest(unittest.TestCase):
 
         for length in lengths:
             for vol in vols:
-                # store the results for different strikes...
                 cap_values = DoubleVector()
                 floor_values = DoubleVector()
                 for strike in strikes:
@@ -110,10 +110,6 @@ class CapFloorTest(unittest.TestCase):
                     floor = vars.makeCapFloor(CapFloor.Floor, leg, strike, vol)
                     floor_values.push_back(floor.NPV())
 
-                # and check that they go the right way
-                # it = std.adjacent_find(cap_values.begin(), cap_values.end(), std.less<Real>())
-                # self.assertFalse (it != cap_values.end())
-
                 it = 1
                 while cap_values[it - 1] >= cap_values[it]:
                     it += 1
@@ -121,10 +117,6 @@ class CapFloorTest(unittest.TestCase):
                         break
 
                 self.assertFalse(it != len(cap_values) - 1)
-
-                # same for floors
-                # it = std.adjacent_find(floor_values.begin(), floor_values.end(), std.greater<Real>())
-                # self.assertFalse (it != floor_values.end())
 
                 it = 1
                 while floor_values[it - 1] <= floor_values[it]:
@@ -135,7 +127,8 @@ class CapFloorTest(unittest.TestCase):
                 self.assertFalse(it != len(floor_values) - 1)
 
     def testConsistency(self):
-        TEST_MESSAGE("Testing consistency between cap, floor and collar...")
+        TEST_MESSAGE(
+            "Testing consistency between cap, floor and collar...")
 
         vars = CommonVars()
 
@@ -161,7 +154,6 @@ class CapFloorTest(unittest.TestCase):
 
                         self.assertFalse(abs((cap.NPV() - floor.NPV()) - collar.NPV()) > 1e-10)
 
-                        # test re-composition by optionlets, N.B. two per year
                         capletsNPV = 0.0
                         caplets = []
                         for m in range(length * 2):
@@ -190,7 +182,8 @@ class CapFloorTest(unittest.TestCase):
                         self.assertFalse(abs(collar.NPV() - collarletsNPV) > 1e-10)
 
     def testParity(self):
-        TEST_MESSAGE("Testing cap/floor parity...")
+        TEST_MESSAGE(
+            "Testing cap/floor parity...")
 
         vars = CommonVars()
 
@@ -216,12 +209,12 @@ class CapFloorTest(unittest.TestCase):
                         vars.index.dayCounter())
                     swap.setPricingEngine(
                         DiscountingSwapEngine(vars.termStructure))
-                    # FLOATING_POINT_EXCEPTION
                     self.assertFalse(
                         abs((cap.NPV() - floor.NPV()) - swap.NPV()) > 1.0e-10)
 
     def testVega(self):
-        TEST_MESSAGE("Testing cap/floor vega...")
+        TEST_MESSAGE(
+            "Testing cap/floor vega...")
 
         vars = CommonVars()
 
@@ -237,11 +230,11 @@ class CapFloorTest(unittest.TestCase):
         for length in lengths:
             for vol in vols:
                 for strike in strikes:
-                    for type in types:
+                    for ty in types:
                         leg = vars.makeLeg(startDate, length)
-                        capFloor = vars.makeCapFloor(type, leg, strike, vol)
-                        shiftedCapFloor2 = vars.makeCapFloor(type, leg, strike, vol + shift)
-                        shiftedCapFloor1 = vars.makeCapFloor(type, leg, strike, vol - shift)
+                        capFloor = vars.makeCapFloor(ty, leg, strike, vol)
+                        shiftedCapFloor2 = vars.makeCapFloor(ty, leg, strike, vol + shift)
+                        shiftedCapFloor1 = vars.makeCapFloor(ty, leg, strike, vol - shift)
                         value1 = shiftedCapFloor1.NPV()
                         value2 = shiftedCapFloor2.NPV()
                         numericalVega = (value2 - value1) / (2 * shift)
@@ -252,7 +245,8 @@ class CapFloorTest(unittest.TestCase):
                             self.assertFalse(discrepancy > tolerance)
 
     def testATMRate(self):
-        TEST_MESSAGE("Testing cap/floor ATM rate...")
+        TEST_MESSAGE(
+            "Testing cap/floor ATM rate...")
 
         vars = CommonVars()
 
@@ -292,7 +286,8 @@ class CapFloorTest(unittest.TestCase):
                     self.assertFalse(not checkAbsError(swapNPV, 0, 1.0e-10))
 
     def testImpliedVolatility(self):
-        TEST_MESSAGE("Testing implied term volatility for cap and floor...")
+        TEST_MESSAGE(
+            "Testing implied term volatility for cap and floor...")
 
         vars = CommonVars()
 
@@ -302,18 +297,16 @@ class CapFloorTest(unittest.TestCase):
         types = [CapFloor.Cap, CapFloor.Floor]
         strikes = [0.02, 0.03, 0.04]
         lengths = [1, 5, 10]
-
-        # test data
         rRates = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07]
         vols = [0.01, 0.05, 0.10, 0.20, 0.30, 0.70, 0.90]
 
         for length in lengths:
             leg = vars.makeLeg(vars.settlement, length)
 
-            for type in types:
+            for ty in types:
                 for strike in strikes:
 
-                    capfloor = vars.makeCapFloor(type, leg, strike, 0.0)
+                    capfloor = vars.makeCapFloor(ty, leg, strike, 0.0)
 
                     for r in rRates:
                         for v in vols:
@@ -335,21 +328,20 @@ class CapFloorTest(unittest.TestCase):
                                     ShiftedLognormal, 0.0)
 
                             except Exception as e:
-                                # couldn't bracket?
                                 capfloor.setPricingEngine(vars.makeEngine(0.0))
                                 value2 = capfloor.NPV()
 
                                 self.assertFalse(abs(value - value2) > tolerance)
 
                             if abs(implVol - v) > tolerance:
-                                # the difference might not matter
                                 capfloor.setPricingEngine(
                                     vars.makeEngine(implVol))
                                 value2 = capfloor.NPV()
                                 self.assertFalse(abs(value - value2) > tolerance)
 
     def testCachedValue(self):
-        TEST_MESSAGE("Testing Black cap/floor price against cached values...")
+        TEST_MESSAGE(
+            "Testing Black cap/floor price against cached values...")
 
         vars = CommonVars()
 
@@ -364,24 +356,20 @@ class CapFloorTest(unittest.TestCase):
         floor = vars.makeCapFloor(CapFloor.Floor, leg,
                                   0.03, 0.20)
 
-        # cachedCapNPV, cachedFloorNPV
         if not IborCouponSettings.instance().usingAtParCoupons():
-            # index fixing price
             cachedCapNPV = 6.87630307745
             cachedFloorNPV = 2.65796764715
 
         else:
-            # par coupon price
             cachedCapNPV = 6.87570026732
             cachedFloorNPV = 2.65812927959
 
-        # test Black cap price against cached value
         self.assertFalse(abs(cap.NPV() - cachedCapNPV) > 1.0e-11)
-        # test Black floor price against cached value
         self.assertFalse(abs(floor.NPV() - cachedFloorNPV) > 1.0e-11)
 
     def testCachedValueFromOptionLets(self):
-        TEST_MESSAGE("Testing Black cap/floor price as a sum of optionlets prices against cached values...")
+        TEST_MESSAGE(
+            "Testing Black cap/floor price as a sum of optionlets prices against cached values...")
 
         vars = CommonVars()
 
@@ -401,7 +389,6 @@ class CapFloorTest(unittest.TestCase):
         calculatedCapletsNPV = 0.0
         calculatedFloorletsNPV = 0.0
 
-        # cachedCapNPV, cachedFloorNPV
         if IborCouponSettings.instance().usingAtParCoupons():
             cachedCapNPV = 6.87570026732
             cachedFloorNPV = 2.65812927959
@@ -410,7 +397,6 @@ class CapFloorTest(unittest.TestCase):
             cachedCapNPV = 6.87630307745
             cachedFloorNPV = 2.65796764715
 
-        # test Black floor price against cached value
         capletPrices = DoubleVector()
         floorletPrices = DoubleVector()
 
@@ -426,11 +412,11 @@ class CapFloorTest(unittest.TestCase):
             calculatedFloorletsNPV += floorletPrice
 
         self.assertFalse(abs(calculatedCapletsNPV - cachedCapNPV) > 1.0e-11)
-        # test Black floor price against cached value
         self.assertFalse(abs(calculatedFloorletsNPV - cachedFloorNPV) > 1.0e-11)
 
     def testOptionLetsDelta(self):
-        TEST_MESSAGE("Testing Black caplet/floorlet delta coefficients against finite difference values...")
+        TEST_MESSAGE(
+            "Testing Black caplet/floorlet delta coefficients against finite difference values...")
 
         vars = CommonVars()
 
@@ -441,7 +427,6 @@ class CapFloorTest(unittest.TestCase):
                              0.05, Actual360())
         baseCurveHandle = RelinkableYieldTermStructureHandle(baseCurve)
 
-        # Define spreaded curve with eps as spread used for FD sensitivities
         eps = 1.0e-6
         spread = SimpleQuote(0.0)
         spreadCurve = ZeroSpreadedTermStructure(
@@ -459,7 +444,6 @@ class CapFloorTest(unittest.TestCase):
         floor = vars.makeCapFloor(CapFloor.Floor, leg,
                                   0.05, 0.20)
 
-        # so far tests pass, now try to get additional results and it will fail
         capletsNum = len(cap.capRates())
         capletUpPrices = DoubleVector()
         capletDownPrices = DoubleVector()
@@ -498,13 +482,10 @@ class CapFloorTest(unittest.TestCase):
         capletForwardsDown = cap.resultVector("optionletsAtmForward")
         floorletForwardsDown = floor.resultVector("optionletsAtmForward")
 
-        # accrualFactor
         capLeg = cap.floatingLeg()
         floorLeg = floor.floatingLeg()
 
         for n in range(1, len(capletUpPrices)):
-            # calculating only caplet's FD sensitivity w.r.t. forward rate
-            # without the effect of sensitivity related to changed discount factor
             c = as_floating_rate_coupon(capLeg[n])
             accrualFactor = c.nominal() * c.accrualPeriod() * c.gearing()
             capletFDDelta[n] = (capletUpPrices[n] / capletDiscountFactorsUp[n] -
@@ -512,8 +493,6 @@ class CapFloorTest(unittest.TestCase):
                                (capletForwardsUp[n] - capletForwardsDown[n]) / accrualFactor
 
         for n in range(len(floorletUpPrices)):
-            # calculating only caplet's FD sensitivity w.r.t. forward rate
-            # without the effect of sensitivity related to changed discount factor
             c = as_floating_rate_coupon(floorLeg[n])
             accrualFactor = c.nominal() * c.accrualPeriod() * c.gearing()
             floorletFDDelta[n] = (floorletUpPrices[n] / floorletDiscountFactorsUp[n]
@@ -527,7 +506,8 @@ class CapFloorTest(unittest.TestCase):
             self.assertFalse(abs(floorletAnalyticDelta[n] - floorletFDDelta[n]) > 1.0e-6)
 
     def testBachelierOptionLetsDelta(self):
-        TEST_MESSAGE("Testing Bachelier caplet/floorlet delta coefficients against finite difference values...")
+        TEST_MESSAGE(
+            "Testing Bachelier caplet/floorlet delta coefficients against finite difference values...")
 
         vars = CommonVars()
 
@@ -537,7 +517,6 @@ class CapFloorTest(unittest.TestCase):
         baseCurve = flatRate(cachedSettlement, 0.05, Actual360())
         baseCurveHandle = RelinkableYieldTermStructureHandle(baseCurve)
 
-        # Define spreaded curve with eps as spread used for FD sensitivities
         eps = 1.0e-6
         spread = SimpleQuote(0.0)
         spreadCurve = ZeroSpreadedTermStructure(
@@ -550,7 +529,6 @@ class CapFloorTest(unittest.TestCase):
         startDate = vars.termStructure.referenceDate()
         leg = vars.makeLeg(startDate, 20)
 
-        # Use normal model (BachelierCapFloorEngine)
         isLogNormal = false
 
         cap = vars.makeCapFloor(
@@ -558,7 +536,6 @@ class CapFloorTest(unittest.TestCase):
         floor = vars.makeCapFloor(
             CapFloor.Floor, leg, 0.05, 0.01, isLogNormal)
 
-        # so far tests pass, now try to get additional results and it will fail
         capletsNum = len(cap.capRates())
         capletUpPrices = DoubleVector()
         capletDownPrices = DoubleVector()
@@ -597,13 +574,10 @@ class CapFloorTest(unittest.TestCase):
         capletForwardsDown = cap.resultVector("optionletsAtmForward")
         floorletForwardsDown = floor.resultVector("optionletsAtmForward")
 
-        # accrualFactor
         capLeg = cap.floatingLeg()
         floorLeg = floor.floatingLeg()
 
         for n in range(1, len(capletUpPrices)):
-            # calculating only caplet's FD sensitivity w.r.t. forward rate
-            # without the effect of sensitivity related to changed discount factor
             c = as_floating_rate_coupon(capLeg[n])
             accrualFactor = c.nominal() * c.accrualPeriod() * c.gearing()
             capletFDDelta[n] = (capletUpPrices[n] / capletDiscountFactorsUp[n] -
@@ -611,8 +585,6 @@ class CapFloorTest(unittest.TestCase):
                                (capletForwardsUp[n] - capletForwardsDown[n]) / accrualFactor
 
         for n in range(0, len(floorletUpPrices)):
-            # calculating only caplet's FD sensitivity w.r.t. forward rate
-            # without the effect of sensitivity related to changed discount factor
             c = as_floating_rate_coupon(floorLeg[n])
             accrualFactor = c.nominal() * c.accrualPeriod() * c.gearing()
             floorletFDDelta[n] = (floorletUpPrices[n] / floorletDiscountFactorsUp[n] -

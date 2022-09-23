@@ -19,7 +19,7 @@ using QuantLib::LocalVolCurve;
 %shared_ptr(AndreasenHugeLocalVolAdapter)
 class AndreasenHugeLocalVolAdapter : public LocalVolTermStructure {
   public:
-    explicit AndreasenHugeLocalVolAdapter(
+    AndreasenHugeLocalVolAdapter(
         ext::shared_ptr<AndreasenHugeVolatilityInterpl> localVol);
 };
 
@@ -183,16 +183,15 @@ class GridModelLocalVolSurface : public LocalVolTermStructure, public Calibrated
         const std::vector<Date>& dates,
         const std::vector<ext::shared_ptr<std::vector<Real>>>& strikes,
         const DayCounter& dayCounter,
-        Extrapolation lowerExtrapolation
-            = FixedLocalVolSurface::ConstantExtrapolation,
-        Extrapolation upperExtrapolation
-            = FixedLocalVolSurface::ConstantExtrapolation);
+        Extrapolation lowerExtrapolation = FixedLocalVolSurface::ConstantExtrapolation,
+        Extrapolation upperExtrapolation = FixedLocalVolSurface::ConstantExtrapolation);
 };
 
 %shared_ptr(LocalVolCurve)
 class LocalVolCurve : public LocalVolTermStructure {
   public:
-    LocalVolCurve(const Handle<BlackVarianceCurve>& curve);
+    LocalVolCurve(
+        const Handle<BlackVarianceCurve>& curve);
 };
 
 #endif

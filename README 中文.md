@@ -12,10 +12,10 @@
 > 相关博客：<https://www.cnblogs.com/xuruilong100/p/13281006.html>
 >
 > 环境：
-> * QuantLib: 1.25
-> * swig: 4.0.1
-> * icx, icpx: Intel(R) oneAPI DPC++/C++ Compiler 2022.0.0 (2022.0.0.20211123)
-> * ubuntu: 20.04.2 LTS
+> * QuantLib: 1.27
+> * swig: 4.0.2
+> * icx, icpx: Intel(R) oneAPI DPC++/C++ Compiler 2022.1.0 (2022.1.0.20220316)
+> * ubuntu: 22.04 LTS
 
 ---
 
@@ -26,7 +26,7 @@
 1. 生成 `.cpp` 文件：
 
 ```
-swig3.0 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp quantlib.i
+swig4.0 -w509 -c++ -python -outdir QuantLib -o QuantLib/ql_wrap.cpp quantlib.i
 ```
 
 2. 编译 `.cpp` 文件：
@@ -74,16 +74,18 @@ python3 setup.py install
 * [x] andreasenhugevolatilityinterpl
 * [x] array
 * [x] asianoptions
-* [ ] assetswap
+* [x] assetswap
 * [x] autocovariances
 * [x] barrieroption
 * [x] basismodels
+* [x] basisswapratehelpers
 * [x] basketoption
 * [x] batesmodel
 * [x] bermudanswaption
 * [x] binaryoption
 * [x] blackdeltacalculator
 * [x] blackformula
+* [x] bondforward
 * [x] bonds
 * [x] brownianbridge
 * [x] businessdayconventions
@@ -100,14 +102,14 @@ python3 setup.py install
 * [x] cms
 * [x] cmsspread
 * [x] commodityunitofmeasure
-* [ ] compiledboostversion
 * [x] compoundoption
 * [x] convertiblebonds
 * [x] covariance
 * [x] creditdefaultswap
 * [x] creditriskplus
+* [x] crosscurrencyratehelpers
 * [x] currency
-* [ ] curvestates
+* [x] curvestates
 * [x] dates
 * [x] daycounters
 * [x] defaultprobabilitycurves
@@ -130,7 +132,7 @@ python3 setup.py install
 * [x] fdsabr
 * [x] fittedbonddiscountcurve
 * [x] forwardoption
-* [ ] forwardrateagreement
+* [x] forwardrateagreement
 * [x] functions
 * [x] garch
 * [x] gaussianquadratures
@@ -141,32 +143,33 @@ python3 setup.py install
 * [x] himalayaoption
 * [x] hybridhestonhullwhiteprocess
 * [x] indexes
-* [ ] inflationcapflooredcoupon
-* [ ] inflationcapfloor
-* [ ] inflationcpibond
-* [ ] inflationcpicapfloor
-* [ ] inflationcpiswap
-* [ ] inflation
-* [ ] inflationvolatility
+* [x] inflation
+* [x] inflationcapfloor
+* [x] inflationcapflooredcoupon
+* [x] inflationcpibond
+* [x] inflationcpicapfloor
+* [x] inflationcpiswap
+* [x] inflationvolatility
+* [x] inflationzciisinterpolation
 * [x] instruments
 * [x] integrals
 * [x] interestrates
 * [x] interpolations
 * [x] jumpdiffusion
 * [x] lazyobject
-* [ ] libormarketmodel
-* [ ] libormarketmodelprocess
+* [x] libormarketmodel
+* [x] libormarketmodelprocess
 * [ ] linearleastsquaresregression
 * [x] lookbackoptions
 * [x] lowdiscrepancysequences
 * [x] margrabeoption
-* [ ] marketmodel_cms
-* [ ] marketmodel
-* [ ] marketmodel_smmcapletalphacalibration
-* [ ] marketmodel_smmcapletcalibration
-* [ ] marketmodel_smmcaplethomocalibration
-* [ ] marketmodel_smm
-* [ ] markovfunctional
+* [x] marketmodel_cms
+* [x] marketmodel
+* [x] marketmodel_smmcapletalphacalibration
+* [x] marketmodel_smmcapletcalibration
+* [x] marketmodel_smmcaplethomocalibration
+* [x] marketmodel_smm
+* [x] markovfunctional
 * [x] matrices
 * [x] mclongstaffschwartzengine
 * [x] mersennetwister
@@ -178,12 +181,12 @@ python3 setup.py install
 * [x] numericaldifferentiation
 * [ ] observable
 * [ ] ode
-* [ ] operators
-* [ ] optimizers
+* [x] operators
+* [x] optimizers
 * [x] optionletstripper
+* [x] overnightindexedcoupon
 * [x] overnightindexedswap
 * [x] pagodaoption
-* [ ] paralleltestrunner
 * [x] partialtimebarrieroption
 * [x] pathgenerator
 * [x] period
@@ -191,26 +194,27 @@ python3 setup.py install
 * [x] piecewisezerospreadedtermstructure
 * [x] quantooption
 * [x] quotes
-* [ ] rangeaccrual
+* [x] rangeaccrual
 * [x] riskneutraldensitycalculator
 * [x] riskstats
 * [x] rngtraits
 * [x] rounding
 * [x] sampledcurve
 * [x] schedule
+* [x] settings
 * [x] shortratemodels
-* [ ] sofrfutures
+* [x] sofrfutures
 * [x] solvers
-* [ ] speedlevel
 * [x] spreadoption
 * [x] squarerootclvmodel
 * [x] stats
-* [ ] swapforwardmappings
+* [x] subperiodcoupons
+* [x] svivolatility
 * [x] swap
+* [x] swapforwardmappings
 * [x] swaption
 * [x] swaptionvolatilitycube
 * [x] swaptionvolatilitymatrix
-* [ ] swaptionvolstructuresutilities
 * [x] swingoption
 * [x] termstructures
 * [x] timegrid
@@ -225,6 +229,6 @@ python3 setup.py install
 * [x] varianceoption
 * [x] varianceswaps
 * [x] volatilitymodels
-* [ ] vpp
+* [x] vpp
 * [x] zabr
 * [x] zerocouponswap

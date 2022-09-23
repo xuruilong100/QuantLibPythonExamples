@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class MargrabeAmericanOptionTwoData(object):
@@ -12,7 +14,7 @@ class MargrabeAmericanOptionTwoData(object):
                  q1,
                  q2,
                  r,
-                 t,  # years
+                 t,
                  v1,
                  v2,
                  rho,
@@ -25,7 +27,7 @@ class MargrabeAmericanOptionTwoData(object):
         self.q1 = q1
         self.q2 = q2
         self.r = r
-        self.t = t  # years
+        self.t = t
         self.v1 = v1
         self.v2 = v2
         self.rho = rho
@@ -42,7 +44,7 @@ class MargrabeOptionTwoData(object):
                  q1,
                  q2,
                  r,
-                 t,  # years
+                 t,
                  v1,
                  v2,
                  rho,
@@ -61,7 +63,7 @@ class MargrabeOptionTwoData(object):
         self.q1 = q1
         self.q2 = q2
         self.r = r
-        self.t = t  # years
+        self.t = t
         self.v1 = v1
         self.v2 = v2
         self.rho = rho
@@ -76,15 +78,12 @@ class MargrabeOptionTwoData(object):
 
 
 class MargrabeOptionTest(unittest.TestCase):
-    def testEuroExchangeTwoAssets(self):
-        TEST_MESSAGE("Testing European one-asset-for-another option...")
 
-        # Exchange-One-Asset-for-Another European Options
+    def testEuroExchangeTwoAssets(self):
+        TEST_MESSAGE(
+            "Testing European one-asset-for-another option...")
+
         values = [
-            # Simplification in we assume that the option always exchanges S2 for S1
-            # s1,  s2,  Q1,  Q2,  q1,  q2,  r,  t,  v1,  v2,  rho,  result,
-            # delta1,  delta2,  gamma1,  gamma2,  theta, rho, tol
-            # data from "given article p.52"
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.15, -0.50, 2.125, 0.841, -0.818, 0.112, 0.135, -2.043, 0.0, 1.0e-3),
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.20, -0.50, 2.199, 0.813, -0.784, 0.109, 0.132, -2.723, 0.0, 1.0e-3),
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.25, -0.50, 2.283, 0.788, -0.753, 0.105, 0.126, -3.419, 0.0, 1.0e-3),
@@ -103,11 +102,9 @@ class MargrabeOptionTest(unittest.TestCase):
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.15, 0.50, 2.138, 0.746, -0.713, 0.106, 0.128, -0.416, 0.0, 1.0e-3),
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.20, 0.50, 2.231, 0.728, -0.689, 0.099, 0.120, -0.550, 0.0, 1.0e-3),
             MargrabeOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.50, 2.374, 0.707, -0.659, 0.090, 0.109, -0.741, 0.0, 1.0e-3),
-            # Quantity tests from Excel calcuations
             MargrabeOptionTwoData(22.0, 10.0, 1, 2, 0.06, 0.04, 0.10, 0.50, 0.20, 0.15, 0.50, 2.138, 0.746, -1.426, 0.106, 0.255, -0.987, 0.0, 1.0e-3),
             MargrabeOptionTwoData(11.0, 20.0, 2, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.20, 0.50, 2.231, 1.455, -0.689, 0.198, 0.120, 0.410, 0.0, 1.0e-3),
-            MargrabeOptionTwoData(11.0, 10.0, 2, 2, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.50, 2.374, 1.413, -1.317, 0.181, 0.219, -0.336, 0.0, 1.0e-3)
-        ]
+            MargrabeOptionTwoData(11.0, 10.0, 2, 2, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.50, 2.374, 1.413, -1.317, 0.181, 0.219, -0.336, 0.0, 1.0e-3)]
 
         dc = Actual360()
         today = Settings.instance().evaluationDate
@@ -160,7 +157,6 @@ class MargrabeOptionTest(unittest.TestCase):
 
             margrabeOption = MargrabeOption(value.Q1, value.Q2, exercise)
 
-            # analytic engine
             margrabeOption.setPricingEngine(engine)
 
             calculated = margrabeOption.NPV()
@@ -200,13 +196,10 @@ class MargrabeOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testAmericanExchangeTwoAssets(self):
-        TEST_MESSAGE("Testing American one-asset-for-another option...")
+        TEST_MESSAGE(
+            "Testing American one-asset-for-another option...")
 
         values = [
-            # Simplification in we assume that the option always exchanges S2 for S1
-            # s1, s2, Q1, Q2, q1, q2, r, t, v1, v2, rho, result, tol
-            # data from Haug
-
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.15, -0.50, 2.1357, 1.0e-3),
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.20, -0.50, 2.2074, 1.0e-3),
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.10, 0.20, 0.25, -0.50, 2.2902, 1.0e-3),
@@ -224,8 +217,7 @@ class MargrabeOptionTest(unittest.TestCase):
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.00, 2.8893, 1.0e-3),
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.15, 0.50, 2.2053, 1.0e-3),
             MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.20, 0.50, 2.2906, 1.0e-3),
-            MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.50, 2.4261, 1.0e-3)
-        ]
+            MargrabeAmericanOptionTwoData(22.0, 20.0, 1, 1, 0.06, 0.04, 0.10, 0.50, 0.20, 0.25, 0.50, 2.4261, 1.0e-3)]
 
         today = Settings.instance().evaluationDate
         dc = Actual360()
@@ -280,7 +272,6 @@ class MargrabeOptionTest(unittest.TestCase):
 
             margrabeOption = MargrabeOption(value.Q1, value.Q2, exercise)
 
-            # analytic engine
             margrabeOption.setPricingEngine(engine)
 
             calculated = margrabeOption.NPV()
@@ -290,7 +281,8 @@ class MargrabeOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testGreeks(self):
-        TEST_MESSAGE("Testing analytic European exchange option greeks...")
+        TEST_MESSAGE(
+            "Testing analytic European exchange option greeks...")
 
         backup = SavedSettings()
 
@@ -314,7 +306,7 @@ class MargrabeOptionTest(unittest.TestCase):
         vols2 = [0.15, 0.20, 0.25]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot1 = SimpleQuote(0.0)
@@ -337,7 +329,6 @@ class MargrabeOptionTest(unittest.TestCase):
             exDate = today + timeToDays(residualTime)
             exercise = EuropeanExercise(exDate)
 
-            # option to check
             stochProcess1 = BlackScholesMertonProcess(
                 QuoteHandle(spot1), YieldTermStructureHandle(qTS1), YieldTermStructureHandle(rTS),
                 BlackVolTermStructureHandle(volTS1))
@@ -348,7 +339,6 @@ class MargrabeOptionTest(unittest.TestCase):
 
             procs = [stochProcess1, stochProcess2]
 
-            # The correlation -0.5 can be different real between -1 and 1 for more tests
             correlation = -0.5
             correlationMatrix = Matrix(2, 2, correlation)
             for j in range(2):
@@ -356,10 +346,8 @@ class MargrabeOptionTest(unittest.TestCase):
 
                 engine = AnalyticEuropeanMargrabeEngine(stochProcess1, stochProcess2, correlation)
 
-                # The quantities of S1 and S2 can be different from 1 & 1 for more tests
                 margrabeOption = MargrabeOption(1, 1, exercise)
 
-                # analytic engine
                 margrabeOption.setPricingEngine(engine)
 
                 for i in range(len(underlyings1)):
@@ -393,7 +381,7 @@ class MargrabeOptionTest(unittest.TestCase):
                                 calculated["rho"] = margrabeOption.rho()
 
                                 if value > spot1.value() * 1.0e-5:
-                                    # perturb spot and get delta1 and gamma
+
                                     u = u1
                                     du = u * 1.0e-4
                                     spot1.setValue(u + du)
@@ -417,7 +405,6 @@ class MargrabeOptionTest(unittest.TestCase):
                                     expected["delta2"] = (value_p - value_m) / (2 * du)
                                     expected["gamma2"] = (delta_p - delta_m) / (2 * du)
 
-                                    # perturb rates and get rho
                                     dr = r * 1.0e-4
                                     rRate.setValue(r + dr)
                                     value_p = margrabeOption.NPV()
@@ -426,7 +413,6 @@ class MargrabeOptionTest(unittest.TestCase):
                                     rRate.setValue(r)
                                     expected["rho"] = (value_p - value_m) / (2 * dr)
 
-                                    # perturb date and get theta
                                     dT = dc.yearFraction(today - 1, today + 1)
                                     Settings.instance().evaluationDate = today - 1
                                     value_m = margrabeOption.NPV()
@@ -434,8 +420,6 @@ class MargrabeOptionTest(unittest.TestCase):
                                     value_p = margrabeOption.NPV()
                                     Settings.instance().evaluationDate = today
                                     expected["theta"] = (value_p - value_m) / dT
-
-                                    # compare
 
                                     for it in calculated.keys():
                                         greek = it

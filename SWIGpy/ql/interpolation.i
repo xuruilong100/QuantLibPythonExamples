@@ -11,7 +11,7 @@ using QuantLib::RichardsonExtrapolation;
 
 class RichardsonExtrapolation {
   public:
-    Real operator()(Real t=2.0) const;
+    Real operator()(Real t = 2.0) const;
     Real operator()(Real t, Real s) const;
 
     %extend {

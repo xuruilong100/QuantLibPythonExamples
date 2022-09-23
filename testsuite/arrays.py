@@ -1,12 +1,16 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sin, exp, sqrt, log
+
+from QuantLib import *
+
+from utilities import *
 
 
 class ArrayTest(unittest.TestCase):
+
     def testConstruction(self):
-        TEST_MESSAGE("Testing array construction...")
+        TEST_MESSAGE(
+            "Testing array construction...")
         a1 = Array()
         self.assertFalse(
             not a1.empty(),
@@ -55,7 +59,8 @@ class ArrayTest(unittest.TestCase):
                 " element of copy not with same value as original")
 
     def testArrayFunctions(self):
-        TEST_MESSAGE("Testing array functions...")
+        TEST_MESSAGE(
+            "Testing array functions...")
         a = Array(5)
         for i in range(len(a)):
             a[i] = sin(i) + 1.1
@@ -75,7 +80,8 @@ class ArrayTest(unittest.TestCase):
             self.assertFalse(abs(s[i] - sqrt(a[i])) > tol)
 
     def testArrayResize(self):
-        TEST_MESSAGE("Testing array resize...")
+        TEST_MESSAGE(
+            "Testing array resize...")
         a = Array(10, 1.0, 1.0)
         tol = 10 * QL_EPSILON
 

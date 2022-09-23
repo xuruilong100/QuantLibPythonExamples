@@ -1,13 +1,14 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
-        self.length = 20  # years
+        self.length = 20
         self.volatility = 0.20
         self.nominal = 100.
         self.nominals = DoubleVector(self.length, self.nominal)
@@ -16,7 +17,7 @@ class CommonVars(object):
         self.index = Euribor1Y(self.termStructure)
         self.calendar = self.index.fixingCalendar()
         self.convention = ModifiedFollowing
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.settlementDays = 2
         self.fixingDays = 2
@@ -27,7 +28,6 @@ class CommonVars(object):
                 self.settlement, 0.05, ActualActual(ActualActual.ISDA)))
         self.backup = SavedSettings()
 
-    # utilities
     def makeFixedLeg(self,
                      startDate,
                      length):
@@ -139,19 +139,15 @@ class CommonVars(object):
 class CapFlooredCouponTest(unittest.TestCase):
 
     def testLargeRates(self):
-        TEST_MESSAGE("Testing degenerate collared coupon...")
+        TEST_MESSAGE(
+            "Testing degenerate collared coupon...")
 
         vars = CommonVars()
-
-        # A vanilla floating leg and a capped floating leg with strike
-        # equal to 100 and floor equal to 0 must have (about) the same NPV
-        # (depending on variance: option expiry and volatility)
 
         caps = DoubleVector(vars.length, 100.0)
         floors = DoubleVector(vars.length, 0.0)
         tolerance = 1e-10
 
-        # fixed leg with zero rate
         fixedLeg = vars.makeFixedLeg(vars.startDate, vars.length)
         floatLeg = vars.makeFloatingLeg(vars.startDate, vars.length)
         collaredLeg = vars.makeCapFlooredLeg(
@@ -167,7 +163,8 @@ class CapFlooredCouponTest(unittest.TestCase):
         self.assertFalse(abs(vanillaLeg.NPV() - collarLeg.NPV()) > tolerance)
 
     def testDecomposition(self):
-        TEST_MESSAGE("Testing collared coupon against its decomposition...")
+        TEST_MESSAGE(
+            "Testing collared coupon against its decomposition...")
 
         vars = CommonVars()
 
@@ -182,23 +179,23 @@ class CapFlooredCouponTest(unittest.TestCase):
         spread_p = 0.002
         gearing_n = -1.5
         spread_n = 0.12
-        # fixed leg with zero rate
+
         fixedLeg = vars.makeFixedLeg(
             vars.startDate, vars.length)
-        # floating leg with gearing=1 and spread=0
+
         floatLeg = vars.makeFloatingLeg(
             vars.startDate, vars.length)
-        # floating leg with positive gearing (gearing_p) and spread<>0
+
         floatLeg_p = vars.makeFloatingLeg(
             vars.startDate, vars.length, gearing_p, spread_p)
-        # floating leg with negative gearing (gearing_n) and spread<>0
+
         floatLeg_n = vars.makeFloatingLeg(
             vars.startDate, vars.length, gearing_n, spread_n)
-        # Swap with null fixed leg and floating leg with gearing=1 and spread=0
+
         vanillaLeg = Swap(fixedLeg, floatLeg)
-        # Swap with null fixed leg and floating leg with positive gearing and spread<>0
+
         vanillaLeg_p = Swap(fixedLeg, floatLeg_p)
-        # Swap with null fixed leg and floating leg with negative gearing and spread<>0
+
         vanillaLeg_n = Swap(fixedLeg, floatLeg_n)
 
         engine = DiscountingSwapEngine(vars.termStructure)
@@ -206,13 +203,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         vanillaLeg_p.setPricingEngine(engine)
         vanillaLeg_n.setPricingEngine(engine)
 
-        # CAPPED coupon - Decomposition of payoff
-        # Payoff = Nom * Min(rate,strike) * accrualperiod =
-        #        = Nom * [rate + Min(0,strike-rate)] * accrualperiod =
-        #        = Nom * rate * accrualperiod - Nom * Max(rate-strike,0) * accrualperiod =
-        #        = VanillaFloatingLeg - Call
-
-        # Case gearing = 1 and spread = 0
         cappedLeg = vars.makeCapFlooredLeg(
             vars.startDate, vars.length,
             caps, floors0, vars.volatility)
@@ -226,13 +216,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvCappedLeg - (npvVanilla - npvCap))
         self.assertFalse(error > tolerance)
 
-        # gearing = 1 and spread = 0
-        # FLOORED coupon - Decomposition of payoff
-        # Payoff = Nom * Max(rate,strike) * accrualperiod =
-        #        = Nom * [rate + Max(0,strike-rate)] * accrualperiod =
-        #        = Nom * rate * accrualperiod + Nom * Max(strike-rate,0) * accrualperiod =
-        #        = VanillaFloatingLeg + Put
-
         flooredLeg = vars.makeCapFlooredLeg(
             vars.startDate, vars.length,
             caps0, floors, vars.volatility)
@@ -244,11 +227,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         npvFloor = floor.NPV()
         error = abs(npvFlooredLeg - (npvVanilla + npvFloor))
         self.assertFalse(error > tolerance)
-
-        # gearing = 1 and spread = 0
-        # COLLARED coupon - Decomposition of payoff
-        # Payoff = Nom * Min(strikem,Max(rate,strikeM)) * accrualperiod =
-        #        = VanillaFloatingLeg - Collar
 
         collaredLeg = vars.makeCapFlooredLeg(
             vars.startDate, vars.length,
@@ -265,19 +243,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvCollaredLeg - (npvVanilla - npvCollar))
         self.assertFalse(error > tolerance)
 
-        # gearing = a and spread = b
-        # CAPPED coupon - Decomposition of payoff
-        # Payoff
-        # = Nom * Min(a*rate+b,strike) * accrualperiod =
-        # = Nom * [a*rate+b + Min(0,strike-a*rate-b)] * accrualperiod =
-        # = Nom * a*rate+b * accrualperiod + Nom * Min(strike-b-a*rate,0) * accrualperiod
-        # -. If a>0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg - Call(a*rate+b,strike)
-        # -. If a<0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg + Nom * Min(strike-b+|a|*rate+,0) * accrualperiod =
-        #            = VanillaFloatingLeg + Put(|a|*rate+b,strike)
-
-        # Positive gearing
         cappedLeg_p = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps, floors0,
             vars.volatility, gearing_p, spread_p)
@@ -291,7 +256,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvCappedLeg - (npvVanilla - npvCap))
         self.assertFalse(error > tolerance)
 
-        # Negative gearing
         cappedLeg_n = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps, floors0,
             vars.volatility, gearing_n, spread_n)
@@ -306,19 +270,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvCappedLeg - (npvVanilla + gearing_n * npvFloor))
         self.assertFalse(error > tolerance)
 
-        # gearing = a and spread = b
-        # FLOORED coupon - Decomposition of payoff
-        # Payoff
-        # = Nom * Max(a*rate+b,strike) * accrualperiod =
-        # = Nom * [a*rate+b + Max(0,strike-a*rate-b)] * accrualperiod =
-        # = Nom * a*rate+b * accrualperiod + Nom * Max(strike-b-a*rate,0) * accrualperiod
-        # -. If a>0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg + Put(a*rate+b,strike)
-        # -. If a<0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg + Nom * Max(strike-b+|a|*rate+,0) * accrualperiod =
-        #            = VanillaFloatingLeg - Call(|a|*rate+b,strike)
-
-        # Positive gearing
         flooredLeg_p1 = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps0, floors,
             vars.volatility, gearing_p, spread_p)
@@ -332,7 +283,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvFlooredLeg - (npvVanilla + npvFloor))
         self.assertFalse(error > tolerance)
 
-        # Negative gearing
         flooredLeg_n = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps0, floors,
             vars.volatility, gearing_n, spread_n)
@@ -346,15 +296,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvFlooredLeg - (npvVanilla - gearing_n * npvCap))
         self.assertFalse(error > tolerance)
 
-        # gearing = a and spread = b
-        # COLLARED coupon - Decomposition of payoff
-        # Payoff = Nom * Min(caprate,Max(a*rate+b,floorrate)) * accrualperiod
-        # -. If a>0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg - Collar(a*rate+b, floorrate, caprate)
-        # -. If a<0 (assuming positive effective strike):
-        #     Payoff = VanillaFloatingLeg + Collar(|a|*rate+b, caprate, floorrate)
-
-        # Positive gearing
         collaredLeg_p = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps, floors,
             vars.volatility, gearing_p, spread_p)
@@ -371,7 +312,6 @@ class CapFlooredCouponTest(unittest.TestCase):
         error = abs(npvCollaredLeg - (npvVanilla - npvCollar))
         self.assertFalse(error > tolerance)
 
-        # Negative gearing
         collaredLeg_n = vars.makeCapFlooredLeg(
             vars.startDate, vars.length, caps, floors,
             vars.volatility, gearing_n, spread_n)

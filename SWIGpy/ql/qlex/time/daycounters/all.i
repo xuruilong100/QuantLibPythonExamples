@@ -16,7 +16,8 @@ class Actual365_25 : public DayCounter {
     enum Convention { Standard,
                       Canadian,
                       NoLeap };
-    explicit Actual365_25(Convention c = Actual365_25::Standard);
+    Actual365_25(
+        Convention c = Actual365_25::Standard);
 };
 
 #endif

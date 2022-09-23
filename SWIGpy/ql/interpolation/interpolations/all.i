@@ -91,7 +91,9 @@ class AbcdInterpolation : public Interpolation {
 class BackwardFlatInterpolation : public Interpolation {
   public:
     %extend {
-        BackwardFlatInterpolation(const Array& x, const Array& y) {
+        BackwardFlatInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new BackwardFlatInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -102,7 +104,9 @@ class BackwardFlatInterpolation : public Interpolation {
 class ForwardFlatInterpolation : public Interpolation {
   public:
     %extend {
-        ForwardFlatInterpolation(const Array& x, const Array& y) {
+        ForwardFlatInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new ForwardFlatInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -113,7 +117,9 @@ class ForwardFlatInterpolation : public Interpolation {
 class LagrangeInterpolation : public Interpolation {
   public:
     %extend {
-        LagrangeInterpolation(const Array& x, const Array& y) {
+        LagrangeInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new LagrangeInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -136,7 +142,9 @@ class LinearFlatInterpolation : public Interpolation {
 class LinearInterpolation : public Interpolation {
   public:
     %extend {
-        LinearInterpolation(const Array& x, const Array& y) {
+        LinearInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new LinearInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -147,7 +155,9 @@ class LinearInterpolation : public Interpolation {
 class LogLinearInterpolation : public Interpolation {
   public:
     %extend {
-        LogLinearInterpolation(const Array& x, const Array& y) {
+        LogLinearInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new LogLinearInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -266,8 +276,14 @@ class SviInterpolation : public Interpolation {
             const Array& y,
             Time t,
             const Real& forward,
-            Real a, Real b, Real sigma, Real rho, Real m,
-            bool aIsFixed, bool bIsFixed, bool sigmaIsFixed,
+            Real a,
+            Real b, 
+            Real sigma, 
+            Real rho, 
+            Real m,
+            bool aIsFixed, 
+            bool bIsFixed, 
+            bool sigmaIsFixed,
             bool rhoIsFixed,
             bool mIsFixed,
             bool vegaWeighted = true,
@@ -309,7 +325,8 @@ class VannaVolgaInterpolation : public Interpolation {
   public:
     %extend {
         VannaVolgaInterpolation(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             Real spot,
             DiscountFactor dDiscount,
             DiscountFactor fDiscount,
@@ -344,7 +361,8 @@ class CubicInterpolation : public Interpolation {
     };
     %extend {
         CubicInterpolation(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             CubicInterpolation::DerivativeApprox da,
             bool monotonic,
             CubicInterpolation::BoundaryCondition leftCond,
@@ -374,7 +392,8 @@ class LogMixedLinearCubicInterpolation : public Interpolation {
   public:
     %extend {
         LogMixedLinearCubicInterpolation(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             const Size n,
             MixedInterpolation::Behavior behavior,
             CubicInterpolation::DerivativeApprox da,
@@ -402,7 +421,8 @@ class LogCubicInterpolation : public Interpolation {
   public:
     %extend {
         LogCubicInterpolation(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             CubicInterpolation::DerivativeApprox da,
             bool monotonic,
             CubicInterpolation::BoundaryCondition leftC,
@@ -426,7 +446,8 @@ class MixedLinearCubicInterpolation : public Interpolation {
   public:
     %extend {
         MixedLinearCubicInterpolation(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             const Size n,
             MixedInterpolation::Behavior behavior,
             CubicInterpolation::DerivativeApprox da,
@@ -453,7 +474,9 @@ class MixedLinearCubicInterpolation : public Interpolation {
 class AkimaCubicInterpolation : public CubicInterpolation {
   public:
     %extend {
-        AkimaCubicInterpolation(const Array& x, const Array& y) {
+        AkimaCubicInterpolation(
+            const Array& x, 
+            const Array& y) {
             return new AkimaCubicInterpolation(
                 x.begin(), x.end(), y.begin());
         }
@@ -464,7 +487,9 @@ class AkimaCubicInterpolation : public CubicInterpolation {
 class CubicNaturalSpline : public CubicInterpolation {
   public:
     %extend {
-        CubicNaturalSpline(const Array& x, const Array& y) {
+        CubicNaturalSpline(
+            const Array& x, 
+            const Array& y) {
             return new CubicNaturalSpline(
                 x.begin(), x.end(), y.begin());
         }
@@ -476,7 +501,8 @@ class CubicSplineOvershootingMinimization1 : public CubicInterpolation {
   public:
     %extend {
         CubicSplineOvershootingMinimization1(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new CubicSplineOvershootingMinimization1(
                 x.begin(), x.end(), y.begin());
         }
@@ -488,7 +514,8 @@ class CubicSplineOvershootingMinimization2 : public CubicInterpolation {
   public:
     %extend {
         CubicSplineOvershootingMinimization2(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new CubicSplineOvershootingMinimization2(
                 x.begin(), x.end(), y.begin());
         }
@@ -500,7 +527,8 @@ class FritschButlandCubic : public CubicInterpolation {
   public:
     %extend {
         FritschButlandCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new FritschButlandCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -512,7 +540,8 @@ class HarmonicCubic : public CubicInterpolation {
   public:
     %extend {
         HarmonicCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new HarmonicCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -524,7 +553,8 @@ class KrugerCubic : public CubicInterpolation {
   public:
     %extend {
         KrugerCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new KrugerCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -536,7 +566,8 @@ class MonotonicCubicNaturalSpline : public CubicInterpolation {
   public:
     %extend {
         MonotonicCubicNaturalSpline(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new MonotonicCubicNaturalSpline(
                 x.begin(), x.end(), y.begin());
         }
@@ -548,7 +579,8 @@ class MonotonicParabolic : public CubicInterpolation {
   public:
     %extend {
         MonotonicParabolic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new MonotonicParabolic(
                 x.begin(), x.end(), y.begin());
         }
@@ -560,7 +592,8 @@ class Parabolic : public CubicInterpolation {
   public:
     %extend {
         Parabolic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new Parabolic(
                 x.begin(), x.end(), y.begin());
         }
@@ -572,7 +605,8 @@ class LogMixedLinearCubicNaturalSpline : public LogMixedLinearCubicInterpolation
   public:
     %extend {
         LogMixedLinearCubicNaturalSpline(
-            const Array& x, const Array& y,
+            const Array& x, 
+            const Array& y,
             const Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new LogMixedLinearCubicNaturalSpline(
@@ -587,7 +621,8 @@ class FritschButlandLogCubic : public LogCubicInterpolation {
   public:
     %extend {
         FritschButlandLogCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new FritschButlandLogCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -599,7 +634,8 @@ class HarmonicLogCubic : public LogCubicInterpolation {
   public:
     %extend {
         HarmonicLogCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new HarmonicLogCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -611,7 +647,8 @@ class KrugerLogCubic : public LogCubicInterpolation {
   public:
     %extend {
         KrugerLogCubic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new KrugerLogCubic(
                 x.begin(), x.end(), y.begin());
         }
@@ -623,7 +660,8 @@ class LogCubicNaturalSpline : public LogCubicInterpolation {
   public:
     %extend {
         LogCubicNaturalSpline(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new LogCubicNaturalSpline(
                 x.begin(), x.end(), y.begin());
         }
@@ -635,7 +673,8 @@ class LogParabolic : public LogCubicInterpolation {
   public:
     %extend {
         LogParabolic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new LogParabolic(
                 x.begin(), x.end(), y.begin());
         }
@@ -647,7 +686,8 @@ class MonotonicLogCubicNaturalSpline : public LogCubicInterpolation {
   public:
     %extend {
         MonotonicLogCubicNaturalSpline(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new MonotonicLogCubicNaturalSpline(
                 x.begin(), x.end(), y.begin());
         }
@@ -659,7 +699,8 @@ class MonotonicLogParabolic : public LogCubicInterpolation {
   public:
     %extend {
         MonotonicLogParabolic(
-            const Array& x, const Array& y) {
+            const Array& x, 
+            const Array& y) {
             return new MonotonicLogParabolic(
                 x.begin(), x.end(), y.begin());
         }
@@ -671,7 +712,9 @@ class MixedLinearCubicNaturalSpline : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearCubicNaturalSpline(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearCubicNaturalSpline(
                 x.begin(), x.end(), y.begin(),
@@ -685,7 +728,9 @@ class MixedLinearFritschButlandCubic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearFritschButlandCubic(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearFritschButlandCubic(
                 x.begin(), x.end(), y.begin(),
@@ -699,7 +744,9 @@ class MixedLinearKrugerCubic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearKrugerCubic(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearKrugerCubic(
                 x.begin(), x.end(), y.begin(),
@@ -713,7 +760,9 @@ class MixedLinearMonotonicCubicNaturalSpline : public MixedLinearCubicInterpolat
   public:
     %extend {
         MixedLinearMonotonicCubicNaturalSpline(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearMonotonicCubicNaturalSpline(
                 x.begin(), x.end(), y.begin(),
@@ -727,7 +776,9 @@ class MixedLinearMonotonicParabolic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearMonotonicParabolic(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearMonotonicParabolic(
                 x.begin(), x.end(), y.begin(),
@@ -741,7 +792,9 @@ class MixedLinearParabolic : public MixedLinearCubicInterpolation {
   public:
     %extend {
         MixedLinearParabolic(
-            const Array& x, const Array& y, Size n,
+            const Array& x, 
+            const Array& y, 
+            Size n,
             MixedInterpolation::Behavior behavior = MixedInterpolation::ShareRanges) {
             return new MixedLinearParabolic(
                 x.begin(), x.end(), y.begin(),

@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class VolatilityModelsTest(unittest.TestCase):
 
     def testConstruction(self):
-        TEST_MESSAGE("Testing volatility model construction...")
+        TEST_MESSAGE(
+            "Testing volatility model construction...")
 
         ts = RealTimeSeries()
         ts[Date(25, March, 2005)] = 1.2

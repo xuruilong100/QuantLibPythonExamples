@@ -93,10 +93,9 @@ class ChinaFixingRepoSwapRateHelper : public BootstrapHelper<YieldTermStructure>
   public:
     ChinaFixingRepoSwapRateHelper(
         Natural settlementDays,
-        const Period& tenor,    // swap maturity
+        const Period& tenor,
         const Handle<Quote>& fixedRate,
         ext::shared_ptr<ChinaFixingRepo> chinaFixingRepo,
-        // exogenous discounting curve
         Handle<YieldTermStructure> discountingCurve = Handle<YieldTermStructure>(),
         Natural paymentLag = 0,
         BusinessDayConvention paymentConvention = Following,

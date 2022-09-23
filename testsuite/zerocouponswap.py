@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
@@ -83,44 +85,42 @@ class CommonVars(object):
 class ZeroCouponSwapTest(unittest.TestCase):
 
     def testInstrumentValuation(self):
-        TEST_MESSAGE("Testing zero coupon swap valuation...")
+        TEST_MESSAGE(
+            "Testing zero coupon swap valuation...")
 
-        # Ongoing instrument
         self.checkReplicationOfZeroCouponSwapNPV(
             Date(12, February, 2021), Date(12, February, 2041),
             Swap.Receiver)
-        # Forward starting instrument
+
         self.checkReplicationOfZeroCouponSwapNPV(
             Date(15, April, 2021), Date(12, February, 2041), Swap.Payer)
 
-        # Expired instrument
         self.checkReplicationOfZeroCouponSwapNPV(
             Date(12, February, 2000), Date(12, February, 2020))
 
     def testFairFixedPayment(self):
-        TEST_MESSAGE("Testing fair fixed payment...")
+        TEST_MESSAGE(
+            "Testing fair fixed payment...")
 
-        # Ongoing instrument
         self.checkFairFixedPayment(
             Date(12, February, 2021), Date(12, February, 2041), Swap.Receiver)
 
-        # Spot starting instrument
         self.checkFairFixedPayment(
             Date(17, March, 2021), Date(12, February, 2041), Swap.Payer)
 
     def testFairFixedRate(self):
-        TEST_MESSAGE("Testing fair fixed rate...")
+        TEST_MESSAGE(
+            "Testing fair fixed rate...")
 
-        # Ongoing instrument
         self.checkFairFixedRate(
             Date(12, February, 2021), Date(12, February, 2041), Swap.Receiver)
 
-        # Spot starting instrument
         self.checkFairFixedRate(
             Date(17, March, 2021), Date(12, February, 2041), Swap.Payer)
 
     def testFixedPaymentFromRate(self):
-        TEST_MESSAGE("Testing fixed payment calculation from rate...")
+        TEST_MESSAGE(
+            "Testing fixed payment calculation from rate...")
 
         vars = CommonVars()
         tolerance = 1.0e-8
@@ -139,28 +139,26 @@ class ZeroCouponSwapTest(unittest.TestCase):
             abs(actualFxdPmt - expectedFxdPmt) > tolerance)
 
     def testArgumentsValidation(self):
-        TEST_MESSAGE("Testing arguments validation...")
+        TEST_MESSAGE(
+            "Testing arguments validation...")
 
         vars = CommonVars()
 
         start = Date(12, February, 2021)
         end = Date(12, February, 2041)
 
-        # Negative base nominal
-        # BOOST_CHECK_THROW(vars.createZCSwap(Swap.Payer, start, end, -1.0e6, 1.0e6), Error)
         self.assertRaises(
             RuntimeError, vars.createZCSwap0,
             Swap.Payer, start, end, -1.0e6, 1.0e6)
 
-        # Start date after end date
-        # BOOST_CHECK_THROW(vars.createZCSwap(end, start, 0.01), Error)
         self.assertRaises(
             RuntimeError,
             vars.createZCSwap3,
             end, start, 0.01)
 
     def testExpectedCashFlowsInLegs(self):
-        TEST_MESSAGE("Testing expected cash flows in legs...")
+        TEST_MESSAGE(
+            "Testing expected cash flows in legs...")
 
         vars = CommonVars()
         tolerance = 1.0e-8

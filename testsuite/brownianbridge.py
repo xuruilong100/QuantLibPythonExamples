@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt
+
+from QuantLib import *
+
+from utilities import *
 
 
 def maxDiff(x, y):
@@ -37,7 +39,8 @@ def maxRelDiffMat(x, y):
 class BrownianBridgeTest(unittest.TestCase):
 
     def testVariates(self):
-        TEST_MESSAGE("Testing Brownian-bridge variates...")
+        TEST_MESSAGE(
+            "Testing Brownian-bridge variates...")
 
         times = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 5.0]
 
@@ -65,17 +68,13 @@ class BrownianBridgeTest(unittest.TestCase):
                 temp[j] = temp[j - 1] + temp[j] * sqrt(times[j] - times[j - 1])
             stats2.add(temp)
 
-        # normalized single variates
         expectedMean = DoubleVector(N, 0.0)
         expectedCovariance = Matrix(N, N, 0.0)
         for i in range(N):
             expectedCovariance[i][i] = 1.0
 
-        # ifndef __FAST_MATH__
         meanTolerance = 1.0e-16
-        # else
         meanTolerance = 1.0e-14
-        # endif
         covTolerance = 2.5e-4
 
         mean = stats1.mean()
@@ -87,7 +86,6 @@ class BrownianBridgeTest(unittest.TestCase):
         self.assertFalse(maxMeanError > meanTolerance)
         self.assertFalse(maxCovError > covTolerance)
 
-        # denormalized sums along the path
         expectedMean = DoubleVector(N, 0.0)
         expectedCovariance = Matrix(N, N)
         for i in range(N):
@@ -106,7 +104,8 @@ class BrownianBridgeTest(unittest.TestCase):
         self.assertFalse(maxCovError > covTolerance)
 
     def testPathGeneration(self):
-        TEST_MESSAGE("Testing Brownian-bridge path generation...")
+        TEST_MESSAGE(
+            "Testing Brownian-bridge path generation...")
 
         times = [
             0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
@@ -118,9 +117,8 @@ class BrownianBridgeTest(unittest.TestCase):
 
         samples = 131071
         seed = 42
-        # sobol = SobolRsg(N, seed)
+
         sobol = UniformLowDiscrepancySequenceGenerator(N, seed)
-        # gsg = InvCumulativeSobolGaussianRsg(sobol)
         gsg = GaussianLowDiscrepancySequenceGenerator(sobol)
 
         today = Settings.instance().evaluationDate
@@ -144,13 +142,13 @@ class BrownianBridgeTest(unittest.TestCase):
 
         for i in range(samples):
             path1 = generator1.next().value()
-            # copy(path1.begin() + 1, path1.end(), temp.begin())
+
             for i in range(1, len(path1)):
                 temp[i - 1] = path1[i]
             stats1.add(temp)
 
             path2 = generator2.next().value()
-            # copy(path2.begin() + 1, path2.end(), temp.begin())
+
             for i in range(1, len(path2)):
                 temp[i - 1] = path2[i]
             stats2.add(temp)

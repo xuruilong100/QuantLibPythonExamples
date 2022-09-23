@@ -1,12 +1,16 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class AmortizingBondTest(unittest.TestCase):
+
     def testAmortizingFixedRateBond(self):
-        TEST_MESSAGE("Testing amortizing fixed rate bond...")
-        # Following data is generated from Excel using function pmt with Nper = 360, PV = 100.0
+        TEST_MESSAGE(
+            "Testing amortizing fixed rate bond...")
+
         rates = [
             0.0, 0.01, 0.02, 0.03, 0.04, 0.05,
             0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12]
@@ -29,11 +33,10 @@ class AmortizingBondTest(unittest.TestCase):
                 coupon = cashflows[2 * k].amount()
                 principal = cashflows[2 * k + 1].amount()
                 totalAmount = coupon + principal
-                # Check the amount is same as pmt returned
+
                 error = abs(totalAmount - amounts[i])
                 self.assertFalse(error > tolerance)
 
-                # Check the coupon result
                 expectedCoupon = notionals[k] * rates[i] / freq
                 error = abs(coupon - expectedCoupon)
                 self.assertFalse(error > tolerance)
@@ -41,10 +44,7 @@ class AmortizingBondTest(unittest.TestCase):
     def testBrazilianAmortizingFixedRateBond(self):
         TEST_MESSAGE(
             "Testing Brazilian amortizing fixed rate bond...")
-        # Following data is based on the following Brazilian onshore corporate bond code:
-        # SND Code - RISF11
-        # ISIN Code - BRRISFDBS005
-        # Fiduciary Agent URL - https://www.pentagonotrustee.com.br/Site/DetalhesEmissor?ativo=RISF11&aba=tab-5&tipo=undefined
+
         arr = [
             1000, 983.33300000, 966.66648898, 950.00019204,
             933.33338867, 916.66685434, 900.00001759, 883.33291726,

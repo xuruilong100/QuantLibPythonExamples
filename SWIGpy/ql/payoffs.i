@@ -34,6 +34,8 @@ class Payoff {
     Real operator()(Real price) const;
 };
 
+%template(PayoffVector) std::vector<ext::shared_ptr<Payoff>>;
+
 %shared_ptr(TypePayoff)
 class TypePayoff : public Payoff {
   private:
@@ -70,9 +72,11 @@ class MaxBasketPayoff : public BasketPayoff  {
 class AverageBasketPayoff : public BasketPayoff {
   public:
     AverageBasketPayoff(
-        const ext::shared_ptr<Payoff> p, const Array& a);
+        const ext::shared_ptr<Payoff> p, 
+        const Array& a);
     AverageBasketPayoff(
-        const ext::shared_ptr<Payoff> p, Size n);
+        const ext::shared_ptr<Payoff> p, 
+        Size n);
 };
 
 %shared_ptr(SpreadBasketPayoff)
@@ -85,7 +89,8 @@ class SpreadBasketPayoff : public BasketPayoff  {
 %shared_ptr(FloatingTypePayoff)
 class FloatingTypePayoff : public TypePayoff {
   public:
-    FloatingTypePayoff(Option::Type type);
+    FloatingTypePayoff(
+        Option::Type type);
 };
 
 %shared_ptr(StrikedTypePayoff)
@@ -96,12 +101,17 @@ class StrikedTypePayoff : public TypePayoff {
     Real strike();
 };
 
+%template(StrikedTypePayoffVector) std::vector<ext::shared_ptr<StrikedTypePayoff>>;
+
 %shared_ptr(PlainVanillaPayoff)
 class PlainVanillaPayoff : public StrikedTypePayoff {
   public:
     PlainVanillaPayoff(
-        Option::Type type, Real strike);
+        Option::Type type, 
+        Real strike);
 };
+
+%template(PlainVanillaPayoffVector) std::vector<ext::shared_ptr<PlainVanillaPayoff>>;
 
 %inline %{
     const ext::shared_ptr<PlainVanillaPayoff> as_plain_vanilla_payoff(
@@ -114,42 +124,51 @@ class PlainVanillaPayoff : public StrikedTypePayoff {
 class PercentageStrikePayoff : public StrikedTypePayoff {
   public:
     PercentageStrikePayoff(
-        Option::Type type, Real moneyness);
+        Option::Type type, 
+        Real moneyness);
 };
 
 %shared_ptr(CashOrNothingPayoff)
 class CashOrNothingPayoff : public StrikedTypePayoff {
   public:
     CashOrNothingPayoff(
-        Option::Type type, Real strike, Real payoff);
+        Option::Type type, 
+        Real strike, 
+        Real payoff);
 };
 
 %shared_ptr(AssetOrNothingPayoff)
 class AssetOrNothingPayoff : public StrikedTypePayoff {
   public:
     AssetOrNothingPayoff(
-        Option::Type type, Real strike);
+        Option::Type type,
+        Real strike);
 };
 
 %shared_ptr(SuperSharePayoff)
 class SuperSharePayoff : public StrikedTypePayoff {
   public:
     SuperSharePayoff(
-        Option::Type type, Real strike, Real increment);
+        Option::Type type, 
+        Real strike, 
+        Real increment);
 };
 
 %shared_ptr(GapPayoff)
 class GapPayoff : public StrikedTypePayoff {
   public:
     GapPayoff(
-        Option::Type type, Real strike, Real strikePayoff);
+        Option::Type type, 
+        Real strike, 
+        Real strikePayoff);
 };
 
 %shared_ptr(VanillaForwardPayoff)
 class VanillaForwardPayoff : public StrikedTypePayoff {
   public:
     VanillaForwardPayoff(
-        Option::Type type, Real strike);
+        Option::Type type, 
+        Real strike);
 };
 
 #endif

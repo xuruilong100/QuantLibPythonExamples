@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, exp, sin
+
+from QuantLib import *
+
+from utilities import *
 
 
 class HestonModelData(object):
@@ -25,19 +27,12 @@ class HestonModelData(object):
 
 
 hestonModels = [
-    # ADI finite difference schemes for option pricing in the
-    # Heston model with correlation, K.J. in t'Hout and S. Foulon,
     HestonModelData("'t Hout case 1", 0.04, 1.5, 0.04, 0.3, -0.9, 0.025, 0.0),
     HestonModelData("'t Hout case 2", 0.12, 3.0, 0.12, 0.04, 0.6, 0.01, 0.04),
     HestonModelData("'t Hout case 3", 0.0707, 0.6067, 0.0707, 0.2928, -0.7571, 0.03, 0.0),
     HestonModelData("'t Hout case 4", 0.06, 2.5, 0.06, 0.5, -0.1, 0.0507, 0.0469),
-    # Efficient numerical methods for pricing American options under
-    # stochastic volatility, Samuli Ikonen and Jari Toivanen,
     HestonModelData("Ikonen-Toivanen", 0.0625, 5, 0.16, 0.9, 0.1, 0.1, 0.0),
-    # Not-so-complex logarithms in the Heston model,
-    # Christian Kahl and Peter Jäckel
     HestonModelData("Kahl-Jaeckel", 0.16, 1.0, 0.16, 2.0, -0.8, 0.0, 0.0),
-    # self defined test cases
     HestonModelData("Equity case", 0.07, 2.0, 0.04, 0.55, -0.8, 0.03, 0.035),
     HestonModelData("high correlation", 0.07, 1.0, 0.04, 0.55, 0.995, 0.02, 0.04),
     HestonModelData("low Vol-Of-Vol", 0.07, 1.0, 0.04, 0.001, -0.75, 0.04, 0.03),
@@ -98,6 +93,7 @@ class VanillaOptionData(object):
 
 
 class HybridHestonHullWhiteProcessTest(unittest.TestCase):
+
     def testBsmHullWhiteEngine(self):
         TEST_MESSAGE(
             "Testing European option pricing for a BSM process with one-factor Hull-White model...")
@@ -106,7 +102,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         dc = Actual365Fixed()
 
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
         maturity = today + Period(20, Years)
 
         Settings.instance().evaluationDate = today
@@ -171,7 +167,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         dc = Actual365Fixed()
 
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
 
@@ -182,7 +178,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         for i in range(40):
             dates.push_back(today + Period(i, Years))
-            # FLOATING_POINT_EXCEPTION
+
             rates.push_back(0.01 + 0.0002 * exp(sin(i / 4.0)))
             divRates.push_back(0.02 + 0.0001 * exp(sin(i / 5.0)))
 
@@ -234,17 +230,15 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                         abs(calculated - expected) > tol)
 
     def testZeroBondPricing(self):
-        TEST_MESSAGE("Testing Monte-Carlo zero bond pricing...")
+        TEST_MESSAGE(
+            "Testing Monte-Carlo zero bond pricing...")
 
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
-
-        # construct a strange yield curve to check drifts and discounting
-        # of the joint stochastic process
 
         dates = DateVector()
         times = DoubleVector()
@@ -281,13 +275,10 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
             temp[i] = times[i]
         grid = TimeGrid(temp)
 
-        # typedef SobolBrownianBridgeRsg rsg_type
-        # typedef MultiPathGenerator<rsg_type>.sample_type sample_type
-
         factors = jointProcess.factors()
         steps = len(grid) - 1
         rsg = SobolBrownianBridgeRsg(factors, steps)
-        # MultiPathGenerator<rsg_type> generator(jointProcess, grid, rsg, False)
+
         generator = BrownianBridgeSobolMultiPathGenerator(
             jointProcess, grid, rsg, False)
 
@@ -303,8 +294,8 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
             path = generator.next()
 
             for j in range(1, m):
-                t = grid[j]  # zero end and option maturity
-                T = grid[j + optionTenor]  # maturity of zero bond of option
+                t = grid[j]
+                T = grid[j + optionTenor]
 
                 states = Array(3)
                 optionStates = Array(3)
@@ -335,17 +326,15 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
             self.assertFalse(abs(calculated - expected) > 0.0035)
 
     def testMcVanillaPricing(self):
-        TEST_MESSAGE("Testing Monte-Carlo vanilla option pricing...")
+        TEST_MESSAGE(
+            "Testing Monte-Carlo vanilla option pricing...")
 
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
-
-        # construct a strange yield curve to check drifts and discounting
-        # of the joint stochastic process
 
         dates = DateVector()
         rates = DoubleVector()
@@ -353,7 +342,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         for i in range(0, 40 + 1):
             dates.push_back(today + Period(i, Years))
-            # FLOATING_POINT_EXCEPTION
+
             rates.push_back(0.03 + 0.0003 * exp(sin(i / 4.0)))
             divRates.push_back(0.02 + 0.0001 * exp(sin(i / 5.0)))
 
@@ -409,17 +398,15 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                     (i == 0.0 and abs(calculated - expected) > 1e-4))
 
     def testMcPureHestonPricing(self):
-        TEST_MESSAGE("Testing Monte-Carlo Heston option pricing...")
+        TEST_MESSAGE(
+            "Testing Monte-Carlo Heston option pricing...")
 
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
-
-        # construct a strange yield curve to check drifts and discounting
-        # of the joint stochastic process
 
         dates = DateVector()
         rates = DoubleVector()
@@ -427,7 +414,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         for i in range(100 + 1):
             dates.push_back(today + Period(i, Months))
-            # FLOATING_POINT_EXCEPTION
+
             rates.push_back(0.02 + 0.0002 * exp(sin(i / 10.0)))
             divRates.push_back(0.02 + 0.0001 * exp(sin(i / 20.0)))
 
@@ -484,17 +471,15 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                     abs(calculated - expected) > tol)
 
     def testAnalyticHestonHullWhitePricing(self):
-        TEST_MESSAGE("Testing analytic Heston Hull-White option pricing...")
+        TEST_MESSAGE(
+            "Testing analytic Heston Hull-White option pricing...")
 
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
-
-        # construct a strange yield curve to check drifts and discounting
-        # of the joint stochastic process
 
         dates = DateVector()
         rates = DoubleVector()
@@ -502,7 +487,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         for i in range(40 + 1):
             dates.push_back(today + Period(i, Years))
-            # FLOATING_POINT_EXCEPTION
+
             rates.push_back(0.03 + 0.0001 * exp(sin(i / 4.0)))
             divRates.push_back(0.02 + 0.0002 * exp(sin(i / 3.0)))
 
@@ -561,19 +546,14 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                     abs(calculated - expected) > tol)
 
     def testCallableEquityPricing(self):
-        TEST_MESSAGE("Testing the pricing of a callable equity product...")
+        TEST_MESSAGE(
+            "Testing the pricing of a callable equity product...")
 
         backup = SavedSettings()
 
-        # For the definition of the example product see
-        # Alexander Giese, On the Pricing of Auto-Callable Equity
-        # Structures in the Presence of Stochastic Volatility and
-        # Stochastic Interest Rates .
-        # http://workshop.mathfinance.de/2006/papers/giese/slides.pdf
-
         maturity = 7
         dc = Actual365Fixed()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
 
@@ -586,7 +566,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
         hestonProcess = HestonProcess(
             rTS, qTS, spot, 0.0625, 1.0,
             0.24 * 0.24, 1e-4, 0.0)
-        # FLOATING_POINT_EXCEPTION
+
         hwProcess = HullWhiteForwardProcess(rTS, 0.00883, 0.00526)
         hwProcess.setForwardMeasureTime(
             dc.yearFraction(
@@ -604,9 +584,6 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
         times = DoubleVector(maturity + 1)
         for i in range(len(schedule)):
             times[i] = dc.yearFraction(today, schedule[i])
-        # transform(schedule.begin(), schedule.end(), times.begin(),
-        #     # [&](Date& d) { return dc.yearFraction(today, d) }
-        #     )
 
         for i in range(maturity + 1):
             times[i] = i
@@ -617,19 +594,13 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
         for i in range(maturity):
             redemption[i] = 1.07 + 0.03 * i
 
-        # typedef PseudoRandom.rsg_type rsg_type
-        # rsg_type : InverseCumulativeRsg<MersenneTwisterUniformRng, InverseCumulativeNormal>
-        # typedef MultiPathGenerator<rsg_type>.sample_type sample_type
-
         seed = 42
-        # rsg_type rsg = PseudoRandom.make_sequence_generator(
-        #     jointProcess.factors() * (grid.size() - 1), seed)
+
         g = UniformRandomSequenceGenerator(
             jointProcess.factors() * (len(grid) - 1),
             UniformRandomGenerator(seed))
         rsg = GaussianRandomSequenceGenerator(g)
 
-        # MultiPathGenerator<rsg_type> generator(jointProcess, grid, rsg, False)
         generator = GaussianMultiPathGenerator(
             jointProcess, grid, rsg, False)
         stat = GeneralStatistics()
@@ -639,7 +610,6 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
         for i in range(nrTrails):
             antithetic = (i % 2) != 0
 
-            # sample_type path = antithetic ? generator.antithetic() : generator.next()
             path = generator.antithetic() if antithetic else generator.next()
 
             payoff = 0
@@ -676,12 +646,9 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
         backup = SavedSettings()
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)  # Date.todaysDate()
+        today = knownGoodDefault
 
         Settings.instance().evaluationDate = today
-
-        # construct a strange yield curve to check drifts and discounting
-        # of the joint stochastic process
 
         dates = DateVector()
         rates = DoubleVector()
@@ -689,7 +656,7 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
         for i in range(31 + 1):
             dates.push_back(today + Period(i, Years))
-            # FLOATING_POINT_EXCEPTION
+
             rates.push_back(0.04 + 0.0001 * exp(sin(i)))
             divRates.push_back(0.04 + 0.0001 * exp(sin(i)))
 
@@ -748,7 +715,8 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                     abs(calculated - expected) > 1e-5)
 
     def testFdmHestonHullWhiteEngine(self):
-        TEST_MESSAGE("Testing the FDM Heston Hull-White engine...")
+        TEST_MESSAGE(
+            "Testing the FDM Heston Hull-White engine...")
 
         backup = SavedSettings()
 
@@ -812,7 +780,8 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                     abs(calculatedGamma - expectedGamma) > gammaTol)
 
     def testBsmHullWhitePricing(self):
-        TEST_MESSAGE("Testing convergence speed of Heston-Hull-White engine...")
+        TEST_MESSAGE(
+            "Testing convergence speed of Heston-Hull-White engine...")
 
         backup = SavedSettings()
 
@@ -874,13 +843,14 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
 
                         option.setPricingEngine(fdEngine)
                         calculated = option.NPV()
-                        avgPriceDiff += abs(expected - calculated) / len(strikes)  # NOLINT(bugprone-integer-division)
+                        avgPriceDiff += abs(expected - calculated) / len(strikes)
 
                     self.assertFalse(i and tolWithCV[l] < avgPriceDiff)
                     self.assertFalse((not i) and tolWithOutCV[l] < avgPriceDiff)
 
     def testSpatialDiscretizatinError(self):
-        TEST_MESSAGE("Testing spatial convergence speed of Heston engine...")
+        TEST_MESSAGE(
+            "Testing spatial convergence speed of Heston engine...")
 
         backup = SavedSettings()
 
@@ -918,20 +888,17 @@ class HybridHestonHullWhiteProcessTest(unittest.TestCase):
                         option.setPricingEngine(fdEngine)
                         calculated = option.NPV()
 
-                        avgPriceDiff += abs(expected - calculated) / len(strikes)  # NOLINT(bugprone-integer-division)
+                        avgPriceDiff += abs(expected - calculated) / len(strikes)
 
                     self.assertFalse(avgPriceDiff > tol[i])
 
+    @unittest.skip("testHestonHullWhiteCalibration")
     def testHestonHullWhiteCalibration(self):
-        pass
+        TEST_MESSAGE(
+            "Testing the Heston Hull-White calibration...")
 
     def testH1HWPricingEngine(self):
         backup = SavedSettings()
-
-        # Example taken from Lech Aleksander Grzelak,
-        # Equity and Foreign Exchange Hybrid Models for Pricing Long-Maturity
-        # Financial Derivatives,
-        # http://repository.tudelft.nl/assets/uuid:a8e1a007-bd89-481a-aee3-0e22f15ade6b/PhDThesis_main.pdf
 
         today = Date(15, July, 2012)
         Settings.instance().evaluationDate = today

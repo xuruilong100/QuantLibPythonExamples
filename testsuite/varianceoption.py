@@ -1,12 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class VarianceOptionTest(unittest.TestCase):
 
     def testIntegralHeston(self):
-        TEST_MESSAGE("Testing variance option with integral Heston engine...")
+        TEST_MESSAGE(
+            "Testing variance option with integral Heston engine...")
 
         dc = Actual360()
         today = Settings.instance().evaluationDate

@@ -1,15 +1,16 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
         self.calendar = TARGET()
 
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
 
         self.dayCounter = Actual360()
@@ -18,7 +19,7 @@ class CommonVars(object):
 
         self.issueDate = self.calendar.advance(self.today, 2, Days)
         self.maturityDate = self.calendar.advance(self.issueDate, 10, Years)
-        # reset to avoid inconsistencies as the schedule is backwards
+
         self.issueDate = self.calendar.advance(self.maturityDate, -10, Years)
 
         self.underlying = RelinkableQuoteHandle()
@@ -38,10 +39,7 @@ class CommonVars(object):
         self.creditSpread.linkTo(SimpleQuote(0.005))
 
         self.no_callability = CallabilitySchedule()
-        # self.no_dividends = DividendSchedule()
 
-        # it fails with 1000000
-        # faceAmount = 1000000.0
         self.faceAmount = 100.0
         self.redemption = 100.0
         self.conversionRatio = self.redemption / self.underlying.value()
@@ -51,8 +49,6 @@ class CommonVars(object):
 class ConvertibleBondTest(unittest.TestCase):
 
     def testBond(self):
-        # when deeply out-of-the-money, the value of the convertible bond
-        # should equal that of the underlying plain-vanilla bond.
 
         TEST_MESSAGE(
             "Testing out-of-the-money convertible bonds against vanilla bonds...")
@@ -72,8 +68,6 @@ class ConvertibleBondTest(unittest.TestCase):
             ForwardSpreadedTermStructure(
                 vars.riskFreeRate, vars.creditSpread))
 
-        # zero-coupon
-
         schedule = MakeSchedule()
         schedule.fromDate(vars.issueDate)
         schedule.to(vars.maturityDate)
@@ -84,9 +78,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         euZero = ConvertibleZeroCouponBond(
             euExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             vars.dayCounter, schedule,
             vars.redemption)
@@ -94,9 +86,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         amZero = ConvertibleZeroCouponBond(
             amExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             vars.dayCounter, schedule,
             vars.redemption)
@@ -118,8 +108,6 @@ class ConvertibleBondTest(unittest.TestCase):
         error = abs(amZero.NPV() - zero.settlementValue())
         self.assertFalse(error > tolerance)
 
-        # coupon
-
         coupons = DoubleVector(1, 0.05)
 
         schedule = MakeSchedule()
@@ -132,9 +120,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         euFixed = ConvertibleFixedCouponBond(
             euExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             coupons, vars.dayCounter,
             schedule, vars.redemption)
@@ -142,9 +128,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         amFixed = ConvertibleFixedCouponBond(
             amExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             coupons, vars.dayCounter,
             schedule, vars.redemption)
@@ -165,8 +149,6 @@ class ConvertibleBondTest(unittest.TestCase):
         error = abs(amFixed.NPV() - fixed.settlementValue())
         self.assertFalse(error > tolerance)
 
-        # floating-rate
-
         index = Euribor1Y(discountCurve)
         fixingDays = 2
         gearings = DoubleVector(1, 1.0)
@@ -174,9 +156,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         euFloating = ConvertibleFloatingRateBond(
             euExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             index, fixingDays, spreads,
             vars.dayCounter, schedule,
@@ -185,9 +165,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         amFloating = ConvertibleFloatingRateBond(
             amExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             index, fixingDays, spreads,
             vars.dayCounter, schedule,
@@ -223,8 +201,6 @@ class ConvertibleBondTest(unittest.TestCase):
         self.assertFalse(error > tolerance)
 
     def testOption(self):
-        # a zero-coupon convertible bond with no credit spread is
-        # equivalent to a call option.
 
         TEST_MESSAGE(
             "Testing zero-coupon convertible bonds against vanilla option...")
@@ -256,9 +232,7 @@ class ConvertibleBondTest(unittest.TestCase):
 
         euZero = ConvertibleZeroCouponBond(
             euExercise, vars.conversionRatio,
-            # vars.no_dividends,
             vars.no_callability,
-            # vars.creditSpread,
             vars.issueDate, vars.settlementDays,
             vars.dayCounter, schedule,
             vars.redemption)
@@ -384,13 +358,6 @@ class ConvertibleBondTest(unittest.TestCase):
                 process, 600, spread, no_dividends))
 
         try:
-            x = bond.NPV()  # should throw if not, an INF was not detected.
-            # BOOST_FAIL("INF result was not detected: " << x << " returned")
-
+            x = bond.NPV()
         except Exception as e:
             print(e)
-            # as expected. Do nothing.
-
-            # Note: we're expecting an Error we threw, not just any
-            # exception.  If something else is thrown, then there's
-            # another problem and the test must fail.

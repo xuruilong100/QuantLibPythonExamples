@@ -18,9 +18,10 @@ using QuantLib::UnitDisplacedBlackYoYInflationCouponPricer;
 class CPICouponPricer : public InflationCouponPricer {
   public:
     CPICouponPricer();
-    explicit CPICouponPricer(Handle<YieldTermStructure> nominalTermStructure);
-    CPICouponPricer(Handle<CPIVolatilitySurface> capletVol,
-                    Handle<YieldTermStructure> nominalTermStructure);
+    CPICouponPricer(Handle<YieldTermStructure> nominalTermStructure);
+    CPICouponPricer(
+        Handle<CPIVolatilitySurface> capletVol,
+        Handle<YieldTermStructure> nominalTermStructure);
 
     Handle<CPIVolatilitySurface> capletVolatility() const;
     Handle<YieldTermStructure> nominalTermStructure() const;
@@ -32,9 +33,10 @@ class CPICouponPricer : public InflationCouponPricer {
 class YoYInflationCouponPricer : public InflationCouponPricer {
   public:
     YoYInflationCouponPricer();
-    explicit YoYInflationCouponPricer(Handle<YieldTermStructure> nominalTermStructure);
-    YoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol,
-                             Handle<YieldTermStructure> nominalTermStructure);
+    YoYInflationCouponPricer(Handle<YieldTermStructure> nominalTermStructure);
+    YoYInflationCouponPricer(
+        Handle<YoYOptionletVolatilitySurface> capletVol,
+        Handle<YieldTermStructure> nominalTermStructure);
 
     Handle<YoYOptionletVolatilitySurface> capletVolatility() const;
     Handle<YieldTermStructure> nominalTermStructure() const;
@@ -46,7 +48,7 @@ class YoYInflationCouponPricer : public InflationCouponPricer {
 class BlackYoYInflationCouponPricer : public YoYInflationCouponPricer {
   public:
     BlackYoYInflationCouponPricer();
-    explicit BlackYoYInflationCouponPricer(
+    BlackYoYInflationCouponPricer(
         const Handle<YieldTermStructure>& nominalTermStructure);
     BlackYoYInflationCouponPricer(
         const Handle<YoYOptionletVolatilitySurface>& capletVol,
@@ -57,7 +59,7 @@ class BlackYoYInflationCouponPricer : public YoYInflationCouponPricer {
 class UnitDisplacedBlackYoYInflationCouponPricer : public YoYInflationCouponPricer {
   public:
     UnitDisplacedBlackYoYInflationCouponPricer();
-    explicit UnitDisplacedBlackYoYInflationCouponPricer(
+    UnitDisplacedBlackYoYInflationCouponPricer(
         const Handle<YieldTermStructure>& nominalTermStructure);
     UnitDisplacedBlackYoYInflationCouponPricer(
         const Handle<YoYOptionletVolatilitySurface>& capletVol,
@@ -68,7 +70,7 @@ class UnitDisplacedBlackYoYInflationCouponPricer : public YoYInflationCouponPric
 class BachelierYoYInflationCouponPricer : public YoYInflationCouponPricer {
   public:
     BachelierYoYInflationCouponPricer();
-    explicit BachelierYoYInflationCouponPricer(
+    BachelierYoYInflationCouponPricer(
         const Handle<YieldTermStructure>& nominalTermStructure);
     BachelierYoYInflationCouponPricer(
         const Handle<YoYOptionletVolatilitySurface>& capletVol,

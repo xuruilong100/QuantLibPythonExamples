@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
@@ -43,7 +45,7 @@ class CommonVars(object):
             49436, 51263, 53087, 56739, 60392]
 
         dates = DateVector()
-        # dates.reserve(datesTmp.size())
+
         for it in datesTmp:
             dates.append(Date(it))
 
@@ -56,7 +58,6 @@ class CommonVars(object):
             0.009136, 0.009601, 0.009384]
 
         self.discountingYTS.linkTo(
-            # InterpolatedZeroCurve< Linear > >(
             ZeroCurve(
                 dates, rates,
                 self.dayCounter, self.calendar))
@@ -82,8 +83,7 @@ class CommonVars(object):
             0.008242, 0.008614, 0.008935, 0.009205, 0.009443, 0.009651,
             0.009818, 0.009952, 0.010054, 0.010146, 0.010206, 0.010266,
             0.010315, 0.010365, 0.010416, 0.010468, 0.010519, 0.010571,
-            0.010757, 0.010806, 0.010423, 0.010217
-        ]
+            0.010757, 0.010806, 0.010423, 0.010217]
 
         self.forwardingYTS.linkTo(
             ZeroCurve(
@@ -133,7 +133,6 @@ class CommonVars(object):
 
         self.setTermStructure()
 
-        # atm cap volatility curve
         optionTenors = [
             Period(1, Years),
             Period(18, Months),
@@ -152,7 +151,6 @@ class CommonVars(object):
             Period(25, Years),
             Period(30, Years)]
 
-        # atm capfloor vols from mkt vol matrix using flat yield curve
         atmTermV = [
             0.090304,
             0.12180,
@@ -187,7 +185,6 @@ class CommonVars(object):
 
         self.setTermStructure()
 
-        # cap volatility smile matrix
         self.optionTenors = [
             Period(1, Years),
             Period(18, Months),
@@ -440,7 +437,6 @@ class CommonVars(object):
 
         self.setRealTermStructure()
 
-        # cap volatility smile matrix
         self.optionTenors = [
             Period(1, Years),
             Period(18, Months),
@@ -458,7 +454,6 @@ class CommonVars(object):
             Period(20, Years),
             Period(25, Years),
             Period(30, Years)]
-        # 16
 
         self.strikes = [
             -0.005,
@@ -474,7 +469,6 @@ class CommonVars(object):
             0.03,
             0.05,
             0.1]
-        # 13
 
         rawVols = [
             0.49, 0.39, 0.34, 0.31, 0.34, 0.37, 0.50, 0.75, 0.99, 1.21, 1.64, 2.44, 4.29,
@@ -495,11 +489,10 @@ class CommonVars(object):
             0.62, 0.62, 0.62, 0.62, 0.66, 0.67, 0.67, 0.67, 0.72, 0.72, 0.78, 0.90, 1.25]
 
         self.termV = Matrix(len(self.optionTenors), len(self.strikes))
-        # copy(rawVols.begin(), rawVols.end(), termV.begin())
+
         for i in range(self.termV.rows()):
             for j in range(self.termV.columns()):
                 self.termV[i][j] = rawVols[i * len(self.strikes) + j] / 100.0
-        # termV /= 100.0
 
         self.capFloorVolRealSurface = CapFloorTermVolSurface(
             0, self.calendar, Following,
@@ -531,12 +524,11 @@ class OptionletStripperTest(unittest.TestCase):
 
         vol = OptionletVolatilityStructureHandle(strippedOptionletAdapter)
 
-        vol.enableExtrapolation()
+        vol.currentLink().enableExtrapolation()
 
         strippedVolEngine = BlackCapFloorEngine(
             vars.yieldTermStructure, vol)
 
-        # cap
         for tenorIndex in range(len(vars.optionTenors)):
             for strikeIndex in range(len(vars.strikes)):
                 cap = MakeCapFloor(
@@ -582,12 +574,11 @@ class OptionletStripperTest(unittest.TestCase):
 
         vol = OptionletVolatilityStructureHandle(strippedOptionletAdapter)
 
-        vol.enableExtrapolation()
+        vol.currentLink().enableExtrapolation()
 
         strippedVolEngine = BlackCapFloorEngine(
             vars.yieldTermStructure, vol)
 
-        # cap
         for tenorIndex in range(len(vars.optionTenors)):
             for strikeIndex in range(len(vars.strikes)):
                 cap = MakeCapFloor(
@@ -633,11 +624,10 @@ class OptionletStripperTest(unittest.TestCase):
 
         vol = OptionletVolatilityStructureHandle(strippedOptionletAdapter)
 
-        vol.enableExtrapolation()
+        vol.currentLink().enableExtrapolation()
 
         strippedVolEngine = BachelierCapFloorEngine(vars.discountingYTS, vol)
 
-        # ext.shared_ptr< CapFloor > cap
         for tenorIndex in range(len(vars.optionTenors)):
             for strikeIndex in range(len(vars.strikes)):
                 cap = MakeCapFloor(
@@ -656,8 +646,8 @@ class OptionletStripperTest(unittest.TestCase):
                 cap.setPricingEngine(bachelierCapFloorEngineConstantVolatility)
                 priceFromConstantVolatility = cap.NPV()
 
-                error = abs(priceFromStrippedVolatility -
-                            priceFromConstantVolatility)
+                error = abs(
+                    priceFromStrippedVolatility - priceFromConstantVolatility)
                 self.assertFalse(error > vars.tolerance)
 
     def testTermVolatilityStrippingShiftedLogNormalVol(self):
@@ -684,11 +674,10 @@ class OptionletStripperTest(unittest.TestCase):
 
         vol = OptionletVolatilityStructureHandle(strippedOptionletAdapter)
 
-        vol.enableExtrapolation()
+        vol.currentLink().enableExtrapolation()
 
         strippedVolEngine = BlackCapFloorEngine(vars.discountingYTS, vol)
 
-        # ext.shared_ptr< CapFloor > cap
         for strikeIndex in range(len(vars.strikes)):
             for tenorIndex in range(len(vars.optionTenors)):
                 cap = MakeCapFloor(
@@ -717,14 +706,13 @@ class OptionletStripperTest(unittest.TestCase):
             "surface using OptionletStripper2 class...")
 
         vars = CommonVars()
-        Settings.instance().evaluationDate = Date.todaysDate()
+        Settings.instance().evaluationDate = knownGoodDefault
 
         vars.setFlatTermVolCurve()
         vars.setFlatTermVolSurface()
 
         iborIndex = Euribor6M(vars.yieldTermStructure)
 
-        # optionletstripper1
         optionletStripper1 = OptionletStripper1(
             vars.flatTermVolSurface,
             iborIndex,
@@ -735,18 +723,16 @@ class OptionletStripperTest(unittest.TestCase):
 
         vol1 = OptionletVolatilityStructureHandle(strippedOptionletAdapter1)
 
-        vol1.enableExtrapolation()
+        vol1.currentLink().enableExtrapolation()
 
-        # optionletstripper2
         optionletStripper2 = OptionletStripper2(optionletStripper1, vars.flatTermVolCurve)
 
         strippedOptionletAdapter2 = StrippedOptionletAdapter(optionletStripper2)
 
         vol2 = OptionletVolatilityStructureHandle(strippedOptionletAdapter2)
 
-        vol2.enableExtrapolation()
+        vol2.currentLink().enableExtrapolation()
 
-        # consistency check: diff(stripped vol1-stripped vol2)
         for strikeIndex in range(len(vars.strikes)):
             for tenorIndex in range(len(vars.optionTenors)):
                 strippedVol1 = vol1.volatility(
@@ -757,7 +743,6 @@ class OptionletStripperTest(unittest.TestCase):
                     vars.optionTenors[tenorIndex],
                     vars.strikes[strikeIndex], true)
 
-                # vol from flat vol surface (for comparison only)
                 flatVol = vars.flatTermVolSurface.volatility(
                     vars.optionTenors[tenorIndex],
                     vars.strikes[strikeIndex], true)
@@ -771,14 +756,13 @@ class OptionletStripperTest(unittest.TestCase):
             "surface using OptionletStripper2 class...")
 
         vars = CommonVars()
-        Settings.instance().evaluationDate = Date.todaysDate()
+        Settings.instance().evaluationDate = knownGoodDefault
 
         vars.setCapFloorTermVolCurve()
         vars.setCapFloorTermVolSurface()
 
         iborIndex = Euribor6M(vars.yieldTermStructure)
 
-        # optionletstripper1
         optionletStripper1 = OptionletStripper1(
             vars.capFloorVolSurface,
             iborIndex,
@@ -788,18 +772,16 @@ class OptionletStripperTest(unittest.TestCase):
         strippedOptionletAdapter1 = StrippedOptionletAdapter(optionletStripper1)
 
         vol1 = OptionletVolatilityStructureHandle(strippedOptionletAdapter1)
-        vol1.enableExtrapolation()
+        vol1.currentLink().enableExtrapolation()
 
-        # optionletstripper2
         optionletStripper2 = OptionletStripper2(
             optionletStripper1, vars.capFloorVolCurve)
 
         strippedOptionletAdapter2 = StrippedOptionletAdapter(optionletStripper2)
 
         vol2 = OptionletVolatilityStructureHandle(strippedOptionletAdapter2)
-        vol2.enableExtrapolation()
+        vol2.currentLink().enableExtrapolation()
 
-        # consistency check: diff(stripped vol1-stripped vol2)
         for strikeIndex in range(len(vars.strikes)):
             for tenorIndex in range(len(vars.optionTenors)):
                 strippedVol1 = vol1.volatility(
@@ -810,7 +792,6 @@ class OptionletStripperTest(unittest.TestCase):
                     vars.optionTenors[tenorIndex],
                     vars.strikes[strikeIndex], true)
 
-                # vol from flat vol surface (for comparison only)
                 flatVol = vars.capFloorVolSurface.volatility(
                     vars.optionTenors[tenorIndex],
                     vars.strikes[strikeIndex], true)
@@ -819,8 +800,9 @@ class OptionletStripperTest(unittest.TestCase):
                 self.assertFalse(error > vars.tolerance)
 
     def testSwitchStrike(self):
-        TEST_MESSAGE("Testing switch strike level and recalibration of level "
-                     "in case of curve relinking...")
+        TEST_MESSAGE(
+            "Testing switch strike level and recalibration of level "
+            "in case of curve relinking...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 

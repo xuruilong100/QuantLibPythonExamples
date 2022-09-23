@@ -1,15 +1,15 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class ChooserOptionTest(unittest.TestCase):
-    def testAnalyticSimpleChooserEngine(self):
-        TEST_MESSAGE("Testing analytic simple chooser option...")
 
-        # The data below are from
-        # "Complete Guide to Option Pricing Formulas", Espen Gaarder Haug
-        # pages 39-40
+    def testAnalyticSimpleChooserEngine(self):
+        TEST_MESSAGE(
+            "Testing analytic simple chooser option...")
 
         dc = Actual360()
         today = Settings.instance().evaluationDate
@@ -45,15 +45,13 @@ class ChooserOptionTest(unittest.TestCase):
         tolerance = 3e-5
         self.assertFalse(abs(calculated - expected) > tolerance)
 
-    @unittest.skip('crash')
+    @unittest.skip("testAnalyticComplexChooserEngine: crash")
     def testAnalyticComplexChooserEngine(self):
-        TEST_MESSAGE("Testing analytic complex chooser option...")
-
-        # The example below is from
-        # "Complete Guide to Option Pricing Formulas", Espen Gaarder Haug
+        TEST_MESSAGE(
+            "Testing analytic complex chooser option...")
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(50.0)

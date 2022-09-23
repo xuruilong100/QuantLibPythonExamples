@@ -1,14 +1,17 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp
+
+from QuantLib import *
+
+from utilities import *
 
 
 class Datum(object):
-    def __init__(self, settlementDays,
+    def __init__(self,
+                 settlementDays,
                  n,
                  unit,
-                 rate, ):
+                 rate):
         self.settlementDays = settlementDays
         self.n = n
         self.unit = unit
@@ -83,7 +86,7 @@ class CommonVars(object):
         self.swapIndex = Euribor3M(self.swapTermStructure)
         self.calendar = self.eoniaIndex.fixingCalendar()
         self.today = Date(5, February, 2009)
-        # today = calendar.adjust(Date.todaysDate())
+
         Settings.instance().evaluationDate = self.today
         self.settlement = self.calendar.advance(
             self.today, Period(self.settlementDays, Days), Following)
@@ -91,7 +94,6 @@ class CommonVars(object):
             flatRate(self.today, 0.05, Actual365Fixed()))
         self.backup = SavedSettings()
 
-    # utilities
     def makeSwap(self,
                  length,
                  fixedRate,
@@ -116,7 +118,8 @@ class CommonVars(object):
 class OvernightIndexedSwapTest(unittest.TestCase):
 
     def testFairRate(self):
-        TEST_MESSAGE("Testing Eonia-swap calculation of fair fixed rate...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap calculation of fair fixed rate...")
 
         vars = CommonVars()
 
@@ -136,7 +139,8 @@ class OvernightIndexedSwapTest(unittest.TestCase):
                 self.assertFalse(abs(swap.NPV()) > 1.0e-10)
 
     def testFairSpread(self):
-        TEST_MESSAGE("Testing Eonia-swap calculation of fair floating spread...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap calculation of fair floating spread...")
 
         vars = CommonVars()
 
@@ -158,7 +162,8 @@ class OvernightIndexedSwapTest(unittest.TestCase):
                 self.assertFalse(abs(swap.NPV()) > 1.0e-10)
 
     def testCachedValue(self):
-        TEST_MESSAGE("Testing Eonia-swap calculation against cached value...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap calculation against cached value...")
 
         vars = CommonVars()
 
@@ -177,27 +182,29 @@ class OvernightIndexedSwapTest(unittest.TestCase):
         self.assertFalse(abs(swap2.NPV() - cachedNPV) > tolerance)
 
     def testBootstrap(self):
-        TEST_MESSAGE("Testing Eonia-swap curve building with daily compounded ON rates...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap curve building with daily compounded ON rates...")
         self._testBootstrap(false, RateAveraging.Compound)
 
     def testBootstrapWithArithmeticAverage(self):
-        TEST_MESSAGE("Testing Eonia-swap curve building with arithmetic average ON rates...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap curve building with arithmetic average ON rates...")
         self._testBootstrap(false, RateAveraging.Simple)
 
     def testBootstrapWithTelescopicDates(self):
-        TEST_MESSAGE("Testing Eonia-swap curve building with telescopic value dates and DCON rates...")
+        TEST_MESSAGE(
+            "Testing Eonia-swap curve building with telescopic value dates and DCON rates...")
         self._testBootstrap(true, RateAveraging.Compound)
 
     def testBootstrapWithTelescopicDatesAndArithmeticAverage(self):
         TEST_MESSAGE(
             "Testing Eonia-swap curve building with telescopic value dates and AAON rates...")
-        # Given that we are using an approximation that omits
-        # the required convexity correction, a lower tolerance
-        # is needed.
+
         self._testBootstrap(true, RateAveraging.Simple, 1.0e-5)
 
     def testSeasonedSwaps(self):
-        TEST_MESSAGE("Testing seasoned Eonia-swap calculation...")
+        TEST_MESSAGE(
+            "Testing seasoned Eonia-swap calculation...")
 
         vars = CommonVars()
 
@@ -208,7 +215,7 @@ class OvernightIndexedSwapTest(unittest.TestCase):
 
         effectiveDate = Date(2, February, 2009)
 
-        vars.eoniaIndex.addFixing(Date(2, February, 2009), 0.0010)  # fake fixing values
+        vars.eoniaIndex.addFixing(Date(2, February, 2009), 0.0010)
         vars.eoniaIndex.addFixing(Date(3, February, 2009), 0.0011)
         vars.eoniaIndex.addFixing(Date(4, February, 2009), 0.0012)
         vars.eoniaIndex.addFixing(Date(5, February, 2009), 0.0013)
@@ -220,7 +227,8 @@ class OvernightIndexedSwapTest(unittest.TestCase):
                 self.assertFalse(abs(swap.NPV() - swap2.NPV()) > 1.0e-10)
 
     def testBootstrapRegression(self):
-        TEST_MESSAGE("Testing 1.16 regression with OIS bootstrap...")
+        TEST_MESSAGE(
+            "Testing 1.16 regression with OIS bootstrap...")
 
         backup = SavedSettings()
 
@@ -274,17 +282,12 @@ class OvernightIndexedSwapTest(unittest.TestCase):
                     YieldTermStructureHandle(),
                     false, 2,
                     Following, Annual, Calendar(), Period(0, Days), 0.0,
-                    # this bootstrap fails with the default LastRelevantDate choice
                     Pillar.MaturityDate))
 
-        # curve = PiecewiseYieldCurve<Discount, LogCubic>(
-        #     0, UnitedStates(UnitedStates.GovernmentBond),
-        #     helpers, Actual365Fixed(), MonotonicLogCubic())
         curve = PiecewiseLogCubicDiscount(
             0, UnitedStates(UnitedStates.GovernmentBond),
             helpers, Actual365Fixed(), MonotonicLogCubic())
 
-        # BOOST_CHECK_NO_THROW(curve.discount(1.0))
         try:
             curve.discount(1.0)
         except Exception as e:
@@ -347,11 +350,10 @@ class OvernightIndexedSwapTest(unittest.TestCase):
 
         vars.eoniaTermStructure.linkTo(eoniaTS)
 
-        # test curve consistency
         for i in eoniaSwapData:
             expected = i.rate / 100
             term = Period(i.n, i.unit)
-            # test telescopic value dates (in bootstrap) against non telescopic value dates (swap here)
+
             swap = vars.makeSwap(
                 term, 0.0, 0.0, false, NullDate(), paymentLag, averagingMethod)
             calculated = swap.fairRate()

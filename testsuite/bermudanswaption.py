@@ -1,11 +1,13 @@
 import unittest
-from utilities import *
-from QuantLib import *
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 class CommonVars(object):
-    # setup
+
     def __init__(self):
         self.startYears = 1
         self.length = 5
@@ -20,12 +22,11 @@ class CommonVars(object):
         self.termStructure = RelinkableYieldTermStructureHandle()
         self.index = Euribor6M(self.termStructure)
         self.calendar = self.index.fixingCalendar()
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         self.settlement = self.calendar.advance(
             self.today, self.settlementDays, Days)
         self.backup = SavedSettings()
 
-    # utilities
     def makeSwap(self, fixedRate):
         start = self.calendar.advance(
             self.settlement, self.startYears, Years)
@@ -70,7 +71,7 @@ class BermudanSwaptionTest(unittest.TestCase):
         Settings.instance().evaluationDate = vars.today
 
         vars.settlement = Date(19, February, 2002)
-        # flat yield term structure impling 1x5 swap at 5%
+
         vars.termStructure.linkTo(
             flatRate(vars.settlement, 0.04875825, Actual365Fixed()))
 
@@ -94,19 +95,17 @@ class BermudanSwaptionTest(unittest.TestCase):
         treeEngine = TreeSwaptionEngine(model, 50)
         fdmEngine = FdHullWhiteSwaptionEngine(model)
 
-        # itmValue, atmValue, otmValue
-        # itmValueFdm, atmValueFdm, otmValueFdm
         if not usingAtParCoupons:
-            itmValue = 42.2413
-            atmValue = 12.8789
-            otmValue = 2.4759
+            itmValue = 42.2402
+            atmValue = 12.9032
+            otmValue = 2.49758
             itmValueFdm = 42.2111
             atmValueFdm = 12.8879
             otmValueFdm = 2.44443
         else:
-            itmValue = 42.2470
-            atmValue = 12.8826
-            otmValue = 2.4769
+            itmValue = 42.2460
+            atmValue = 12.9069
+            otmValue = 2.4985
             itmValueFdm = 42.2091
             atmValueFdm = 12.8864
             otmValueFdm = 2.4437
@@ -137,14 +136,14 @@ class BermudanSwaptionTest(unittest.TestCase):
         exercise = BermudanExercise(exerciseDates)
 
         if not usingAtParCoupons:
-            itmValue = 42.1917
-            atmValue = 12.7788
-            otmValue = 2.4388
+            itmValue = 42.1791
+            atmValue = 12.7699
+            otmValue = 2.4368
 
         else:
-            itmValue = 42.1974
-            atmValue = 12.7825
-            otmValue = 2.4399
+            itmValue = 42.1849
+            atmValue = 12.7736
+            otmValue = 2.4379
 
         swaption = Swaption(itmSwap, exercise)
         swaption.setPricingEngine(treeEngine)
@@ -169,7 +168,6 @@ class BermudanSwaptionTest(unittest.TestCase):
         Settings.instance().evaluationDate = vars.today
         vars.settlement = Date(19, September, 2016)
 
-        # flat yield term structure impling 1x5 swap at 5%
         vars.termStructure.linkTo(
             flatRate(vars.settlement, 0.04875825, Actual365Fixed()))
 
@@ -197,17 +195,16 @@ class BermudanSwaptionTest(unittest.TestCase):
         fdmEngine = FdG2SwaptionEngine(g2Model, 50, 75, 75, 0, 1e-3)
         treeEngine = TreeSwaptionEngine(g2Model, 50)
 
-        # expectedFdm[5], expectedTree[5]
         if not usingAtParCoupons:
             tmpExpectedFdm = [103.231, 54.6519, 20.0475, 5.26941, 1.07097]
-            tmpExpectedTree = [103.253, 54.6685, 20.1399, 5.40517, 1.10642]
+            tmpExpectedTree = [103.245, 54.6685, 20.1656, 5.43999, 1.12702]
 
             expectedFdm = tmpExpectedFdm
             expectedTree = tmpExpectedTree
 
         else:
             tmpExpectedFdm = [103.227, 54.6502, 20.0469, 5.26924, 1.07093]
-            tmpExpectedTree = [103.256, 54.6726, 20.1429, 5.4064, 1.10677]
+            tmpExpectedTree = [103.248, 54.6726, 20.1685, 5.44118, 1.12737]
 
             expectedFdm = tmpExpectedFdm
             expectedTree = tmpExpectedTree
@@ -223,3 +220,54 @@ class BermudanSwaptionTest(unittest.TestCase):
             calculatedTree = swaptions[i].NPV()
 
             self.assertFalse(abs(calculatedTree - expectedTree[i]) > tol)
+
+    def testTreeEngineTimeSnapping(self):
+        TEST_MESSAGE(
+            "Testing snap of exercise dates for discretized swaption...")
+
+        today = Date(8, Jul, 2021)
+        backup = SavedSettings()
+        Settings.instance().evaluationDate = today
+
+        termStructure = RelinkableYieldTermStructureHandle()
+        termStructure.linkTo(FlatForward(today, 0.02, Actual365Fixed()))
+        index = Euribor3M(termStructure)
+
+        def makeBermudanSwaption(callDate):
+            effectiveDate = Date(15, May, 2025)
+            swap = MakeVanillaSwap(Period(10, Years), index, 0.05)
+            swap.withEffectiveDate(effectiveDate)
+            swap.withNominal(10000.00)
+            swap.withType(Swap.Payer)
+            swap = swap.makeVanillaSwap()
+
+            bermudanExercise = BermudanExercise([effectiveDate, callDate])
+            bermudanSwaption = Swaption(swap, bermudanExercise)
+
+            return bermudanSwaption
+
+        intervalOfDaysToTest = 10
+
+        for i in range(-intervalOfDaysToTest, intervalOfDaysToTest + 1):
+            initialCallDate = Date(15, May, 2030)
+            calendar = index.fixingCalendar()
+
+            callDate = initialCallDate + Period(i, Days)
+            if calendar.isBusinessDay(callDate):
+                bermudanSwaption = makeBermudanSwaption(callDate)
+
+                model = HullWhite(termStructure)
+
+                bermudanSwaption.setPricingEngine(FdHullWhiteSwaptionEngine(model))
+                npvFD = bermudanSwaption.NPV()
+
+                timesteps = 14 * 4 * 4
+
+                bermudanSwaption.setPricingEngine(
+                    TreeSwaptionEngine(model, timesteps))
+                npvTree = bermudanSwaption.NPV()
+
+                npvDiff = npvTree - npvFD
+
+                tolerance = 1.0
+                self.assertFalse(abs(npvTree - npvFD) > tolerance)

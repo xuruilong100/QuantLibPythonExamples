@@ -21,22 +21,34 @@ class HestonExpansion {
 class LPP2HestonExpansion : public HestonExpansion {
   public:
     LPP2HestonExpansion(
-        Real kappa, Real theta, Real sigma,
-        Real v0, Real rho, Real term);
+        Real kappa, 
+        Real theta, 
+        Real sigma,
+        Real v0, 
+        Real rho, 
+        Real term);
 };
 
 class LPP3HestonExpansion : public HestonExpansion{
   public:
     LPP3HestonExpansion(
-        Real kappa, Real theta, Real sigma,
-        Real v0, Real rho, Real term);
+        Real kappa, 
+        Real theta, 
+        Real sigma,
+        Real v0, 
+        Real rho, 
+        Real term);
 };
 
 class FordeHestonExpansion : public HestonExpansion {
   public:
     FordeHestonExpansion(
-        Real kappa, Real theta, Real sigma,
-        Real v0, Real rho, Real term);
+        Real kappa, 
+        Real theta, 
+        Real sigma,
+        Real v0, 
+        Real rho, 
+        Real term);
 };
 
 #endif

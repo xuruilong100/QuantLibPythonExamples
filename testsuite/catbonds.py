@@ -1,12 +1,14 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 data = [
     (Date(1, February, 2012), 100),
     (Date(1, July, 2013), 150),
     (Date(5, January, 2014), 50)]
-sampleEvents = data  # std.vector<>(data, data + 3))
+sampleEvents = data
 
 eventsStart = Date(1, January, 2011)
 eventsEnd = Date(31, December, 2014)
@@ -14,10 +16,9 @@ eventsEnd = Date(31, December, 2014)
 
 class CommonVars(object):
 
-    # setup
     def __init__(self):
         self.calendar = TARGET()
-        self.today = self.calendar.adjust(Date.todaysDate())
+        self.today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = self.today
         self.faceAmount = 1000000.0
         self.backup = SavedSettings()
@@ -66,7 +67,8 @@ class CatBondTest(unittest.TestCase):
         self.assertTrue(not rst[0])
 
     def testEventSetForIrregularPeriods(self):
-        TEST_MESSAGE("Testing that catastrophe events are split correctly for irregular periods...")
+        TEST_MESSAGE(
+            "Testing that catastrophe events are split correctly for irregular periods...")
 
         catRisk = EventSet(sampleEvents, eventsStart, eventsEnd)
         simulation = catRisk.newSimulation(
@@ -94,7 +96,8 @@ class CatBondTest(unittest.TestCase):
         self.assertTrue(not rst[0])
 
     def testEventSetForNoEvents(self):
-        TEST_MESSAGE("Testing that catastrophe events are split correctly when there are no simulated events...")
+        TEST_MESSAGE(
+            "Testing that catastrophe events are split correctly when there are no simulated events...")
 
         emptyEvents = []
         catRisk = EventSet(emptyEvents, eventsStart, eventsEnd)
@@ -119,7 +122,8 @@ class CatBondTest(unittest.TestCase):
         self.assertTrue(not rst[0])
 
     def testBetaRisk(self):
-        TEST_MESSAGE("Testing that beta risk gives correct terminal distribution...")
+        TEST_MESSAGE(
+            "Testing that beta risk gives correct terminal distribution...")
 
         PATHS = 1000000
         catRisk = BetaRisk(100.0, 100.0, 10.0, 15.0)
@@ -145,37 +149,29 @@ class CatBondTest(unittest.TestCase):
             poissonSumSquares += len(path) * len(path)
 
         poissonMean = poissonSum / PATHS
-        # BOOST_CHECK_CLOSE(3.0 / 100.0, poissonMean, 2)
         self.assertFalse(
             abs(3.0 / 100.0 - poissonMean) /
             min(abs(3.0 / 100.0), abs(poissonMean)) > 2 / 100.0)
         poissonVar = poissonSumSquares / PATHS - poissonMean * poissonMean
-        # BOOST_CHECK_CLOSE(3.0 / 100.0, poissonVar, 5)
         self.assertFalse(
             abs(3.0 / 100.0 - poissonVar) /
             min(abs(3.0 / 100.0), abs(poissonVar)) > 5 / 100.0)
 
         expectedMean = 3.0 * 10.0 / 100.0
         actualMean = sum / PATHS
-        # BOOST_CHECK_CLOSE(expectedMean, actualMean, 1)
         self.assertFalse(
             abs(expectedMean - actualMean) / min(
                 abs(expectedMean), abs(actualMean)) > 1 / 100.0)
 
         expectedVar = 3.0 * (15.0 * 15.0 + 10 * 10) / 100.0
         actualVar = sumSquares / PATHS - actualMean * actualMean
-        # if BOOST_VERSION > 106300
-        # changes in Boost.Random after 1.64 increased numerical error
-        # BOOST_CHECK_CLOSE(expectedVar, actualVar, 1.5)
         self.assertFalse(
             abs(expectedVar - actualVar) / min(
-                abs(expectedVar), abs(actualVar)) > 1.5 / 100.0)
-        # else
-        # BOOST_CHECK_CLOSE(expectedVar, actualVar, 1)
+                abs(expectedVar), abs(actualVar)) > 1 / 100.0)
 
-    # endif
     def testRiskFreeAgainstFloatingRateBond(self):
-        TEST_MESSAGE("Testing floating-rate cat bond against risk-free floating-rate bond...")
+        TEST_MESSAGE(
+            "Testing floating-rate cat bond against risk-free floating-rate bond...")
 
         usingAtParCoupons = IborCouponSettings.instance().usingAtParCoupons()
 
@@ -196,8 +192,6 @@ class CatBondTest(unittest.TestCase):
 
         pricer = BlackIborCouponPricer(
             OptionletVolatilityStructureHandle())
-
-        # plain
 
         sch = Schedule(
             Date(30, November, 2004),
@@ -247,8 +241,6 @@ class CatBondTest(unittest.TestCase):
         self.assertFalse(
             abs(price - cachedPrice1) > tolerance or abs(catPrice - price) > tolerance)
 
-        # different risk-free and discount curve
-
         bond2 = FloatingRateBond(
             settlementDays, vars.faceAmount, sch,
             index, ActualActual(ActualActual.ISMA),
@@ -281,8 +273,6 @@ class CatBondTest(unittest.TestCase):
         price = bond2.cleanPrice()
         catPrice = catBond2.cleanPrice()
         self.assertFalse(abs(price - cachedPrice2) > tolerance or abs(catPrice - price) > tolerance)
-
-        # varying spread
 
         spreads = DoubleVector(4)
         spreads[0] = 0.001
@@ -322,7 +312,8 @@ class CatBondTest(unittest.TestCase):
         self.assertFalse(abs(price - cachedPrice3) > tolerance or abs(catPrice - price) > tolerance)
 
     def testCatBondInDoomScenario(self):
-        TEST_MESSAGE("Testing floating-rate cat bond in a doom scenario (certain default)...")
+        TEST_MESSAGE(
+            "Testing floating-rate cat bond in a doom scenario (certain default)...")
 
         vars = CommonVars()
 
@@ -379,9 +370,6 @@ class CatBondTest(unittest.TestCase):
         exhaustionProbability = catBond.exhaustionProbability()
         expectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(1.0, lossProbability, tolerance)
-        # BOOST_CHECK_CLOSE(1.0, exhaustionProbability, tolerance)
-        # BOOST_CHECK_CLOSE(1.0, expectedLoss, tolerance)
         self.assertFalse(
             abs(1.0 - lossProbability) / min(
                 abs(1.0), abs(lossProbability)) > tolerance / 100.0)
@@ -393,7 +381,8 @@ class CatBondTest(unittest.TestCase):
                 abs(1.0), abs(expectedLoss)) > tolerance / 100.0)
 
     def testCatBondWithDoomOnceInTenYears(self):
-        TEST_MESSAGE("Testing floating-rate cat bond in a doom once in 10 years scenario...")
+        TEST_MESSAGE(
+            "Testing floating-rate cat bond in a doom once in 10 years scenario...")
 
         vars = CommonVars()
 
@@ -453,9 +442,6 @@ class CatBondTest(unittest.TestCase):
         exhaustionProbability = catBond.exhaustionProbability()
         expectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(0.1, lossProbability, tolerance)
-        # BOOST_CHECK_CLOSE(0.1, exhaustionProbability, tolerance)
-        # BOOST_CHECK_CLOSE(0.1, expectedLoss, tolerance)
         self.assertFalse(
             abs(0.1 - lossProbability) / min(
                 abs(0.1), abs(lossProbability)) > tolerance / 100.0)
@@ -476,22 +462,20 @@ class CatBondTest(unittest.TestCase):
         riskFreeExhaustionProbability = catBond.exhaustionProbability()
         riskFreeExpectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(0.0, riskFreeLossProbability, tolerance)
-        # BOOST_CHECK_CLOSE(0.0, riskFreeExhaustionProbability, tolerance)
         self.assertFalse(
             abs(0.0 - riskFreeLossProbability) > tolerance / 100.0)
         self.assertFalse(
             abs(0.0 - riskFreeExhaustionProbability) > tolerance / 100.0)
         self.assertTrue(abs(riskFreeExpectedLoss) < tolerance)
 
-        # BOOST_CHECK_CLOSE(riskFreePrice * 0.9, price, tolerance)
         self.assertFalse(
             abs(riskFreePrice * 0.9 - price) / min(
                 abs(riskFreePrice * 0.9), abs(price)) > tolerance / 100.0)
         self.assertLess(riskFreeYield, bondYield)
 
     def testCatBondWithDoomOnceInTenYearsProportional(self):
-        TEST_MESSAGE("Testing floating-rate cat bond in a doom once in 10 years scenario with proportional notional reduction...")
+        TEST_MESSAGE(
+            "Testing floating-rate cat bond in a doom once in 10 years scenario with proportional notional reduction...")
 
         vars = CommonVars()
 
@@ -549,9 +533,6 @@ class CatBondTest(unittest.TestCase):
         exhaustionProbability = catBond.exhaustionProbability()
         expectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(0.1, lossProbability, tolerance)
-        # BOOST_CHECK_CLOSE(0.0, exhaustionProbability, tolerance)
-        # BOOST_CHECK_CLOSE(0.05, expectedLoss, tolerance)
         self.assertFalse(
             abs(0.1 - lossProbability) / min(
                 abs(0.1), abs(lossProbability)) > tolerance / 100.0)
@@ -569,19 +550,18 @@ class CatBondTest(unittest.TestCase):
         riskFreeLossProbability = catBond.lossProbability()
         riskFreeExpectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(0.0, riskFreeLossProbability, tolerance)
         self.assertFalse(
             abs(0.0 - riskFreeLossProbability) > tolerance / 100.0)
         self.assertTrue(abs(riskFreeExpectedLoss) < tolerance / 100.0)
 
-        # BOOST_CHECK_CLOSE(riskFreePrice * 0.95, price, tolerance)
         self.assertFalse(
             abs(riskFreePrice * 0.95 - price) / min(
                 abs(riskFreePrice * 0.95), abs(price)) > tolerance / 100.0)
         self.assertLess(riskFreeYield, bondYield)
 
     def testCatBondWithGeneratedEventsProportional(self):
-        TEST_MESSAGE("Testing floating-rate cat bond in a generated scenario with proportional notional reduction...")
+        TEST_MESSAGE(
+            "Testing floating-rate cat bond in a generated scenario with proportional notional reduction...")
 
         vars = CommonVars()
 
@@ -650,7 +630,6 @@ class CatBondTest(unittest.TestCase):
         riskFreeLossProbability = catBond.lossProbability()
         riskFreeExpectedLoss = catBond.expectedLoss()
 
-        # BOOST_CHECK_CLOSE(0.0, riskFreeLossProbability, tolerance)
         self.assertFalse(
             abs(0.0 - riskFreeLossProbability) > tolerance / 100.0)
         self.assertTrue(abs(riskFreeExpectedLoss) < tolerance)

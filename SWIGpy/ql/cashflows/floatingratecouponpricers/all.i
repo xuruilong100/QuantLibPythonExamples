@@ -37,6 +37,8 @@ using QuantLib::LognormalCmsSpreadPricer;
 using QuantLib::BlackIborCouponPricer;
 using QuantLib::CompoundingRatePricer;
 using QuantLib::AveragingRatePricer;
+using QuantLib::RangeAccrualPricer;
+using QuantLib::RangeAccrualPricerByBgm;
 %}
 
 class GFunctionFactory {
@@ -104,20 +106,22 @@ class IborCouponPricer : public FloatingRateCouponPricer {
 %shared_ptr(AnalyticHaganPricer)
 class AnalyticHaganPricer : public CmsCouponPricer {
   public:
-    AnalyticHaganPricer(const Handle<SwaptionVolatilityStructure>& v,
-                        GFunctionFactory::YieldCurveModel model,
-                        const Handle<Quote>& meanReversion);
+    AnalyticHaganPricer(
+        const Handle<SwaptionVolatilityStructure>& v,
+        GFunctionFactory::YieldCurveModel model,
+        const Handle<Quote>& meanReversion);
 };
 
 %shared_ptr(NumericHaganPricer)
 class NumericHaganPricer : public CmsCouponPricer {
   public:
-    NumericHaganPricer(const Handle<SwaptionVolatilityStructure>& v,
-                       GFunctionFactory::YieldCurveModel model,
-                       const Handle<Quote>& meanReversion,
-                       Rate lowerLimit = 0.0,
-                       Rate upperLimit = 1.0,
-                       Real precision = 1.0e-6);
+    NumericHaganPricer(
+        const Handle<SwaptionVolatilityStructure>& v,
+        GFunctionFactory::YieldCurveModel model,
+        const Handle<Quote>& meanReversion,
+        Rate lowerLimit = 0.0,
+        Rate upperLimit = 1.0,
+        Real precision = 1.0e-6);
 };
 
 %rename (LinearTsrPricerSettings) LinearTsrPricer::Settings;
@@ -166,7 +170,8 @@ class LognormalCmsSpreadPricer : public CmsSpreadCouponPricer {
         const Handle<YieldTermStructure>& couponDiscountCurve = Handle<YieldTermStructure>(),
         const Size IntegrationPoints = 16,
         const boost::optional<VolatilityType> volatilityType = boost::none,
-        const Real shift1 = Null<Real>(), const Real shift2 = Null<Real>());
+        const Real shift1 = Null<Real>(), 
+        const Real shift2 = Null<Real>());
     Real swapletPrice() const;
     Rate swapletRate() const;
     Real capletPrice(Rate effectiveCap) const;
@@ -199,6 +204,21 @@ class AveragingRatePricer: public SubPeriodsPricer {
   public:
     AveragingRatePricer();
     Rate swapletRate() const;
+};
+
+%shared_ptr(RangeAccrualPricer)
+class RangeAccrualPricer: public FloatingRateCouponPricer {
+};
+
+%shared_ptr(RangeAccrualPricerByBgm)
+class RangeAccrualPricerByBgm : public RangeAccrualPricer {
+  public:
+   RangeAccrualPricerByBgm(
+      Real correlation,
+      ext::shared_ptr<SmileSection> smilesOnExpiry,
+      ext::shared_ptr<SmileSection> smilesOnPayment,
+      bool withSmile,
+      bool byCallSpread);
 };
 
 #endif

@@ -9,7 +9,9 @@
 %{
 class SafeInterpolation : public Interpolation {
   public:
-    SafeInterpolation(const Array& x, const Array& y) : x_(x), y_(y) {}
+    SafeInterpolation(
+        const Array& x, 
+        const Array& y) : x_(x), y_(y) {}
     ~SafeInterpolation() override = default;
 
     void enableExtrapolation(bool b = true) {

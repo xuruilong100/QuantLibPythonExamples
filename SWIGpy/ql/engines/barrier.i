@@ -115,7 +115,9 @@ class FdBlackScholesRebateEngine : public PricingEngine {
   public:
     FdBlackScholesRebateEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
-        Size tGrid = 100, Size xGrid = 100, Size dampingSteps = 0,
+        Size tGrid = 100,
+        Size xGrid = 100, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas(),
         bool localVol = false,
         Real illegalLocalVolOverwrite = -Null<Real>());
@@ -126,7 +128,10 @@ class FdHestonBarrierEngine : public PricingEngine {
   public:
     FdHestonBarrierEngine(
         const ext::shared_ptr<HestonModel>& model,
-        Size tGrid = 100, Size xGrid = 100, Size vGrid = 50, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100, 
+        Size vGrid = 50, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         const Real mixingFactor = 1.0);
@@ -137,7 +142,10 @@ class FdHestonRebateEngine : public PricingEngine {
   public:
     FdHestonRebateEngine(
         const ext::shared_ptr<HestonModel>& model,
-        Size tGrid = 100, Size xGrid = 100, Size vGrid = 50, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100, 
+        Size vGrid = 50, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         const ext::shared_ptr<LocalVolTermStructure>& leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         const Real mixingFactor = 1.0);
@@ -186,20 +194,20 @@ class BinomialBarrierEngine : public PricingEngine {
         Size max_steps = 0);
 };
 
-%template(BinomialCRRBarrierEngine) BinomialBarrierEngine<CoxRossRubinstein, DiscretizedBarrierOption>;
-%template(BinomialJRBarrierEngine) BinomialBarrierEngine<JarrowRudd, DiscretizedBarrierOption>;
-%template(BinomialEQPBarrierEngine) BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedBarrierOption>;
-%template(BinomialTrigeorgisBarrierEngine) BinomialBarrierEngine<Trigeorgis, DiscretizedBarrierOption>;
-%template(BinomialTianBarrierEngine) BinomialBarrierEngine<Tian, DiscretizedBarrierOption>;
-%template(BinomialLRBarrierEngine) BinomialBarrierEngine<LeisenReimer, DiscretizedBarrierOption>;
-%template(BinomialJ4BarrierEngine) BinomialBarrierEngine<Joshi4, DiscretizedBarrierOption>;
-%template(BinomialCRRDKBarrierEngine) BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialJRDKBarrierEngine) BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialEQPDKBarrierEngine) BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialTrigeorgisDKBarrierEngine) BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialTianDKBarrierEngine) BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialLRDKBarrierEngine) BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>;
-%template(BinomialJ4DKBarrierEngine) BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialCRRBarrierEngine)           BinomialBarrierEngine<CoxRossRubinstein, DiscretizedBarrierOption>;
+%template(BinomialJRBarrierEngine)            BinomialBarrierEngine<JarrowRudd, DiscretizedBarrierOption>;
+%template(BinomialEQPBarrierEngine)           BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedBarrierOption>;
+%template(BinomialTrigeorgisBarrierEngine)    BinomialBarrierEngine<Trigeorgis, DiscretizedBarrierOption>;
+%template(BinomialTianBarrierEngine)          BinomialBarrierEngine<Tian, DiscretizedBarrierOption>;
+%template(BinomialLRBarrierEngine)            BinomialBarrierEngine<LeisenReimer, DiscretizedBarrierOption>;
+%template(BinomialJ4BarrierEngine)            BinomialBarrierEngine<Joshi4, DiscretizedBarrierOption>;
+%template(BinomialCRRDKBarrierEngine)         BinomialBarrierEngine<CoxRossRubinstein, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialJRDKBarrierEngine)          BinomialBarrierEngine<JarrowRudd, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialEQPDKBarrierEngine)         BinomialBarrierEngine<AdditiveEQPBinomialTree, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialTrigeorgisDKBarrierEngine)  BinomialBarrierEngine<Trigeorgis, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialTianDKBarrierEngine)        BinomialBarrierEngine<Tian, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialLRDKBarrierEngine)          BinomialBarrierEngine<LeisenReimer, DiscretizedDermanKaniBarrierOption>;
+%template(BinomialJ4DKBarrierEngine)          BinomialBarrierEngine<Joshi4, DiscretizedDermanKaniBarrierOption>;
 
 %shared_ptr(VannaVolgaBarrierEngine)
 class VannaVolgaBarrierEngine : public PricingEngine {
@@ -231,8 +239,10 @@ class FdHestonDoubleBarrierEngine : public PricingEngine {
   public:
     FdHestonDoubleBarrierEngine(
         const ext::shared_ptr<HestonModel>& model,
-        Size tGrid = 100, Size xGrid = 100,
-        Size vGrid = 50, Size dampingSteps = 0,
+        Size tGrid = 100, 
+        Size xGrid = 100,
+        Size vGrid = 50, 
+        Size dampingSteps = 0,
         const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer(),
         ext::shared_ptr<LocalVolTermStructure> leverageFct = ext::shared_ptr<LocalVolTermStructure>(),
         Real mixingFactor = 1.0);
@@ -333,7 +343,7 @@ class BinomialDoubleBarrierEngine : public PricingEngine {
 %shared_ptr(PerturbativeBarrierOptionEngine)
 class PerturbativeBarrierOptionEngine : public PricingEngine {
   public:
-    explicit PerturbativeBarrierOptionEngine(
+    PerturbativeBarrierOptionEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process,
         Natural order = 1,
         bool zeroGamma = false);
@@ -364,8 +374,8 @@ class MCDoubleBarrierEngine : public PricingEngine {
 template <class RNG>
 class MakeMCDoubleBarrierEngine {
   public:
-    explicit MakeMCDoubleBarrierEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
-    // named parameters
+    MakeMCDoubleBarrierEngine(ext::shared_ptr<GeneralizedBlackScholesProcess>);
+
     MakeMCDoubleBarrierEngine& withSteps(Size steps);
     MakeMCDoubleBarrierEngine& withStepsPerYear(Size steps);
     MakeMCDoubleBarrierEngine& withBrownianBridge(bool b = true);
@@ -374,7 +384,7 @@ class MakeMCDoubleBarrierEngine {
     MakeMCDoubleBarrierEngine& withAbsoluteTolerance(Real tolerance);
     MakeMCDoubleBarrierEngine& withMaxSamples(Size samples);
     MakeMCDoubleBarrierEngine& withSeed(BigNatural seed);
-    // conversion to pricing engine
+    
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
             return (ext::shared_ptr<PricingEngine>)(*self);
@@ -388,7 +398,7 @@ class MakeMCDoubleBarrierEngine {
 %shared_ptr(AnalyticPartialTimeBarrierOptionEngine)
 class AnalyticPartialTimeBarrierOptionEngine : public PricingEngine {
   public:
-    explicit AnalyticPartialTimeBarrierOptionEngine(
+    AnalyticPartialTimeBarrierOptionEngine(
         ext::shared_ptr<GeneralizedBlackScholesProcess> process);
 };
 

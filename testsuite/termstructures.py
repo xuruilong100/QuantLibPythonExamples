@@ -1,6 +1,8 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class Datum(object):
@@ -14,12 +16,11 @@ class Datum(object):
 
 
 class CommonVars(object):
-
     def __init__(self):
         self.backup = SavedSettings()
         self.calendar = TARGET()
         self.settlementDays = 2
-        today = self.calendar.adjust(Date.todaysDate())
+        today = self.calendar.adjust(knownGoodDefault)
         Settings.instance().evaluationDate = today
         settlement = self.calendar.advance(today, self.settlementDays, Days)
         depositData = [
@@ -77,7 +78,8 @@ def sub(x, y):
 class TermStructureTest(unittest.TestCase):
 
     def testReferenceChange(self):
-        TEST_MESSAGE("Testing term structure against evaluation date change...")
+        TEST_MESSAGE(
+            "Testing term structure against evaluation date change...")
 
         vars = CommonVars()
 
@@ -103,13 +105,14 @@ class TermStructureTest(unittest.TestCase):
             self.assertFalse(not close(expected[i], calculated[i]))
 
     def testImplied(self):
-        TEST_MESSAGE("Testing consistency of implied term structure...")
+        TEST_MESSAGE(
+            "Testing consistency of implied term structure...")
 
         vars = CommonVars()
 
         tolerance = 1.0e-10
         today = Settings.instance().evaluationDate
-        newToday = today + 3 * Years
+        newToday = today + Period(3, Years)
         newSettlement = vars.calendar.advance(
             newToday, vars.settlementDays, Days)
         testDate = newSettlement + Period(5, Years)
@@ -123,12 +126,13 @@ class TermStructureTest(unittest.TestCase):
             abs(discount - baseDiscount * impliedDiscount) > tolerance)
 
     def testImpliedObs(self):
-        TEST_MESSAGE("Testing observability of implied term structure...")
+        TEST_MESSAGE(
+            "Testing observability of implied term structure...")
 
         vars = CommonVars()
 
         today = Settings.instance().evaluationDate
-        newToday = today + 3 * Years
+        newToday = today + Period(3, Years)
         newSettlement = vars.calendar.advance(
             newToday, vars.settlementDays, Days)
         h = RelinkableYieldTermStructureHandle()
@@ -139,7 +143,8 @@ class TermStructureTest(unittest.TestCase):
         self.assertFalse(not flag.isUp())
 
     def testFSpreaded(self):
-        TEST_MESSAGE("Testing consistency of forward-spreaded term structure...")
+        TEST_MESSAGE(
+            "Testing consistency of forward-spreaded term structure...")
 
         vars = CommonVars()
 
@@ -159,14 +164,15 @@ class TermStructureTest(unittest.TestCase):
             abs(forward.rate() - (spreadedForward.rate() - me.value())) > tolerance)
 
     def testFSpreadedObs(self):
-        TEST_MESSAGE("Testing observability of forward-spreaded "
-                     "term structure...")
+        TEST_MESSAGE(
+            "Testing observability of forward-spreaded "
+            "term structure...")
 
         vars = CommonVars()
 
         me = SimpleQuote(0.01)
         mh = QuoteHandle(me)
-        h = RelinkableYieldTermStructureHandle()  # (vars.dummyTermStructure)
+        h = RelinkableYieldTermStructureHandle()
         spreaded = ForwardSpreadedTermStructure(h, mh)
         flag = Flag()
         flag.registerWith(spreaded)
@@ -177,7 +183,8 @@ class TermStructureTest(unittest.TestCase):
         self.assertFalse(not flag.isUp())
 
     def testZSpreaded(self):
-        TEST_MESSAGE("Testing consistency of zero-spreaded term structure...")
+        TEST_MESSAGE(
+            "Testing consistency of zero-spreaded term structure...")
 
         vars = CommonVars()
 
@@ -198,7 +205,8 @@ class TermStructureTest(unittest.TestCase):
             abs(zero.rate() - (spreadedZero.rate() - me.value())) > tolerance)
 
     def testZSpreadedObs(self):
-        TEST_MESSAGE("Testing observability of zero-spreaded term structure...")
+        TEST_MESSAGE(
+            "Testing observability of zero-spreaded term structure...")
 
         vars = CommonVars()
 
@@ -224,14 +232,14 @@ class TermStructureTest(unittest.TestCase):
 
         spread = QuoteHandle(SimpleQuote(0.01))
         underlying = RelinkableYieldTermStructureHandle()
-        # this shouldn't throw
+
         spreaded = ZeroSpreadedTermStructure(underlying, spread)
-        # if we do this, the curve can work.
+
         underlying.linkTo(vars.termStructure)
-        # check that we can use it
+
         spreaded.referenceDate()
 
-    @unittest.skip('YieldTermStructure: No constructor defined')
+    @unittest.skip("testLinkToNullUnderlying: No constructor defined")
     def testLinkToNullUnderlying(self):
         TEST_MESSAGE(
             "Testing that an underlying curve can be relinked to "
@@ -242,10 +250,9 @@ class TermStructureTest(unittest.TestCase):
         spread = QuoteHandle(SimpleQuote(0.01))
         underlying = RelinkableYieldTermStructureHandle(vars.termStructure)
         spreaded = ZeroSpreadedTermStructure(underlying, spread)
-        # check that we can use it
+
         spreaded.referenceDate()
-        # if we do this, the curve can't work anymore. But it shouldn't
-        # throw as long as we don't try to use it.
+
         underlying.linkTo(YieldTermStructure())
 
     def testCompositeZeroYieldStructures(self):
@@ -255,7 +262,6 @@ class TermStructureTest(unittest.TestCase):
         backup = SavedSettings()
         Settings.instance().evaluationDate = Date(10, Nov, 2017)
 
-        # First curve
         dates = [
             Date(10, Nov, 2017), Date(13, Nov, 2017), Date(12, Feb, 2018),
             Date(10, May, 2018), Date(10, Aug, 2018), Date(12, Nov, 2018),
@@ -274,7 +280,6 @@ class TermStructureTest(unittest.TestCase):
 
         termStructure1 = ForwardCurve(dates, rates, Actual365Fixed(), NullCalendar())
 
-        # Second curve
         dates = [
             Date(10, Nov, 2017), Date(13, Nov, 2017), Date(11, Dec, 2017), Date(12, Feb, 2018),
             Date(10, May, 2018), Date(31, Jan, 2022), Date(7, Dec, 2023), Date(31, Jan, 2025),
@@ -289,14 +294,11 @@ class TermStructureTest(unittest.TestCase):
 
         termStructure2 = ForwardCurve(dates, rates, Actual365Fixed(), NullCalendar())
 
-        # typedef Real(*binary_f)(Real, Real)
-
         compoundCurve = CompositeBFZeroYieldStructure(
             YieldTermStructureHandle(termStructure1),
             YieldTermStructureHandle(termStructure2),
             sub)
 
-        # Expected values
         dates = [
             Date(10, Nov, 2017), Date(15, Dec, 2017), Date(15, Jun, 2018), Date(15, Sep, 2029),
             Date(15, Sep, 2038), Date(15, Mar, 2046), Date(15, Dec, 2141)]

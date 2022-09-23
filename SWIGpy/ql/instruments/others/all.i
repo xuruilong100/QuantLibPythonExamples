@@ -5,19 +5,20 @@
 %include ../ql/common.i
 %include ../ql/alltypes.i
 %include ../ql/base.i
+%include ../ql/indexes/all.i
 
 %{
-using QuantLib::Claim;
+using QuantLib::CPICapFloor;
 using QuantLib::FaceValueClaim;
 using QuantLib::FaceValueAccrualClaim;
 using QuantLib::CompositeInstrument;
 using QuantLib::CreditDefaultSwap;
-using QuantLib::ForwardRateAgreement;
 using QuantLib::Stock;
 using QuantLib::cdsMaturity;
 using QuantLib::VarianceOption;
 using QuantLib::VarianceSwap;
 using QuantLib::MakeCreditDefaultSwap;
+using QuantLib::Claim;
 %}
 
 %shared_ptr(Claim)
@@ -133,7 +134,6 @@ class CreditDefaultSwap : public Instrument {
     Protection::Side side() const;
     Real notional() const;
     Rate runningSpread() const;
-    // boost::optional<Rate> upfront() const;
     %extend {
         Real upfront() const {
             boost::optional<Rate> result = self->upfront();
@@ -175,42 +175,17 @@ class CreditDefaultSwap : public Instrument {
         PricingModel model = Midpoint) const;
 };
 
-%shared_ptr(ForwardRateAgreement)
-class ForwardRateAgreement : public Instrument {
-  public:
-    ForwardRateAgreement(
-        const Date& valueDate,
-        const Date& maturityDate,
-        Position::Type type,
-        Rate strikeForwardRate,
-        Real notionalAmount,
-        const ext::shared_ptr<IborIndex>& index,
-        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
-        bool useIndexedCoupon = true);
-    ForwardRateAgreement(
-        const Date& valueDate,
-        Position::Type type,
-        Rate strikeForwardRate,
-        Real notionalAmount,
-        const ext::shared_ptr<IborIndex>& index,
-        Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>());
-
-    Real amount() const;
-    const Calendar& calendar() const;
-    BusinessDayConvention businessDayConvention() const;
-    const DayCounter& dayCounter() const;
-    Handle<YieldTermStructure> discountCurve() const;
-    Date fixingDate() const;
-    InterestRate forwardRate() const;
-};
-
 Date cdsMaturity(
     const Date& tradeDate, const Period& tenor, DateGeneration::Rule rule);
 
 class MakeCreditDefaultSwap {
   public:
-    MakeCreditDefaultSwap(const Period& tenor, Real couponRate);
-    MakeCreditDefaultSwap(const Date& termDate, Real couponRate);
+    MakeCreditDefaultSwap(
+        const Period& tenor, 
+        Real couponRate);
+    MakeCreditDefaultSwap(
+        const Date& termDate,
+        Real couponRate);
 
     MakeCreditDefaultSwap& withUpfrontRate(Real);
     MakeCreditDefaultSwap& withSide(Protection::Side);
@@ -264,6 +239,32 @@ class VarianceSwap : public Instrument {
     Date maturityDate() const;
     Real notional() const;
     Real variance() const;
+};
+
+%shared_ptr(CPICapFloor)
+class CPICapFloor : public Instrument {
+  public:
+    CPICapFloor(
+        Option::Type type,
+        Real nominal,
+        const Date& startDate,
+        Real baseCPI,
+        const Date& maturity,
+        Calendar fixCalendar,
+        BusinessDayConvention fixConvention,
+        Calendar payCalendar,
+        BusinessDayConvention payConvention,
+        Rate strike,
+        Handle<ZeroInflationIndex> infIndex,
+        const Period& observationLag,
+        CPI::InterpolationType observationInterpolation = CPI::AsIndex);
+    Option::Type type() const;
+    Real nominal() const;
+    Rate strike() const;
+    Date fixingDate() const;
+    Date payDate() const;
+    Handle<ZeroInflationIndex> inflationIndex() const;
+    Period observationLag() const;
 };
 
 #endif

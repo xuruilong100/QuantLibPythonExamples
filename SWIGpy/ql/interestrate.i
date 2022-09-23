@@ -12,10 +12,11 @@ using QuantLib::InterestRate;
 class InterestRate {
   public:
     InterestRate();
-    InterestRate(Rate r,
-                 const DayCounter& dc,
-                 Compounding comp,
-                 Frequency freq);
+    InterestRate(
+        Rate r,
+        const DayCounter& dc,
+        Compounding comp,
+        Frequency freq);
     Rate rate() const;
     DayCounter dayCounter() const;
     Compounding compounding() const;

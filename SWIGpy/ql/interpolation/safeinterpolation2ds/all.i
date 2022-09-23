@@ -10,7 +10,9 @@
 class SafeBackwardflatLinearInterpolation : public SafeInterpolation2D {
   public:
     SafeBackwardflatLinearInterpolation(
-        const Array& x, const Array& y, const Matrix& z) :
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z) :
         SafeInterpolation2D(x, y, z) {
         i_ = ext::shared_ptr<Interpolation2D>(
             new BackwardflatLinearInterpolation(
@@ -21,7 +23,9 @@ class SafeBackwardflatLinearInterpolation : public SafeInterpolation2D {
 class SafeBicubicSpline : public SafeInterpolation2D {
   public:
     SafeBicubicSpline(
-        const Array& x, const Array& y, const Matrix& z) :
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z) :
         SafeInterpolation2D(x, y, z) {
         i_ = ext::shared_ptr<Interpolation2D>(
             new BicubicSpline(
@@ -38,7 +42,9 @@ class SafeBicubicSpline : public SafeInterpolation2D {
 class SafeBilinearInterpolation : public SafeInterpolation2D {
   public:
     SafeBilinearInterpolation(
-        const Array& x, const Array& y, const Matrix& z) :
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z) :
         SafeInterpolation2D(x, y, z) {
         i_ = ext::shared_ptr<Interpolation2D>(
             new BilinearInterpolation(
@@ -49,7 +55,9 @@ class SafeBilinearInterpolation : public SafeInterpolation2D {
 class SafePolynomial2DSpline : public SafeInterpolation2D {
   public:
     SafePolynomial2DSpline(
-        const Array& x, const Array& y, const Matrix& z) :
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z) :
         SafeInterpolation2D(x, y, z) {
         i_ = ext::shared_ptr<Interpolation2D>(
             new Polynomial2DSpline(
@@ -90,14 +98,18 @@ class SafeKernelInterpolation2D : public SafeInterpolation2D{
 class SafeBackwardflatLinearInterpolation : public SafeInterpolation2D {
   public:
     SafeBackwardflatLinearInterpolation(
-        const Array& x, const Array& y, const Matrix& z);
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z);
 };
 
 %shared_ptr(SafeBicubicSpline)
 class SafeBicubicSpline : public SafeInterpolation2D {
   public:
     SafeBicubicSpline(
-        const Array& x, const Array& y, const Matrix& z);
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z);
 
     Real derivativeX(Real x, Real y) const;
     Real derivativeY(Real x, Real y) const;
@@ -110,14 +122,18 @@ class SafeBicubicSpline : public SafeInterpolation2D {
 class SafeBilinearInterpolation : public SafeInterpolation2D {
   public:
     SafeBilinearInterpolation(
-        const Array& x, const Array& y, const Matrix& z);
+        const Array& x, 
+        const Array& y,
+        const Matrix& z);
 };
 
 %shared_ptr(SafePolynomial2DSpline)
 class SafePolynomial2DSpline : public SafeInterpolation2D {
   public:
     SafePolynomial2DSpline(
-        const Array& x, const Array& y, const Matrix& z);
+        const Array& x, 
+        const Array& y, 
+        const Matrix& z);
 };
 
 %shared_ptr(SafeKernelInterpolation2D)

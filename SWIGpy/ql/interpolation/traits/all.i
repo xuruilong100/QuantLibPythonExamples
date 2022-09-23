@@ -54,7 +54,7 @@ class BackwardFlat {
 
 class ConvexMonotone {
   public:
-    explicit ConvexMonotone(
+    ConvexMonotone(
         Real quadraticity = 0.3,
         Real monotonicity = 0.7,
         bool forcePositive = true);
@@ -73,12 +73,13 @@ class ConvexMonotone {
 
 class Cubic {
   public:
-    Cubic(CubicInterpolation::DerivativeApprox da = CubicInterpolation::Kruger,
-          bool monotonic = false,
-          CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
-          Real leftConditionValue = 0.0,
-          CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
-          Real rightConditionValue = 0.0);
+    Cubic(
+        CubicInterpolation::DerivativeApprox da = CubicInterpolation::Kruger,
+        bool monotonic = false,
+        CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
+        Real leftConditionValue = 0.0,
+        CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
+        Real rightConditionValue = 0.0);
 
     %extend {
         Interpolation interpolate(

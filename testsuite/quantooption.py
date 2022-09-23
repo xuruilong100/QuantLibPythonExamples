@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, log
+
+from QuantLib import *
+
+from utilities import *
 
 
 class QuantoOptionData(object):
@@ -20,16 +22,16 @@ class QuantoOptionData(object):
                  tol, ):
         self.typeOpt = typeOpt
         self.strike = strike
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.fxr = fxr  # fx risk-free rate
-        self.fxv = fxv  # fx volatility
-        self.corr = corr  # correlation
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.fxr = fxr
+        self.fxv = fxv
+        self.corr = corr
+        self.result = result
+        self.tol = tol
 
 
 class QuantoForwardOptionData(object):
@@ -49,17 +51,17 @@ class QuantoForwardOptionData(object):
                  tol, ):
         self.typeOpt = typeOpt
         self.moneyness = moneyness
-        self.s = s  # spot
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.start = start  # time to reset
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.fxr = fxr  # fx risk-free rate
-        self.fxv = fxv  # fx volatility
-        self.corr = corr  # correlation
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.s = s
+        self.q = q
+        self.r = r
+        self.start = start
+        self.t = t
+        self.v = v
+        self.fxr = fxr
+        self.fxv = fxv
+        self.corr = corr
+        self.result = result
+        self.tol = tol
 
 
 class QuantoBarrierOptionData(object):
@@ -83,17 +85,17 @@ class QuantoBarrierOptionData(object):
         self.barrier = barrier
         self.rebate = rebate
         self.typeOpt = typeOpt
-        self.s = s  # spot
+        self.s = s
         self.strike = strike
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.fxr = fxr  # fx risk-free rate
-        self.fxv = fxv  # fx volatility
-        self.corr = corr  # correlation
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.fxr = fxr
+        self.fxv = fxv
+        self.corr = corr
+        self.result = result
+        self.tol = tol
 
 
 class QuantoDoubleBarrierOptionData(object):
@@ -119,38 +121,33 @@ class QuantoDoubleBarrierOptionData(object):
         self.barrier_hi = barrier_hi
         self.rebate = rebate
         self.typeOpt = typeOpt
-        self.s = s  # spot
+        self.s = s
         self.strike = strike
-        self.q = q  # dividend
-        self.r = r  # risk-free rate
-        self.t = t  # time to maturity
-        self.v = v  # volatility
-        self.fxr = fxr  # fx risk-free rate
-        self.fxv = fxv  # fx volatility
-        self.corr = corr  # correlation
-        self.result = result  # expected result
-        self.tol = tol  # tolerance
+        self.q = q
+        self.r = r
+        self.t = t
+        self.v = v
+        self.fxr = fxr
+        self.fxv = fxv
+        self.corr = corr
+        self.result = result
+        self.tol = tol
 
 
 class QuantoOptionTest(unittest.TestCase):
 
     def testValues(self):
-        TEST_MESSAGE("Testing quanto option values...")
+        TEST_MESSAGE(
+            "Testing quanto option values...")
 
         backup = SavedSettings()
 
-        # /* The data below are from
-        #    from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-
         values = [
-            #       type, strike,  spot,  div, rate,   t, vol, fx risk-free rate, fx volatility, correlation,     result, tol
-            # "Option pricing formulas", pag 105-106
             QuantoOptionData(Option.Call, 105.0, 100.0, 0.04, 0.08, 0.5, 0.2, 0.05, 0.10, 0.3, 5.3280 / 1.5, 1.0e-4),
-            # "Option pricing formulas", VBA code
             QuantoOptionData(Option.Put, 105.0, 100.0, 0.04, 0.08, 0.5, 0.2, 0.05, 0.10, 0.3, 8.1636, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -196,7 +193,8 @@ class QuantoOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testGreeks(self):
-        TEST_MESSAGE("Testing quanto option greeks...")
+        TEST_MESSAGE(
+            "Testing quanto option greeks...")
 
         backup = SavedSettings()
 
@@ -223,7 +221,7 @@ class QuantoOptionTest(unittest.TestCase):
         correlations = [0.10, 0.90]
 
         dc = Actual360()
-        today = Date(16, Sep, 2015)
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -246,28 +244,26 @@ class QuantoOptionTest(unittest.TestCase):
             stochProcess, fxrTS, fxVolTS,
             QuoteHandle(correlation))
 
-        for type in types:
+        for ty in types:
             for strike in strikes:
                 for length in lengths:
 
                     exDate = today + Period(length, Years)
                     exercise = EuropeanExercise(exDate)
 
-                    payoff = PlainVanillaPayoff(type, strike)
+                    payoff = PlainVanillaPayoff(ty, strike)
 
                     option = QuantoVanillaOption(payoff, exercise)
                     option.setPricingEngine(engine)
 
                     for u in underlyings:
-                        for m in qRates:
-                            for n in rRates:
+                        for q in qRates:
+                            for r in rRates:
                                 for v in vols:
                                     for fxr in rRates:
                                         for fxv in vols:
                                             for corr in correlations:
 
-                                                q = m
-                                                r = n
                                                 spot.setValue(u)
                                                 qRate.setValue(q)
                                                 rRate.setValue(r)
@@ -288,7 +284,7 @@ class QuantoOptionTest(unittest.TestCase):
                                                 calculated["qlambda"] = option.qlambda()
 
                                                 if value > spot.value() * 1.0e-5:
-                                                    # perturb spot and get delta and gamma
+
                                                     du = u * 1.0e-4
                                                     spot.setValue(u + du)
                                                     value_p = option.NPV()
@@ -300,7 +296,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     expected["delta"] = (value_p - value_m) / (2 * du)
                                                     expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                                    # perturb rates and get rho and dividend rho
                                                     dr = r * 1.0e-4
                                                     rRate.setValue(r + dr)
                                                     value_p = option.NPV()
@@ -317,7 +312,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     qRate.setValue(q)
                                                     expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                                    # perturb volatility and get vega
                                                     dv = v * 1.0e-4
                                                     vol.setValue(v + dv)
                                                     value_p = option.NPV()
@@ -326,7 +320,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     vol.setValue(v)
                                                     expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                                    # perturb fx rate and get qrho
                                                     dfxr = fxr * 1.0e-4
                                                     fxRate.setValue(fxr + dfxr)
                                                     value_p = option.NPV()
@@ -335,7 +328,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     fxRate.setValue(fxr)
                                                     expected["qrho"] = (value_p - value_m) / (2 * dfxr)
 
-                                                    # perturb fx volatility and get qvega
                                                     dfxv = fxv * 1.0e-4
                                                     fxVol.setValue(fxv + dfxv)
                                                     value_p = option.NPV()
@@ -344,7 +336,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     fxVol.setValue(fxv)
                                                     expected["qvega"] = (value_p - value_m) / (2 * dfxv)
 
-                                                    # perturb correlation and get qlambda
                                                     dcorr = corr * 1.0e-4
                                                     correlation.setValue(corr + dcorr)
                                                     value_p = option.NPV()
@@ -353,7 +344,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     correlation.setValue(corr)
                                                     expected["qlambda"] = (value_p - value_m) / (2 * dcorr)
 
-                                                    # perturb date and get theta
                                                     dT = dc.yearFraction(today - 1, today + 1)
                                                     Settings.instance().evaluationDate = today - 1
                                                     value_m = option.NPV()
@@ -362,7 +352,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                     Settings.instance().evaluationDate = today
                                                     expected["theta"] = (value_p - value_m) / dT
 
-                                                    # compare
                                                     for it in calculated.keys():
                                                         greek = it
                                                         expct = expected[greek]
@@ -373,21 +362,19 @@ class QuantoOptionTest(unittest.TestCase):
                                                             self.assertFalse(error > tol)
 
     def testForwardValues(self):
-        TEST_MESSAGE("Testing quanto-forward option values...")
+        TEST_MESSAGE(
+            "Testing quanto-forward option values...")
 
         backup = SavedSettings()
 
         values = [
-            #   type, moneyness,  spot,  div, risk-free rate, reset, maturity,  vol, fx risk-free rate, fx vol, corr,     result, tol
-            # reset=0.0, quanto (not-forward) options
             QuantoForwardOptionData(Option.Call, 1.05, 100.0, 0.04, 0.08, 0.00, 0.5, 0.20, 0.05, 0.10, 0.3, 5.3280 / 1.5, 1.0e-4),
             QuantoForwardOptionData(Option.Put, 1.05, 100.0, 0.04, 0.08, 0.00, 0.5, 0.20, 0.05, 0.10, 0.3, 8.1636, 1.0e-4),
-            # reset!=0.0, quanto-forward options (cursory checked against FinCAD 7)
             QuantoForwardOptionData(Option.Call, 1.05, 100.0, 0.04, 0.08, 0.25, 0.5, 0.20, 0.05, 0.10, 0.3, 2.0171, 1.0e-4),
             QuantoForwardOptionData(Option.Put, 1.05, 100.0, 0.04, 0.08, 0.25, 0.5, 0.20, 0.05, 0.10, 0.3, 6.7296, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -435,7 +422,8 @@ class QuantoOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testForwardGreeks(self):
-        TEST_MESSAGE("Testing quanto-forward option greeks...")
+        TEST_MESSAGE(
+            "Testing quanto-forward option greeks...")
 
         backup = SavedSettings()
 
@@ -463,7 +451,7 @@ class QuantoOptionTest(unittest.TestCase):
         correlations = [0.10, 0.90]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
         Settings.instance().evaluationDate = today
 
         spot = SimpleQuote(0.0)
@@ -486,7 +474,7 @@ class QuantoOptionTest(unittest.TestCase):
             stochProcess, fxrTS, fxVolTS,
             QuoteHandle(correlation))
 
-        for type in types:
+        for ty in types:
             for moneynes in moneyness:
                 for length in lengths:
                     for startMonth in startMonths:
@@ -496,21 +484,19 @@ class QuantoOptionTest(unittest.TestCase):
 
                         reset = today + Period(startMonth, Months)
 
-                        payoff = PlainVanillaPayoff(type, 0.0)
+                        payoff = PlainVanillaPayoff(ty, 0.0)
 
                         option = QuantoForwardVanillaOption(moneynes, reset, payoff, exercise)
                         option.setPricingEngine(engine)
 
                         for u in underlyings:
-                            for m in qRates:
-                                for n in rRates:
+                            for q in qRates:
+                                for r in rRates:
                                     for v in vols:
                                         for fxr in rRates:
                                             for fxv in vols:
                                                 for corr in correlations:
 
-                                                    q = m
-                                                    r = n
                                                     spot.setValue(u)
                                                     qRate.setValue(q)
                                                     rRate.setValue(r)
@@ -531,7 +517,7 @@ class QuantoOptionTest(unittest.TestCase):
                                                     calculated["qlambda"] = option.qlambda()
 
                                                     if value > spot.value() * 1.0e-5:
-                                                        # perturb spot and get delta and gamma
+
                                                         du = u * 1.0e-4
                                                         spot.setValue(u + du)
                                                         value_p = option.NPV()
@@ -543,7 +529,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         expected["delta"] = (value_p - value_m) / (2 * du)
                                                         expected["gamma"] = (delta_p - delta_m) / (2 * du)
 
-                                                        # perturb rates and get rho and dividend rho
                                                         dr = r * 1.0e-4
                                                         rRate.setValue(r + dr)
                                                         value_p = option.NPV()
@@ -560,7 +545,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         qRate.setValue(q)
                                                         expected["divRho"] = (value_p - value_m) / (2 * dq)
 
-                                                        # perturb volatility and get vega
                                                         dv = v * 1.0e-4
                                                         vol.setValue(v + dv)
                                                         value_p = option.NPV()
@@ -569,7 +553,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         vol.setValue(v)
                                                         expected["vega"] = (value_p - value_m) / (2 * dv)
 
-                                                        # perturb fx rate and get qrho
                                                         dfxr = fxr * 1.0e-4
                                                         fxRate.setValue(fxr + dfxr)
                                                         value_p = option.NPV()
@@ -578,7 +561,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         fxRate.setValue(fxr)
                                                         expected["qrho"] = (value_p - value_m) / (2 * dfxr)
 
-                                                        # perturb fx volatility and get qvega
                                                         dfxv = fxv * 1.0e-4
                                                         fxVol.setValue(fxv + dfxv)
                                                         value_p = option.NPV()
@@ -587,7 +569,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         fxVol.setValue(fxv)
                                                         expected["qvega"] = (value_p - value_m) / (2 * dfxv)
 
-                                                        # perturb correlation and get qlambda
                                                         dcorr = corr * 1.0e-4
                                                         correlation.setValue(corr + dcorr)
                                                         value_p = option.NPV()
@@ -596,7 +577,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         correlation.setValue(corr)
                                                         expected["qlambda"] = (value_p - value_m) / (2 * dcorr)
 
-                                                        # perturb date and get theta
                                                         dT = dc.yearFraction(today - 1, today + 1)
                                                         Settings.instance().evaluationDate = today - 1
                                                         value_m = option.NPV()
@@ -604,8 +584,6 @@ class QuantoOptionTest(unittest.TestCase):
                                                         value_p = option.NPV()
                                                         Settings.instance().evaluationDate = today
                                                         expected["theta"] = (value_p - value_m) / dT
-
-                                                        # compare
 
                                                         for it in calculated.keys():
                                                             greek = it
@@ -616,22 +594,19 @@ class QuantoOptionTest(unittest.TestCase):
                                                             self.assertFalse(error > tol)
 
     def testForwardPerformanceValues(self):
-        TEST_MESSAGE("Testing quanto-forward-performance option values...")
+        TEST_MESSAGE(
+            "Testing quanto-forward-performance option values...")
 
         backup = SavedSettings()
 
         values = [
-            #   type, moneyness,  spot,  div, risk-free rate, reset, maturity,  vol, fx risk-free rate, fx vol, corr,     result, tol
-            # reset=0.0, quanto-(not-forward)-performance options
-            # exactly one hundredth of the non-performance version
             QuantoForwardOptionData(Option.Call, 1.05, 100.0, 0.04, 0.08, 0.00, 0.5, 0.20, 0.05, 0.10, 0.3, 5.3280 / 150, 1.0e-4),
             QuantoForwardOptionData(Option.Put, 1.05, 100.0, 0.04, 0.08, 0.00, 0.5, 0.20, 0.05, 0.10, 0.3, 0.0816, 1.0e-4),
-            # reset!=0.0, quanto-forward-performance options (roughly one hundredth of the non-performance version)
             QuantoForwardOptionData(Option.Call, 1.05, 100.0, 0.04, 0.08, 0.25, 0.5, 0.20, 0.05, 0.10, 0.3, 0.0201, 1.0e-4),
             QuantoForwardOptionData(Option.Put, 1.05, 100.0, 0.04, 0.08, 0.25, 0.5, 0.20, 0.05, 0.10, 0.3, 0.0672, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -656,8 +631,6 @@ class QuantoOptionTest(unittest.TestCase):
 
         for value in values:
             payoff = PlainVanillaPayoff(value.typeOpt, 0.0)
-            #     = PercentageStrikePayoff(values[i].type,
-            #     values[i].moneyness))
 
             exDate = today + timeToDays(value.t)
             exercise = EuropeanExercise(exDate)
@@ -682,20 +655,18 @@ class QuantoOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testBarrierValues(self):
-        TEST_MESSAGE("Testing quanto-barrier option values...")
+        TEST_MESSAGE(
+            "Testing quanto-barrier option values...")
 
         backup = SavedSettings()
 
         values = [
-            # TODO:  Bench results against an existing prop calculator
-            # barrierType, barrier, rebate, type, spot, strike,
-            # q, r, T, vol, fx risk-free rate, fx vol, corr, result, tol
             QuantoBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Call, 100, 90, 0.04, 0.0212, 0.50, 0.25, 0.05, 0.2, 0.3, 8.247, 0.5),
             QuantoBarrierOptionData(Barrier.DownOut, 95.0, 3.0, Option.Put, 100, 90, 0.04, 0.0212, 0.50, 0.25, 0.05, 0.2, 0.3, 2.274, 0.5),
             QuantoBarrierOptionData(Barrier.DownIn, 95.0, 0, Option.Put, 100, 90, 0.04, 0.0212, 0.50, 0.25, 0.05, 0.2, 0.3, 2.85, 0.5), ]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -745,12 +716,12 @@ class QuantoOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testDoubleBarrierValues(self):
-        TEST_MESSAGE("Testing quanto-double-barrier option values...")
+        TEST_MESSAGE(
+            "Testing quanto-double-barrier option values...")
 
         backup = SavedSettings()
 
         values = [
-            # barrierType,           bar.lo, bar.hi, rebate,         type, spot,  strk,    q,   r,    T,  vol, fx rate, fx vol, corr, result, tol
             QuantoDoubleBarrierOptionData(DoubleBarrier.KnockOut, 50.0, 150.0, 0, Option.Call, 100, 100.0, 0.00, 0.1, 0.25, 0.15, 0.05, 0.2, 0.3, 3.4623, 1.0e-4),
             QuantoDoubleBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, 0, Option.Call, 100, 100.0, 0.00, 0.1, 0.50, 0.15, 0.05, 0.2, 0.3, 0.5236, 1.0e-4),
             QuantoDoubleBarrierOptionData(DoubleBarrier.KnockOut, 90.0, 110.0, 0, Option.Put, 100, 100.0, 0.00, 0.1, 0.25, 0.15, 0.05, 0.2, 0.3, 1.1320, 1.0e-4),
@@ -758,7 +729,7 @@ class QuantoOptionTest(unittest.TestCase):
             QuantoDoubleBarrierOptionData(DoubleBarrier.KnockIn, 80.0, 120.0, 0, Option.Call, 100, 102.0, 0.00, 0.1, 0.50, 0.15, 0.05, 0.2, 0.3, 1.9305, 1.0e-4)]
 
         dc = Actual360()
-        today = Date.todaysDate()
+        today = knownGoodDefault
 
         spot = SimpleQuote(0.0)
         qRate = SimpleQuote(0.0)
@@ -809,7 +780,8 @@ class QuantoOptionTest(unittest.TestCase):
             self.assertFalse(error > tolerance)
 
     def testFDMQuantoHelper(self):
-        TEST_MESSAGE("Testing FDM quanto helper...")
+        TEST_MESSAGE(
+            "Testing FDM quanto helper...")
 
         backup = SavedSettings()
 
@@ -885,7 +857,8 @@ class QuantoOptionTest(unittest.TestCase):
             abs(loc[0] - xMin) > tol or abs(loc[len(loc) - 1] - xMax) > tol)
 
     def testPDEOptionValues(self):
-        TEST_MESSAGE("Testing quanto-option values with PDEs...")
+        TEST_MESSAGE(
+            "Testing quanto-option values with PDEs...")
 
         backup = SavedSettings()
 
@@ -893,7 +866,6 @@ class QuantoOptionTest(unittest.TestCase):
         today = Date(21, April, 2019)
 
         values = [
-            #    type,    strike,  spot,   div, domestic rate,  t,   vol, foreign rate, fx vol, correlation, result,     tol
             QuantoOptionData(Option.Call, 105.0, 100.0, 0.04, 0.08, 0.5, 0.2, 0.05, 0.10, 0.3, NullReal(), NullReal()),
             QuantoOptionData(Option.Call, 100.0, 100.0, 0.16, 0.08, 0.25, 0.15, 0.05, 0.20, -0.3, NullReal(), NullReal()),
             QuantoOptionData(Option.Call, 105.0, 100.0, 0.04, 0.08, 0.5, 0.2, 0.05, 0.10, 0.3, NullReal(), NullReal()),
@@ -971,7 +943,8 @@ class QuantoOptionTest(unittest.TestCase):
                 self.assertFalse(error > tol)
 
     def testAmericanQuantoOption(self):
-        TEST_MESSAGE("Testing American quanto-option values with PDEs...")
+        TEST_MESSAGE(
+            "Testing American quanto-option values with PDEs...")
 
         backup = SavedSettings()
 

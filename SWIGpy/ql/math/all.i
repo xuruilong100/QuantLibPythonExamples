@@ -132,9 +132,7 @@ std::pair<Real, Array> autocovariances(Array& forward, Size maxLag, bool reuse);
 Array autocorrelations(const Array& forward, Size maxLag);
 std::pair<Real, Array> autocorrelations(Array& forward, Size maxLag, bool reuse);
 
-%template(DoubleArray) std::pair<Real, Array>;
-
-//---------
+%template(DoubleArrayPair) std::pair<Real, Array>;
 
 %inline %{
 Matrix getCovariance(
@@ -169,8 +167,6 @@ class CovarianceDecomposition {
     const Matrix& correlationMatrix() const;
 };
 
-//------
-
 class CreditRiskPlus {
   public:
     CreditRiskPlus(
@@ -193,8 +189,6 @@ class CreditRiskPlus {
     const std::vector<Real>& sectorUnexpectedLoss() const;
     Real lossQuantile(Real p);
 };
-
-//------
 
 class MaddockInverseCumulativeNormal {
   public:
@@ -235,8 +229,6 @@ class NonCentralCumulativeChiSquareSankaranApprox {
         Real df, Real ncp);
     Real operator()(Real x) const;
 };
-
-//-----------
 
 class FastFourierTransform {
   public:
@@ -310,10 +302,11 @@ std::complex<Real> Ci(std::complex<Real> z);
 
 class AbcdMathFunction {
   public:
-    AbcdMathFunction(Real a = 0.002,
-                     Real b = 0.001,
-                     Real c = 0.16,
-                     Real d = 0.0005);
+    AbcdMathFunction(
+        Real a = 0.002,
+        Real b = 0.001,
+        Real c = 0.16,
+        Real d = 0.0005);
     AbcdMathFunction(std::vector<Real> abcd);
 
     Real operator()(Time t) const;
@@ -338,10 +331,11 @@ class AbcdMathFunction {
 
 class AbcdFunction : public AbcdMathFunction {
   public:
-    AbcdFunction(Real a = -0.06,
-                 Real b =  0.17,
-                 Real c =  0.54,
-                 Real d =  0.17);
+    AbcdFunction(
+        Real a = -0.06,
+        Real b =  0.17,
+        Real c =  0.54,
+        Real d =  0.17);
 
     Real maximumVolatility() const;
     Real shortTermVolatility() const;
@@ -358,7 +352,13 @@ class AbcdFunction : public AbcdMathFunction {
 
 class AbcdSquared {
   public:
-    AbcdSquared(Real a, Real b, Real c, Real d, Time T, Time S);
+    AbcdSquared(
+        Real a, 
+        Real b, 
+        Real c, 
+        Real d, 
+        Time T, 
+        Time S);
     Real operator()(Time t) const;
 };
 
@@ -372,7 +372,7 @@ Real abcdBlackVolatility(Time u, Real a, Real b, Real c, Real d);
 
 class FaureRsg {
   public:
-    typedef Sample<std::vector<Real> > sample_type;
+    typedef Sample<std::vector<Real>> sample_type;
     FaureRsg(Size dimensionality);
     const std::vector<long int>& nextIntSequence() const;
     const std::vector<long int>& lastIntSequence() const;
@@ -383,8 +383,10 @@ class FaureRsg {
 
 class LatticeRsg {
   public:
-    typedef Sample<std::vector<Real> > sample_type;
-    LatticeRsg(Size dimensionality, std::vector<Real> z, Size N);
+    typedef Sample<std::vector<Real>> sample_type;
+    LatticeRsg(
+        Size dimensionality, 
+        std::vector<Real> z, Size N);
 
     void skipTo(unsigned long n);
     const sample_type& nextSequence();
@@ -393,15 +395,16 @@ class LatticeRsg {
 };
 
 template <class LDS,
-          class PRS = RandomSequenceGenerator<MersenneTwisterUniformRng> >
+          class PRS = RandomSequenceGenerator<MersenneTwisterUniformRng>>
 class RandomizedLDS {
   public:
-    typedef Sample<std::vector<Real> > sample_type;
+    typedef Sample<std::vector<Real>> sample_type;
     RandomizedLDS(const LDS& ldsg, PRS prsg);
     RandomizedLDS(const LDS& ldsg);
-    RandomizedLDS(Size dimensionality,
-                  BigNatural ldsSeed = 0,
-                  BigNatural prsSeed = 0);
+    RandomizedLDS(
+        Size dimensionality,
+        BigNatural ldsSeed = 0,
+        BigNatural prsSeed = 0);
     const sample_type& nextSequence() const;
     const sample_type& lastSequence() const;
     void nextRandomizer();
@@ -411,9 +414,12 @@ class RandomizedLDS {
 template <>
 class RandomizedLDS<LatticeRsg, RandomSequenceGenerator<MersenneTwisterUniformRng>> {
   public:
-    typedef Sample<std::vector<Real> > sample_type;
-    RandomizedLDS(const LatticeRsg& ldsg, RandomSequenceGenerator<MersenneTwisterUniformRng> prsg);
-    RandomizedLDS(const LatticeRsg& ldsg);
+    typedef Sample<std::vector<Real>> sample_type;
+    RandomizedLDS(
+        const LatticeRsg& ldsg, 
+        RandomSequenceGenerator<MersenneTwisterUniformRng> prsg);
+    RandomizedLDS(
+        const LatticeRsg& ldsg);
     const sample_type& nextSequence() const;
     const sample_type& lastSequence() const;
     void nextRandomizer();
@@ -435,13 +441,12 @@ public:
                 return z;
             }
     }
-    /* static void getRule(
-        type name, std::vector<Real>& Z, Integer N); */
 };
 
 class SymmetricSchurDecomposition {
   public:
-    SymmetricSchurDecomposition(const Matrix &s);
+    SymmetricSchurDecomposition(
+        const Matrix& s);
     const Array& eigenvalues() const;
     const Matrix& eigenvectors() const;
 };
@@ -461,10 +466,9 @@ public:
         const Matrix& originalVectors,
         Real multiplierCutOff,
         Real tolerance);
-    /* const std::valarray<bool>& validVectors() const; */
     %extend {
         std::vector<bool> validVectors() const {
-            const std::valarray<bool>& v=self->validVectors();
+            const std::valarray<bool>& v = self->validVectors();
             std::vector<bool> rst(std::begin(v), std::end(v));
             return rst;
         }
@@ -477,7 +481,7 @@ Matrix CholeskyDecomposition(
     const Matrix& S, bool flexible);
 
 Matrix moorePenroseInverse(
-    const Matrix &A, const Real tol = Null<Real>());
+    const Matrix& A, const Real tol = Null<Real>());
 
 class NumericalDifferentiation {
   public:
@@ -533,9 +537,10 @@ class TqrEigenDecomposition {
 
 class BSpline {
   public:
-    BSpline(Natural p,
-            Natural n,
-            const std::vector<Real>& knots);
+    BSpline(
+        Natural p,
+        Natural n,
+        const std::vector<Real>& knots);
     Real operator()(Natural i, Real x) const;
 };
 
@@ -545,9 +550,12 @@ Array BoundedLogGrid(Real xMin, Real xMax, Size steps);
 
 class TransformedGrid {
 public:
-    TransformedGrid (const Array& grid);
+    TransformedGrid(
+        const Array& grid);
     %extend {
-        TransformedGrid(const Array& grid, PyObject* func) {
+        TransformedGrid(
+            const Array& grid,
+            PyObject* func) {
             return new TransformedGrid(grid, UnaryFunction(func));
         }
     }
@@ -568,7 +576,8 @@ public:
 
 class LogGrid : public TransformedGrid {
 public:
-    LogGrid(const Array& grid);
+    LogGrid(
+        const Array& grid);
     const Array& logGridArray() const;
     Real logGrid(Size i) const;
 };

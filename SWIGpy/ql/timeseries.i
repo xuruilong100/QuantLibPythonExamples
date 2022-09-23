@@ -16,10 +16,14 @@ class TimeSeries {
   public:
     TimeSeries();
     %extend {
-        TimeSeries(const std::vector<Date>& d, const std::vector<T>& v) {
+        TimeSeries(
+            const std::vector<Date>& d, 
+            const std::vector<T>& v) {
             return new TimeSeries<T>(d.begin(), d.end(), v.begin());
         }
-        TimeSeries(const Date& firstDate, const std::vector<T>& v) {
+        TimeSeries(
+            const Date& firstDate, 
+            const std::vector<T>& v) {
             return new TimeSeries<T>(firstDate, v.begin(), v.end());
         }
     }
@@ -51,7 +55,11 @@ class IntervalPrice {
         High,
         Low
     };
-    IntervalPrice(Real, Real, Real, Real);
+    IntervalPrice(
+        Real open, 
+        Real close, 
+        Real high, 
+        Real low);
     void setValue(Real, IntervalPrice::Type);
     void setValues(Real, Real, Real, Real);
     Real value(IntervalPrice::Type t);

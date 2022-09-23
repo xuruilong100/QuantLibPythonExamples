@@ -5,23 +5,27 @@
 %include common.i
 %include date.i
 
-//%template(SizeVector) std::vector<Size>;
+// %template(SizeVector) std::vector<Size>;    // comment this line if on ubuntu
 %template(IntVector) std::vector<int>;
-%template(UnsignedIntVector) std::vector<unsigned int>;
-%template(UnsignedLongVector) std::vector<unsigned long>;
-//%template(BigNaturalVector) std::vector<BigNatural>;
+%template(NaturalVector) std::vector<Natural>;
+%template(BigNaturalVector) std::vector<BigNatural>;
 %template(DoubleVector) std::vector<double>;
 %template(StrVector) std::vector<std::string>;
 %template(BoolVector) std::vector<bool>;
 
-%template(DoublePair) std::pair<double, double>;
-%template(DoublePairVector) std::vector<std::pair<double, double>>;
-%template(PairDoubleVector) std::pair<std::vector<double>, std::vector<double>>;
+%template(SizeSizePair) std::pair<Size, Size>;
+%template(SizeSizePairVector) std::vector<std::pair<Size, Size>>;
 
-%template(NodePair) std::pair<Date, double>;
-%template(NodeVector) std::vector<std::pair<Date, double>>;
+%template(DoubleDoublePair) std::pair<double, double>;
+%template(DoubleDoublePairVector) std::vector<std::pair<double, double>>;
+%template(DoubleVectorDoubleVectorPair) std::pair<std::vector<double>, std::vector<double>>;
+
+%template(DateDoublePair) std::pair<Date, double>;
+%template(DateDoublePairVector) std::vector<std::pair<Date, double>>;
+%template(DateVectorDoubleVectorPair) std::pair<std::vector<Date>, std::vector<Rate>>;
 
 %template(DoubleVectorVector) std::vector<std::vector<Real>>;
+%template(DoubleVectorVectorVector) std::vector<std::vector<std::vector<Real>>>;
 
 %template(QuoteVector) std::vector<ext::shared_ptr<Quote>>;
 %template(QuoteVectorVector) std::vector<std::vector<ext::shared_ptr<Quote>>>;
@@ -40,9 +44,7 @@ std::vector<T> to_vector(const std::vector<U>& v) {
 %}
 
 %pythoncode %{
-SizeVector = UnsignedLongVector
-BigNaturalVector = UnsignedLongVector
-Shape = DoublePairVector
+Shape = DoubleDoublePairVector
 %}
 
 #endif

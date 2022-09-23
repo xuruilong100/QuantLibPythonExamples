@@ -30,7 +30,7 @@ class BatesDoubleExpModel : public HestonModel {
     %feature("kwargs") BatesDoubleExpModel;
     %rename(lambdaParameter) lambda;
   public:
-    explicit BatesDoubleExpModel(
+    BatesDoubleExpModel(
         const ext::shared_ptr<HestonProcess>& process,
         Real lamda = 0.1,
         Real nuUp = 0.1,
@@ -46,7 +46,7 @@ class BatesDoubleExpModel : public HestonModel {
 %shared_ptr(BatesDetJumpModel)
 class BatesDetJumpModel : public BatesModel {
   public:
-    explicit BatesDetJumpModel(
+    BatesDetJumpModel(
         const ext::shared_ptr<BatesProcess>& process,
         Real kappaLambda = 1.0,
         Real thetaLambda = 0.1);
@@ -59,7 +59,7 @@ class BatesDetJumpModel : public BatesModel {
 class BatesDoubleExpDetJumpModel : public BatesDoubleExpModel {
     %feature("kwargs") BatesDoubleExpDetJumpModel;
   public:
-    explicit BatesDoubleExpDetJumpModel(
+    BatesDoubleExpDetJumpModel(
         const ext::shared_ptr<HestonProcess>& process,
         Real lamda = 0.1,
         Real nuUp = 0.1,

@@ -20,7 +20,7 @@ class BlackCalculator {
         Real strike,
         Real forward,
         Real stdDev,
-        Real discount=1.0);
+        Real discount = 1.0);
     Real value() const;
     Real deltaForward() const;
     Real delta(Real spot) const;
@@ -90,7 +90,10 @@ class BlackDeltaCalculator {
 
 class CEVCalculator {
   public:
-    CEVCalculator(Real f0, Real alpha, Real beta);
+    CEVCalculator(
+      Real f0, 
+      Real alpha, 
+      Real beta);
     Real value(Option::Type optionType, Real strike, Time t) const;
     Real f0()    const;
     Real alpha() const;

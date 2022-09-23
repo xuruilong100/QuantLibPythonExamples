@@ -18,6 +18,7 @@ using QuantLib::Gaussian1dSwaptionEngine;
 using QuantLib::Gaussian1dJamshidianSwaptionEngine;
 using QuantLib::Gaussian1dNonstandardSwaptionEngine;
 using QuantLib::Gaussian1dFloatFloatSwaptionEngine;
+using QuantLib::LfmSwaptionEngine;
 %}
 
 %shared_ptr(BlackSwaptionEngine)
@@ -90,26 +91,35 @@ class TreeSwaptionEngine : public PricingEngine {
 %shared_ptr(G2SwaptionEngine)
 class G2SwaptionEngine : public PricingEngine {
   public:
-    G2SwaptionEngine(const ext::shared_ptr<G2>& model,
-                     Real range, Size intervals);
+    G2SwaptionEngine(
+        const ext::shared_ptr<G2>& model,
+        Real range, 
+        Size intervals);
 };
 
 %shared_ptr(FdG2SwaptionEngine)
 class FdG2SwaptionEngine : public PricingEngine {
   public:
-    FdG2SwaptionEngine(const ext::shared_ptr<G2>& model,
-                       Size tGrid = 100, Size xGrid = 50, Size yGrid = 50,
-                       Size dampingSteps = 0, Real invEps = 1e-5,
-                       const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
+    FdG2SwaptionEngine(
+        const ext::shared_ptr<G2>& model,
+        Size tGrid = 100, 
+        Size xGrid = 50, 
+        Size yGrid = 50,
+        Size dampingSteps = 0, 
+        Real invEps = 1e-5,
+        const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
 };
 
 %shared_ptr(FdHullWhiteSwaptionEngine)
 class FdHullWhiteSwaptionEngine : public PricingEngine {
   public:
-    FdHullWhiteSwaptionEngine(const ext::shared_ptr<HullWhite>& model,
-                              Size tGrid = 100, Size xGrid = 100,
-                              Size dampingSteps = 0, Real invEps = 1e-5,
-                              const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas());
+    FdHullWhiteSwaptionEngine(
+        const ext::shared_ptr<HullWhite>& model,
+        Size tGrid = 100,
+        Size xGrid = 100,
+        Size dampingSteps = 0, 
+        Real invEps = 1e-5,
+        const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Douglas());
 };
 
 %shared_ptr(Gaussian1dSwaptionEngine)
@@ -124,14 +134,16 @@ class Gaussian1dSwaptionEngine : public PricingEngine {
     };
     Gaussian1dSwaptionEngine(
         const ext::shared_ptr<Gaussian1dModel>& model,
-        const int integrationPoints = 64, const Real stddevs = 7.0,
+        const int integrationPoints = 64, 
+        const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
         Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
         const Gaussian1dSwaptionEngine::Probabilities probabilities = Gaussian1dSwaptionEngine::None);
     Gaussian1dSwaptionEngine(
         const Handle<Gaussian1dModel>& model,
-        const int integrationPoints = 64, const Real stddevs = 7.0,
+        const int integrationPoints = 64, 
+        const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
         Handle<YieldTermStructure> discountCurve = Handle<YieldTermStructure>(),
@@ -157,7 +169,8 @@ class Gaussian1dNonstandardSwaptionEngine : public PricingEngine, public BasketG
     };
     Gaussian1dNonstandardSwaptionEngine(
         const ext::shared_ptr<Gaussian1dModel>& model,
-        const int integrationPoints = 64, const Real stddevs = 7.0,
+        const int integrationPoints = 64, 
+        const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
         const Handle<Quote>& oas = Handle<Quote>(),
@@ -165,7 +178,8 @@ class Gaussian1dNonstandardSwaptionEngine : public PricingEngine, public BasketG
         const Gaussian1dNonstandardSwaptionEngine::Probabilities probabilities = Gaussian1dNonstandardSwaptionEngine::None);
     Gaussian1dNonstandardSwaptionEngine(
         const Handle<Gaussian1dModel>& model,
-        const int integrationPoints = 64, const Real stddevs = 7.0,
+        const int integrationPoints = 64, 
+        const Real stddevs = 7.0,
         const bool extrapolatePayoff = true,
         const bool flatPayoffExtrapolation = false,
         const Handle<Quote>& oas = Handle<Quote>(),
@@ -206,6 +220,14 @@ class Gaussian1dFloatFloatSwaptionEngine : public PricingEngine, public BasketGe
         const Gaussian1dFloatFloatSwaptionEngine::Probabilities probabilities =
         Gaussian1dFloatFloatSwaptionEngine::None);
     Handle<YieldTermStructure> discountingCurve() const;
+};
+
+%shared_ptr(LfmSwaptionEngine)
+class LfmSwaptionEngine : public PricingEngine {
+  public:
+    LfmSwaptionEngine(
+      const ext::shared_ptr<LiborForwardModel>& model,
+      Handle<YieldTermStructure> discountCurve);    
 };
 
 #endif

@@ -1,14 +1,16 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class MersenneTwisterTest(unittest.TestCase):
-    def testValues(self):
-        TEST_MESSAGE("Testing Mersenne twister...")
 
-        # the following numbers are provided by MT authors in order
-        # to check any actual implementation of MT
+    def testValues(self):
+        TEST_MESSAGE(
+            "Testing Mersenne twister...")
+
         referenceLongValues = [
             1067595299, 955945823, 477289528, 4107218783, 4228976476,
             3344332714, 3355579695, 227628506, 810200273, 2591290167,
@@ -427,8 +429,6 @@ class MersenneTwisterTest(unittest.TestCase):
             e = abs(referenceValues[i] - mt19937.next().value())
             self.assertFalse(e > 1.0e-8)
 
-            # check absence of interaction between instances:
-        # a) with sequential use
         mt1 = MersenneTwisterUniformRng(init)
         mt2 = MersenneTwisterUniformRng(init)
         for i in range(1000):
@@ -437,7 +437,6 @@ class MersenneTwisterTest(unittest.TestCase):
             mt2.nextInt32()
         self.assertFalse(referenceLongValues[999] != mt2.nextInt32())
 
-        # b) with parallel use
         mt3 = MersenneTwisterUniformRng(init)
         mt4 = MersenneTwisterUniformRng(init)
         for i in range(999):

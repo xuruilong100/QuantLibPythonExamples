@@ -16,8 +16,6 @@ using QuantLib::pseudoSqrt;
 using QuantLib::SVD;
 using QuantLib::BiCGstab;
 using QuantLib::GMRES;
-typedef QuantLib::LexicographicalView<Array::iterator> DefaultLexicographicalView;
-typedef QuantLib::LexicographicalView<Array::iterator>::y_iterator DefaultLexicographicalViewColumn;
 typedef QuantLib::Matrix::row_iterator MatrixRow;
 
 using QuantLib::DotProduct;
@@ -82,7 +80,6 @@ bool extractArray(PyObject* source, Array* target) {
 }
 
 %typecheck(QL_TYPECHECK_ARRAY) Array {
-    /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         Size size = PySequence_Size($input);
         if (size == 0) {
@@ -96,7 +93,6 @@ bool extractArray(PyObject* source, Array* target) {
             Py_DECREF(o);
         }
     } else {
-        /* wrapped Array? */
         Array* v;
         if (SWIG_ConvertPtr($input,(void **) &v,
                             $&1_descriptor,0) != -1)
@@ -107,7 +103,6 @@ bool extractArray(PyObject* source, Array* target) {
 }
 
 %typecheck(QL_TYPECHECK_ARRAY) const Array& {
-    /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         Size size = PySequence_Size($input);
         if (size == 0) {
@@ -121,7 +116,6 @@ bool extractArray(PyObject* source, Array* target) {
             Py_DECREF(o);
         }
     } else {
-        /* wrapped Array? */
         Array* v;
         if (SWIG_ConvertPtr($input,(void **) &v,
                             $1_descriptor,0) != -1)
@@ -138,7 +132,6 @@ bool extractArray(PyObject* source, Array* target) {
                 PyTuple_Size($input) :
                 PyList_Size($input));
         if (rows > 0) {
-            // look ahead
             PyObject* o = PySequence_GetItem($input,0);
             if (PyTuple_Check(o) || PyList_Check(o)) {
                 cols = (PyTuple_Check(o) ?
@@ -201,7 +194,6 @@ bool extractArray(PyObject* source, Array* target) {
                 PyTuple_Size($input) :
                 PyList_Size($input));
         if (rows > 0) {
-            // look ahead
             PyObject* o = PySequence_GetItem($input,0);
             if (PyTuple_Check(o) || PyList_Check(o)) {
                 cols = (PyTuple_Check(o) ?
@@ -259,10 +251,8 @@ bool extractArray(PyObject* source, Array* target) {
 }
 
 %typecheck(QL_TYPECHECK_MATRIX) Matrix {
-    /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         $1 = 1;
-    /* wrapped Matrix? */
     } else {
         Matrix* m;
         if (SWIG_ConvertPtr($input,(void **) &m,
@@ -274,10 +264,8 @@ bool extractArray(PyObject* source, Array* target) {
 }
 
 %typecheck(QL_TYPECHECK_MATRIX) const Matrix& {
-    /* native sequence? */
     if (PyTuple_Check($input) || PyList_Check($input)) {
         $1 = 1;
-    /* wrapped Matrix? */
     } else {
         Matrix* m;
         if (SWIG_ConvertPtr($input,(void **) &m,
@@ -291,11 +279,17 @@ bool extractArray(PyObject* source, Array* target) {
 class Array {
     %rename(__len__)   size;
   public:
-    explicit Array(Size size = 0);
-    Array(Size n, Real fill);
-    Array(Size size, Real value, Real increment);
-    Array(const Array&);
-    Array(const Disposable<Array>&);
+    Array(
+        Size size = 0);
+    Array(
+        Size n, 
+        Real fill);
+    Array(
+        Size size,
+        Real value, 
+        Real increment);
+    Array(
+        const Array&);
 
     Real at(Size) const;
     Real front() const;
@@ -406,52 +400,6 @@ Array Log(const Array&);
 Array Exp(const Array&);
 Array Pow(const Array&, Real);
 
-class DefaultLexicographicalViewColumn {
-  private:
-    DefaultLexicographicalViewColumn();
-  public:
-    %extend {
-        Real __getitem__(Size i) {
-            return (*self)[i];
-        }
-        void __setitem__(Size i, Real x) {
-            (*self)[i] = x;
-        }
-    }
-};
-
-%rename(LexicographicalView) DefaultLexicographicalView;
-class DefaultLexicographicalView {
-  public:
-    Size xSize() const;
-    Size ySize() const;
-    %extend {
-        DefaultLexicographicalView(
-            Array& a, Size xSize) {
-            return new DefaultLexicographicalView(
-                a.begin(), a.end(), xSize);
-        }
-        std::string __str__() {
-            std::ostringstream s;
-            for (Size j=0; j<self->ySize(); j++) {
-                s << "\n";
-                for (Size i=0; i<self->xSize(); i++) {
-                    if (i != 0)
-                        s << ",";
-                    Array::value_type value = (*self)[i][j];
-                    s << value;
-                }
-            }
-            s << "\n";
-            return s.str();
-        }
-        DefaultLexicographicalViewColumn __getitem__(Size i) {
-            return (*self)[i];
-        }
-
-    }
-};
-
 class MatrixRow {
   private:
     MatrixRow();
@@ -469,10 +417,17 @@ class MatrixRow {
 class Matrix {
   public:
     Matrix();
-    Matrix(Size rows, Size columns);
-    Matrix(Size rows, Size columns, Real value);
-    Matrix(const Matrix&);
-    Matrix(Matrix&&);
+    Matrix(
+        Size rows, 
+        Size columns);
+    Matrix(
+        Size rows, 
+        Size columns, 
+        Real value);
+    Matrix(
+        const Matrix&);
+    Matrix(
+        Matrix&&);
     Array diagonal() const;
     Real& operator()(Size i, Size j) const;
     Size rows() const;
@@ -519,6 +474,9 @@ class Matrix {
     }
 };
 
+%template(MatrixVector) std::vector<Matrix>;
+%template(MatrixVectorVector) std::vector<std::vector<Matrix>>;
+
 struct SalvagingAlgorithm {
     %rename(NoAlgorithm) None;
     enum Type {
@@ -540,7 +498,7 @@ class SVD {
 };
 
 %{
-Disposable<Array> extractArray(
+Array extractArray(
     PyObject* source, const std::string& methodName) {
 
     QL_ENSURE(
@@ -596,7 +554,7 @@ class MatrixMultiplicationProxy {
         Py_XDECREF(matrixMult_);
     }
 
-    Disposable<Array> operator()(const Array& x) const {
+    Array operator()(const Array& x) const {
         PyObject* pyArray = SWIG_NewPointerObj(
             SWIG_as_voidptr(&x), SWIGTYPE_p_Array, 0);
 

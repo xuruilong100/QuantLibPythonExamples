@@ -1,8 +1,10 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import exp, sqrt, log, pow
+
 import numpy as np
+from QuantLib import *
+
+from utilities import *
 
 
 def getFixedLocalVolFromHeston(hestonModel,
@@ -79,14 +81,13 @@ def hestonPxBoundary(maturity,
 
 class HestonModelParams(object):
     def __init__(self,
-                 r, q,
+                 r,
+                 q,
                  kappa,
                  theta,
                  rho,
                  sigma,
                  v0):
-        # r, q
-        # kappa, theta, rho, sigma, v0
         self.r = r
         self.q = q
         self.kappa = kappa
@@ -160,11 +161,20 @@ def createSmoothImpliedVol(dc, cal):
 
 class FokkerPlanckFwdTestCase(object):
     def __init__(self,
-                 s0, r, q, v0,
-                 kappa, theta, rho, sigma,
-                 xGrid, vGrid, tGridPerYear,
+                 s0,
+                 r,
+                 q,
+                 v0,
+                 kappa,
+                 theta,
+                 rho,
+                 sigma,
+                 xGrid,
+                 vGrid,
+                 tGridPerYear,
                  tMinGridPerYear,
-                 avgEps, eps,
+                 avgEps,
+                 eps,
                  trafoType,
                  greensAlgorithm,
                  schemeType):
@@ -337,6 +347,7 @@ class q_fct(object):
 
 
 class HestonSLVModelTest(unittest.TestCase):
+
     def _hestonFokkerPlanckFwdEquationTest(self,
                                            testCase):
 
@@ -445,7 +456,6 @@ class HestonSLVModelTest(unittest.TestCase):
             FdmSchemeDesc.ModifiedCraigSneyd().mu,
             hestonFwdOp)
 
-        #  step one days using non-correlated process
         eT = 1.0 / 365
         p = FdmHestonGreensFct(
             mesher, process, testCase.trafoType).get(
@@ -457,7 +467,7 @@ class HestonSLVModelTest(unittest.TestCase):
         t = eT
 
         for maturitie in maturities:
-            #  calculate step size
+
             nextMaturityDate = todaysDate + maturitie
             nextMaturityTime = dc.yearFraction(
                 todaysDate, nextMaturityDate)
@@ -548,7 +558,6 @@ class HestonSLVModelTest(unittest.TestCase):
         slvModel = HestonSLVFDMModel(
             localVol, hestonModel, finalDate, testCase.fdmParams)
 
-        #  this includes a calibration of the leverage function!
         l = slvModel.leverageFunction()
 
         bsProcess = GeneralizedBlackScholesProcess(
@@ -594,7 +603,7 @@ class HestonSLVModelTest(unittest.TestCase):
                     BlackVolTermStructureHandle(
                         flatVol(lv, dc)))
 
-                tol = 0.001  # testCase.eps
+                tol = 0.001
                 self.assertFalse(
                     abs((calculated - expected) / vega) > tol)
 
@@ -718,7 +727,6 @@ class HestonSLVModelTest(unittest.TestCase):
             p1 = rndCalculator.pdf(v1, t)
             p2 = rndCalculator.pdf(v2, t)
 
-            # test derivatives
             flowSym2Order = sigma * sigma * v0 / (4 * h) * (p1 - pm1) + (kappa * (v0 - theta) + sigma * sigma / 2) * p0
             flowSym4Order = sigma * sigma * v0 / (24 * h) * (-p2 + 8 * p1 - 8 * pm1 + pm2) + (kappa * (v0 - theta) + sigma * sigma / 2) * p0
             fwd1Order = sigma * sigma * v0 / (2 * h) * (p1 - p0) + (kappa * (v0 - theta) + sigma * sigma / 2) * p0
@@ -776,9 +784,6 @@ class HestonSLVModelTest(unittest.TestCase):
     def testSquareRootEvolveWithStationaryDensity(self):
         TEST_MESSAGE(
             "Testing Fokker-Planck forward equation for the square root process with stationary density...")
-
-        # Documentation for this test case:
-        # http:#www.spanderen.de/2013/05/04/fokker-planck-equation-feller-constraint-and-boundary-conditions/
 
         backup = SavedSettings()
 
@@ -849,9 +854,6 @@ class HestonSLVModelTest(unittest.TestCase):
         TEST_MESSAGE(
             "Testing Fokker-Planck forward equation for the square root log process with stationary density...")
 
-        # Documentation for this test case:
-        # nowhere yet :)
-
         backup = SavedSettings()
 
         kappa = 2.5
@@ -861,8 +863,6 @@ class HestonSLVModelTest(unittest.TestCase):
 
         for sigma in np.arange(0.2, 2.01, 0.1):
             lowerLimit = 0.001
-            # should not go to very large negative values, distributions flattens with sigma
-            # causing numerical instabilities log/exp evaluations
 
             rnd = SquareRootProcessRNDCalculator(
                 theta, kappa, theta, sigma)
@@ -973,8 +973,6 @@ class HestonSLVModelTest(unittest.TestCase):
         testCases = [
             FokkerPlanckFwdTestCase(
                 100.0, 0.01, 0.02,
-                # Feller constraint violated, high vol-of-vol case
-                # \frac[2\kappa\theta][\sigma^2] = 2.0 * 1.0 * 0.05 / 0.2 = 0.5 < 1
                 0.05, 1.0, 0.05, -0.75, sqrt(0.2),
                 101, 401, 25, 25,
                 0.02, 0.05,
@@ -983,8 +981,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 FdmSchemeDesc.DouglasType),
             FokkerPlanckFwdTestCase(
                 100.0, 0.01, 0.02,
-                # Feller constraint violated, high vol-of-vol case
-                # \frac[2\kappa\theta][\sigma^2] = 2.0 * 1.0 * 0.05 / 0.2 = 0.5 < 1
                 0.05, 1.0, 0.05, -0.75, sqrt(0.2),
                 201, 501, 10, 10,
                 0.005, 0.02,
@@ -993,8 +989,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 FdmSchemeDesc.HundsdorferType),
             FokkerPlanckFwdTestCase(
                 100.0, 0.01, 0.02,
-                # Feller constraint violated, high vol-of-vol case
-                # \frac[2\kappa\theta][\sigma^2] = 2.0 * 1.0 * 0.05 / 0.2 = 0.5 < 1
                 0.05, 1.0, 0.05, -0.75, sqrt(0.2),
                 201, 501, 25, 25,
                 0.01, 0.03,
@@ -1003,8 +997,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 FdmSchemeDesc.HundsdorferType),
             FokkerPlanckFwdTestCase(
                 100.0, 0.01, 0.02,
-                #  Feller constraint fulfilled, low vol-of-vol case
-                #  \frac[2\kappa\theta][\sigma^2] = 2.0 * 1.0 * 0.05 / 0.05 = 2.0 > 1
                 0.05, 1.0, 0.05, -0.75, sqrt(0.05),
                 201, 401, 5, 5,
                 0.01, 0.02,
@@ -1084,7 +1076,6 @@ class HestonSLVModelTest(unittest.TestCase):
             BlackVolTermStructureHandle(
                 smoothSurface[2]))
 
-        #  step two days using non-correlated process
         eT = 2.0 / 365
 
         v = -NullReal()
@@ -1099,9 +1090,7 @@ class HestonSLVModelTest(unittest.TestCase):
             x = mesher.location(ly, 0)
             if v != mesher.location(ly, 1):
                 v = mesher.location(ly, 1)
-                #  the extreme tail probabilities of the non central
-                #  chi square distribution lead to numerical exceptions
-                #  on some platforms
+
                 if abs(v - v0) < 5 * sigma * sqrt(v0 * eT):
                     p_v = rndCalculator.pdf(v, eT)
                 else:
@@ -1230,7 +1219,6 @@ class HestonSLVModelTest(unittest.TestCase):
                         xGrid, process,
                         maturity, s0))
 
-                # -- operator --
                 uniformBSFwdOp = FdmLocalVolFwdOp(
                     uniformMesher,
                     spot.currentLink(),
@@ -1244,7 +1232,6 @@ class HestonSLVModelTest(unittest.TestCase):
                         NullReal(), NullReal(),
                         0.0001, 1.5, (s0, 0.1)))
 
-                # -- operator --
                 concentratedBSFwdOp = FdmLocalVolFwdOp(
                     concentratedMesher,
                     spot.currentLink(),
@@ -1258,7 +1245,6 @@ class HestonSLVModelTest(unittest.TestCase):
                         NullReal(), NullReal(),
                         0.0001, 1.5, (s0 * 1.1, 0.2)))
 
-                # -- operator --
                 shiftedBSFwdOp = FdmLocalVolFwdOp(
                     shiftedMesher,
                     spot.currentLink(),
@@ -1352,7 +1338,6 @@ class HestonSLVModelTest(unittest.TestCase):
         vTS = BlackVolTermStructureHandle(
             createSmoothImpliedVol(dayCounter, calendar)[2])
 
-        #  Heston parameter from implied calibration
         kappa = 2.0
         theta = 0.074
         rho = -0.51
@@ -1368,7 +1353,7 @@ class HestonSLVModelTest(unittest.TestCase):
         localVol = LocalVolTermStructureHandle(
             NoExceptLocalVolSurface(
                 vTS, rTS, qTS, spot, 0.3))
-        localVol.enableExtrapolation(True)
+        localVol.currentLink().enableExtrapolation(True)
 
         vGrid = 151
         xGrid = 51
@@ -1623,7 +1608,6 @@ class HestonSLVModelTest(unittest.TestCase):
 
         localVol = LocalConstantVol(todaysDate, 0.3, dc)
 
-        #  parameter of the "calibrated" Heston model
         kappa = 1.0
         theta = 0.06
         rho = -0.75
@@ -1710,13 +1694,6 @@ class HestonSLVModelTest(unittest.TestCase):
 
         backup = SavedSettings()
 
-        #  A more detailed description of this test case can found on
-        #  https://hpcquantlib.wordpress.com/2016/01/10/monte-carlo-calibration-of-the-heston-stochastic-local-volatiltiy-model/
-        #
-        #  The comparison of Black-Scholes and SLV prices is derived
-        #  from figure 8.8 in Iain J. Clark's book,
-        #  Foreign Exchange Option Pricing: A Practitioner’s Guide
-
         dc = ActualActual(ActualActual.ISDA)
         todaysDate = Date(5, January, 2016)
         maturityDate = todaysDate + Period(1, Years)
@@ -1727,7 +1704,6 @@ class HestonSLVModelTest(unittest.TestCase):
         r = 0.02
         q = 0.01
 
-        #  parameter of the "calibrated" Heston model
         kappa = 1.0
         theta = 0.06
         rho = -0.8
@@ -1773,7 +1749,6 @@ class HestonSLVModelTest(unittest.TestCase):
 
         timeGrid = TimeGrid(expiries)
 
-        #  first build the True local vol surface from another Heston model
         sf = getFixedLocalVolFromHeston(hestonModel, timeGrid)
 
         localVol = LocalVolTermStructureHandle(sf)
@@ -1833,7 +1808,7 @@ class HestonSLVModelTest(unittest.TestCase):
             diff = slvNPV - bsNPV
             self.assertFalse(abs(diff - expected[i]) > tol)
 
-    @unittest.skip("not implemented")
+    @unittest.skip("testForwardSkewSLV")
     def testForwardSkewSLV(self):
         TEST_MESSAGE(
             "Testing the implied volatility skew of forward starting options in SLV model...")
@@ -1922,7 +1897,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 dw[0] = n[j]
                 dw[1] = n[j + nTimeSteps]
 
-                #  full truncation scheme
                 xt[0] = x[0]
                 xt[1] = x[1] if x[1] > 0 else 0.0
 
@@ -2034,9 +2008,6 @@ class HestonSLVModelTest(unittest.TestCase):
         mixingFactors = [1.0, 0.64, 0.3]
         requiredDates = DateVector()
 
-        # Create two slightly different Heston models. The first will be our stochastic
-        # vol model, the second is used to create a similar implied vol surface which
-        # we fit a local vol model to
         kappa1 = 2.0
         theta1 = 0.12
         rho1 = -0.25
@@ -2067,11 +2038,10 @@ class HestonSLVModelTest(unittest.TestCase):
             TimeGrid(maturity, 20))
 
         localVol = LocalVolTermStructureHandle(localVolPtr)
-        localVol.enableExtrapolation()
+        localVol.currentLink().enableExtrapolation()
         hestonModel = HestonModelHandle(hestonModelPtr)
         hestonModel2 = HestonModelHandle(hestonModelPtr2)
 
-        # Create the options we will price - a vanilla and a barrier
         exercise = EuropeanExercise(maturityDate)
 
         strike = 100
@@ -2084,8 +2054,6 @@ class HestonSLVModelTest(unittest.TestCase):
         barrierOption = BarrierOption(
             Barrier.UpOut, barrier, rebate, payoff, exercise)
 
-        # hestonModel2 is our simulated local vol model, so its vanilla prices
-        # should match the calibrated SLV model pricers
         hestonVanillaEngine = AnalyticHestonEngine(hestonModelPtr2)
         vanillaOption.setPricingEngine(hestonVanillaEngine)
         localVolPrice = vanillaOption.NPV()
@@ -2095,7 +2063,6 @@ class HestonSLVModelTest(unittest.TestCase):
             SobolRsg.JoeKuoD7)
 
         for mixingFactor in mixingFactors:
-            # Finite Difference calibration
             logParams = HestonSLVFokkerPlanckFdmParams(
                 201, 401, 1000, 30, 2.0, 0, 2,
                 0.1, 1e-4, 10000,
@@ -2109,7 +2076,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 logParams, false, requiredDates,
                 mixingFactor).leverageFunction()
 
-            # Monte-Carlo calibration
             timeStepsPerYear = 365
             nBins = 201
             calibrationPaths = 65536
@@ -2121,7 +2087,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 nBins, calibrationPaths, requiredDates,
                 mixingFactor).leverageFunction()
 
-            # Create SLV pricing engines with both leverage functions
             fdEngineWithMixingFactor = FdHestonVanillaEngine(
                 hestonModelPtr, 100, 100, 50, 0,
                 FdmSchemeDesc.Hundsdorfer(),
@@ -2142,7 +2107,6 @@ class HestonSLVModelTest(unittest.TestCase):
                 FdmSchemeDesc.Hundsdorfer(),
                 leverageFctMC, mixingFactor)
 
-            # Price the vanilla and barrier with both engines
             vanillaOption.setPricingEngine(fdEngineWithMixingFactor)
             priceFDM = vanillaOption.NPV()
 
@@ -2155,8 +2119,6 @@ class HestonSLVModelTest(unittest.TestCase):
             barrierOption.setPricingEngine(mcBarrierEngineWithMixingFactor)
             barrierPriceMC = barrierOption.NPV()
 
-            # Check MC and FDM vanilla prices against local vol, and ensure that the barrier
-            # prices from MC and FDM are also consistent
             self.assertFalse(relativeError(priceFDM, localVolPrice, localVolPrice) > epsilon)
             self.assertFalse(relativeError(priceMC, localVolPrice, localVolPrice) > epsilon)
             self.assertFalse(relativeError(barrierPriceFDM, barrierPriceMC, barrierPriceMC) > epsilon)

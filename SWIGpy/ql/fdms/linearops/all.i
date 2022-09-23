@@ -108,15 +108,15 @@ class FdmLinearOpCompositeProxy : public FdmLinearOpComposite {
         Py_XDECREF(pyResult);
     }
 
-    Disposable<Array> apply(const Array& r) const {
+    Array apply(const Array& r) const {
         return apply(r, "apply");
     }
 
-    Disposable<Array> apply_mixed(const Array& r) const {
+    Array apply_mixed(const Array& r) const {
         return apply(r, "apply_mixed");
     }
 
-    Disposable<Array> apply_direction(Size direction, const Array& r) const {
+    Array apply_direction(Size direction, const Array& r) const {
         PyObject* pyArray = SWIG_NewPointerObj(
             SWIG_as_voidptr(&r), SWIGTYPE_p_Array, 0);
 
@@ -129,7 +129,7 @@ class FdmLinearOpCompositeProxy : public FdmLinearOpComposite {
         return extractArray(pyResult, "apply_direction");
     }
 
-    Disposable<Array> solve_splitting(
+    Array solve_splitting(
         Size direction, const Array& r, Real s) const {
 
         PyObject* pyArray = SWIG_NewPointerObj(
@@ -145,7 +145,7 @@ class FdmLinearOpCompositeProxy : public FdmLinearOpComposite {
             pyResult, "solve_splitting");
     }
 
-    Disposable<Array> preconditioner(const Array& r, Real s) const {
+    Array preconditioner(const Array& r, Real s) const {
         PyObject* pyArray = SWIG_NewPointerObj(
             SWIG_as_voidptr(&r), SWIGTYPE_p_Array, 0);
 
@@ -158,7 +158,7 @@ class FdmLinearOpCompositeProxy : public FdmLinearOpComposite {
     }
 
   private:
-    Disposable<Array> apply(
+    Array apply(
         const Array& r, const std::string& methodName) const {
 
         PyObject* pyArray = SWIG_NewPointerObj(
@@ -269,7 +269,9 @@ class FdmCEVOp : public FdmLinearOpComposite {
       FdmCEVOp(
         const ext::shared_ptr<FdmMesher>& mesher,
         const ext::shared_ptr<YieldTermStructure>& rTS,
-        Real f0, Real alpha, Real beta,
+        Real f0, 
+        Real alpha, 
+        Real beta,
         Size direction);
 };
 
@@ -427,7 +429,9 @@ class FdmSquareRootFwdOp : public FdmLinearOpComposite {
 
     FdmSquareRootFwdOp(
         const ext::shared_ptr<FdmMesher>& mesher,
-        Real kappa, Real theta, Real sigma,
+        Real kappa, 
+        Real theta, 
+        Real sigma,
         Size direction,
         TransformationType type = Plain);
 };
@@ -462,7 +466,8 @@ class SecondDerivativeOp : public TripleBandLinearOp {
 class SecondOrderMixedDerivativeOp : public NinePointLinearOp {
 public:
     SecondOrderMixedDerivativeOp(
-        Size d0, Size d1,
+        Size d0, 
+        Size d1,
         const ext::shared_ptr<FdmMesher>& mesher);
 };
 

@@ -86,9 +86,9 @@ class MCAmericanBasketEngine : public PricingEngine {
         Real requiredTolerance,
         Size maxSamples,
         BigNatural seed,
-        Size nCalibrationSamples=Null<Size>(),
-        Size polynomOrder=2,
-        LsmBasisSystem::PolynomType polynomType=LsmBasisSystem::Monomial);
+        Size nCalibrationSamples = Null<Size>(),
+        Size polynomOrder = 2,
+        LsmBasisSystem::PolynomialType polynomType = LsmBasisSystem::Monomial);
 };
 
 %template(MCPRAmericanBasketEngine) MCAmericanBasketEngine<PseudoRandom>;
@@ -109,7 +109,7 @@ class MakeMCAmericanBasketEngine {
     MakeMCAmericanBasketEngine& withSeed(BigNatural seed);
     MakeMCAmericanBasketEngine& withCalibrationSamples(Size samples);
     MakeMCAmericanBasketEngine& withPolynomialOrder(Size polynmOrder);
-    MakeMCAmericanBasketEngine& withBasisSystem(LsmBasisSystem::PolynomType polynomType);
+    MakeMCAmericanBasketEngine& withBasisSystem(LsmBasisSystem::PolynomialType polynomType);
 
     %extend {
         ext::shared_ptr<PricingEngine> makeEngine() const {
@@ -178,7 +178,7 @@ class MCEverestEngine : public PricingEngine {
 template <class RNG>
 class MakeMCEverestEngine {
   public:
-    explicit MakeMCEverestEngine(ext::shared_ptr<StochasticProcessArray>);
+    MakeMCEverestEngine(ext::shared_ptr<StochasticProcessArray>);
 
     MakeMCEverestEngine& withSteps(Size steps);
     MakeMCEverestEngine& withStepsPerYear(Size steps);
@@ -220,7 +220,7 @@ class MCHimalayaEngine : public PricingEngine {
 template <class RNG>
 class MakeMCHimalayaEngine {
   public:
-    explicit MakeMCHimalayaEngine(ext::shared_ptr<StochasticProcessArray>);
+    MakeMCHimalayaEngine(ext::shared_ptr<StochasticProcessArray>);
 
     MakeMCHimalayaEngine& withBrownianBridge(bool b = true);
     MakeMCHimalayaEngine& withAntitheticVariate(bool b = true);
@@ -279,7 +279,7 @@ class MCPagodaEngine : public PricingEngine {
 template <class RNG>
 class MakeMCPagodaEngine {
   public:
-    explicit MakeMCPagodaEngine(ext::shared_ptr<StochasticProcessArray>);
+    MakeMCPagodaEngine(ext::shared_ptr<StochasticProcessArray>);
 
     MakeMCPagodaEngine& withBrownianBridge(bool b = true);
     MakeMCPagodaEngine& withAntitheticVariate(bool b = true);

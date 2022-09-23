@@ -1,15 +1,18 @@
 import unittest
-from utilities import *
+
 from QuantLib import *
+
+from utilities import *
 
 
 class MCLongstaffSchwartzEngineTest(unittest.TestCase):
+
     def testAmericanOption(self):
-        TEST_MESSAGE("Testing Monte-Carlo pricing of American options...")
+        TEST_MESSAGE(
+            "Testing Monte-Carlo pricing of American options...")
 
         backup = SavedSettings()
 
-        #  most of the example taken from the EquityOption.cpp
         optType = Option.Put
         underlying = 36
         dividendYield = 0.00
@@ -25,23 +28,20 @@ class MCLongstaffSchwartzEngineTest(unittest.TestCase):
 
         americanExercise = AmericanExercise(settlementDate, maturity)
 
-        #  bootstrap the yield/dividend/vol curves
         flatTermStructure = YieldTermStructureHandle(
             FlatForward(settlementDate, riskFreeRate, dayCounter))
         flatDividendTS = YieldTermStructureHandle(
             FlatForward(settlementDate, dividendYield, dayCounter))
 
-        #  expected results for exercise probability, evaluated with third-party
-        #  product (using Cox-Rubinstein binomial tree)
         expectedExProb = Matrix(2, 3)
-        expectedExProb[0][0] = 0.48013  # (price: 2.105)
-        expectedExProb[0][1] = 0.51678  # (price: 3.451)
-        expectedExProb[0][2] = 0.54598  # (price: 4.807)
-        expectedExProb[1][0] = 0.75549  # (price: 4.505)
-        expectedExProb[1][1] = 0.67569  # (price: 5.764)
-        expectedExProb[1][2] = 0.65562  # (price: 7.138)
+        expectedExProb[0][0] = 0.48013
+        expectedExProb[0][1] = 0.51678
+        expectedExProb[0][2] = 0.54598
+        expectedExProb[1][0] = 0.75549
+        expectedExProb[1][1] = 0.67569
+        expectedExProb[1][2] = 0.65562
 
-        polynomTypes = [
+        polynomialTypes = [
             LsmBasisSystem.Monomial, LsmBasisSystem.Laguerre,
             LsmBasisSystem.Hermite, LsmBasisSystem.Hyperbolic,
             LsmBasisSystem.Chebyshev2nd]
@@ -68,13 +68,12 @@ class MCLongstaffSchwartzEngineTest(unittest.TestCase):
                 mcengine.withAntitheticVariate()
                 mcengine.withAbsoluteTolerance(0.02)
                 mcengine.withSeed(42)
-                mcengine.withPolynomOrder(3)
+                mcengine.withPolynomialOrder(3)
                 mcengine.withBasisSystem(
-                    polynomTypes[0 * (i * 3 + j) % len(polynomTypes)])
+                    polynomialTypes[0 * (i * 3 + j) % len(polynomialTypes)])
                 mcengine = mcengine.makeEngine()
 
                 americanOption.setPricingEngine(mcengine)
-                #  FLOATING_POINT_EXCEPTION
                 calculated = americanOption.NPV()
                 errorEstimate = americanOption.errorEstimate()
                 exerciseProbability = americanOption.resultScalar("exerciseProbability")
@@ -83,16 +82,12 @@ class MCLongstaffSchwartzEngineTest(unittest.TestCase):
                     FdBlackScholesVanillaEngine(stochasticProcess, 401, 200))
                 expected = americanOption.NPV()
 
-                #  Check price
                 self.assertFalse(abs(calculated - expected) > 2.34 * errorEstimate)
-                #  Check exercise probability (tolerance 1.5%)
+
                 self.assertFalse(abs(exerciseProbability - expectedExProb[i][j]) > 0.015)
 
-    @unittest.skip("not implemented")
+    @unittest.skip("testAmericanMaxOption")
     def testAmericanMaxOption(self):
-        #  reference values taken from
-        #  "Monte Carlo Methods in Financial Engineering",
-        #  by Paul Glasserman, 2004 Springer Verlag, p. 462
 
         TEST_MESSAGE(
             "Testing Monte-Carlo pricing of American max options...")

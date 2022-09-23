@@ -1,7 +1,9 @@
 import unittest
-from utilities import *
-from QuantLib import *
 from math import sqrt, pow
+
+from QuantLib import *
+
+from utilities import *
 
 
 class ExpectationFct(object):
@@ -14,6 +16,7 @@ class ExpectationFct(object):
 
 
 class FdCevTest(unittest.TestCase):
+
     def testLocalMartingale(self):
         TEST_MESSAGE(
             "Testing local martingale property of CEV process with PDF...")
@@ -40,14 +43,12 @@ class FdCevTest(unittest.TestCase):
             self.assertFalse(beta < 1.0 and abs(diff) > tol)
             self.assertFalse(beta > 1.0 and diff > -tol)
 
-            # check local martingale property with Monte-Carlo simulation
             nSims = 5000
             nSteps = 2000
             dt = t / nSteps
             sqrtDt = sqrt(dt)
 
             stat = GeneralStatistics()
-            # const PseudoRandom::rng_type mt(MersenneTwisterUniformRng(42));
             mt = InvCumulativeMersenneTwisterGaussianRng(
                 MersenneTwisterUniformRng(42))
 
@@ -59,7 +60,7 @@ class FdCevTest(unittest.TestCase):
                         f = max(0.0, f)
 
                         if f == 0.0:
-                            break  # absorbing boundary
+                            break
 
                     stat.add(f - f0)
 

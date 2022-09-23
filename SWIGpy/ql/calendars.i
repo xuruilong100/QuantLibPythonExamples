@@ -247,7 +247,7 @@ class UnitedStates : public Calendar {
                   NERC,
                   LiborImpact,
                   FederalReserve };
-    explicit UnitedStates(Market market);
+    UnitedStates(Market market);
 };
 
 class NullCalendar : public Calendar {};
@@ -256,15 +256,24 @@ class WeekendsOnly : public Calendar {};
 
 class JointCalendar : public Calendar {
   public:
-    JointCalendar(const Calendar&, const Calendar&,
-                  JointCalendarRule rule = QuantLib::JoinHolidays);
-    JointCalendar(const Calendar&, const Calendar&, const Calendar&,
-                  JointCalendarRule rule = QuantLib::JoinHolidays);
-    JointCalendar(const Calendar&, const Calendar&,
-                  const Calendar&, const Calendar&,
-                  JointCalendarRule rule = QuantLib::JoinHolidays);
-    JointCalendar(const std::vector<Calendar>&,
-                  JointCalendarRule = JoinHolidays);
+    JointCalendar(
+        const Calendar&, 
+        const Calendar&,
+        JointCalendarRule rule = JoinHolidays);
+    JointCalendar(
+        const Calendar&, 
+        const Calendar&, 
+        const Calendar&,
+        JointCalendarRule rule = JoinHolidays);
+    JointCalendar(
+        const Calendar&, 
+        const Calendar&,
+        const Calendar&, 
+        const Calendar&,
+        JointCalendarRule rule = JoinHolidays);
+    JointCalendar(
+        const std::vector<Calendar>&,
+        JointCalendarRule = JoinHolidays);
 };
 
 class BespokeCalendar : public Calendar {
